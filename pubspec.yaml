@@ -84,6 +84,16 @@ flutter:
     - promocode.png
     - wallet.png
     - order_placed.png
+    - delivery-location.png
+    - search-icon.png
+    - close.png
+    - current-location.png
+    - no-result.png
+    - back.png
+    - cart.png
+    - filter.png
+    - Cherry-Tomatoes.png
+    - selected-refine.png
 
   fonts:
     - family: GoogleSans

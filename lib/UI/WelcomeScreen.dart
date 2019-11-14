@@ -103,15 +103,17 @@ class WelcomeScreen extends State<WelcomeScreenState>
             margin: EdgeInsets.all(10.0),
             child: Align(
               alignment: Alignment.bottomRight,
-              child: FloatingActionButton(
-                onPressed: (){
-                  Navigator.pushNamed(context, Const.dashboard);
-                },
-                shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(26)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.pushNamed(context, Const.setDeliveryLocation);
+                  },
+                  child: Text(
+                    'Skip'
+                  ),
                 ),
-                child: Icon(Icons.arrow_forward),
-              ),
+              )
             ),
           ),
         )

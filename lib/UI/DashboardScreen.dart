@@ -142,7 +142,7 @@ class DashboardScreen extends StatelessWidget
                     ),
                     child: GestureDetector(
                       onTap: () {
-
+                        Navigator.pushNamed(context, Const.searchScreen);
                       },
                       child: Row(
                         children: <Widget>[

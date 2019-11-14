@@ -12,6 +12,11 @@ class Const
   static String productDetail = "/ProductDetailScreen";
   static String myCart = "/MyCartScreen";
   static String paymentOption = "/PaymentOptionScreen";
+  static String setDeliveryLocation = "/SetDeliveryLocation";
+  static String setLocationManually = "/SetLocationManually";
+  static String locationServiceUnavailable = "/LocationServiceUnavailable";
+  static String searchScreen = "/SearchScreen";
+
 
   static String welcome1_title = "Fresh, Organic & Handpicked";
   static String welcome1_desc = "We prefer local and organically grown fruits and vegetables, assuring that all of them are fresh and healthy enough for your family.";
