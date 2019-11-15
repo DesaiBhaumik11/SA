@@ -5,6 +5,8 @@ import 'package:vegetos_flutter/Utils/Const.dart';
 
 class CategoriesScreen extends StatelessWidget
 {
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -51,11 +53,15 @@ class CategoriesScreen extends StatelessWidget
 
   Widget categoriesChild()
   {
+
     var categoriChild = Container(
          margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-         child: Card(
-           color: Colors.white,
-           child: Container(
+         child: InkWell(
+           onTap: (){
+
+           },
+           child: Card(
+             color: Colors.white,
              child: Column(
                children: <Widget>[
                  Row(
