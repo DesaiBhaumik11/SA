@@ -10,8 +10,11 @@ import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'UI/SplashScreeen.dart';
+import 'UI/choose_address.dart';
 import 'UI/location_service_unavailable.dart';
+import 'UI/promo_screen.dart';
 import 'UI/search_screen.dart';
+import 'UI/set_delivery_details.dart';
 import 'UI/set_location_manually.dart';
 
 void main() => runApp(MyApp());
@@ -39,6 +42,9 @@ class MyApp extends StatelessWidget {
           Const.setLocationManually: (BuildContext context) => SetLocationManually(),
           Const.locationServiceUnavailable: (BuildContext context) => LocationServiceUnavailable((){}),
           Const.searchScreen: (BuildContext context) => SearchScreen(),
+          Const.setDeliveryDetails: (BuildContext context) => SetDeliveryDetails(),
+          Const.chooseAddress: (BuildContext context) => ChooseAddress(),
+          Const.promoCode: (BuildContext context) => PromoCode(),
 
         },
         home: DashboardScreen());

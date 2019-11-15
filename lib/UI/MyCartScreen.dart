@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/PaymentOptionScreen.dart';
+import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 class MyCartScreen extends StatefulWidget
@@ -67,7 +68,7 @@ class MyCartState extends State<MyCartScreen>
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
           onTap: () {
-            Navigator.push(context, SlideRightRoute(page: PaymentOptionScreen()));
+            Navigator.push(context, SlideLeftRoute(page: SetDeliveryDetails()));
           },
           child: Container(
             color: Const.primaryColor,
@@ -286,7 +287,7 @@ class MyCartState extends State<MyCartScreen>
                                     margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text('₹120 ',style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans',
+                                      child: Text('₹120 ',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w500,
                                           color: Colors.grey, decoration: TextDecoration.lineThrough),
                                       ),

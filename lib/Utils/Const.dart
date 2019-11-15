@@ -16,6 +16,9 @@ class Const
   static String setLocationManually = "/SetLocationManually";
   static String locationServiceUnavailable = "/LocationServiceUnavailable";
   static String searchScreen = "/SearchScreen";
+  static String setDeliveryDetails = "/SetDeliveryDetails";
+  static String chooseAddress = "/ChooseAddress";
+  static String promoCode = "/PromoCode";
 
 
   static String welcome1_title = "Fresh, Organic & Handpicked";

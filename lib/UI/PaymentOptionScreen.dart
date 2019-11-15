@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/OrderPlacedScreen.dart';
+import 'package:vegetos_flutter/UI/promo_screen.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 class PaymentOptionScreen extends StatefulWidget
@@ -233,38 +234,67 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
           Container(
             child: Image.asset('assets/promocode.png', height: 25.0, width: 25.0,),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                child: Text('SUMMER19 - 40% off upto ₹100', style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans',
-                    fontWeight: FontWeight.w500, color: Const.location_grey),),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Promo code applied successfully', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                      fontWeight: FontWeight.w500, color: Const.location_grey),),
-                ),
-              ),
-            ],
+
+//          Column(
+//            crossAxisAlignment: CrossAxisAlignment.start,
+//            children: <Widget>[
+//              Container(
+//                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+//                child: Text('SUMMER19 - 40% off upto ₹100', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans',
+//                    fontWeight: FontWeight.w500, color: Const.location_grey),),
+//              ),
+//              Container(
+//                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+//                child: Align(
+//                  alignment: Alignment.centerLeft,
+//                  child: Text('Promo code applied successfully', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+//                      fontWeight: FontWeight.w500, color: Const.location_grey),),
+//                ),
+//              ),
+//            ],
+//          ),
+//
+//          Expanded(
+//            flex: 1,
+//            child: Container(),
+//          ),
+//          Column(
+//            children: <Widget>[
+//              Container(
+//                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+//                child: Text('- ₹62', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans',
+//                    fontWeight: FontWeight.w500, color: Const.location_grey),),
+//              ),
+//              Container(
+//                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+//                child: Text('Remove', style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+//                    fontWeight: FontWeight.w500, color: Colors.red),),
+//              ),
+//            ],
+//          )
+
+        SizedBox(width: 10,),
+
+        Text('Apply Promo Code', style: TextStyle(
+          fontSize: 16.0,
+            color: Const.location_grey,
+          fontWeight: FontWeight.w500
+        ),),
+
+          Expanded(
+            flex: 1,
+            child: Container(),
           ),
-          Column(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                child: Text('- ₹62', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans',
-                    fontWeight: FontWeight.w500, color: Const.location_grey),),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                child: Text('Remove', style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                    fontWeight: FontWeight.w500, color: Colors.red),),
-              ),
-            ],
-          )
+
+
+          IconButton(
+            onPressed: (){
+              Navigator.of(context).push(SlideLeftRoute(page: PromoCode()));
+            },
+            icon: Icon(Icons.keyboard_arrow_right),
+          ),
+
+
         ],
       ),
     );
