@@ -20,15 +20,19 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
 
             Image.asset('delivery-location.png'),
 
+            SizedBox(
+              height: 15,
+            ),
+
             Text(
               'Set your delivery location', style: TextStyle(
-                fontSize: 25,
+                fontSize: 23,
                 fontWeight: FontWeight.w500
             ),
             ),
 
             SizedBox(
-              height: 20,
+              height: 15,
             ),
 
             Padding(
@@ -45,7 +49,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                         padding: const EdgeInsets.only(top: 12, bottom: 12),
                         child: Text(
                           'Use my location', style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 19,
                             color: Colors.white,
                             fontWeight: FontWeight.w500
                         ),
@@ -68,7 +72,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                     'Set location Manually',
                     style: TextStyle(
                         color: Color(0xff393939),
-                        fontSize: 18,
+                        fontSize: 17,
                         fontWeight: FontWeight.w500
                     ),
                   ),

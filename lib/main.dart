@@ -47,6 +47,6 @@ class MyApp extends StatelessWidget {
           Const.promoCode: (BuildContext context) => PromoCode(),
 
         },
-        home: DashboardScreen());
+        home: SplashScreen());
   }
 }
