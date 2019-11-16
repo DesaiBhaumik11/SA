@@ -6,16 +6,20 @@ import 'package:vegetos_flutter/UI/PaymentOptionScreen.dart';
 import 'package:vegetos_flutter/UI/ProductDetailScreen.dart';
 import 'package:vegetos_flutter/UI/SplashScreeen.dart';
 import 'package:vegetos_flutter/UI/WelcomeScreen.dart';
+import 'package:vegetos_flutter/UI/customer_Support2.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'UI/SplashScreeen.dart';
 import 'UI/choose_address.dart';
+import 'UI/customer_Support_1.dart';
+import 'UI/expired_items.dart';
 import 'UI/location_service_unavailable.dart';
 import 'UI/promo_screen.dart';
 import 'UI/search_screen.dart';
 import 'UI/set_delivery_details.dart';
 import 'UI/set_location_manually.dart';
+import 'UI/tell_us_about.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,8 +49,12 @@ class MyApp extends StatelessWidget {
           Const.setDeliveryDetails: (BuildContext context) => SetDeliveryDetails(),
           Const.chooseAddress: (BuildContext context) => ChooseAddress(),
           Const.promoCode: (BuildContext context) => PromoCode(),
+          Const.customerSupport1: (BuildContext context) => CustomerSupport1(),
+          Const.customerSupport2: (BuildContext context) => CustomerSupport2(),
+          Const.expiredItems: (BuildContext context) => ExpiredItems(),
+          Const.tellUsAbout: (BuildContext context) => TellUsAbout(),
 
         },
-        home: SplashScreen());
+        home: DashboardScreen());
   }
 }

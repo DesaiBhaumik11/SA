@@ -19,6 +19,7 @@ class OrderItemsState extends State<OrderItems>
   Widget build(BuildContext context) {
     // TODO: implement build
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Column(
         children: <Widget>[
           itemChild()
@@ -33,7 +34,7 @@ class OrderItemsState extends State<OrderItems>
     var child = Container(
       child: Card(
         child: Container(
-          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+          padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
           child: Row(
             children: <Widget>[
               Container(

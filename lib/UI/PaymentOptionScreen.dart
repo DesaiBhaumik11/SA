@@ -44,7 +44,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
         child: GestureDetector(
           onTap: () {
             //Navigator.pushNamed(context, Const.paymentOption);
-            Navigator.of(context).push(SlideRightRoute(page: OrderPlacedScreen()));
+            Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
           },
           child: Container(
             color: Const.primaryColor,
@@ -226,14 +226,18 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
       ),
     );
 
-    var appliedPromo = Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(10.0),
-      child: Row(
-        children: <Widget>[
-          Container(
-            child: Image.asset('assets/promocode.png', height: 25.0, width: 25.0,),
-          ),
+    var appliedPromo = GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(SlideLeftRoute(page: PromoCode()));
+      },
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          children: <Widget>[
+            Container(
+              child: Image.asset('assets/promocode.png', height: 25.0, width: 25.0,),
+            ),
 
 //          Column(
 //            crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,29 +277,30 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
 //            ],
 //          )
 
-        SizedBox(width: 10,),
+            SizedBox(width: 10,),
 
-        Text('Apply Promo Code', style: TextStyle(
-          fontSize: 16.0,
-            color: Const.location_grey,
-          fontWeight: FontWeight.w500
-        ),),
+            Text('Apply Promo Code', style: TextStyle(
+                fontSize: 16.0,
+                color: Const.location_grey,
+                fontWeight: FontWeight.w500
+            ),),
 
-          Expanded(
-            flex: 1,
-            child: Container(),
-          ),
-
-
-          IconButton(
-            onPressed: (){
-              Navigator.of(context).push(SlideLeftRoute(page: PromoCode()));
-            },
-            icon: Icon(Icons.keyboard_arrow_right),
-          ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
 
 
-        ],
+            IconButton(
+              onPressed: (){
+                Navigator.of(context).push(SlideLeftRoute(page: PromoCode()));
+              },
+              icon: Icon(Icons.keyboard_arrow_right),
+            ),
+
+
+          ],
+        ),
       ),
     );
 
@@ -304,49 +309,57 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
 
   Widget walletContainer()
   {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(10.0),
-      margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-      child: Row(
-        children: <Widget>[
-          Container(
-            child: Image.asset('assets/wallet.png', height: 25.0, width: 25.0,),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                  child: Text('Wallet', style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans',
-                      fontWeight: FontWeight.w500, color: Const.location_grey),),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                  child: Align(
+    return
+      GestureDetector(
+        onTap: (){
+          setState(() {
+            wallet =!wallet;
+          });
+        },
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+        child: Row(
+          children: <Widget>[
+            Container(
+              child: Image.asset('assets/wallet.png', height: 25.0, width: 25.0,),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: <Widget>[
+                  Container(
                     alignment: Alignment.centerLeft,
-                    child: Text('Total Balance: ₹30', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                    margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                    child: Text('Wallet', style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans',
                         fontWeight: FontWeight.w500, color: Const.location_grey),),
                   ),
-                ),
-              ],
+                  Container(
+                    margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Total Balance: ₹30', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            flex: 0,
-            child: Checkbox(
-              value: wallet,
-              activeColor: Const.primaryColor,
-              onChanged: (b) {
-                setState(() {
-                  wallet = b;
-                });
-              },
+            Expanded(
+              flex: 0,
+              child: Checkbox(
+                value: wallet,
+                activeColor: Const.primaryColor,
+                onChanged: (b) {
+                  setState(() {
+                    wallet = b;
+                  });
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

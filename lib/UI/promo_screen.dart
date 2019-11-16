@@ -26,6 +26,7 @@ class _PromoCodeState extends State<PromoCode> {
             child: Image.asset('back.png', height: 25,),
           ),
         ),
+
         title: Text(
             'Promo Code'
         ),

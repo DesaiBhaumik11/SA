@@ -96,6 +96,9 @@ flutter:
     - selected-refine.png
     - pomegranate-furit.png
     - tick-orange.png
+    - customer-support.png
+    - order-placed.png
+    - confirmation.png
 
   fonts:
     - family: GoogleSans

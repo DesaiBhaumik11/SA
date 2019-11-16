@@ -19,7 +19,10 @@ class Const
   static String setDeliveryDetails = "/SetDeliveryDetails";
   static String chooseAddress = "/ChooseAddress";
   static String promoCode = "/PromoCode";
-
+  static String customerSupport1 = "/CustomerSupport1";
+  static String customerSupport2 = "/CustomerSupport2";
+  static String expiredItems = "/ExpiredItems";
+  static String tellUsAbout = "/TellUsAbout";
 
   static String welcome1_title = "Fresh, Organic & Handpicked";
   static String welcome1_desc = "We prefer local and organically grown fruits and vegetables, assuring that all of them are fresh and healthy enough for your family.";
