@@ -6,13 +6,13 @@ import 'package:vegetos_flutter/UI/PaymentOptionScreen.dart';
 import 'package:vegetos_flutter/UI/ProductDetailScreen.dart';
 import 'package:vegetos_flutter/UI/SplashScreeen.dart';
 import 'package:vegetos_flutter/UI/WelcomeScreen.dart';
-import 'package:vegetos_flutter/UI/customer_Support2.dart';
+import 'package:vegetos_flutter/UI/customer_support_2.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'UI/SplashScreeen.dart';
 import 'UI/choose_address.dart';
-import 'UI/customer_Support_1.dart';
+import 'UI/customer_support_1.dart';
 import 'UI/expired_items.dart';
 import 'UI/location_service_unavailable.dart';
 import 'UI/login.dart';
