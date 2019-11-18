@@ -59,8 +59,8 @@ class MyApp extends StatelessWidget {
           Const.loginScreen: (BuildContext context) => LoginScreen(),
           Const.verifyOTP: (BuildContext context) => VerifyOTP(),
           Const.updateProfile: (BuildContext context) => UpdateProfile(),
-
         },
-        home: DashboardScreen());
+//        home: DashboardScreen());
+        home: WelcomeScreenState());
   }
 }
