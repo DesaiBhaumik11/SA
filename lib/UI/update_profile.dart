@@ -7,25 +7,58 @@ class UpdateProfile extends StatefulWidget {
 }
 
 class _UpdateProfileState extends State<UpdateProfile> {
+
+  var title = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 14,
+    color: Colors.grey
+  );
+
+  var text = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 16
+  );
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+
+          FlatButton(
+            onPressed: (){},
+            child: Text(
+              'Skip for now',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+
+              ),
+            ),
+          )
+
+        ],
+      ),
       body: SafeArea(
         child: ListView(
+          physics: BouncingScrollPhysics(),
           children: <Widget>[
 
 
             SizedBox(height: 70),
 
 
-            Image.asset('verify.png', height: 170, ),
+            Image.asset('profile.png', height: 170, ),
 
             SizedBox(height: 20),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Verify OTP', style: TextStyle(
+                Text('Update Profile', style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 19
                 ),),
@@ -37,7 +70,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Enter the six digit OTP sent on', style: TextStyle(
+                Text('Get update your profile for better', style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 15
                 ),),
@@ -47,7 +80,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('your mobile number to continue', style: TextStyle(
+                Text('app experience', style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 15
                 ),),
@@ -55,6 +88,94 @@ class _UpdateProfileState extends State<UpdateProfile> {
             ),
 
             SizedBox(height: 10),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only( top: 20),
+                    child: Text(
+                      'Full Name', style: title,
+                    ),
+                  ),
+
+                  TextFormField(
+                    style: text,
+                    initialValue: "Parth Parekh",
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 5)
+                    ),
+                  ),
+
+
+                  Padding(
+                    padding: const EdgeInsets.only( top: 20),
+                    child: Text(
+                      'Email Address', style: title,
+                    ),
+                  ),
+
+                  TextFormField(
+                    style: text,
+                    initialValue: "Parth@archisys.in",
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 5)
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only( top: 20),
+                    child: Text(
+                      'Referral code', style: title,
+                    ),
+                  ),
+
+                  TextFormField(
+                    initialValue: "ASFFRDF",
+                    style: text,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 5)
+                    ),
+                  ),
+
+
+
+
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20,),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: (){
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Update Profile', style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18
+                          ),
+                          ),
+                        ),
+                      )
+                  )
+                ],
+              ),
+            ),
+
+            SizedBox(height: 50,),
 
           ],
         ),

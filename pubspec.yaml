@@ -102,6 +102,7 @@ flutter:
     - confirmation.png
     - login.png
     - verify.png
+    - profile.png
 
   fonts:
     - family: GoogleSans
