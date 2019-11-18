@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/OrderItems.dart';
 import 'package:vegetos_flutter/UI/OrderSummery.dart';
-import 'package:vegetos_flutter/UI/customer_Support_1.dart';
+import 'package:vegetos_flutter/UI/customer_support_1.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 class OrderPlacedScreen extends StatefulWidget

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
 
 
-
+  var wid=1;
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +70,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Stack(
                         children: <Widget>[
                           Align(
-                            child: Image.asset('cart.png', height: 27,),
+                            child: Image.asset('cart.png', height: 23,),
                             alignment: Alignment.center,
                           ),
                           Container(
-                            margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(15.0, 15.0, 5.0, 0.0),
                             child: Align(
                               alignment: Alignment.topRight,
                               child: CircleAvatar(
@@ -128,9 +129,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
             ],
           ),
+
           Expanded(
-            child: buildList(context),
-          )
+            child: wid==1?searchHistory(context):buildList(context),
+          ),
 
         ],
       ),
@@ -243,7 +245,9 @@ class _SearchScreenState extends State<SearchScreen> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return InkWell(
-          onTap: (){},
+          onTap: (){
+
+          },
           child: Card(
             child: Container(
               padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
@@ -417,6 +421,23 @@ class _SheetWidState extends State<SheetWid> {
     color: Color(0xff262626)
   );
 
+  bool newest = false;
+  bool popularity = false;
+  bool priceLow = false;
+  bool priceHigh= false;
+
+
+  bool buttons = false;
+
+  List<String> _checked = [];
+
+  List<String> _category = [];
+
+  List<String> _discount = [];
+
+  List<String> _price = [];
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -425,71 +446,79 @@ class _SheetWidState extends State<SheetWid> {
         children: <Widget>[
 
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
 
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  onPressed: (){
-                    setState(() {
-                      slidePanel = 1;
-                    });
-                  },
-                  child: Row(
-                    children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
 
-                      Image.asset('selected-refine.png', height: 18 ,),
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    onPressed: (){
+                      setState(() {
+                        slidePanel = 1;
+                        buttons = !buttons;
+                      });
+                    },
+                    child: Row(
+                      children: <Widget>[
 
-                      SizedBox(
-                        width: 5,
-                      ),
+                        Image.asset('selected-refine.png', height: 18 , color: buttons ?Colors.black:Colors.grey),
 
-                      Text(
-                        'Refine By',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                        SizedBox(
+                          width: 5,
                         ),
-                      )
 
-                    ],
+                        Text(
+                          'Refine By',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: buttons ?Colors.black:Colors.grey
+                          ),
+                        )
+
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  onPressed: (){
-                    setState(() {
-                      slidePanel = 0;
-                    });
-                  },
-                  child: Row(
-                    children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    onPressed: (){
+                      setState(() {
+                        slidePanel = 0;
+                        buttons = !buttons;
+                      });
+                    },
+                    child: Row(
+                      children: <Widget>[
 
-                      Image.asset('filter.png', height: 18 ,),
+                        Image.asset('filter.png', height: 18 ,color: buttons ?Colors.grey:Colors.black,),
 
-                      SizedBox(
-                        width: 5,
-                      ),
-
-                      Text(
-                        'Sort By',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                        SizedBox(
+                          width: 5,
                         ),
-                      )
 
-                    ],
+                        Text(
+                          'Sort By',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                              color: buttons ?Colors.grey:Colors.black,
+                          ),
+                        )
+
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
 
-            ],
+              ],
+            ),
           ),
 
           Divider(
@@ -501,130 +530,177 @@ class _SheetWidState extends State<SheetWid> {
             children: <Widget>[
 
 
-              InkWell(
-                onTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 15),
-                  child: Row(
-                    children: <Widget>[
-
-                      Checkbox(
-                        value: false,
-                        activeColor: Theme.of(context).primaryColor,
-                        onChanged: (e){
-                        },
-                        checkColor: Colors.white,
-                      ),
-
-                      Text(
-                        'Newest', style: tileTitle,
-                      ),
-
-                    ],
-                  ),
-                ),
+              CheckboxGroup(
+                labels: <String>[
+                  "Newest arrival",
+                  "Popularity",
+                  "Price low ",
+                  "Wednesday",
+                ],
+                checked: _checked,
+                labelStyle: radioTitle,
+                onChange: (bool isChecked, String label, int index) =>
+                    print("isChecked: $isChecked   label: $label  index: $index"),
+                onSelected: (List selected) => setState(() {
+                  if (selected.length > 1) {
+                    selected.removeAt(0);
+                  } else {
+                  }
+                  _checked = selected;
+                }),
               ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: Colors.black12,
-                ),
-              ),
-
-
-              InkWell(
-                onTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 15),
-                  child: Row(
-                    children: <Widget>[
-
-                      Checkbox(
-                        value: true,
-                        activeColor: Theme.of(context).primaryColor,
-                        onChanged: (e){
-                        },
-                        checkColor: Colors.white,
-                      ),
-
-                      Text(
-                        'Popularity', style: tileTitle,
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: Colors.black12,
-                ),
-              ),
-
-              InkWell(
-                onTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 15),
-                  child: Row(
-                    children: <Widget>[
-
-                      Checkbox(
-                        value: false,
-                        activeColor: Theme.of(context).primaryColor,
-                        onChanged: (e){
-                        },
-                        checkColor: Colors.white,
-                      ),
-
-                      Text(
-                        'Price Low to High', style: tileTitle,
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: Colors.black12,
-                ),
-              ),
-
-              InkWell(
-                onTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 1, horizontal: 15),
-                  child: Row(
-                    children: <Widget>[
-
-                      Checkbox(
-                        value: false,
-                        activeColor: Theme.of(context).primaryColor,
-                        onChanged: (e){
-                        },
-                        checkColor: Colors.white,
-                      ),
-
-                      Text(
-                        'Price Hign to Low', style: tileTitle,
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-
+//              InkWell(
+//                onTap: (){
+//                  setState(() {
+//                    newest = !newest;
+//                  });
+//                },
+//                child: Padding(
+//                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 15),
+//                  child: Row(
+//                    children: <Widget>[
+//
+//                      Checkbox(
+//                        value: newest,
+//                        activeColor: Theme.of(context).primaryColor,
+//                        onChanged: (bool e){
+//                          setState(() {
+//                            newest = e;
+//                          });
+//                        },
+//                        checkColor: Colors.white,
+//                      ),
+//
+//                      Text(
+//                        'Newest', style: tileTitle,
+//                      ),
+//
+//                    ],
+//                  ),
+//                ),
+//              ),
+//
+//              Padding(
+//                padding: const EdgeInsets.symmetric(horizontal: 10),
+//                child: Container(
+//                  height: 1,
+//                  width: double.infinity,
+//                  color: Colors.black12,
+//                ),
+//              ),
+//
+//
+//              InkWell(
+//                onTap: (){
+//                  setState(() {
+//                    popularity = !popularity;
+//                  });
+//                },
+//                child: Padding(
+//                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 15),
+//                  child: Row(
+//                    children: <Widget>[
+//
+//                      Checkbox(
+//                        value: popularity,
+//                        activeColor: Theme.of(context).primaryColor,
+//                        onChanged: (bool e){
+//                          setState(() {
+//                            popularity = e;
+//                          });
+//                        },
+//                        checkColor: Colors.white,
+//                      ),
+//
+//                      Text(
+//                        'Popularity', style: tileTitle,
+//                      ),
+//
+//                    ],
+//                  ),
+//                ),
+//              ),
+//
+//              Padding(
+//                padding: const EdgeInsets.symmetric(horizontal: 10),
+//                child: Container(
+//                  height: 1,
+//                  width: double.infinity,
+//                  color: Colors.black12,
+//                ),
+//              ),
+//
+//              InkWell(
+//                onTap: (){
+//                  setState(() {
+//                    priceLow = !priceLow;
+//                  });
+//                },
+//                child: Padding(
+//                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 15),
+//                  child: Row(
+//                    children: <Widget>[
+//
+//                      Checkbox(
+//                        value: priceLow,
+//                        activeColor: Theme.of(context).primaryColor,
+//                        onChanged: (bool e){
+//                          setState(() {
+//                            priceLow= e;
+//                          });
+//                        },
+//                        checkColor: Colors.white,
+//                      ),
+//
+//                      Text(
+//                        'Price Low to High', style: tileTitle,
+//                      ),
+//
+//                    ],
+//                  ),
+//                ),
+//              ),
+//
+//              Padding(
+//                padding: const EdgeInsets.symmetric(horizontal: 10),
+//                child: Container(
+//                  height: 1,
+//                  width: double.infinity,
+//                  color: Colors.black12,
+//                ),
+//              ),
+//
+//              InkWell(
+//                onTap: (){
+//                  setState(() {
+//                    priceHigh = !priceHigh;
+//                  });
+//                },
+//                child: Padding(
+//                  padding: EdgeInsets.symmetric(vertical: 1, horizontal: 15),
+//                  child: Row(
+//                    children: <Widget>[
+//
+//                      Checkbox(
+//                        value: priceHigh,
+//                        activeColor: Theme.of(context).primaryColor,
+//                        onChanged: (bool e){
+//                          setState(() {
+//                            priceHigh = e;
+//                          });
+//                        },
+//                        checkColor: Colors.white,
+//                      ),
+//
+//                      Text(
+//                        'Price Hign to Low', style: tileTitle,
+//                      ),
+//
+//                    ],
+//                  ),
+//                ),
+//              ),
+//
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -632,7 +708,9 @@ class _SheetWidState extends State<SheetWid> {
                   children: <Widget>[
                     RaisedButton(
                       color: Theme.of(context).primaryColor,
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(18.0),
 
@@ -651,7 +729,9 @@ class _SheetWidState extends State<SheetWid> {
 
                     RaisedButton(
                       color: Color(0xffced2d8),
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(18.0),
 
@@ -693,37 +773,23 @@ class _SheetWidState extends State<SheetWid> {
                           ),
                           children: <Widget>[
 
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: false,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                'Demo', style: radioTitle,
-                              ),
+                            CheckboxGroup(
+                              labels: <String>[
+                                "Demo",
+                                "Demo1",
+                              ],
+                              checked: _category,
+                              labelStyle: radioTitle,
+                              onChange: (bool isChecked, String label, int index) =>
+                                  print("isChecked: $isChecked   label: $label  index: $index"),
+                              onSelected: (List selected) => setState(() {
+                                if (selected.length > 1) {
+                                  selected.removeAt(0);
+                                } else {
+                                }
+                                _category = selected;
+                              }),
                             ),
-
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: true,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                'Demo', style: radioTitle,
-                              ),
-                            ),
-
-
 
                           ],
                         ),
@@ -735,36 +801,23 @@ class _SheetWidState extends State<SheetWid> {
                           ),
                           children: <Widget>[
 
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: false,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                'Demo', style: radioTitle,
-                              ),
+                            CheckboxGroup(
+                              labels: <String>[
+                                "Demo",
+                                "Demo1",
+                              ],
+                              checked: _discount,
+                              labelStyle: radioTitle,
+                              onChange: (bool isChecked, String label, int index) =>
+                                  print("isChecked: $isChecked   label: $label  index: $index"),
+                              onSelected: (List selected) => setState(() {
+                                if (selected.length > 1) {
+                                  selected.removeAt(0);
+                                } else {
+                                }
+                                _discount = selected;
+                              }),
                             ),
-
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: true,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                'Demo', style: radioTitle,
-                              ),
-                            ),
-
 
 
                           ],
@@ -778,51 +831,24 @@ class _SheetWidState extends State<SheetWid> {
                           ),
                           children: <Widget>[
 
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: false,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                '0-100', style: radioTitle,
-                              ),
+                            CheckboxGroup(
+                              labels: <String>[
+                                "0-100",
+                                "101-500",
+                                "501-1000",
+                              ],
+                              checked: _price,
+                              labelStyle: radioTitle,
+                              onChange: (bool isChecked, String label, int index) =>
+                                  print("isChecked: $isChecked   label: $label  index: $index"),
+                              onSelected: (List selected) => setState(() {
+                                if (selected.length > 1) {
+                                  selected.removeAt(0);
+                                } else {
+                                }
+                                _price = selected;
+                              }),
                             ),
-
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: true,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                '101-500', style: radioTitle,
-                              ),
-                            ),
-
-                            ListTile(
-                              onTap: (){
-                              },
-                              leading: Checkbox(
-                                value: true,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (e){
-                                },
-                                checkColor: Colors.white,
-                              ),
-                              title: Text(
-                                '501-1000', style: radioTitle,
-                              ),
-                            ),
-
 
 
                           ],
@@ -839,7 +865,9 @@ class _SheetWidState extends State<SheetWid> {
                       children: <Widget>[
                         RaisedButton(
                           color: Theme.of(context).primaryColor,
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(18.0),
 
@@ -858,7 +886,9 @@ class _SheetWidState extends State<SheetWid> {
 
                         RaisedButton(
                           color: Color(0xffced2d8),
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(18.0),
 

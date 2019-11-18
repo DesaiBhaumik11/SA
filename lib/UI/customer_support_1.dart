@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 
-import 'customer_Support2.dart';
+import 'customer_support_2.dart';
 
 class CustomerSupport1 extends StatefulWidget {
   @override

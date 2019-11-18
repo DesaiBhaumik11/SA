@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:vegetos_flutter/Utils/Const.dart';
 
 class UpdateProfile extends StatefulWidget {
   @override
@@ -29,7 +30,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
         children: <Widget>[
 
           FlatButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushNamed(context, Const.dashboard);
+            },
             child: Text(
               'Skip for now',
               style: TextStyle(
@@ -158,6 +161,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         onPressed: (){
+                          Navigator.pushNamed(context, Const.dashboard);
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
