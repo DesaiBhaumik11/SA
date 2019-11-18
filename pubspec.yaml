@@ -24,6 +24,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  grouped_buttons: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +104,9 @@ flutter:
     - login.png
     - verify.png
     - profile.png
+    - whoops.png
+    - order-delivered.png
+    - order-confirmed.png
 
   fonts:
     - family: GoogleSans

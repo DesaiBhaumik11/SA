@@ -17,6 +17,7 @@ class Const
   static String locationServiceUnavailable = "/LocationServiceUnavailable";
   static String searchScreen = "/SearchScreen";
   static String setDeliveryDetails = "/SetDeliveryDetails";
+  static String orderPlacedScreen = "/OrderPlacedScreen";
   static String chooseAddress = "/ChooseAddress";
   static String promoCode = "/PromoCode";
   static String customerSupport1 = "/CustomerSupport1";
@@ -26,6 +27,10 @@ class Const
   static String loginScreen = "/LoginScreen";
   static String verifyOTP = "/VerifyOTP";
   static String updateProfile = "/UpdateProfile";
+  static String myOrders = "/MyOrders";
+  static String myAddresses = "/MyAddresses";
+  static String addNewAddress = "/AddNewAddress";
+
 
   static String welcome1_title = "Fresh, Organic & Handpicked";
   static String welcome1_desc = "We prefer local and organically grown fruits and vegetables, assuring that all of them are fresh and healthy enough for your family.";

@@ -376,14 +376,12 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         color: tappedIndex == index
                             ? Color(0xffffffff)
                             : Color(0xff000000),
-                    ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-
-
 
           ],
         );
@@ -395,7 +393,6 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       physics: BouncingScrollPhysics(),
     );
   }
-
 }
 
 
