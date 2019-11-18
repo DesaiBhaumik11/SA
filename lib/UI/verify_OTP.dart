@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:pin_view/pin_view.dart';
+import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/login.dart';
+import 'package:vegetos_flutter/UI/update_profile.dart';
+
+class VerifyOTP extends StatefulWidget {
+  @override
+  _VerifyOTPState createState() => _VerifyOTPState();
+}
+
+class _VerifyOTPState extends State<VerifyOTP> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ListView(
+        physics: BouncingScrollPhysics(),
+        children: <Widget>[
+
+          SizedBox(height: 70),
+
+
+          Image.asset('verify.png', height: 170, ),
+
+          SizedBox(height: 20),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Verify OTP', style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 19
+              ),),
+            ],
+          ),
+
+          SizedBox(height: 7),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Enter the six digit OTP sent on', style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15
+              ),),
+            ],
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('your mobile number to continue', style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15
+              ),),
+            ],
+          ),
+
+          SizedBox(height: 10),
+
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: PinView (
+                count: 6, // count of the fields, excluding dashes
+                autoFocusFirstField: false,
+                submit: (){
+                } // gets triggered when all the fields are filled
+            ),
+          ),
+
+
+
+
+          SizedBox(height: 25),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                    child: RaisedButton(
+                      color: Theme.of(context).primaryColor,
+                      onPressed: (){
+                        Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          'Verify', style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18
+                        ),
+                        ),
+                      ),
+                    )
+                )
+              ],
+            ),
+          ),
+
+          SizedBox
+            (height: 10,),
+
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+
+              Text('Haven\'t received the OTP yet?', style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500
+              ),),
+
+              InkWell(
+                onTap: (){
+                  Navigator.of(context).push(SlideRightRoute(page: LoginScreen()));
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Text(
+                    'Resend OTP.', style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500
+                  ),
+                  ),
+                ),
+              ),
+
+            ],
+          )
+
+
+        ],
+      ),
+    );
+  }
+}

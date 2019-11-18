@@ -351,27 +351,33 @@ class DashboardScreen extends StatelessWidget
   {
     double textWidth = MediaQuery.of(context).size.width*0.5;
 
-    return ListView(
-      children: <Widget>[
-        Container(
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child:
+        SafeArea(
           child: Column(
             children: <Widget>[
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/mobile.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('9998654599',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.loginScreen);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/mobile.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Login',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -699,7 +705,7 @@ class DashboardScreen extends StatelessWidget
             ],
           ),
         )
-      ],
+      ,
     );
   }
 

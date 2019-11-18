@@ -23,6 +23,9 @@ class Const
   static String customerSupport2 = "/CustomerSupport2";
   static String expiredItems = "/ExpiredItems";
   static String tellUsAbout = "/TellUsAbout";
+  static String loginScreen = "/LoginScreen";
+  static String verifyOTP = "/VerifyOTP";
+  static String updateProfile = "/UpdateProfile";
 
   static String welcome1_title = "Fresh, Organic & Handpicked";
   static String welcome1_desc = "We prefer local and organically grown fruits and vegetables, assuring that all of them are fresh and healthy enough for your family.";

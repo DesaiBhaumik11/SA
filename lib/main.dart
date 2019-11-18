@@ -15,11 +15,14 @@ import 'UI/choose_address.dart';
 import 'UI/customer_Support_1.dart';
 import 'UI/expired_items.dart';
 import 'UI/location_service_unavailable.dart';
+import 'UI/login.dart';
 import 'UI/promo_screen.dart';
 import 'UI/search_screen.dart';
 import 'UI/set_delivery_details.dart';
 import 'UI/set_location_manually.dart';
 import 'UI/tell_us_about.dart';
+import 'UI/update_profile.dart';
+import 'UI/verify_OTP.dart';
 
 void main() => runApp(MyApp());
 
@@ -53,6 +56,9 @@ class MyApp extends StatelessWidget {
           Const.customerSupport2: (BuildContext context) => CustomerSupport2(),
           Const.expiredItems: (BuildContext context) => ExpiredItems(),
           Const.tellUsAbout: (BuildContext context) => TellUsAbout(),
+          Const.loginScreen: (BuildContext context) => LoginScreen(),
+          Const.verifyOTP: (BuildContext context) => VerifyOTP(),
+          Const.updateProfile: (BuildContext context) => UpdateProfile(),
 
         },
         home: DashboardScreen());
