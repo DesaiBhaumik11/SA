@@ -579,22 +579,27 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/offerzone.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('Offerzone',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.offerzone);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/offerzone.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Offerzone',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

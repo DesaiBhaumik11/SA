@@ -3,6 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+//Pages Srings
+
 class Const
 {
   static String initialRoute = "/";
@@ -30,7 +32,13 @@ class Const
   static String myOrders = "/MyOrders";
   static String myAddresses = "/MyAddresses";
   static String addNewAddress = "/AddNewAddress";
+  static String locateMap = "/LocateMap";
+  static String offerzone = "/Offerzone";
+  static String itemsOfferzone = "/ItemsOfferzone";
 
+
+
+  // Paragraph Strings
 
   static String welcome1Title = "Fresh, Organic & Handpicked";
   static String welcome1Desc = "We prefer local and organically grown fruits and vegetables, assuring that all of them are fresh and healthy enough for your family.";
@@ -49,6 +57,14 @@ class Const
 
   static String disclaimer = "Disclaimer: Please check the product at the time of delivery.";
 
+  static String deleteAddressConfir = 'Are you sure you want to delete\nthis saved address?';
+
+  static String localitydialog1 = 'Locality can\'t be changed';
+  static String localitydialog2 = 'Your delivery address has to be inside\nPaldi,Ahmedabad as you have shopped\nfrom the same locality';
+
+  static String offerzone1 = 'June Sale | Get 50% off';
+  static String offerzone2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
 
   //static const primaryColor = Color(0xFF009a00);
   static const gray10 = Color(0xFFe6e6e6);
@@ -58,6 +74,7 @@ class Const
   static const navMenuDevider = Color(0xFFDAF1F7);
   static const orange = Color(0xffE36130);
   static const appBar = Color(0xff47870d);
+  static const greyLight = Color(0xffCED1D8);
 
   static Map<int, Color> color =
   {
