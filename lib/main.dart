@@ -16,10 +16,13 @@ import 'UI/add_new_address.dart';
 import 'UI/choose_address.dart';
 import 'UI/customer_support_1.dart';
 import 'UI/expired_items.dart';
+import 'UI/items_offerzone.dart';
+import 'UI/locate_on_map.dart';
 import 'UI/location_service_unavailable.dart';
 import 'UI/login.dart';
 import 'UI/my_addresses.dart';
 import 'UI/my_orders.dart';
+import 'UI/offerzone.dart';
 import 'UI/promo_screen.dart';
 import 'UI/search_screen.dart';
 import 'UI/set_delivery_details.dart';
@@ -67,6 +70,9 @@ class MyApp extends StatelessWidget {
           Const.myOrders: (BuildContext context) => MyOrders(),
           Const.myAddresses: (BuildContext context) => MyAddresses(),
           Const.addNewAddress: (BuildContext context) => AddNewAddress(),
+          Const.locateMap: (BuildContext context) => LocateMap(),
+          Const.offerzone: (BuildContext context) => Offerzone(),
+          Const.itemsOfferzone: (BuildContext context) => ItemsOfferzone(),
 
         },
         home: DashboardScreen());

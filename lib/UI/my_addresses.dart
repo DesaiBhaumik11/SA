@@ -137,10 +137,16 @@ class _MyAddressesState extends State<MyAddresses> {
                       ),
 
                       PopupMenuButton(
-                        itemBuilder: (c)=>["Edit", "Delete"].map((i)=>PopupMenuItem(child: ListTile(onTap: (){
+                        itemBuilder: (c)=>["Edit", "Delete"].map((i)=>PopupMenuItem(child: ListTile( onTap: (){
                           if(i=="Edit"){
-
-                          }Navigator.pop(context);
+                            Navigator.push(context, SlideLeftRoute(page: AddNewAddress()));
+                          }else{
+                            showDialog(
+                                context: context,
+                                builder: (s) {
+                                  return FunkyOverlay();
+                                });
+                          }
                         },title: Text(i),))).toList(),
                         child: Padding(
                           padding: EdgeInsets.only(left: 20, bottom: 15),
@@ -177,3 +183,118 @@ class _MyAddressesState extends State<MyAddresses> {
   }
 
 }
+
+class FunkyOverlay extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => FunkyOverlayState();
+}
+
+class FunkyOverlayState extends State<FunkyOverlay>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation<double> scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    scaleAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Material(
+          color: Colors.white,
+          child: ScaleTransition(
+            scale: scaleAnimation,
+            child: Padding(
+                padding: EdgeInsets.symmetric( vertical: 35),
+                child:  Wrap(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        Image.asset('cancel-subscription.png', height: 150,),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        Text(Const.deleteAddressConfir,textAlign: TextAlign.center, style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),),
+
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RaisedButton(
+                                color: Theme.of(context).primaryColor,
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(50))
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                  child: Text('Yes', style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white
+                                  ),),
+                                )
+                            ),
+
+                            SizedBox(width: 10,),
+                            RaisedButton(
+                                color: Const.greyLight,
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(50))
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                  child: Text('No', style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black
+                                  ),),
+                                )
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                )
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
