@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Utils/Const.dart';
 
 class ChooseAddress extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){

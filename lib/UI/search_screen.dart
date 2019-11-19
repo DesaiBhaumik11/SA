@@ -1,6 +1,6 @@
 
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
@@ -24,7 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Container(
             width: double.infinity,
             height: 81,
-            color: Color(0xff47870d),
+            color: Const.appBar,
             child: Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Row(
@@ -459,7 +459,8 @@ class _SheetWidState extends State<SheetWid> {
                     onPressed: (){
                       setState(() {
                         slidePanel = 1;
-                        buttons = !buttons;
+                        buttons = true
+                        ;
                       });
                     },
                     child: Row(
@@ -491,7 +492,7 @@ class _SheetWidState extends State<SheetWid> {
                     onPressed: (){
                       setState(() {
                         slidePanel = 0;
-                        buttons = !buttons;
+                        buttons = false;
                       });
                     },
                     child: Row(

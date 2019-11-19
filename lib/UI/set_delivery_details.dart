@@ -1,7 +1,6 @@
-import 'dart:ffi';
-import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'PaymentOptionScreen.dart';
@@ -61,7 +60,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -112,7 +111,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xffE36130),
+                                color: Const.orange,
                                 borderRadius: BorderRadius.all(Radius.circular(5))
                               ),
 
@@ -205,7 +204,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         print("Radio Tile pressed $val");
                         setSelectedRadioTile(val);
                       },
-                      activeColor: Color(0xffE36130),
+                      activeColor: Const.orange,
                       selected: true,
                     ),
 
@@ -231,7 +230,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         print("Radio Tile pressed $val");
                         setSelectedRadioTile(val);
                       },
-                      activeColor: Color(0xffE36130),
+                      activeColor: Const.orange,
                       selected: true,
                     ),
 
@@ -257,7 +256,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         print("Radio Tile pressed $val");
                         setSelectedRadioTile(val);
                       },
-                      activeColor: Color(0xffE36130),
+                      activeColor: Const.orange,
                       selected: true,
                     ),
 
@@ -283,7 +282,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         print("Radio Tile pressed $val");
                         setSelectedRadioTile(val);
                       },
-                      activeColor: Color(0xffE36130),
+                      activeColor: Const.orange,
                       selected: true,
                     ),
 
@@ -364,7 +363,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                   width: 30,
                   decoration: BoxDecoration(
                       color:  tappedIndex == index
-                          ? Color(0xffE36130)
+                          ? Const.orange
                           : Color(0xfffffff),
                     borderRadius: BorderRadius.all(Radius.circular(100))
                   ),

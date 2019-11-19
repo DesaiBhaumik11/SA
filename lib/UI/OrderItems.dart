@@ -61,7 +61,7 @@ class OrderItemsState extends State<OrderItems>
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                         child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                            color: Const.dashboard_gray, fontWeight: FontWeight.w500),),
+                            color: Const.dashboardGray, fontWeight: FontWeight.w500),),
                       ),
                       Container(
                         child: Row(
@@ -122,7 +122,7 @@ class OrderItemsState extends State<OrderItems>
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
           child: Text('Exotic', style: TextStyle(fontFamily: 'GoogleSans',
-              fontWeight: FontWeight.w500, color: Const.location_grey),),
+              fontWeight: FontWeight.w500, color: Const.locationGrey),),
         ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
@@ -214,7 +214,7 @@ class OrderItemsState extends State<OrderItems>
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                         child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                            color: Const.dashboard_gray, fontWeight: FontWeight.w500),),
+                            color: Const.dashboardGray, fontWeight: FontWeight.w500),),
                       ),
                       Container(
                         child: Row(

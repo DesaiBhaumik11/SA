@@ -31,7 +31,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
         title: Text('Payment Options', style: TextStyle(fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
       ),
       body: Container(
-        color: Const.gray_10,
+        color: Const.gray10,
         child: Column(
           children: <Widget>[
             priceTotalBox(),
@@ -75,12 +75,12 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     Expanded(
                       flex: 1,
                       child: Text('M.R.P', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                     Expanded(
                       flex: 0,
                       child: Text('₹504', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
                 ),
@@ -92,12 +92,12 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     Expanded(
                       flex: 1,
                       child: Text('Product Discount', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                     Expanded(
                       flex: 0,
                       child: Text('-₹104', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
                 ),
@@ -111,7 +111,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                       child: Row(
                         children: <Widget>[
                           Text('Delivery Charge ', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w500, color: Const.location_grey),),
+                              fontWeight: FontWeight.w500, color: Const.locationGrey),),
                           Icon(Icons.help_outline, color: Const.primaryColor, size: 20.0,),
                         ],
                       ),
@@ -131,12 +131,12 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     Expanded(
                       flex: 1,
                       child: Text('Promo/Discount', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                     Expanded(
                       flex: 0,
                       child: Text('-₹62', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
                 ),
@@ -148,17 +148,17 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     Expanded(
                       flex: 1,
                       child: Text('Wallet', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                     Expanded(
                       flex: 0,
                       child: Text('-₹30', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
                 ),
               ),
-              Container(color: Const.gray_10, height: 1.0, margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),),
+              Container(color: Const.gray10, height: 1.0, margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),),
               Container(
                 padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                 child: Row(
@@ -183,12 +183,12 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     Expanded(
                       flex: 1,
                       child: Text('Your Savings', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                     Expanded(
                       flex: 0,
                       child: Text('₹104', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
                 ),
@@ -215,12 +215,12 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
             child: Container(
               margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
               child: Text('Apply Promo Code', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans',
-                  fontWeight: FontWeight.w500, color: Const.location_grey),),
+                  fontWeight: FontWeight.w500, color: Const.locationGrey),),
             ),
           ),
           Expanded(
             flex: 0,
-            child: Icon(Icons.arrow_forward_ios, color: Const.location_grey,),
+            child: Icon(Icons.arrow_forward_ios, color: Const.locationGrey,),
           ),
         ],
       ),
@@ -281,7 +281,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
 
             Text('Apply Promo Code', style: TextStyle(
                 fontSize: 16.0,
-                color: Const.location_grey,
+                color: Const.locationGrey,
                 fontWeight: FontWeight.w500
             ),),
 
@@ -333,14 +333,14 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                     child: Text('Wallet', style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans',
-                        fontWeight: FontWeight.w500, color: Const.location_grey),),
+                        fontWeight: FontWeight.w500, color: Const.locationGrey),),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Total Balance: ₹30', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500, color: Const.location_grey),),
+                          fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ),
                 ],

@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Dart:math' as math;
 import 'package:flutter/rendering.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/CategoriesScreen.dart';
@@ -27,7 +26,7 @@ class DashboardScreen extends StatelessWidget
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Container(
-            color: Const.gray_10,
+            color: Const.gray10,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -129,7 +128,7 @@ class DashboardScreen extends StatelessWidget
                     child: Container(
                       padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                       child: Text('Categories',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          color: Const.dashboard_gray, fontWeight: FontWeight.w500)),
+                          color: Const.dashboardGray, fontWeight: FontWeight.w500)),
                     ),
                   ),
                 ),
@@ -148,12 +147,12 @@ class DashboardScreen extends StatelessWidget
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                            child: Icon(Icons.search, color: Const.dashboard_gray,),
+                            child: Icon(Icons.search, color: Const.dashboardGray,),
                           ),
                           Container(
                             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                             child: Text('Search Product',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                                fontWeight: FontWeight.w500, color: Const.dashboard_gray)),
+                                fontWeight: FontWeight.w500, color: Const.dashboardGray)),
                           )
                         ],
                       ),
@@ -383,7 +382,7 @@ class DashboardScreen extends StatelessWidget
               ),
               Container(
                 height: 5.0,
-                color: Const.nav_menu_devider,
+                color: Const.navMenuDevider,
               ),
               Container(
                 height: 50.0,
@@ -416,7 +415,7 @@ class DashboardScreen extends StatelessWidget
               ),
               Container(
                 height: 5.0,
-                color: Const.nav_menu_devider,
+                color: Const.navMenuDevider,
               ),
               Container(
                 height: 50.0,
@@ -601,7 +600,7 @@ class DashboardScreen extends StatelessWidget
               ),
               Container(
                 height: 5.0,
-                color: Const.nav_menu_devider,
+                color: Const.navMenuDevider,
               ),
               Container(
                 height: 50.0,
