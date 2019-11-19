@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'customer_support_2.dart';
 
@@ -15,7 +16,7 @@ class _CustomerSupport1State extends State<CustomerSupport1> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/OrderItems.dart';
-import 'package:vegetos_flutter/UI/OrderSummery.dart';
 import 'package:vegetos_flutter/UI/customer_support_1.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
@@ -54,7 +53,7 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
           ),
         ),
         appBar: AppBar(
-          backgroundColor: Color(0xff47870d),
+          backgroundColor: Const.appBar,
           elevation: 0,
           leading: InkWell(
             onTap: (){

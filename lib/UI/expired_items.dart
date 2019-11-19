@@ -40,7 +40,7 @@ class _ExpiredItemsState extends State<ExpiredItems> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -92,7 +92,7 @@ class _ExpiredItemsState extends State<ExpiredItems> {
                   children: <Widget>[
 
                     Checkbox(
-                      activeColor: Color(0xffE36130),
+                      activeColor: Const.orange,
                       value: select,
                       onChanged: (bool value){
                         setState(() {
@@ -127,7 +127,7 @@ class _ExpiredItemsState extends State<ExpiredItems> {
                               alignment: Alignment.centerLeft,
                               margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                               child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                                  color: Const.dashboard_gray, fontWeight: FontWeight.w500),),
+                                  color: Const.dashboardGray, fontWeight: FontWeight.w500),),
                             ),
                             Container(
                               child: Row(

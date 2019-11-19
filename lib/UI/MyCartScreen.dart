@@ -2,9 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
-import 'package:vegetos_flutter/UI/PaymentOptionScreen.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
@@ -55,7 +53,7 @@ class MyCartState extends State<MyCartScreen>
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          color: Const.gray_10,
+          color: Const.gray10,
           child: Column(
             children: <Widget>[
               priceTotalBox(),
@@ -173,7 +171,7 @@ class MyCartState extends State<MyCartScreen>
                   ],
                 ),
               ),
-              Container(color: Const.gray_10, height: 1.0, margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),),
+              Container(color: Const.gray10, height: 1.0, margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),),
               Container(
                 padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                 child: Row(
@@ -264,7 +262,7 @@ class MyCartState extends State<MyCartScreen>
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                         child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                            color: Const.dashboard_gray, fontWeight: FontWeight.w500),),
+                            color: Const.dashboardGray, fontWeight: FontWeight.w500),),
                       ),
                       Container(
                         child: Row(

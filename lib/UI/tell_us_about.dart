@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Utils/Const.dart';
 
 class TellUsAbout extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _TellUsAboutState extends State<TellUsAbout> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){

@@ -72,7 +72,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          color: Const.gray_10,
+          color: Const.gray10,
           child: Column(
             children: <Widget>[
               productImageSlides(),
@@ -196,7 +196,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       borderRadius: BorderRadius.circular(5.0),
                       color: _selectedIndex != null && _selectedIndex == index
                           ? Colors.orange
-                          : Const.gray_10,
+                          : Const.gray10,
                     ),
                     child: ListTile(
                       title: Row(
@@ -247,7 +247,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
         children: <Widget>[
           Container(
             alignment: Alignment.centerLeft,
-            color: Const.gray_10,
+            color: Const.gray10,
             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
             height: 40.0,
             child: Column(
@@ -302,8 +302,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           Container(
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-              child: Text(Const.product_detail_desc, maxLines: descFlag ? 20 : 2,
-                  style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboard_gray,
+              child: Text(Const.productDetailDesc, maxLines: descFlag ? 20 : 2,
+                  style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                       fontWeight: FontWeight.w500))
           ),
 
@@ -355,7 +355,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text('500 GM, 1KG', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboard_gray,
+                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
           ),
@@ -407,8 +407,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(Const.product_detail_desc, maxLines: disclaimerFlag ? 20 : 2, textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboard_gray,
+                child: Text(Const.productDetailDesc, maxLines: disclaimerFlag ? 20 : 2, textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
           ),
@@ -460,8 +460,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(Const.product_detail_desc, maxLines: shelfLifeFlag ? 20 : 2, textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboard_gray,
+                child: Text(Const.productDetailDesc, maxLines: shelfLifeFlag ? 20 : 2, textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
           ),
@@ -513,8 +513,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 10.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(Const.product_detail_desc, maxLines: termsFlag ? 20 : 2, textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboard_gray,
+                child: Text(Const.productDetailDesc, maxLines: termsFlag ? 20 : 2, textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
           ),

@@ -152,7 +152,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
                       flex: 0,
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                        child: Text(Const.welcome1_title, style: TextStyle(fontSize: 22.0,
+                        child: Text(Const.welcome1Title, style: TextStyle(fontSize: 22.0,
                             fontFamily: 'GoogleSans', fontWeight: FontWeight.w700)),
                       ),
                     ),
@@ -162,7 +162,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                         child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Text(Const.welcome1_desc, style: TextStyle(fontSize: 15.0,
+                          child: Text(Const.welcome1Desc, style: TextStyle(fontSize: 15.0,
                               fontFamily: 'GoogleSans', fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
                         ),
                       ),
@@ -216,7 +216,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                         child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Text(Const.welcome2_desc, style: TextStyle(fontSize: 15.0,
+                          child: Text(Const.welcome2Desc, style: TextStyle(fontSize: 15.0,
                               fontFamily: 'GoogleSans', fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
                         ),
                       ),
@@ -260,7 +260,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
                       flex: 0,
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                        child: Text(Const.welcome3_title, style: TextStyle(fontSize: 22.0,
+                        child: Text(Const.welcome3Title, style: TextStyle(fontSize: 22.0,
                             fontFamily: 'GoogleSans', fontWeight: FontWeight.w700)),
                       ),
                     ),
@@ -270,7 +270,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                         child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Text(Const.welcome3_desc, style: TextStyle(fontSize: 15.0,
+                          child: Text(Const.welcome3Desc, style: TextStyle(fontSize: 15.0,
                               fontFamily: 'GoogleSans', fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
                         ),
                       ),

@@ -75,13 +75,13 @@ class CategoriesScreen extends StatelessWidget
                          mainAxisAlignment: MainAxisAlignment.center,
                          children: <Widget>[
                            Container(
-                             child: Text(Const.category_title,style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                             child: Text(Const.categoryTitle,style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                  fontWeight: FontWeight.w500)),
                              alignment: Alignment.centerLeft,
                            ),
                            Container(
                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
-                             child: Text(Const.category_desc,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', color: Const.dashboard_gray)),
+                             child: Text(Const.categoryDesc,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', color: Const.dashboardGray)),
                            )
                          ],
                        ),
@@ -109,7 +109,7 @@ class CategoriesScreen extends StatelessWidget
             child: Image.asset('assets/vegitables.png', height: 70.0, width: 70.0,),
           ),
           Container(
-            child: Text(Const.category_title,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+            child: Text(Const.categoryTitle,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
                 fontWeight: FontWeight.w300)), alignment: Alignment.center,
           )
         ],

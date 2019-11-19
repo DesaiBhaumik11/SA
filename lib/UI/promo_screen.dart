@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'PaymentOptionScreen.dart';
 
@@ -15,7 +16,7 @@ class _PromoCodeState extends State<PromoCode> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -74,7 +75,7 @@ class _PromoCodeState extends State<PromoCode> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xffE36130),
+                          color: Const.orange,
                           borderRadius: BorderRadius.all(Radius.circular(5))
                       ),
 
@@ -133,7 +134,7 @@ class _PromoCodeState extends State<PromoCode> {
                       Text('SUMMER2019', style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xffE36130),
+                        color: Const.orange,
                       ),),
 
 
@@ -149,7 +150,7 @@ class _PromoCodeState extends State<PromoCode> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Color(0xffE36130),
+                              color: Const.orange,
                               borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
 

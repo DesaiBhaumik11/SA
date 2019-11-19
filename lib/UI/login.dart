@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

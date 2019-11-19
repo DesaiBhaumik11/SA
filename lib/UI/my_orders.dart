@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 class MyOrders extends StatefulWidget {
@@ -18,7 +17,7 @@ class _MyOrdersState extends State<MyOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff47870d),
+        backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -125,7 +124,7 @@ class _MyOrdersState extends State<MyOrders> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Color(0xffE36130),
+                              color: Const.orange,
                               borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
 
