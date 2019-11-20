@@ -358,7 +358,7 @@ class DashboardScreen extends StatelessWidget
             children: <Widget>[
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.loginScreen);
+                  Navigator.pushNamed(context, Const.profile);
                 },
                 child: Container(
                   height: 50.0,
@@ -372,7 +372,7 @@ class DashboardScreen extends StatelessWidget
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Text('Login',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                          child: Text('987654321',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
                               color: Colors.black)),
                         )
                       ],
@@ -460,22 +460,27 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/my_subscription.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('My Subscriptions',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.mySubscriptions);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/my_subscription.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('My Subscriptions',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -560,22 +565,27 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/wallet_menu.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('Wallet',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.wallet);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/wallet_menu.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Wallet',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -664,60 +674,79 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/about-vegetos.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('About Vegetos',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.aboutVegetos);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/about-vegetos.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('About Vegetos',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/about-app.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('About App Release',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.aboutAppRelease);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/about-app.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('About App Release',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/logout.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('Logout',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      )
-                    ],
+              InkWell(
+                onTap: (){
+                  showDialog(
+                      context: context,
+                      builder: (s) {
+                        return FunkyOverlay();
+                      });
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/logout.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Logout',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -731,6 +760,123 @@ class DashboardScreen extends StatelessWidget
 
 
 }
+
+
+class FunkyOverlay extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => FunkyOverlayState();
+}
+
+class FunkyOverlayState extends State<FunkyOverlay>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation<double> scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    scaleAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Material(
+          color: Colors.white,
+          child: ScaleTransition(
+            scale: scaleAnimation,
+            child: Padding(
+                padding: EdgeInsets.symmetric( vertical: 35),
+                child:  Wrap(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+
+                        Image.asset('cancel-subscription.png', height: 150,),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        Text(Const.logout1,textAlign: TextAlign.center, style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),),
+
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RaisedButton(
+                                color: Theme.of(context).primaryColor,
+                                onPressed: (){
+                                  Navigator.pushNamed(context, Const.loginScreen);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(50))
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                  child: Text('Logout', style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white
+                                  ),),
+                                )
+                            ),
+
+                            SizedBox(width: 10,),
+                            RaisedButton(
+                                color: Const.greyLight,
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(50))
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                  child: Text('Cancel', style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black
+                                  ),),
+                                )
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                )
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 /*
 class _sliverAppbarDelegate extends SliverPersistentHeaderDelegate
