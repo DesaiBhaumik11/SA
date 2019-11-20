@@ -113,6 +113,11 @@ flutter:
     - locate-on-map.png
     - locality-not-found.png
     - offerzone_01.png
+    - wallet-bg.png
+    - add-balance-wallet.png
+    - cashback-wallet.png
+    - purchase-wallet.png
+    - order-cancelled.png
 
   fonts:
     - family: GoogleSans

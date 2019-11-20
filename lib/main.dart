@@ -7,21 +7,27 @@ import 'package:vegetos_flutter/UI/ProductDetailScreen.dart';
 import 'package:vegetos_flutter/UI/SplashScreeen.dart';
 import 'package:vegetos_flutter/UI/WelcomeScreen.dart';
 import 'package:vegetos_flutter/UI/customer_support_2.dart';
+import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
 import 'UI/OrderPlacedScreen.dart';
 import 'UI/SplashScreeen.dart';
+import 'UI/about_app_release.dart';
+import 'UI/about_vegetos.dart';
+import 'UI/add_balance.dart';
 import 'UI/add_new_address.dart';
 import 'UI/choose_address.dart';
 import 'UI/customer_support_1.dart';
 import 'UI/expired_items.dart';
+import 'UI/item_subscribed.dart';
 import 'UI/items_offerzone.dart';
 import 'UI/locate_on_map.dart';
 import 'UI/location_service_unavailable.dart';
 import 'UI/login.dart';
 import 'UI/my_addresses.dart';
 import 'UI/my_orders.dart';
+import 'UI/my_subscriptions.dart';
 import 'UI/offerzone.dart';
 import 'UI/promo_screen.dart';
 import 'UI/search_screen.dart';
@@ -30,6 +36,7 @@ import 'UI/set_location_manually.dart';
 import 'UI/tell_us_about.dart';
 import 'UI/update_profile.dart';
 import 'UI/verify_otp.dart';
+import 'UI/wallet.dart';
 
 void main() => runApp(MyApp());
 
@@ -73,6 +80,13 @@ class MyApp extends StatelessWidget {
           Const.locateMap: (BuildContext context) => LocateMap(),
           Const.offerzone: (BuildContext context) => Offerzone(),
           Const.itemsOfferzone: (BuildContext context) => ItemsOfferzone(),
+          Const.wallet: (BuildContext context) => Wallet(),
+          Const.addBalance: (BuildContext context) => AddBalance(),
+          Const.aboutVegetos: (BuildContext context) => AboutVegetos(),
+          Const.aboutAppRelease: (BuildContext context) => AboutAppRelease(),
+          Const.profile: (BuildContext context) => Profile(),
+          Const.mySubscriptions: (BuildContext context) => MySubscriptions(),
+          Const.itemsSubscribed: (BuildContext context) => ItemsSubscribed(),
 
         },
         home: DashboardScreen());
