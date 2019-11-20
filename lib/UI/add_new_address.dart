@@ -325,7 +325,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Material(
           color: Colors.white,
           child: ScaleTransition(
