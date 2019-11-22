@@ -118,6 +118,7 @@ flutter:
     - cashback-wallet.png
     - purchase-wallet.png
     - order-cancelled.png
+    - user-not-found-error.png
 
   fonts:
     - family: GoogleSans

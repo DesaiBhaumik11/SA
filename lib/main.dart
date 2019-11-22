@@ -31,8 +31,10 @@ import 'UI/my_subscriptions.dart';
 import 'UI/offerzone.dart';
 import 'UI/promo_screen.dart';
 import 'UI/search_screen.dart';
+import 'UI/select_contact.dart';
 import 'UI/set_delivery_details.dart';
 import 'UI/set_location_manually.dart';
+import 'UI/shared_cart.dart';
 import 'UI/tell_us_about.dart';
 import 'UI/update_profile.dart';
 import 'UI/verify_otp.dart';
@@ -87,6 +89,8 @@ class MyApp extends StatelessWidget {
           Const.profile: (BuildContext context) => Profile(),
           Const.mySubscriptions: (BuildContext context) => MySubscriptions(),
           Const.itemsSubscribed: (BuildContext context) => ItemsSubscribed(),
+          Const.selectContact: (BuildContext context) => SelectContact(),
+          Const.sharedCart: (BuildContext context) => SharedCart(),
 
         },
         home: DashboardScreen());

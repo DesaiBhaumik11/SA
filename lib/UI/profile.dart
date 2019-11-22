@@ -205,7 +205,9 @@ class _ProfileState extends State<Profile> {
                       ),
 
                       InkWell(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.pushNamed(context, Const.sharedCart);
+                        },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                           child: Row(
