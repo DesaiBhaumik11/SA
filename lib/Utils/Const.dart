@@ -42,6 +42,8 @@ class Const
   static String profile = "/Profile";
   static String mySubscriptions = "/MySubscriptions";
   static String itemsSubscribed = "/ItemsSubscribed";
+  static String selectContact = "/SelectContact";
+  static String sharedCart = "/SharedCart";
 
 
   // Paragraph Strings
@@ -81,6 +83,13 @@ class Const
 
   static String logout1 = 'Are you sure you wants to logged out\nof your Vegetos account?';
 
+  static String subDisc = 'Disclaimer: Please check the product at the time of delivery.';
+  static String unsubscribedDialog = 'Are you sure you want to\nUnsubscribe this item?';
+
+  static String userNotVeg = 'It seems that the some of your select\ncontacts doesn\'t have VEGETOS,\nwill share download link via sms.';
+
+  static String startedCart = 'has shared a cart with you';
+
   //static const primaryColor = Color(0xFF009a00);
   static const gray10 = Color(0xFFe6e6e6);
   static const dashboardGray = Color(0xFF464646);
@@ -90,6 +99,7 @@ class Const
   static const orange = Color(0xffE36130);
   static const appBar = Color(0xff47870d);
   static const greyLight = Color(0xffCED1D8);
+  static const cancel = Color(0xffD00033);
 
   static Map<int, Color> color =
   {

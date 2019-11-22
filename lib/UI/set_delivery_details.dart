@@ -362,9 +362,9 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                   height: 30,
                   width: 30,
                   decoration: BoxDecoration(
-                      color:  tappedIndex == index
-                          ? Const.orange
-                          : Color(0xfffffff),
+                        color:  tappedIndex == index
+                            ? Const.orange
+                            : Color(0xfffffff),
                     borderRadius: BorderRadius.all(Radius.circular(100))
                   ),
                   child: Center(

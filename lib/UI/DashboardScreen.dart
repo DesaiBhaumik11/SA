@@ -532,36 +532,41 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/shared_cart.png', height: 20.0, width: 20.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('Shared Cart',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.orange,
-                              radius: 10.0,
-                              child: Text('88',style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans', color: Colors.white)),
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, Const.sharedCart);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/shared_cart.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Shared Cart',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.orange,
+                                radius: 10.0,
+                                child: Text('88',style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

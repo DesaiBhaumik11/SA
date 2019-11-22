@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
 
@@ -44,9 +45,14 @@ class MyCartState extends State<MyCartScreen>
           ),
         ),
         actions: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-            child: Icon(Icons.share, color: Colors.white,),
+          InkWell(
+            onTap: (){
+              Navigator.push(context, SlideLeftRoute(page: SelectContact()));
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: Icon(Icons.share, color: Colors.white,),
+            ),
           )
         ],
       ),
