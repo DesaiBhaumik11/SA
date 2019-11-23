@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="archisys.veg">
+    package="archisys.vegetos_flutter">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -8,10 +8,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="veg"
+        android:label="vegetos_flutter"
         android:icon="@mipmap/ic_launcher">
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAbnNcaXfrNc69sdUZCCExMmixYnrM3EXE"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
