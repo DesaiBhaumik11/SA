@@ -52,7 +52,7 @@ class Const
   static String welcome1Title = "Fresh, Organic & Handpicked";
   static String welcome1Desc = "We prefer local and organically grown fruits and vegetables, assuring that all of them are fresh and healthy enough for your family.";
 
-  static String welcome2_title = "Most Affordable Price";
+  static String welcome2Title = "Most Affordable Price";
   static String welcome2Desc = "Redefine 'pocket-friendly' and get your daily/weekly/monthly groceries at the lowest price only on 'Vegetos'.";
 
   static String welcome3Title = "Scheduled Delivery";

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Utils/Const.dart';
+import '../Utils/const.dart';
 
 class SetDeliveryLocation extends StatefulWidget {
   @override

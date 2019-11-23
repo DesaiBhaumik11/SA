@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/OrderPlacedScreen.dart';
 import 'package:vegetos_flutter/UI/promo_screen.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class PaymentOptionScreen extends StatefulWidget
 {

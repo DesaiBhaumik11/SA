@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LocationServiceUnavailable extends StatefulWidget {
-  var s;
+  final s;
   LocationServiceUnavailable(this.s);
   @override
   _LocationServiceUnavailableState createState() => _LocationServiceUnavailableState();
