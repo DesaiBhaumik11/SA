@@ -17,6 +17,7 @@ import 'UI/about_app_release.dart';
 import 'UI/about_vegetos.dart';
 import 'UI/add_balance.dart';
 import 'UI/add_new_address.dart';
+import 'UI/cart_view.dart';
 import 'UI/choose_address.dart';
 import 'UI/customer_support_1.dart';
 import 'UI/expired_items.dart';
@@ -91,6 +92,7 @@ class MyApp extends StatelessWidget {
           Const.itemsSubscribed: (BuildContext context) => ItemsSubscribed(),
           Const.selectContact: (BuildContext context) => SelectContact(),
           Const.sharedCart: (BuildContext context) => SharedCart(),
+          Const.cartView: (BuildContext context) => CartView(),
 
         },
         home: DashboardScreen());

@@ -44,6 +44,7 @@ class Const
   static String itemsSubscribed = "/ItemsSubscribed";
   static String selectContact = "/SelectContact";
   static String sharedCart = "/SharedCart";
+  static String cartView = "/CartView";
 
 
   // Paragraph Strings
