@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
-import 'PaymentOptionScreen.dart';
+import 'payment_option_screen.dart';
 
 class PromoCode extends StatefulWidget {
   @override

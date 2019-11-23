@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
-import 'package:vegetos_flutter/UI/CategoriesScreen.dart';
-import 'package:vegetos_flutter/UI/MyCartScreen.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/UI/categories_screen.dart';
+import 'package:vegetos_flutter/UI/my_cart_screen.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class DashboardScreen extends StatelessWidget
 {
@@ -348,7 +348,6 @@ class DashboardScreen extends StatelessWidget
 
   Widget drawer(BuildContext context)
   {
-    double textWidth = MediaQuery.of(context).size.width*0.5;
 
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),

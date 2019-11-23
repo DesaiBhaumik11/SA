@@ -5,7 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class MyCartScreen extends StatefulWidget
 {

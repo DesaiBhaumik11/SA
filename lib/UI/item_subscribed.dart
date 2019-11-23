@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class ItemsSubscribed extends StatefulWidget {
   @override
@@ -8,17 +8,10 @@ class ItemsSubscribed extends StatefulWidget {
 }
 
 class _ItemsSubscribedState extends State<ItemsSubscribed> {
+  var text = TextStyle(fontWeight: FontWeight.w500, fontSize: 15);
 
-  var text = TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 15
-  );
-
-  var greyText = TextStyle(
-    fontSize: 13,
-    color: Colors.grey,
-    fontWeight: FontWeight.w500
-  );
+  var greyText =
+      TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w500);
 
   var address = TextStyle(
     fontSize: 16,
@@ -31,10 +24,7 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
       backgroundColor: Color(0xffEDEDEE),
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
-          onTap: () {
-            //Navigator.pushNamed(context, Const.paymentOption);
-//            Navigator.of(context).push(SlideLeftRoute(page: CustomerSupport1()));
-          },
+          onTap: () {},
           child: Container(
             color: Const.primaryColor,
             height: 50.0,
@@ -42,14 +32,21 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-
-
-                  Image.asset('customer-support.png', height: 25,),
-
-                  SizedBox(width: 10,),
-
-                  Text('Customer Support', style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans',
-                      fontWeight: FontWeight.w500, color: Colors.white),),
+                  Image.asset(
+                    'customer-support.png',
+                    height: 25,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Customer Support',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
                 ],
               ),
             ),
@@ -60,18 +57,18 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
         backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset(
+              'back.png',
+              height: 25,
+            ),
           ),
         ),
-
-        title: Text(
-            'Cherry Tomatoes'
-        ),
+        title: Text('Cherry Tomatoes'),
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -82,11 +79,13 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-
-                Text('Item', style: text,),
-
-                SizedBox(height: 2,),
-
+                Text(
+                  'Item',
+                  style: text,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
                 Card(
                   child: Container(
                     padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
@@ -99,7 +98,11 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                               child: Stack(
                                 children: <Widget>[
                                   Container(
-                                    child: Image.asset('Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
+                                    child: Image.asset(
+                                      'Cherry-Tomatoes.png',
+                                      height: 100.0,
+                                      width: 100.0,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -110,30 +113,52 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                                   children: <Widget>[
                                     Container(
                                       alignment: Alignment.centerLeft,
-                                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                      child: Text('Cherry Tomatoes', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
-                                          color: Colors.black, fontWeight: FontWeight.w500),),
+                                      margin: EdgeInsets.fromLTRB(
+                                          10.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                        'Cherry Tomatoes',
+                                        style: TextStyle(
+                                            fontSize: 17.0,
+                                            fontFamily: 'GoogleSans',
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
                                     Container(
                                       alignment: Alignment.centerLeft,
-                                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                      child: Text('500 gm', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                                          color: Const.dashboardGray, fontWeight: FontWeight.w500),),
+                                      margin: EdgeInsets.fromLTRB(
+                                          10.0, 0.0, 0.0, 0.0),
+                                      child: Text(
+                                        '500 gm',
+                                        style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontFamily: 'GoogleSans',
+                                            color: Const.dashboardGray,
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
                                     Container(
                                       child: Row(
                                         children: <Widget>[
                                           Expanded(
-                                            flex:1,
+                                            flex: 1,
                                             child: Row(
                                               children: <Widget>[
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      10.0, 5.0, 5.0, 10.0),
                                                   child: Align(
-                                                    alignment: Alignment.topLeft,
-                                                    child: Text('₹45 x 2 ',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                                        fontWeight: FontWeight.w700,
-                                                        color: Colors.black),
+                                                    alignment:
+                                                        Alignment.topLeft,
+                                                    child: Text(
+                                                      '₹45 x 2 ',
+                                                      style: TextStyle(
+                                                          fontSize: 20.0,
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: Colors.black),
                                                     ),
                                                   ),
                                                 ),
@@ -145,10 +170,17 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                                             child: Row(
                                               children: <Widget>[
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                                  child: Text('₹90',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black,)),
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      5.0, 0.0, 5.0, 0.0),
+                                                  child: Text('₹90',
+                                                      style: TextStyle(
+                                                        fontSize: 20.0,
+                                                        fontFamily:
+                                                            'GoogleSans',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.black,
+                                                      )),
                                                 ),
                                               ],
                                             ),
@@ -166,203 +198,231 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                     ),
                   ),
                 ),
-
-                SizedBox(height: 15,),
-
-                Text('Subscription Details', style: text,),
-
-                SizedBox(height: 2,),
-
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Subscription Details',
+                  style: text,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
                 Card(
                   child: Padding(
                     padding: EdgeInsets.all(15),
                     child: Row(
                       children: <Widget>[
-
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-
-                              Text('Order Frequency', style: greyText,),
-
-                              SizedBox(height: 5,),
-
-                              Text('Every 15 Days', style: text,),
-
-
+                              Text(
+                                'Order Frequency',
+                                style: greyText,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Every 15 Days',
+                                style: text,
+                              ),
                             ],
                           ),
                         ),
-
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-
-                              Text('Quantity', style: greyText,),
-
-                              SizedBox(height: 5,),
-
-                              Text('2', style: text,),
-
-
+                              Text(
+                                'Quantity',
+                                style: greyText,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '2',
+                                style: text,
+                              ),
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
-
-
-
-                SizedBox(height: 15,),
-
-                Text('Subscription History', style: text,),
-
-                SizedBox(height: 2,),
-
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Subscription History',
+                  style: text,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(5))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Column(
                     children: <Widget>[
-
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-
-                            Text('01 June', style: text,),
-
-                            Expanded(child: Container(),flex: 1,),
-
-                            Image.asset('order-delivered.png', height: 22,),
-
-                            SizedBox(width: 8,),
-
-                            Text('Upcoming Order', style: text,)
-
+                            Text(
+                              '01 June',
+                              style: text,
+                            ),
+                            Expanded(
+                              child: Container(),
+                              flex: 1,
+                            ),
+                            Image.asset(
+                              'order-delivered.png',
+                              height: 22,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              'Upcoming Order',
+                              style: text,
+                            )
                           ],
                         ),
                       ),
-
                       Container(
                         width: double.infinity,
                         height: 1,
                         color: Colors.black26,
                       ),
-
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-
-                            Text('16 June', style: text,),
-
-                            Expanded(child: Container(),flex: 1,),
-
-                            Image.asset('order-confirmed.png', height: 22,),
-
-                            SizedBox(width: 8,),
-
-                            Text('Order Scheduled', style: text,)
-
+                            Text(
+                              '16 June',
+                              style: text,
+                            ),
+                            Expanded(
+                              child: Container(),
+                              flex: 1,
+                            ),
+                            Image.asset(
+                              'order-confirmed.png',
+                              height: 22,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              'Order Scheduled',
+                              style: text,
+                            )
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ),
-
-                SizedBox(height: 15,),
-
-                Text('Delivery Slot', style: text,),
-
-                SizedBox(height: 2,),
-
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Delivery Slot',
+                  style: text,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(15),
                     child: Row(
                       children: <Widget>[
-
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-
-                              Text('Upcoming Order', style: greyText,),
-
-                              SizedBox(height: 5,),
-
-                              Text('Sat 1 Jun 2019', style: text,),
-
-
+                              Text(
+                                'Upcoming Order',
+                                style: greyText,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Sat 1 Jun 2019',
+                                style: text,
+                              ),
                             ],
                           ),
                         ),
-
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-
-                              Text('Timeslot', style: greyText,),
-                              SizedBox(height: 5,),
-
+                              Text(
+                                'Timeslot',
+                                style: greyText,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Row(
                                 children: <Widget>[
-                                  Text('11AM - 3PM', style: text,),
-
+                                  Text(
+                                    '11AM - 3PM',
+                                    style: text,
+                                  ),
                                   GestureDetector(
-                                    onTap: (){
+                                    onTap: () {
                                       _settingModalBottomSheet(context);
                                     },
                                     child: Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 0, 20, 2),
-                                      child: Image.asset('edit-pencil.png' , height: 15,),
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 0, 20, 2),
+                                      child: Image.asset(
+                                        'edit-pencil.png',
+                                        height: 15,
+                                      ),
                                     ),
                                   )
-
                                 ],
                               ),
-
-
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
-
-
-                SizedBox(height: 15,),
-
-                Text('Delivery Address', style: text,),
-
-                SizedBox(height: 2,),
-
-
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Delivery Address',
+                  style: text,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
                 Container(
                   width: double.infinity,
                   color: Colors.white,
@@ -372,30 +432,39 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-
-                        Text('Home', style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),),
-
-                        Text('Partho Parekh', style: address,),
-                        Text('Shayona Tailak 3, New SG Road, Gota', style: address,),
-                        Text('Ahmedabad, Gujrat 38248', style: address,)
-
+                        Text(
+                          'Home',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          'Partho Parekh',
+                          style: address,
+                        ),
+                        Text(
+                          'Shayona Tailak 3, New SG Road, Gota',
+                          style: address,
+                        ),
+                        Text(
+                          'Ahmedabad, Gujrat 38248',
+                          style: address,
+                        )
                       ],
                     ),
                   ),
                 ),
-
-
-
-                SizedBox(height: 15,),
-
-                Text('Payment Details', style: text,),
-
-                SizedBox(height: 2,),
-
-
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Payment Details',
+                  style: text,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -408,89 +477,93 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-
-                                  Text('Payment option', style: text,),
-
-                                  SizedBox(height: 8,),
-
-                                  Text('Discount/Promo', style: text,),
-
-
+                                  Text(
+                                    'Payment option',
+                                    style: text,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Discount/Promo',
+                                    style: text,
+                                  ),
                                 ],
                               ),
                             ),
-
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-
-                                  Text('Credit Card', style: text,),
-                                  SizedBox(height: 8,),
-
-                                  Text('- \u20b9308', style: text,),
-
-
+                                  Text(
+                                    'Credit Card',
+                                    style: text,
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    '- \u20b9308',
+                                    style: text,
+                                  ),
                                 ],
                               ),
                             ),
-
                           ],
                         ),
-
-                        SizedBox(height: 5,),
-
+                        SizedBox(
+                          height: 5,
+                        ),
                         Divider(
                           color: Colors.grey,
                         ),
-
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-
-                            Text('Sub Total', style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                            ),),
-
-                            Text('\u20b9308', style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                            ),)
-
+                            Text(
+                              'Sub Total',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                              ),
+                            ),
+                            Text(
+                              '\u20b9308',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                              ),
+                            )
                           ],
                         )
-
                       ],
                     ),
                   ),
                 ),
-
-
-                SizedBox(height: 10,),
-
-                Text(Const.subDisc, style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey
-                ),),
-
-                SizedBox(height: 15,),
-
-
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  Const.subDisc,
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 Row(
                   children: <Widget>[
                     Expanded(
                       child: RaisedButton(
-                        onPressed: (){
+                        onPressed: () {
                           showDialog(
                               context: context,
                               builder: (s) {
@@ -503,23 +576,18 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                           child: Text(
                             'Cancel Subscription',
                             style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              fontSize: 17
-                            ),
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                                fontSize: 17),
                           ),
                         ),
                       ),
                     )
                   ],
                 ),
-
-
-                SizedBox(height: 30,),
-
-
-
-
+                SizedBox(
+                  height: 30,
+                ),
               ],
             ),
           ),
@@ -528,31 +596,13 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
     );
   }
 
-
-  void _settingModalBottomSheet(context){
-
-    var tileTitle = TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.w500
-    );
-
-    var radioTitle= TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-        color: Color(0xff262626)
-    );
-
-
-
+  void _settingModalBottomSheet(context) {
     showModalBottomSheet(
-
         context: context,
-        builder: (BuildContext bc){
+        builder: (BuildContext bc) {
           return SheetWid();
-        }
-    );
+        });
   }
-
 }
 
 class FunkyOverlay extends StatefulWidget {
@@ -591,86 +641,87 @@ class FunkyOverlayState extends State<FunkyOverlay>
           child: ScaleTransition(
             scale: scaleAnimation,
             child: Padding(
-                padding: EdgeInsets.symmetric( vertical: 35),
-                child:  Wrap(
+                padding: EdgeInsets.symmetric(vertical: 35),
+                child: Wrap(
                   children: <Widget>[
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-
-                        Image.asset('cancel-subscription.png', height: 150,),
-
+                        Image.asset(
+                          'cancel-subscription.png',
+                          height: 150,
+                        ),
                         SizedBox(
                           height: 10,
                         ),
-
-                        Text(Const.unsubscribedDialog,textAlign: TextAlign.center, style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),),
-
-
+                        Text(
+                          Const.unsubscribedDialog,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
                         SizedBox(
                           height: 10,
                         ),
-
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
-                                onPressed: (){
+                                onPressed: () {
                                   Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(50))
-                                ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50))),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                                  child: Text('Yes', style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white
-                                  ),),
-                                )
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 10),
+                                  child: Text(
+                                    'Yes',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white),
+                                  ),
+                                )),
+                            SizedBox(
+                              width: 10,
                             ),
-
-                            SizedBox(width: 10,),
                             RaisedButton(
                                 color: Const.greyLight,
-                                onPressed: (){
+                                onPressed: () {
                                   Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(50))
-                                ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50))),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                  child: Text('No', style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black
-                                  ),),
-                                )
-                            ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 8),
+                                  child: Text(
+                                    'No',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black),
+                                  ),
+                                )),
                           ],
                         )
                       ],
                     ),
                   ],
-                )
-            ),
+                )),
           ),
         ),
       ),
     );
   }
-
 }
-
-
 
 class SheetWid extends StatefulWidget {
   @override
@@ -678,8 +729,6 @@ class SheetWid extends StatefulWidget {
 }
 
 class _SheetWidState extends State<SheetWid> {
-
-
   int selectedRadioTile;
 
   setSelectedRadioTile(int val) {
@@ -688,36 +737,32 @@ class _SheetWidState extends State<SheetWid> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       child: new Wrap(
         children: <Widget>[
-
-
           Padding(
             padding: const EdgeInsets.only(left: 15, top: 15, bottom: 10),
-            child: Text('Modify Time Slot', style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500
-            ),),
+            child: Text(
+              'Modify Time Slot',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
           ),
-
           Divider(
             color: Colors.grey,
           ),
-
           RadioListTile(
             value: 1,
             groupValue: selectedRadioTile,
-            title: Text("7 AM - 11 AM", style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: 16
-            ),),
-
+            title: Text(
+              "7 AM - 11 AM",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16),
+            ),
             onChanged: (val) {
               print("Radio Tile pressed $val");
               setSelectedRadioTile(val);
@@ -725,7 +770,6 @@ class _SheetWidState extends State<SheetWid> {
             activeColor: Const.orange,
             selected: true,
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
@@ -734,16 +778,16 @@ class _SheetWidState extends State<SheetWid> {
               color: Colors.black12,
             ),
           ),
-
           RadioListTile(
             value: 2,
             groupValue: selectedRadioTile,
-            title: Text("11 AM - 3 AM", style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: 16
-            ),),
-
+            title: Text(
+              "11 AM - 3 AM",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16),
+            ),
             onChanged: (val) {
               print("Radio Tile pressed $val");
               setSelectedRadioTile(val);
@@ -751,7 +795,6 @@ class _SheetWidState extends State<SheetWid> {
             activeColor: Const.orange,
             selected: true,
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
@@ -760,16 +803,16 @@ class _SheetWidState extends State<SheetWid> {
               color: Colors.black12,
             ),
           ),
-
           RadioListTile(
             value: 3,
             groupValue: selectedRadioTile,
-            title: Text("3 AM - 7 AM", style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: 16
-            ),),
-
+            title: Text(
+              "3 AM - 7 AM",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16),
+            ),
             onChanged: (val) {
               print("Radio Tile pressed $val");
               setSelectedRadioTile(val);
@@ -777,7 +820,6 @@ class _SheetWidState extends State<SheetWid> {
             activeColor: Const.orange,
             selected: true,
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
@@ -786,16 +828,16 @@ class _SheetWidState extends State<SheetWid> {
               color: Colors.black12,
             ),
           ),
-
           RadioListTile(
             value: 4,
             groupValue: selectedRadioTile,
-            title: Text("7 AM - 11 AM", style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: 16
-            ),),
-
+            title: Text(
+              "7 AM - 11 AM",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16),
+            ),
             onChanged: (val) {
               print("Radio Tile pressed $val");
               setSelectedRadioTile(val);
@@ -803,11 +845,8 @@ class _SheetWidState extends State<SheetWid> {
             activeColor: Const.orange,
             selected: true,
           ),
-
-
           Column(
             children: <Widget>[
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -815,53 +854,52 @@ class _SheetWidState extends State<SheetWid> {
                   children: <Widget>[
                     RaisedButton(
                       color: Theme.of(context).primaryColor,
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(18.0),
-
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        child: Text('Update', style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500
-                        ),),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        child: Text(
+                          'Update',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
-
-                    SizedBox(width: 10,),
-
+                    SizedBox(
+                      width: 10,
+                    ),
                     RaisedButton(
                       color: Color(0xffced2d8),
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.pop(context);
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(18.0),
-
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        child: Text('Cancel', style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500
-                        ),),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-
-
-
             ],
           )
-
-
         ],
       ),
     );

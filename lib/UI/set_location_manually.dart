@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Utils/Const.dart';
+import '../Utils/const.dart';
 import 'location_service_unavailable.dart';
 
 class SetLocationManually extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vegetos_flutter/UI/promo_screen.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class AboutAppRelease extends StatefulWidget {
   @override
@@ -9,12 +8,8 @@ class AboutAppRelease extends StatefulWidget {
 }
 
 class _AboutAppReleaseState extends State<AboutAppRelease> {
-
   var text = TextStyle(
-    fontWeight: FontWeight.w500,
-    color: Colors.black54,
-    fontSize: 13
-  );
+      fontWeight: FontWeight.w500, color: Colors.black54, fontSize: 13);
 
   var title = TextStyle(
     fontSize: 16,
@@ -29,93 +24,96 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
         backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset(
+              'back.png',
+              height: 25,
+            ),
           ),
         ),
-
-        title: Text(
-            'About App Release'
-        ),
+        title: Text('About App Release'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: <Widget>[
-            
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(3))
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(3))),
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-
-                        Text('Date: 5 Jun 2019', style: text,),
-
-                        Text('Date: Version History: V.1.22', style: text,),
-
+                        Text(
+                          'Date: 5 Jun 2019',
+                          style: text,
+                        ),
+                        Text(
+                          'Date: Version History: V.1.22',
+                          style: text,
+                        ),
                       ],
                     ),
-
-                    SizedBox(height: 7,),
-
-                    Divider(color: Colors.grey,),
-
-                    SizedBox(height: 7,),
-
-                    Text(
-                      'Promo Codes', style: title,
+                    SizedBox(
+                      height: 7,
                     ),
-
-                    Text(
-                      Const.aboutAppRelease1, style: text,
+                    Divider(
+                      color: Colors.grey,
                     ),
-
-                    SizedBox(height: 20,),
-
-                    Text(
-                      'Payment Options', style: title,
+                    SizedBox(
+                      height: 7,
                     ),
-
-                    SizedBox(height: 10,),
-
                     Text(
-                      Const.aboutAppRelease2, style: text,
+                      'Promo Codes',
+                      style: title,
                     ),
-
-                    SizedBox(height: 20,),
-
                     Text(
-                      'Payment Options', style: title,
+                      Const.aboutAppRelease1,
+                      style: text,
                     ),
-
-                    SizedBox(height: 10,),
-
+                    SizedBox(
+                      height: 20,
+                    ),
                     Text(
-                      Const.aboutAppRelease3, style: text,
+                      'Payment Options',
+                      style: title,
                     ),
-
-
-
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      Const.aboutAppRelease2,
+                      style: text,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Payment Options',
+                      style: title,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      Const.aboutAppRelease3,
+                      style: text,
+                    ),
                   ],
                 ),
               ),
             )
-            
           ],
         ),
       ),

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class WelcomeScreenState extends StatefulWidget
 {
@@ -20,7 +20,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
 
   int currentPageValue;
 
-  Widget CircleBar(bool isActive)
+  Widget circleBar(bool isActive)
   {
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
@@ -88,8 +88,8 @@ class WelcomeScreen extends State<WelcomeScreenState>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   for(int i = 0; i < widgetList.length; i++)
-                    if (i == currentPageValue) ...[CircleBar(true)] else
-                      CircleBar(false),
+                    if (i == currentPageValue) ...[circleBar(true)] else
+                      circleBar(false),
                 ],
               ),
             )
@@ -206,7 +206,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
                       flex: 0,
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                        child: Text(Const.welcome2_title, style: TextStyle(fontSize: 22.0,
+                        child: Text(Const.welcome2Title, style: TextStyle(fontSize: 22.0,
                             fontFamily: 'GoogleSans', fontWeight: FontWeight.w700)),
                       ),
                     ),

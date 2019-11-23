@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
 class OrderItems extends StatefulWidget
 {
@@ -140,12 +140,6 @@ class OrderItemsState extends State<OrderItems>
     return subChild;
   }
 
-  Widget itemListwithChild()
-  {
-    var list = ListView.builder(
-      itemCount: 5,
-    );
-  }
 
   Widget cartItemList()
   {

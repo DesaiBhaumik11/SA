@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
-import 'package:vegetos_flutter/Utils/Const.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 
-import 'PaymentOptionScreen.dart';
+import 'payment_option_screen.dart';
 import 'choose_address.dart';
 
 class SetDeliveryDetails extends StatefulWidget {
@@ -34,26 +34,6 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       selectedRadioTile = val;
     });
   }
-
-  List<GroupModel> _group = [
-    GroupModel(
-      text: "Flutter.dev",
-      index: 1,
-    ),
-    GroupModel(
-      text: "Inducesmile.com",
-      index: 2,
-    ),
-    GroupModel(
-      text: "Google.com",
-      index: 3,
-    ),
-    GroupModel(
-      text: "Yahoo.com",
-      index: 4,
-    ),
-  ];
-
 
   @override
   Widget build(BuildContext context) {
