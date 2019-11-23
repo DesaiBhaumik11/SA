@@ -118,6 +118,7 @@ class _WalletState extends State<Wallet> {
               ),
             ),
 
+
             Expanded(child: buildList(context),)
 
           ],

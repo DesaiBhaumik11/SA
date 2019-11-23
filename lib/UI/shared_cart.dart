@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/Const.dart';
+
+import 'cart_view.dart';
 
 class SharedCart extends StatefulWidget {
   @override
@@ -36,7 +39,9 @@ class _SharedCartState extends State<SharedCart> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return InkWell(
-            onTap: (){},
+            onTap: (){
+              Navigator.push(context, SlideLeftRoute(page: CartView()));
+            },
             child: Column(
               children: <Widget>[
 
