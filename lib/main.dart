@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vegetos_flutter/UI/MyCartScreen.dart';
-import 'package:vegetos_flutter/UI/PaymentOptionScreen.dart';
-import 'package:vegetos_flutter/UI/ProductDetailScreen.dart';
+import 'package:vegetos_flutter/UI/my_cart_screen.dart';
+import 'package:vegetos_flutter/UI/payment_option_screen.dart';
+import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/UI/welcome_screen.dart';
 import 'package:vegetos_flutter/UI/customer_support_2.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
@@ -9,7 +9,7 @@ import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
-import 'UI/OrderPlacedScreen.dart';
+import 'UI/order_placed_screen.dart';
 import 'UI/about_app_release.dart';
 import 'UI/about_vegetos.dart';
 import 'UI/add_balance.dart';

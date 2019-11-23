@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
-import 'PaymentOptionScreen.dart';
+import 'payment_option_screen.dart';
 import 'choose_address.dart';
 
 class SetDeliveryDetails extends StatefulWidget {
