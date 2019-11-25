@@ -14,7 +14,17 @@ class CategoriesScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Const.appBar,
         title: Text('All Categories'),
+        leading: InkWell(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Image.asset('back.png', height: 25,),
+          ),
+        ),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
