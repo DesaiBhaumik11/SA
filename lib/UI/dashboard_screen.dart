@@ -174,6 +174,7 @@ class DashboardScreen extends StatelessWidget
       Image.asset('assets/ad02.png', fit: BoxFit.fill,)
     ];
 
+
     return Container(
       height: 180.0,
       alignment: Alignment.center,
