@@ -2,16 +2,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/best_selling_product.dart';
+import 'package:vegetos_flutter/models/product_common.dart' as bst;
+import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:vegetos_flutter/models/recommended_products.dart';
+import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 class DashboardScreen extends StatelessWidget
 {
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final cat=Provider.of<CategoriesModel>(context);
+    final bestSelling=Provider.of<BestSellingProductModel>(context);
+    final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
+    final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
+    if(!cat.isLoaded){
+      cat.loadCategories();
+    }
+    if(!bestSelling.loaded){
+      bestSelling.loadProducts();
+    }
+    if(!vegitosExclusive.loaded){
+      vegitosExclusive.loadProducts();
+    }
+    if(!recommendedProducts.loaded){
+      recommendedProducts.loadProducts();
+    }
     return Scaffold(
       drawer: Drawer(
         child: drawer(context),
@@ -32,8 +54,11 @@ class DashboardScreen extends StatelessWidget
               children: <Widget>[
                 searchBar(context),
                 adViewWidget(),
-                for(int i = 0; i < 5; i++)
-                  horizontalList()
+                bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):Container(),
+                vegitosExclusive.loaded?horizontalList("Vegeto's Exclusive",vegitosExclusive.result):Container(),
+                recommendedProducts.loaded?horizontalList("Recommended for you",recommendedProducts.result):Container(),
+
+
               ],
             ),
           ),
@@ -197,7 +222,7 @@ class DashboardScreen extends StatelessWidget
     );
   }
 
-  Widget childView(BuildContext context)
+  Widget childView(BuildContext context, bst.Result result)
   {
     return Stack(
       children: <Widget>[
@@ -216,7 +241,7 @@ class DashboardScreen extends StatelessWidget
                       Container(
                         child: Align(
                           alignment: Alignment.center,
-                          child: Image.asset('assets/product01.png', height: 100.0, width: 100.0,),
+                          child: Image.network("${result.productImage}", height: 100.0, width: 100.0,),
                         ),
                         margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
@@ -234,7 +259,7 @@ class DashboardScreen extends StatelessWidget
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                    child: Text('Parle Monacco Cheeselings Classic',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                    child: Text(result.seoTags,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                         fontWeight: FontWeight.w700,
                         color: Colors.black)),
                   ),
@@ -242,7 +267,7 @@ class DashboardScreen extends StatelessWidget
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('300 gm',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text('${result.alertQuantity} gm',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -295,7 +320,7 @@ class DashboardScreen extends StatelessWidget
 
   }
 
-  Widget horizontalList()
+  Widget horizontalList(String s, List<bst.Result> products)
   {
     return Stack(
       children: <Widget>[
@@ -309,7 +334,7 @@ class DashboardScreen extends StatelessWidget
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
-                      child: Text('Best Selling Items',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      child: Text(s,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w700,
                           color: Colors.black)),
                     ),
@@ -331,10 +356,10 @@ class DashboardScreen extends StatelessWidget
                   margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                   child: ListView.builder(
                       physics: BouncingScrollPhysics(),
-                      itemCount: 10,
+                      itemCount: products.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        return childView(context);
+                        return childView(context,products[index]);
                       }
                   ),
                 )

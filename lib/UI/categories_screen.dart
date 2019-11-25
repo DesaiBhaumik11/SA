@@ -1,11 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/categories_model.dart';
 
 class CategoriesScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final CategoriesModel categoriesModel =Provider.of<CategoriesModel>(context);
+    if(!categoriesModel.isLoaded){
+      categoriesModel.loadCategories();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('All Categories'),
@@ -38,68 +44,64 @@ class CategoriesScreen extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: <Widget>[for (int i = 0; i < 5; i++) categoriesChild()],
-        ),
-      ),
-    );
-  }
+      body: !categoriesModel.isLoaded?Container():ListView.builder(
 
-  Widget categoriesChild() {
-    var categoriChild = Container(
-      margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-      child: InkWell(
-        onTap: () {},
-        child: Card(
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Row(
+        physics: BouncingScrollPhysics(),
+        itemBuilder:(c,index)=> Container(
+          margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+          child: InkWell(
+            onTap: () {},
+            child: Card(
+              color: Colors.white,
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                    child: Image.asset(
-                      'assets/vegitables.png',
-                      height: 100.0,
-                      width: 100.0,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          child: Text(Const.categoryTitle,
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: 'GoogleSans',
-                                  fontWeight: FontWeight.w500)),
-                          alignment: Alignment.centerLeft,
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                        child: Image.asset(
+                          'assets/vegitables.png',
+                          height: 100.0,
+                          width: 100.0,
                         ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
-                          child: Text(Const.categoryDesc,
-                              style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontFamily: 'GoogleSans',
-                                  color: Const.dashboardGray)),
-                        )
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              child: Text(categoriesModel.result[index].name,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontFamily: 'GoogleSans',
+                                      fontWeight: FontWeight.w500)),
+                              alignment: Alignment.centerLeft,
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
+                              child: Text(categoriesModel.result[index].id,
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontFamily: 'GoogleSans',
+                                      color: Const.dashboardGray)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+                  //categoriesSubChild()
                 ],
               ),
-              //categoriesSubChild()
-            ],
+            ),
           ),
         ),
+        itemCount: categoriesModel.result.length,
       ),
     );
-
-    return categoriChild;
   }
+
+
 
   Widget categoriesSubChild() {
     var child = Container(

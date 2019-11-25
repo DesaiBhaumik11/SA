@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/search_products.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -10,9 +14,10 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   var wid = 1;
-
+  Timer timer;
   @override
   Widget build(BuildContext context) {
+    final SearchModel searchModel=Provider.of<SearchModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       body: Column(
@@ -45,6 +50,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
+                      onChanged: (e){
+                        if(timer!=null){
+                          timer.cancel();
+                        }
+                        timer=Timer(Duration(milliseconds: 500), (){
+                          searchModel.searchProducts(e);
+                        });
+                      },
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Search...",
