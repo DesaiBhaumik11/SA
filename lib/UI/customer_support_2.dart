@@ -10,8 +10,6 @@ class CustomerSupport2 extends StatefulWidget {
 }
 
 class _CustomerSupport2State extends State<CustomerSupport2> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,17 +18,18 @@ class _CustomerSupport2State extends State<CustomerSupport2> {
         backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset(
+              'back.png',
+              height: 25,
+            ),
           ),
         ),
-        title: Text(
-            'Customer Support'
-        ),
+        title: Text('Customer Support'),
       ),
       body: buildList(context),
     );
@@ -40,12 +39,11 @@ class _CustomerSupport2State extends State<CustomerSupport2> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.of(context).push(SlideLeftRoute(page: ExpiredItems()));
             },
             child: Column(
               children: <Widget>[
-
                 Container(
                   color: Colors.white,
                   child: Padding(
@@ -53,30 +51,25 @@ class _CustomerSupport2State extends State<CustomerSupport2> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-
                         Text(
-                          'Expired items received', style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
+                          'Expired items received',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                          ),
                         ),
-                        ),
-
                         Icon(Icons.keyboard_arrow_right)
-
                       ],
                     ),
                   ),
                 ),
-
                 Container(
                   height: 1,
                   width: double.infinity,
                   color: Colors.black12,
                 )
-
               ],
-            )
-        );
+            ));
       },
       itemCount: 4,
       padding: EdgeInsets.fromLTRB(15, 15, 15, 20),
@@ -84,5 +77,4 @@ class _CustomerSupport2State extends State<CustomerSupport2> {
       physics: BouncingScrollPhysics(),
     );
   }
-
 }
