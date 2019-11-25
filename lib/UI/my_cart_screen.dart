@@ -24,8 +24,17 @@ class MyCartState extends State<MyCartScreen>
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Const.appBar,
         automaticallyImplyLeading: true,
-        leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
+        leading: InkWell(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Image.asset('back.png', height: 25,),
+          ),
+        ),
         title: Container(
           padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
           child: Align(

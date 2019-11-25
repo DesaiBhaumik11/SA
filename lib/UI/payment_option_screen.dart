@@ -26,8 +26,17 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Const.appBar,
         automaticallyImplyLeading: true,
-        leading: IconButton(icon:Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
+        leading: InkWell(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Image.asset('back.png', height: 25,),
+          ),
+        ),
         title: Text('Payment Options', style: TextStyle(fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
       ),
       body: Container(

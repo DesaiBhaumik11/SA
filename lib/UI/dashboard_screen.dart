@@ -49,6 +49,7 @@ class DashboardScreen extends StatelessWidget
       automaticallyImplyLeading: true,
       floating: true,
       pinned: false,
+      backgroundColor: Const.appBar,
       actions: <Widget>[
         GestureDetector(
           onTap: () {
@@ -107,7 +108,7 @@ class DashboardScreen extends StatelessWidget
   {
     return Container(
       height: 50.0,
-      color: Const.primaryColor,
+      color: Const.appBar,
       child: Align(
         alignment: Alignment.center,
         child: Column(

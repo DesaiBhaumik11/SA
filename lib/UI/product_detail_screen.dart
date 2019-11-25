@@ -32,6 +32,16 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Const.appBar,
+        leading: InkWell(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Image.asset('back.png', height: 25,),
+          ),
+        ),
         title: Text('Washington Apple'),
         actions: <Widget>[
           Container(
