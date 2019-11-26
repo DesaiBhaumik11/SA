@@ -24,7 +24,7 @@ class Result {
   String createdBy;
   DateTime createdOn;
   DateTime updatedOn;
-  String test;
+
 
   Result({
     this.id,
@@ -50,7 +50,7 @@ class Result {
     this.productVariantAttributeGroup,
     this.updatedBy,
     this.createdBy,
-    this.test,
+
     this.createdOn,
     this.updatedOn,
   });
@@ -67,7 +67,7 @@ class Result {
     categoryId: json["CategoryId"],
     upc: json["Upc"],
     sku: json["Sku"],
-    test: json['test'],
+
     expiryPeriod: json["ExpiryPeriod"],
     expiryPeriodType: json["ExpiryPeriodType"],
     barCodeType: json["BarCodeType"],
