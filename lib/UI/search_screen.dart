@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/product_common.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -15,6 +16,8 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   var wid = 1;
   Timer timer;
+
+  bool search=false;
   @override
   Widget build(BuildContext context) {
     final SearchModel searchModel=Provider.of<SearchModel>(context);
@@ -51,11 +54,18 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                       onChanged: (e){
+                        search=true;
                         if(timer!=null){
                           timer.cancel();
                         }
                         timer=Timer(Duration(milliseconds: 500), (){
-                          searchModel.searchProducts(e);
+                          if(e.isEmpty){
+                            searchModel.searching(false);
+                          }else{
+                            searchModel.searching(true);
+                            searchModel.searchProducts(e);
+                          }
+
                         });
                       },
                       decoration: InputDecoration(
@@ -108,9 +118,11 @@ class _SearchScreenState extends State<SearchScreen> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  '4 Result Found',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                child: Visibility(
+                  visible: search &&searchModel.search &&searchModel.result!=null&&searchModel.result.length>0,
+                  child: Text('${searchModel.result!=null?searchModel.result.length:"0"} Result Found',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
               ),
               FlatButton(
@@ -137,14 +149,14 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
           Expanded(
-            child: wid == 1 ? searchHistory(context) : buildList(context),
+            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Center(child: Text("No products"),):buildList(context,searchModel.result)),
           ),
         ],
       ),
     );
   }
 
-  ListView buildList(BuildContext context) {
+  ListView buildList(BuildContext context, List<Result> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
         return GestureDetector(
@@ -159,8 +171,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: Image.asset(
-                            'Cherry-Tomatoes.png',
+                          child: Image.network(
+                            "${result[index].productImage}",
                             height: 100.0,
                             width: 100.0,
                           ),
@@ -189,7 +201,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Cherry Tomatoes',
+                          result[index].seoTags,
                           style: TextStyle(
                               fontSize: 17.0,
                               fontFamily: 'GoogleSans',
@@ -200,7 +212,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          '1 gm',
+                          "${result[index].alertQuantity} gm",
                           style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'GoogleSans',
@@ -211,7 +223,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          '₹101 ',
+                          '₹100',
                           style: TextStyle(
                               fontSize: 20.0,
                               fontFamily: 'GoogleSans',
@@ -253,7 +265,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         );
       },
-      itemCount: 4,
+      itemCount: result.length,
       padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),

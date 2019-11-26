@@ -12,6 +12,7 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
+import 'package:vegetos_flutter/models/search_products.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 import 'UI/order_placed_screen.dart';
@@ -55,6 +56,8 @@ class MyApp extends StatelessWidget {
 
   final recommendedProducts=RecommendedProductsModel();
 
+  final searchModel=SearchModel();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,7 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<BestSellingProductModel>.value(value: bestSellingProducts),
       ChangeNotifierProvider<VegetosExclusiveModel>.value(value: vegetosExclusive),
       ChangeNotifierProvider<RecommendedProductsModel>.value(value: recommendedProducts),
+      ChangeNotifierProvider<SearchModel>.value(value: searchModel)
 
     ],child: MaterialApp(
         title: 'Vegetos',

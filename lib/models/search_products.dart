@@ -17,6 +17,8 @@ class SearchModel with ChangeNotifier{
   int statusCode;
   String message;
   bool isError;
+
+  bool search=false;
   SearchModel({
     this.result,
     this.statusCode,
@@ -52,6 +54,11 @@ class SearchModel with ChangeNotifier{
     statusCode= json["StatusCode"];
     message= json["Message"];
     isError= json["IsError"];
+    notifyListeners();
+  }
+
+  void searching(bool param0) {
+    search=param0;
     notifyListeners();
   }
 }
