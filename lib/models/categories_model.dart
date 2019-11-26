@@ -27,7 +27,10 @@ class CategoriesModel with ChangeNotifier {
     this.message,
     this.isError,
   });
-
+setSubVisibility(index){
+  result[index].showSubs=!(result[index].showSubs);
+  notifyListeners();
+}
   factory CategoriesModel.fromMap(Map<String, dynamic> json) => CategoriesModel(
         result: List<Result>.from(json["Result"].map((x) => Result.fromMap(x))),
         statusCode: json["StatusCode"],
@@ -74,6 +77,8 @@ class Result {
   String createdBy;
   DateTime createdOn;
   DateTime updatedOn;
+
+  var showSubs=false;
 
   Result({
     this.id,

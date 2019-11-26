@@ -243,7 +243,7 @@ class DashboardScreen extends StatelessWidget
                       Container(
                         child: Align(
                           alignment: Alignment.center,
-                          child: Image.network("${result.productImage}", height: 100.0, width: 100.0,),
+                          child: result.productImage==null||result.productImage.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):Image.network("${result.productImage}", height: 100.0, width: 100.0,),
                         ),
                         margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
@@ -264,7 +264,7 @@ class DashboardScreen extends StatelessWidget
                     child: Text(result.seoTags,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                         fontWeight: FontWeight.w700,
                         color: Colors.black)),
-                  ),
+                  ),Expanded(child: Container(),flex: 1,),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(

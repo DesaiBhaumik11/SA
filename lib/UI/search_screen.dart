@@ -149,7 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
           Expanded(
-            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Center(child: Text("No products"),):buildList(context,searchModel.result)),
+            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():buildList(context,searchModel.result)),
           ),
         ],
       ),
@@ -171,7 +171,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: Image.network(
+                          child: result[index].productImage==null||result[index].productImage.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
                             "${result[index].productImage}",
                             height: 100.0,
                             width: 100.0,
@@ -338,76 +338,75 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-class Whoops extends StatefulWidget {
-  @override
-  _WhoopsState createState() => _WhoopsState();
-}
 
-class _WhoopsState extends State<Whoops> {
+
+class Whoops extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 120),
-      child: Container(
-        color: Colors.white,
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              'no-result.png',
-              height: 140,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Whoops!',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Sorry!We could not find the product you were',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff2d2d2d)),
-            ),
-            Text(
-              'looking for. Please check out our \'categories\'',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff2d2d2d)),
-            ),
-            Text(
-              'for more options.',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff2d2d2d)),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            RaisedButton(
-              onPressed: () {},
-              color: Theme.of(context).primaryColor,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Text(
-                  'Explore Catergory',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                      color: Colors.white),
-                ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 120),
+        child: Container(
+          color: Colors.white,
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'no-result.png',
+                height: 140,
               ),
-            )
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Whoops!',
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Sorry!We could not find the product you were',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff2d2d2d)),
+              ),
+              Text(
+                'looking for. Please check out our \'categories\'',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff2d2d2d)),
+              ),
+              Text(
+                'for more options.',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff2d2d2d)),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              RaisedButton(
+                onPressed: () {},
+                color: Theme.of(context).primaryColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Text(
+                    'Explore Catergory',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: Colors.white),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

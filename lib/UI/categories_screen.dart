@@ -6,6 +6,7 @@ import 'package:vegetos_flutter/models/categories_model.dart';
 
 class CategoriesScreen extends StatelessWidget {
 
+
   @override
   Widget build(BuildContext context) {
     final CategoriesModel categoriesModel =Provider.of<CategoriesModel>(context);
@@ -60,7 +61,9 @@ class CategoriesScreen extends StatelessWidget {
         itemBuilder:(c,index)=> Container(
           margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              categoriesModel.setSubVisibility(index);
+            },
             child: Card(
               color: Colors.white,
               child: Column(
@@ -100,7 +103,8 @@ class CategoriesScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  //categoriesSubChild()
+                  Visibility(child: categoriesSubChild(),
+                  visible:categoriesModel.result[index].showSubs,)
                 ],
               ),
             ),
@@ -118,9 +122,11 @@ class CategoriesScreen extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
       child: Column(
         children: <Widget>[
+
           Container(
+
             child: Image.asset(
-              'assets/vegitables.png',
+              'assets/04-product.png',
               height: 70.0,
               width: 70.0,
             ),
