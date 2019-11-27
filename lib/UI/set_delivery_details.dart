@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/my_addresses.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 import 'payment_option_screen.dart';
@@ -13,11 +14,11 @@ class SetDeliveryDetails extends StatefulWidget {
 
 class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
-  final List<String> day = ['S', 'M', 'T', 'W', 'T', 'F', 'S','S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  final List<String> day = List();
 
-  final List<int> date = [1, 2, 3,4, 5,6, 7,8, 9, 10, 11, 12, 13, 14];
+  final List<int> date = List();
 
-
+  List<String> days=["S","M","T","W","T","F","S",];
   var tappedIndex = -1;
 
   int selectedRadioTile;
@@ -26,6 +27,13 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   void initState() {
     super.initState();
     selectedRadioTile = 0;
+    DateTime dateTime=DateTime.now();
+    for(int a=0;a<30;a++)
+      {
+        date.add(dateTime.day);
+        dateTime=dateTime.add(Duration(days: 1));
+        day.add(days[dateTime.weekday-1]);
+      }
   }
 
 
@@ -87,7 +95,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
                           InkWell(
                             onTap: (){
-                              Navigator.push(context, SlideLeftRoute(page: ChooseAddress()));
+                              Navigator.push(context, SlideLeftRoute(page: MyAddresses()));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -365,7 +373,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
           ],
         );
       },
-      itemCount: 14,
+      itemCount: date.length,
       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,

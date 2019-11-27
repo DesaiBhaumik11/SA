@@ -7,13 +7,18 @@ import 'package:vegetos_flutter/Utils/const.dart';
 
 class SplashScreen extends StatelessWidget
 {
+  bool runOnce=true;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      Navigator.pushNamed(context, Const.welcome);
-    });
+   if(runOnce){
+     runOnce=false;
+     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+     Future.delayed(const Duration(milliseconds: 3000), () {
+       Navigator.pushNamed(context, Const.welcome);
+     });
+   }
 
     return Scaffold(
       body: Container(

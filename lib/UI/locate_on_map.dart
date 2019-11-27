@@ -133,7 +133,7 @@ class _LocateMapState extends State<LocateMap> {
   }
 
   void onMapTap(LatLng argument) {
-    _createMarkerImageFromAsset("locate-on-map.png").then((b) {
+    _createMarkerImageFromAsset("assets/locate-on-map.png").then((b) {
       setState(() {
         markers.add(Marker(
             markerId: MarkerId('value'),

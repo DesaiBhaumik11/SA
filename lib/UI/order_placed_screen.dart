@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/custom_stepper.dart' as s;
 import 'package:vegetos_flutter/UI/order_items.dart';
 import 'package:vegetos_flutter/UI/customer_support_1.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
@@ -126,6 +127,8 @@ class _SummaryState extends State<Summary> {
     fontWeight: FontWeight.w400,
   );
 
+  var currentStep=1;
+
 
   @override
   Widget build(BuildContext context) {
@@ -197,17 +200,19 @@ class _SummaryState extends State<Summary> {
 
                    SizedBox(height: 5,),
 
-                   Row(
-                     children: <Widget>[
+                   SizedBox(
+                     height: 100,
+                     child: s.CustomStepper(
 
-                       Image.asset('order-placed.png', height: 20,),
-
-                       SizedBox(width: 8,),
-
-                       Text('Order Placed', style: text,),
-
-
+                       steps: [
+                       s.Step(title: Text("Booked"),   isActive: true,state: s.StepState.start),
+                       s.Step(title: Text("Confirmed"),state: currentStep==1?s.StepState.complete:s.StepState.indexed,isActive: currentStep==1,),
+                       s.Step(title: Text("Dispatched",),state: currentStep==2?s.StepState.complete:s.StepState.indexed,isActive: currentStep==2),
+                       s.Step(title: Text("Delivered"),state: currentStep==3?s.StepState.complete:s.StepState.indexed,isActive: currentStep==3)
                      ],
+                     type: s.StepperType.horizontal,
+                     currentStep: 1,
+                     ),
                    )
 
                  ],

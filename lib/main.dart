@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/payment_option_screen.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
+import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/UI/welcome_screen.dart';
 import 'package:vegetos_flutter/UI/customer_support_2.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
@@ -118,6 +119,6 @@ class MyApp extends StatelessWidget {
           Const.sharedCart: (BuildContext context) => SharedCart(),
           Const.cartView: (BuildContext context) => CartView(),
         },
-        home: DashboardScreen()));
+        home: SplashScreen()));
   }
 }
