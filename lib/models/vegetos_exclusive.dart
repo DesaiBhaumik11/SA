@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/product_common.dart';
 
@@ -46,7 +47,7 @@ class VegetosExclusiveModel with ChangeNotifier {
   loadProducts(){
     if(!_loading) {
       _loading=true;
-      NetworkUtils.getRequest(endPoint: "GetVegetosExclusive").then((r) {
+      NetworkUtils.getRequest(endPoint: "" + Constant.GetVegetosExclusive).then((r) {
         _loading=false;
         print("Vegetos Exclusive product response = $r");
         setData(json.decode(r));

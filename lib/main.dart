@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
@@ -63,6 +65,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
+
       ChangeNotifierProvider<CategoriesModel>.value(value: categories),
       ChangeNotifierProvider<BestSellingProductModel>.value(value: bestSellingProducts),
       ChangeNotifierProvider<VegetosExclusiveModel>.value(value: vegetosExclusive),

@@ -3,10 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
@@ -230,7 +233,11 @@ class DashboardScreen extends StatelessWidget
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, Const.productDetail);
+            SharedPreferences.getInstance().then((prefs){
+              prefs.setString("product_id", "1")  ;
+              Navigator.pushNamed(context, Const.productDetail);
+            }) ;
+
           },
           child: Container(
             width: 180.0,
@@ -261,9 +268,15 @@ class DashboardScreen extends StatelessWidget
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                    child: Text(result.seoTags,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black)),
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(result.seoTags,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black)),
+                        ),
+                      ],
+                    ),
                   ),Expanded(child: Container(),flex: 1,),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
@@ -860,7 +873,8 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: (){
-                                  Navigator.pushNamed(context, Const.loginScreen);
+                                   logoutApi() ;
+                                 // Navigator.pushNamed(context, Const.loginScreen);
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(50))
@@ -904,6 +918,21 @@ class FunkyOverlayState extends State<FunkyOverlay>
         ),
       ),
     );
+  }
+
+  void logoutApi() {
+    //Navigator.pushNamed(context, Const.loginScreen);
+
+    NetworkUtils.getRequest(endPoint: Constant.Logout).then((res){
+      print("logoutApi" +res) ;
+
+      Navigator.pushNamed(context, Const.loginScreen);
+
+    }) ;
+
+
+
+
   }
 }
 

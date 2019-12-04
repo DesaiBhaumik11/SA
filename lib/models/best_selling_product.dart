@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/product_common.dart';
 
@@ -44,7 +45,7 @@ class BestSellingProductModel with ChangeNotifier {
   loadProducts(){
     if(!_loading) {
       _loading=true;
-      NetworkUtils.getRequest(endPoint: "GetBestSellingProducts").then((r) {
+      NetworkUtils.getRequest(endPoint: "" + Constant.GetBestSellingProducts).then((r) {
         _loading=false;
         print("Best selling product response = $r");
         setData(json.decode(r));

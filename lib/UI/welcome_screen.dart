@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class WelcomeScreenState extends StatefulWidget
@@ -17,6 +19,8 @@ class WelcomeScreenState extends StatefulWidget
 
 class WelcomeScreen extends State<WelcomeScreenState>
 {
+
+
 
   int currentPageValue;
 
@@ -45,12 +49,22 @@ class WelcomeScreen extends State<WelcomeScreenState>
     // TODO: implement initState
     super.initState();
     slideShow();
+
+    SharedPreferences.getInstance().then((r){
+
+      print(r.getString("JWT_TOKEN")) ;
+    });
+
+
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+
     return Scaffold(
       body: slideShow()
     );
@@ -284,5 +298,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
       ),
     );
   }
+
+
 
 }

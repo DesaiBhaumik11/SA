@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+
+class Constant{
+
+  static String BASE_URL = "http://artismicro.archisys.biz:5101/";
+
+  static String GetMyAddresses  = "GetMyAddresses";
+  static String GetAddressById  = "GetAddressById?addressId=";
+  static String AddAddress  = "AddAddress";
+  static String UpdateAddress  = "UpdateAddress";
+  static String DeleteAddress  = "DeleteAddress?addressId=";
+  static String AppFirstStart  = "AppFirstStart";
+  static String RefreshToken  = "RefreshToken?expiredTokenString";
+  static String Register  = "Register";
+  static String Validate  = "Validate";
+  static String Login  = "Login";
+  static String Logout  = "Logout";
+  static String GetMyCards  = "GetMyCards";
+  static String GetById  = "GetById?cardtId=";
+  static String AddCard  = "AddCard";
+  static String UpdateCard  = "UpdateCard";
+  static String DeleteCard  = "DeleteCard?cardId=";
+  static String GetCart  = "GetCart";
+  static String AddItem  = "AddItem";
+  static String Count  = "Count";
+  static String UpdateItem  = "UpdateItem";
+  static String DeleteItem  = "DeleteItem?cartItemId=";
+  static String AddQuantity  = "/AddQuantity?itemId=";
+  static String ClearCart  = "ClearCart?cartId=";
+  static String Checkout  = "Checkout";
+  static String GetAllCategories  = "GetAllCategories";
+
+  static String GetBestSellingProducts  = "GetBestSellingProducts";
+  static String GetVegetosExclusive  = "GetVegetosExclusive";
+  static String GetRecommendedProducts  = "GetRecommendedProducts";
+  static String GetProductById  = "GetProductById?id=";
+  static String GetBrands  = "GetBrands";
+  static String SearchProduct  = "SearchProduct?searchString";
+  static String GetOrders  = "GetOrders";
+  static String GetOrderById  = "GetOrderById?Id=";
+
+
+
+
+
+}

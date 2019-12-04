@@ -1,9 +1,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 class ProductDetailScreen extends StatefulWidget
 {
@@ -26,6 +29,24 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   bool termsFlag = false;
 
   int _selectedIndex = 0;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    SharedPreferences.getInstance().then((prefs){
+
+
+      getProductById(prefs.getString("product_id")) ;
+
+    }) ;
+
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -681,5 +702,16 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     );
 
   }
+
+  void getProductById(String id){
+
+        NetworkUtils.getRequest(endPoint: Constant.GetProductById + id).then((res){
+
+        print("getProductById" + res) ;
+
+    }) ;
+
+  }
+
 
 }

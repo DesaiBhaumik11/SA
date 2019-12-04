@@ -6,6 +6,8 @@ import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 class MyCartScreen extends StatefulWidget
 {
@@ -491,6 +493,14 @@ class MyCartState extends State<MyCartScreen>
       ],
     );
 
+  }
+
+
+  void getMyCart(){
+    NetworkUtils.getRequest(endPoint: Constant.GetMyCards).then((e){
+      print("GetMyCards" + e) ;
+
+    }) ;
   }
 
 }

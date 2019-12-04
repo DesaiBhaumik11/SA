@@ -2,12 +2,25 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:http/http.dart';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
+import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
 
 abstract class NetworkUtils{
-  static String _baseUrl="http://artismicro.archisys.biz:5101/";
-  static Future<String> postRequest({Map<String,String> body,String endpoint,Map<String,String> headers}) async{
+
+  //static String _baseUrl="http://artismicro.archisys.biz:5101/";
+  static String _baseUrl= Constant.BASE_URL ;
+  static String AWT_Token= "" ;
+
+  static Future<String> postRequest({Map<String,String> body,String
+  endpoint,Map<String,String> headers}) async{
+
+    print("postRequest" + body.toString()) ;
     // set up POST request arguments
     String url = '$_baseUrl$endpoint';
     Map<String, String> headerMap = headers??new Map();
@@ -17,9 +30,20 @@ abstract class NetworkUtils{
   }
 
   static Future<String> getRequest({String endPoint}) async {
+    Map<String, String> headerMap = Map();
+
+    SharedPreferences.getInstance().then((prefs){
+
+      headerMap["device_token"] = "device_token" ;
+      headerMap["Content-Type"] = "device_token" ;
+      headerMap["Authorization"] = "Authorization" ;
+
+    }) ;
+
+
     String url="$_baseUrl$endPoint";
     print("Url = $url");
-    Response response=await get(url);
+    Response response=await get(url,headers: headerMap);
     return response.body;
   }
 
@@ -106,4 +130,6 @@ abstract class NetworkUtils{
     }, onDone: () => completer.complete(contents.toString()));
     return completer.future;
   }
+
+
 }

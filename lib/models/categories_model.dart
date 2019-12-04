@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 CategoriesModel categoriesFromJson(String str) =>
@@ -48,7 +49,7 @@ setSubVisibility(index){
   loadCategories() {
     if(!_loading) {
       _loading=true;
-      NetworkUtils.getRequest(endPoint: "GetAllCategories").then((r) {
+      NetworkUtils.getRequest(endPoint: "" + Constant.GetAllCategories).then((r) {
         _loading=false;
         print("categories response = $r");
         setData(json.decode(r));

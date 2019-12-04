@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 class MyOrders extends StatefulWidget {
   @override
@@ -220,4 +222,22 @@ class WhoopsOrder extends StatelessWidget {
       ),
     );
   }
+
+
+
+
+
+  void getMyOrder() {
+
+    NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((e){
+
+      print("GetOrders" + e) ;
+
+    }) ;
+
+
+
+  }
+
+
 }

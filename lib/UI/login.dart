@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,6 +13,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String mobile="" ;
+  String auth_token ="" ;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SharedPreferences.getInstance().then((prefs){
+      auth_token = prefs.getString("AUTH_TOKEN");
+
+    }) ;
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 maxLength: 10,
+                onChanged: (e){
+                  mobile = e ;
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   counterText: '',
@@ -98,7 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: RaisedButton(
                       color: Theme.of(context).primaryColor,
                       onPressed: (){
-                        Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                        if(mobile==""||mobile.length < 10){
+
+                          Utility.toastMessage("Enter Correct Number")  ;
+                        }else{
+                          loginApi() ;
+                        }
+
+                        // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -121,5 +150,26 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void loginApi() {
+
+    Map<String , String>headers = Map() ;
+    Map<String , String>map = Map() ;
+    map["IsdCode"]="+91" ;
+    map["Mobile"]="" + mobile ;
+
+    headers["device_token"] = "" ;
+    headers["Content-Type"] = "application/json" ;
+    headers["Authorization"] = "" + auth_token ;
+
+
+    NetworkUtils.postRequest(body: map , endpoint: "" + Constant.Login , headers: headers).then((e){
+
+      print(e) ;
+    });
+
+
+
   }
 }

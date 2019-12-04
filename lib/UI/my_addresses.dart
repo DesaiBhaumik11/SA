@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/add_new_address.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 class MyAddresses extends StatefulWidget {
   @override
@@ -295,4 +297,13 @@ class FunkyOverlayState extends State<FunkyOverlay>
       ),
     );
   }
+
+  void getMyAddress(){
+
+    NetworkUtils.getRequest(endPoint: Constant.GetMyAddresses).then((res){
+      print("GetMyAddresses" + res) ;
+    }) ;
+
+  }
+
 }

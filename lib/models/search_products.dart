@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/product_common.dart';
 
@@ -41,7 +42,7 @@ class SearchModel with ChangeNotifier{
   };
 
   searchProducts(s){
-      NetworkUtils.getRequest(endPoint: "SearchProduct?searchString=$s").then((r){
+      NetworkUtils.getRequest(endPoint: Constant.SearchProduct + "$s").then((r){
         print("Best selling product response = $r");
         setData(json.decode(r));
       }).catchError((e) {
