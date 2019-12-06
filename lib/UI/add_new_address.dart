@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
@@ -72,7 +73,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
               child: RaisedButton(
                 onPressed: () {
                   Navigator.push(context, SlideLeftRoute(page: LocateMap())).then((latLng){
-
+                    ProgressDialog d=ProgressDialog(context);
                     Result result=
                       Result(
                       id:          widget.edit?widget.result.id:  Uuid().v4(),
@@ -80,7 +81,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
                       addressLine1:  addressLine1,
                       addressLine2:  addressLine2,
-                      city:          city,
+                      city:          "AMBD",
                       country:       "DEMO",
                       state:         "DEMO STATE",
                       pin:           "151204",
@@ -88,7 +89,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       longitude:     latLng.longitude,
                       isDefault:     false
                     );
-                   widget.edit? Provider.of<AddressModal>(context).updateAddress(result):Provider.of<AddressModal>(context).addAddress(result);
+                   widget.edit? Provider.of<AddressModal>(context).updateAddress(result,callback: addressChanged()):Provider.of<AddressModal>(context).addAddress(result,callback: addressChanged());
                   });
                 },
                 color: Theme.of(context).primaryColor,
@@ -340,6 +341,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
     );
+  }
+
+  addressChanged(){
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 }
 

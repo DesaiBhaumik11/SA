@@ -129,6 +129,6 @@ class MyApp extends StatelessWidget {
           Const.sharedCart: (BuildContext context) => SharedCart(),
           Const.cartView: (BuildContext context) => CartView(),
         },
-        home: SplashScreen()));
+        home: DashboardScreen()));
   }
 }

@@ -208,7 +208,7 @@ abstract class NetworkUtils {
     headerMap["Content-Type"] = "application/json";
     headerMap["Authorization"] = authorization;
 
-    Response response = await post(url, headers: headerMap, body: body??Map());
+    Response response = await put(url, headers: headerMap, body: body??Map());
     if(response.statusCode==200){
     }else{
       Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);

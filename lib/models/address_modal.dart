@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
@@ -63,11 +64,10 @@ class AddressModal extends ChangeNotifier{
     notifyListeners() ;
   }
 
-  addAddress(Result result){
-    Map<String,dynamic> map={
-      "Id":            result.id,
+  addAddress(Result result,{callback}){
+
+      Map<String,dynamic> map={
       "Name":          result.name,
-      "ContactId":     result.contactId,
       "AddressLine1":  result.addressLine1,
       "AddressLine2":  result.addressLine2,
       "City":          result.city,
@@ -78,11 +78,22 @@ class AddressModal extends ChangeNotifier{
       "Longitude":     result.longitude,
       "IsDefault":     result.isDefault
     };
-    NetworkUtils.postRequest(endpoint:Constant.AddAddress,body: "$map").then((r){
+    NetworkUtils.postRequest(endpoint:Constant.AddAddress,body: json.encode(map)).then((r){
+      print("Address response = $r");
+      var root=json.decode(r);
+      if(root['IsError']){
+       Fluttertoast.showToast(msg: "error");
+      }else {
+        this.result.add(Result.fromJson((root['Result'])));
+        if(callback!=null){
+          callback();
+        }
+        notifyListeners();
+      }
     });
   }
 
-  updateAddress(Result result) {
+  updateAddress(Result result,{callback}) {
     Map<String,dynamic> map={
       "Id":            result.id,
       "Name":          result.name,
@@ -97,8 +108,18 @@ class AddressModal extends ChangeNotifier{
       "Longitude":     result.longitude,
       "IsDefault":     result.isDefault
     };
-    NetworkUtils.putRequest(endpoint:Constant.AddAddress,body: "$map").then((r){
+    NetworkUtils.putRequest(endpoint:Constant.UpdateAddress,body: json.encode(map)).then((r){
       print("Update request response $r");
+      var root=json.decode(r);
+      if(root['IsError']){
+        Fluttertoast.showToast(msg: "error in update");
+      }else {
+        getMyAddresses();
+        if(callback!=null){
+          callback();
+        }
+        notifyListeners();
+      }
     });
   }
 

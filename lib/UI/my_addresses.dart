@@ -140,6 +140,7 @@ class _MyAddressesState extends State<MyAddresses> {
                             .map((i) => PopupMenuItem(
                                     child: ListTile(
                                   onTap: () {
+                                    Navigator.pop(context);
                                     if (i == "Edit") {
                                       Navigator.push(
                                           context,
