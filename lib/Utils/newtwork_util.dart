@@ -17,6 +17,9 @@ abstract class NetworkUtils{
   static String _baseUrl= Constant.BASE_URL ;
   static String AWT_Token= "" ;
 
+  static String device_token= "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI4NyIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJzYW1zdW5nIiwibW9kZWwiOiJHYWxheHkgUzEwIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOS4wIiwicGxhdGZvcm0iOiJNb2JpbGUiLCJub3RpZmljYXRpb25pZCI6IiIsImlhdCI6MTU1ODk1NzQ0NiwibmJmIjoxNTU4OTU3NDQ2LCJleHAiOjE1NzU2MDk0NDYsImF1ZCI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.k5NPGlUfy2K4d9f-rgUUiCrA9N_9eO2S5xqNigu9rdw_iCI5NaIbYlB5ga_ISL356t9rBc43ZT7xtrVnyPp7Ww" ;
+  static String Authorization= "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s " ;
+
   static Future<String> postRequest({Map<String,String> body,String
   endpoint,Map<String,String> headers}) async{
 
@@ -32,13 +35,9 @@ abstract class NetworkUtils{
   static Future<String> getRequest({String endPoint}) async {
     Map<String, String> headerMap = Map();
 
-    SharedPreferences.getInstance().then((prefs){
-
-      headerMap["device_token"] = "device_token" ;
-      headerMap["Content-Type"] = "device_token" ;
-      headerMap["Authorization"] = "Authorization" ;
-
-    }) ;
+      headerMap["device_token"] = "" +device_token ;
+      headerMap["Content-Type"] = "application/json" ;
+      headerMap["Authorization"] = ""+Authorization ;
 
 
     String url="$_baseUrl$endPoint";

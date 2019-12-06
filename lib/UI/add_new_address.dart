@@ -2,12 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/address_modal.dart';
 
 import 'locate_on_map.dart';
 
 class AddNewAddress extends StatefulWidget {
+   Result result ;
+  AddNewAddress(Result result){
+
+    this.result = result ;
+
+  }
+
+
   @override
-  _AddNewAddressState createState() => _AddNewAddressState();
+  _AddNewAddressState createState() => _AddNewAddressState(result);
 }
 
 class _AddNewAddressState extends State<AddNewAddress> {
@@ -24,11 +33,34 @@ class _AddNewAddressState extends State<AddNewAddress> {
     color: Colors.grey,
     fontWeight: FontWeight.w500
   );
-
+  String fname ="" ;
   var tappedIndex = -1;
+     Result resultt  ;
+    _AddNewAddressState(Result result){
+    this.resultt = result ;
+
+
+    }
+
+    @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     fname = resultt.name ?? '';
+     //fname = resultt.name??'default value' ;
+  }
+
+
+
+
+  //String fname =  result.name!=null? result.name:'default value' ;
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
     return Scaffold(
       backgroundColor: Color(0xffffffff),
       appBar: AppBar(
@@ -146,9 +178,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 ),
 
                 Text('Full Name', style: title,),
-
+               // Text(cart_prod_qty!=null?cart_prod_qty:'Default Value'),
                 TextFormField(
-                  initialValue: 'Parth Parekh',
+                  initialValue: fname ,
                   style: text,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 7)

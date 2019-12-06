@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
-ProductDetail productDetailFromJson(String str) => ProductDetail.fromJson(json.decode(str));
+ProductDetailModal productDetailFromJson(String str) => ProductDetailModal.fromJson(json.decode(str));
 
-String productDetailToJson(ProductDetail data) => json.encode(data.toJson());
+String productDetailToJson(ProductDetailModal data) => json.encode(data.toJson());
 
-class ProductDetail extends ChangeNotifier{
+class ProductDetailModal extends ChangeNotifier{
   Result result;
   int statusCode;
   String message;
@@ -18,14 +18,14 @@ class ProductDetail extends ChangeNotifier{
   bool loaded=false;
   bool _loading=false;
 
-  ProductDetail({
+  ProductDetailModal({
     this.result,
     this.statusCode,
     this.message,
     this.isError,
   });
 
-  factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
+  factory ProductDetailModal.fromJson(Map<String, dynamic> json) => ProductDetailModal(
     result: Result.fromJson(json["Result"]),
     statusCode: json["StatusCode"],
     message: json["Message"],
@@ -62,6 +62,7 @@ class ProductDetail extends ChangeNotifier{
     message= decode["Message"];
     isError = decode["IsError"];
 
+
     loaded=true;
     notifyListeners();
   }
@@ -83,7 +84,7 @@ class Result {
   int expiryPeriod;
   dynamic expiryPeriodType;
   dynamic barCodeType;
-  int alertQuantity;
+  double alertQuantity;
   dynamic productImage;
   dynamic unit;
   List<dynamic> productExtraFields;

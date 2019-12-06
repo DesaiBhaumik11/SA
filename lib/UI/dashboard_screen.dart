@@ -10,9 +10,11 @@ import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
@@ -22,9 +24,18 @@ class DashboardScreen extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final cat=Provider.of<CategoriesModel>(context);
+
+
     final bestSelling=Provider.of<BestSellingProductModel>(context);
     final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
     final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
+    final addressModal=Provider.of<AddressModal>(context);
+
+    if(!addressModal.loaded){
+      addressModal.getMyAddresses() ;
+    }
+
+
     if(!cat.isLoaded){
       cat.loadCategories();
     }
@@ -234,7 +245,12 @@ class DashboardScreen extends StatelessWidget
         GestureDetector(
           onTap: () {
             SharedPreferences.getInstance().then((prefs){
-              prefs.setString("product_id", "1")  ;
+              prefs.setString("product_id", ""+result.id)  ;
+
+              final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+
+              productModal.getProductDetail(result.id) ;
+
               Navigator.pushNamed(context, Const.productDetail);
             }) ;
 

@@ -1,12 +1,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/product_detail.dart';
 
 class ProductDetailScreen extends StatefulWidget
 {
@@ -20,6 +22,7 @@ class ProductDetailScreen extends StatefulWidget
 
 class ProductDetailScreenState extends State<ProductDetailScreen>
 {
+   ProductDetailModal productModal ;
 
   var pressed = false;
   bool descFlag = false;
@@ -35,13 +38,13 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    SharedPreferences.getInstance().then((prefs){
-
-
-      getProductById(prefs.getString("product_id")) ;
-
-    }) ;
+//
+//    SharedPreferences.getInstance().then((prefs){
+//
+//
+//      getProductById(prefs.getString("product_id")) ;
+//
+//    }) ;
 
 
 
@@ -50,6 +53,14 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+
+     productModal=Provider.of<ProductDetailModal>(context);
+     print("Product Detail provider" + productModal.result.id) ;
+
+
+
+
+
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +74,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             child: Image.asset('back.png', height: 25,),
           ),
         ),
-        title: Text('Washington Apple'),
+        title: Text(productModal.result.seoTags),
+        //title: Text('Washington Apple'),
         actions: <Widget>[
           Container(
             margin: EdgeInsets.fromLTRB(5.0, 0.0, 10.0, 0.0),
@@ -158,7 +170,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           Container(
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
             alignment: Alignment.centerLeft,
-            child: Text('Washington Apple', style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
+
+            child: Text(productModal.result.seoTags, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
                 fontWeight: FontWeight.w800),),
           ),
           Row(

@@ -12,8 +12,10 @@ import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
@@ -53,6 +55,9 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   final categories=CategoriesModel();
 
+  final productModal=ProductDetailModal();
+  final addressModal=AddressModal();
+
   final bestSellingProducts=BestSellingProductModel();
 
   final vegetosExclusive=VegetosExclusiveModel();
@@ -66,6 +71,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
 
+      ChangeNotifierProvider<AddressModal>.value(value: addressModal),
+      ChangeNotifierProvider<ProductDetailModal>.value(value: productModal),
       ChangeNotifierProvider<CategoriesModel>.value(value: categories),
       ChangeNotifierProvider<BestSellingProductModel>.value(value: bestSellingProducts),
       ChangeNotifierProvider<VegetosExclusiveModel>.value(value: vegetosExclusive),
@@ -107,7 +114,7 @@ class MyApp extends StatelessWidget {
           Const.updateProfile: (BuildContext context) => UpdateProfile(),
           Const.myOrders: (BuildContext context) => MyOrders(),
           Const.myAddresses: (BuildContext context) => MyAddresses(),
-          Const.addNewAddress: (BuildContext context) => AddNewAddress(),
+          Const.addNewAddress: (BuildContext context) => AddNewAddress(null),
           Const.locateMap: (BuildContext context) => LocateMap(),
           Const.offerzone: (BuildContext context) => Offerzone(),
           Const.itemsOfferzone: (BuildContext context) => ItemsOfferzone(),

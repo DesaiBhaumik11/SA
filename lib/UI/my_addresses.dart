@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/add_new_address.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/address_modal.dart';
 
 class MyAddresses extends StatefulWidget {
   @override
@@ -12,11 +14,20 @@ class MyAddresses extends StatefulWidget {
 }
 
 class _MyAddressesState extends State<MyAddresses> {
+  AddressModal  addressModal ;
   var address = TextStyle(
       fontWeight: FontWeight.w400, fontSize: 15, color: Color(0xff2d2d2d));
 
+
+
   @override
   Widget build(BuildContext context) {
+     addressModal=Provider.of<AddressModal>(context);
+
+    if(!addressModal.loaded){
+      addressModal.getMyAddresses();
+    }
+
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
@@ -42,7 +53,7 @@ class _MyAddressesState extends State<MyAddresses> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              Navigator.push(context, SlideLeftRoute(page: AddNewAddress()));
+              Navigator.push(context, SlideLeftRoute(page: AddNewAddress(null)));
             },
             child: Container(
               width: double.infinity,
@@ -90,7 +101,9 @@ class _MyAddressesState extends State<MyAddresses> {
   }
 
   ListView buildList(BuildContext context) {
+
     return ListView.builder(
+
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {},
@@ -104,7 +117,7 @@ class _MyAddressesState extends State<MyAddresses> {
                   Row(
                     children: <Widget>[
                       Text(
-                        'Home',
+                        addressModal.result[index].name,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
@@ -130,7 +143,7 @@ class _MyAddressesState extends State<MyAddresses> {
                                       Navigator.push(
                                           context,
                                           SlideLeftRoute(
-                                              page: AddNewAddress()));
+                                              page: AddNewAddress(addressModal.result[index])));
                                     } else {
                                       showDialog(
                                           context: context,
@@ -156,15 +169,15 @@ class _MyAddressesState extends State<MyAddresses> {
                     height: 10,
                   ),
                   Text(
-                    'Partho Parekh',
+                    addressModal.result[index].name,
                     style: address,
                   ),
                   Text(
-                    'Shayona Tilak 3, New SG Road, Gota',
+                    addressModal.result[index].addressLine1,
                     style: address,
                   ),
                   Text(
-                    'Ahmedabad, Gujarat 38248',
+                    addressModal.result[index].addressLine2,
                     style: address,
                   )
                 ],
@@ -173,7 +186,7 @@ class _MyAddressesState extends State<MyAddresses> {
           ),
         );
       },
-      itemCount: 4,
+      itemCount: addressModal.result.length ,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
@@ -298,12 +311,6 @@ class FunkyOverlayState extends State<FunkyOverlay>
     );
   }
 
-  void getMyAddress(){
 
-    NetworkUtils.getRequest(endPoint: Constant.GetMyAddresses).then((res){
-      print("GetMyAddresses" + res) ;
-    }) ;
-
-  }
 
 }
