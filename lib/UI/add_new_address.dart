@@ -76,9 +76,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     ProgressDialog d=ProgressDialog(context);
                     Result result=
                       Result(
-                      id:          widget.edit?widget.result.id:  Uuid().v4(),
+                  //    id:          widget.edit?widget.result.id:  Uuid().v4(),
                       name:          fName,
-                      contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
+                     // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
                       addressLine1:  addressLine1,
                       addressLine2:  addressLine2,
                       city:          "AMBD",

@@ -74,7 +74,7 @@ class _ProfileState extends State<Profile> {
 
                         Row(
                           children: <Widget>[
-                            Text('Parth@archisys.in', style: text,),
+                            Text('Parth@test.in', style: text,),
                             GestureDetector(
                               onTap: (){},
                               child: Padding(
