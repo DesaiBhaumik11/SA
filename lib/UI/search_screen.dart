@@ -201,7 +201,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
+
                           result[index].seoTags,
+
                           style: TextStyle(
                               fontSize: 17.0,
                               fontFamily: 'GoogleSans',

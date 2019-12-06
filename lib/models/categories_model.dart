@@ -49,7 +49,7 @@ setSubVisibility(index){
   loadCategories() {
     if(!_loading) {
       _loading=true;
-      NetworkUtils.getRequest(endPoint: "" + Constant.GetAllCategories).then((r) {
+      NetworkUtils.getRequest(endPoint: Constant.GetAllCategories).then((r) {
         _loading=false;
         print("categories response = $r");
         setData(json.decode(r));

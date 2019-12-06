@@ -68,7 +68,10 @@ class DashboardScreen extends StatelessWidget
               children: <Widget>[
                 searchBar(context),
                 adViewWidget(),
-                bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):Container(),
+                bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):Center(child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: CircularProgressIndicator(),
+                ),),
                 vegitosExclusive.loaded?horizontalList("Vegeto's Exclusive",vegitosExclusive.result):Container(),
                 recommendedProducts.loaded?horizontalList("Recommended for you",recommendedProducts.result):Container(),
 
@@ -244,13 +247,13 @@ class DashboardScreen extends StatelessWidget
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            SharedPreferences.getInstance().then((prefs){
-              prefs.setString("product_id", ""+result.id)  ;
-
-              final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-
-              productModal.getProductDetail(result.id) ;
-
+            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator())));
+            productModal.getProductDetail(result.id,(){
+              Navigator.pop(context);
               Navigator.pushNamed(context, Const.productDetail);
             }) ;
 
@@ -565,7 +568,7 @@ class DashboardScreen extends StatelessWidget
               ),
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.myAddresses);
+                  Navigator.pushNamed(context, Const.myAddresses,);
                 },
                 child: Container(
                   height: 50.0,

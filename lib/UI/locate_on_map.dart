@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
@@ -22,6 +23,8 @@ class _LocateMapState extends State<LocateMap> {
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+
+  LatLng latLng;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +105,12 @@ class _LocateMapState extends State<LocateMap> {
                           Expanded(
                             child: RaisedButton(
                               onPressed: () {
-//                                Navigator.push(context, SlideLeftRoute(page: LocateMap()));
+                                if (latLng != null) {
+                                  Navigator.pop(context, latLng);
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Please pick a location");
+                                }
                               },
                               color: Theme.of(context).primaryColor,
                               child: Padding(
@@ -135,16 +143,14 @@ class _LocateMapState extends State<LocateMap> {
   void onMapTap(LatLng argument) {
     _createMarkerImageFromAsset("assets/locate-on-map.png").then((b) {
       setState(() {
-        markers.add(Marker(
+        markers.add(
+          Marker(
             markerId: MarkerId('value'),
             icon: b,
             position: argument,
-            onTap: () {
-              setState(() {
-                singleCard = !singleCard;
-              });
-            }));
-        //
+          ),
+        );
+        latLng = argument;
       });
     });
   }

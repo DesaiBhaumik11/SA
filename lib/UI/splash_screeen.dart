@@ -111,7 +111,7 @@ class SplashScreen extends StatelessWidget {
 
 
     SharedPreferences.getInstance().then((prefs){
-      prefs.setString("JWT_TOKEN", "" + token) ;
+      prefs.setString("JWT_TOKEN",token) ;
 
     });
 

@@ -47,13 +47,13 @@ class VegetosExclusiveModel with ChangeNotifier {
   loadProducts(){
     if(!_loading) {
       _loading=true;
-      NetworkUtils.getRequest(endPoint: "" + Constant.GetVegetosExclusive).then((r) {
+      NetworkUtils.getRequest(endPoint: Constant.GetVegetosExclusive).then((r) {
         _loading=false;
-        print("Vegetos Exclusive product response = $r");
+        print("product response = $r");
         setData(json.decode(r));
       }).catchError((e) {
         _loading=false;
-        print("Error caught in Vegetos Exclusive $e");
+        print("Error caught in $e");
       });
     }
   }

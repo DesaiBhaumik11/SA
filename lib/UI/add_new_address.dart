@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
@@ -7,78 +11,58 @@ import 'package:vegetos_flutter/models/address_modal.dart';
 import 'locate_on_map.dart';
 
 class AddNewAddress extends StatefulWidget {
-   Result result ;
-  AddNewAddress(Result result){
+  Result result;
 
-    this.result = result ;
+  bool edit;
 
-  }
-
+  AddNewAddress({this.result, this.edit});
 
   @override
-  _AddNewAddressState createState() => _AddNewAddressState(result);
+  _AddNewAddressState createState() => _AddNewAddressState();
 }
 
 class _AddNewAddressState extends State<AddNewAddress> {
-
   int _radioValue1 = -1;
 
-  var text = TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 16
-  );
+  var text = TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
 
-  var title = TextStyle(
-    fontSize: 13,
-    color: Colors.grey,
-    fontWeight: FontWeight.w500
-  );
-  String fname ="" ;
+  var title =TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w500);
+  String fName;
+
   var tappedIndex = -1;
-     Result resultt  ;
-    _AddNewAddressState(Result result){
-    this.resultt = result ;
 
+  var addressLine1,addressLine2,city;
 
-    }
-
-    @override
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-     fname = resultt.name ?? '';
-     //fname = resultt.name??'default value' ;
+
+    fName = widget.edit ? widget.result.name : '';
+    addressLine1 = widget.edit ? widget.result.addressLine1 : '';
+    addressLine2 = widget.edit ? widget.result.addressLine2 : '';
+    city = widget.edit ? widget.result.city : '';
   }
-
-
-
-
-  //String fname =  result.name!=null? result.name:'default value' ;
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Scaffold(
       backgroundColor: Color(0xffffffff),
       appBar: AppBar(
         backgroundColor: Const.appBar,
         elevation: 0,
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset(
+              'back.png',
+              height: 25,
+            ),
           ),
         ),
-
-        title: Text(
-            'Add New Address'
-        ),
+        title: Text(widget.edit?"Edit Address":'Add New Address'),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -86,18 +70,37 @@ class _AddNewAddressState extends State<AddNewAddress> {
           children: <Widget>[
             Expanded(
               child: RaisedButton(
-                onPressed: (){
-                  Navigator.push(context, SlideLeftRoute(page: LocateMap()));
+                onPressed: () {
+                  Navigator.push(context, SlideLeftRoute(page: LocateMap())).then((latLng){
+
+                    Result result=
+                      Result(
+                      id:          widget.edit?widget.result.id:  Uuid().v4(),
+                      name:          fName,
+                      contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
+                      addressLine1:  addressLine1,
+                      addressLine2:  addressLine2,
+                      city:          city,
+                      country:       "DEMO",
+                      state:         "DEMO STATE",
+                      pin:           "151204",
+                      latitude:      latLng.latitude,
+                      longitude:     latLng.longitude,
+                      isDefault:     false
+                    );
+                   widget.edit? Provider.of<AddressModal>(context).updateAddress(result):Provider.of<AddressModal>(context).addAddress(result);
+                  });
                 },
                 color: Theme.of(context).primaryColor,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
-                    'Next', style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                    'Next',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -108,7 +111,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
-
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -116,7 +118,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 value: 0,
                 activeColor: Const.orange,
                 groupValue: _radioValue1,
-                onChanged: (int e){
+                onChanged: (int e) {
                   setState(() {
                     _radioValue1 = e;
                   });
@@ -126,13 +128,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 'Mr.',
                 style: text,
               ),
-
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               new Radio(
                 value: 1,
                 activeColor: Const.orange,
                 groupValue: _radioValue1,
-                onChanged: (int e){
+                onChanged: (int e) {
                   setState(() {
                     _radioValue1 = e;
                   });
@@ -142,14 +145,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 'Mrs.',
                 style: text,
               ),
-
-              SizedBox(width: 10,),
-
+              SizedBox(
+                width: 10,
+              ),
               new Radio(
                 value: 2,
                 activeColor: Const.orange,
                 groupValue: _radioValue1,
-                onChanged: (int e){
+                onChanged: (int e) {
                   setState(() {
                     _radioValue1 = e;
                   });
@@ -161,14 +164,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
               ),
             ],
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-
                 Divider(
                   color: Colors.grey,
                 ),
@@ -177,40 +178,15 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   height: 10,
                 ),
 
-                Text('Full Name', style: title,),
-               // Text(cart_prod_qty!=null?cart_prod_qty:'Default Value'),
+                Text(
+                  'Full Name',
+                  style: title,
+                ),
+                // Text(cart_prod_qty!=null?cart_prod_qty:'Default Value'),
                 TextFormField(
-                  initialValue: fname ,
+                  initialValue: fName,
                   style: text,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 7)
-                  ),
-                ),
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                Text('Flat/House/Office', style: title,),
-
-                TextFormField(
-                  initialValue: 'A/101, Sheetalnath Apaetment',
-                  style: text,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 7)
-                  ),
-                ),
-
-
-                SizedBox(
-                  height: 20,
-                ),
-
-                Text('Street/Socity/Area', style: title,),
-
-                TextFormField(
-                  initialValue: 'Viksagurg Road, Opera House socity',
-                  style: text,
+                  onChanged: (e)=>fName=e,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 7)
                   ),
@@ -220,10 +196,47 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   height: 20,
                 ),
 
-                Text('Locality', style: title,),
+                Text(
+                  'Flat/House/Office',
+                  style: title,
+                ),
+
+                TextFormField(
+                  initialValue: addressLine1,
+                  style: text,
+                  onChanged: (e)=>addressLine1=e,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 7)),
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+
+                Text(
+                  'Street/Socity/Area',
+                  style: title,
+                ),
+
+                TextFormField(
+                  initialValue: addressLine2,
+                  style: text,
+                  onChanged: (e)=>addressLine2=e,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 7)),
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+
+                Text(
+                  'Locality',
+                  style: title,
+                ),
 
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     showDialog(
                         context: context,
                         builder: (s) {
@@ -231,9 +244,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         });
                   },
                   child: Padding(
-                    padding: EdgeInsets.only(top: 10,right: 15),
+                    padding: EdgeInsets.only(top: 10, right: 15),
                     child: Text(
-                      'Paldi, Ahmedabad', style: text,
+                      '$city',
+                      style: text,
                     ),
                   ),
                 ),
@@ -242,12 +256,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   color: Colors.black,
                 ),
 
-
                 SizedBox(
                   height: 20,
                 ),
 
-                Text('Nickname of your address', style: title,),
+                Text(
+                  'Nickname of your address',
+                  style: title,
+                ),
 
                 Container(
                   height: 60,
@@ -256,21 +272,22 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   child: buildList(context),
                 ),
 
-
-                Text('Create your own label', style: title,),
+                Text(
+                  'Create your own label',
+                  style: title,
+                ),
 
                 SizedBox(
                   height: 10,
                 ),
 
-                Text('My Friends\'s Home', style: text,),
-
-
-
+                Text(
+                  'My Friends\'s Home',
+                  style: text,
+                ),
               ],
             ),
           )
-
         ],
       ),
     );
@@ -284,29 +301,30 @@ class _AddNewAddressState extends State<AddNewAddress> {
             Padding(
               padding: const EdgeInsets.only(left: 3, right: 3, top: 10),
               child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   setState(() {
                     tappedIndex = index;
                   });
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      color:  tappedIndex == index
+                      color: tappedIndex == index
                           ? Const.orange
                           : Color(0xffb8b8b8),
-                      borderRadius: BorderRadius.all(Radius.circular(5))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Text(
-                        'Home', style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: tappedIndex == index
-                            ? Color(0xffffffff)
-                            : Color(0xff000000),
-                      ),
+                        'Home',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: tappedIndex == index
+                              ? Color(0xffffffff)
+                              : Color(0xff000000),
+                        ),
                       ),
                     ),
                   ),
@@ -323,9 +341,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
       physics: BouncingScrollPhysics(),
     );
   }
-
 }
-
 
 class FunkyOverlay extends StatefulWidget {
   @override
@@ -363,8 +379,10 @@ class FunkyOverlayState extends State<FunkyOverlay>
           child: ScaleTransition(
             scale: scaleAnimation,
             child: Padding(
-                padding: EdgeInsets.symmetric( vertical: 35,),
-                child:  Wrap(
+                padding: EdgeInsets.symmetric(
+                  vertical: 35,
+                ),
+                child: Wrap(
                   children: <Widget>[
                     Container(
                       width: double.infinity,
@@ -372,62 +390,62 @@ class FunkyOverlayState extends State<FunkyOverlay>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-
-                          Image.asset('locality-not-found.png', height: 150,),
-
+                          Image.asset(
+                            'locality-not-found.png',
+                            height: 150,
+                          ),
                           SizedBox(
                             height: 10,
                           ),
-
-                          Text(Const.localitydialog1,textAlign: TextAlign.center, style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ),),
-
+                          Text(
+                            Const.localitydialog1,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
+                          ),
                           SizedBox(
                             height: 10,
                           ),
-
-                          Text(Const.localitydialog2,textAlign: TextAlign.center, style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),),
-
-
+                          Text(
+                            Const.localitydialog2,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                            ),
+                          ),
                           SizedBox(
                             height: 10,
                           ),
-
-
                           RaisedButton(
                               color: Theme.of(context).primaryColor,
-                              onPressed: (){
+                              onPressed: () {
                                 Navigator.pop(context);
                               },
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(50))
-                              ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                child: Text('okay', style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white
-                                ),),
-                              )
-                          )
-
-
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: Text(
+                                  'okay',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ))
                         ],
                       ),
                     ),
                   ],
-                )
-            ),
+                )),
           ),
         ),
       ),
     );
   }
 }
-

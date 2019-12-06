@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
           Const.updateProfile: (BuildContext context) => UpdateProfile(),
           Const.myOrders: (BuildContext context) => MyOrders(),
           Const.myAddresses: (BuildContext context) => MyAddresses(),
-          Const.addNewAddress: (BuildContext context) => AddNewAddress(null),
+          Const.addNewAddress: (BuildContext context) => AddNewAddress(),
           Const.locateMap: (BuildContext context) => LocateMap(),
           Const.offerzone: (BuildContext context) => Offerzone(),
           Const.itemsOfferzone: (BuildContext context) => ItemsOfferzone(),

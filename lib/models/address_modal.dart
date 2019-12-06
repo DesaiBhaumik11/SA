@@ -51,15 +51,8 @@ class AddressModal extends ChangeNotifier{
         print("getMyAddresses = $response");
         setData(json.decode(response)) ;
         loaded = true ;
-
       });
-
-
-    }else{
-
     }
-
-
   }
 
   void setData(decode) {
@@ -67,11 +60,47 @@ class AddressModal extends ChangeNotifier{
     statusCode= decode["StatusCode"] ;
     message= decode["Message"];
     isError= decode["IsError"] ;
-
     notifyListeners() ;
-
   }
 
+  addAddress(Result result){
+    Map<String,dynamic> map={
+      "Id":            result.id,
+      "Name":          result.name,
+      "ContactId":     result.contactId,
+      "AddressLine1":  result.addressLine1,
+      "AddressLine2":  result.addressLine2,
+      "City":          result.city,
+      "Country":       result.country,
+      "State":         result.state,
+      "Pin":           result.pin,
+      "Latitude":      result.latitude,
+      "Longitude":     result.longitude,
+      "IsDefault":     result.isDefault
+    };
+    NetworkUtils.postRequest(endpoint:Constant.AddAddress,body: "$map").then((r){
+    });
+  }
+
+  updateAddress(Result result) {
+    Map<String,dynamic> map={
+      "Id":            result.id,
+      "Name":          result.name,
+      "ContactId":     result.contactId,
+      "AddressLine1":  result.addressLine1,
+      "AddressLine2":  result.addressLine2,
+      "City":          result.city,
+      "Country":       result.country,
+      "State":         result.state,
+      "Pin":           result.pin,
+      "Latitude":      result.latitude,
+      "Longitude":     result.longitude,
+      "IsDefault":     result.isDefault
+    };
+    NetworkUtils.putRequest(endpoint:Constant.AddAddress,body: "$map").then((r){
+      print("Update request response $r");
+    });
+  }
 
 }
 

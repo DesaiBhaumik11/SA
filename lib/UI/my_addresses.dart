@@ -26,6 +26,7 @@ class _MyAddressesState extends State<MyAddresses> {
 
     if(!addressModal.loaded){
       addressModal.getMyAddresses();
+      return Material(child: Center(child: CircularProgressIndicator(),),);
     }
 
     return Scaffold(
@@ -53,7 +54,7 @@ class _MyAddressesState extends State<MyAddresses> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              Navigator.push(context, SlideLeftRoute(page: AddNewAddress(null)));
+              Navigator.push(context, SlideLeftRoute(page: AddNewAddress(edit: false)));
             },
             child: Container(
               width: double.infinity,
@@ -142,8 +143,7 @@ class _MyAddressesState extends State<MyAddresses> {
                                     if (i == "Edit") {
                                       Navigator.push(
                                           context,
-                                          SlideLeftRoute(
-                                              page: AddNewAddress(addressModal.result[index])));
+                                          SlideLeftRoute(page: AddNewAddress(result:addressModal.result[index],edit: true)));
                                     } else {
                                       showDialog(
                                           context: context,
@@ -222,6 +222,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
 
   @override
   Widget build(BuildContext context) {
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),

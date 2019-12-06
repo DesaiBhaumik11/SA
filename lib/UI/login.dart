@@ -157,14 +157,14 @@ class _LoginScreenState extends State<LoginScreen> {
     Map<String , String>headers = Map() ;
     Map<String , String>map = Map() ;
     map["IsdCode"]="+91" ;
-    map["Mobile"]="" + mobile ;
+    map["Mobile"]=mobile ;
 
     headers["device_token"] = "" ;
     headers["Content-Type"] = "application/json" ;
-    headers["Authorization"] = "" + auth_token ;
+    headers["Authorization"] = auth_token ;
 
 
-    NetworkUtils.postRequest(body: map , endpoint: "" + Constant.Login , headers: headers).then((e){
+    NetworkUtils.postRequest(body: map , endpoint: Constant.Login , headers: headers).then((e){
 
       print(e) ;
     });

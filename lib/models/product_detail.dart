@@ -40,14 +40,14 @@ class ProductDetailModal extends ChangeNotifier{
   };
 
 
-  getProductDetail(String id){
+  getProductDetail(String id,callback){
     if(!_loading) {
       _loading=true;
-      NetworkUtils.getRequest(endPoint: "" + Constant.GetProductById+id).then((r) {
+      NetworkUtils.getRequest(endPoint:  Constant.GetProductById+id).then((r) {
         _loading=false;
         print("getProductDetail = $r");
         setData(json.decode(r)) ;
-
+        callback();
       }).catchError((e) {
         _loading=false;
         print("Error caught in getProductDetail $e");
