@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class Constant{
 
-  static String BASE_URL = "http://artismicro.archisys.biz:5101/";
+  static const String BASE_URL = "http://artismicro.archisys.biz:5101/";
 
-  static String GetMyAddresses  = "GetMyAddresses";
+  static String getMyAddresses  = "GetMyAddresses";
   static String GetAddressById  = "GetAddressById?addressId=";
   static String AddAddress  = "AddAddress";
   static String UpdateAddress  = "UpdateAddress";
