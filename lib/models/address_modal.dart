@@ -47,7 +47,7 @@ class AddressModal extends ChangeNotifier{
   getMyAddresses(){
     if(!is_loading){
       is_loading = true ;
-      NetworkUtils.getRequest(endPoint: Constant.GetMyAddresses).then((response){
+      NetworkUtils.getRequest(endPoint: Constant.getMyAddresses).then((response){
         is_loading = false  ;
         print("getMyAddresses = $response");
         setData(json.decode(response)) ;
