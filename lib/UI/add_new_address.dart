@@ -72,8 +72,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(context, SlideLeftRoute(page: LocateMap())).then((latLng){
-                    ProgressDialog d=ProgressDialog(context);
+                  Navigator.push(context, SlideLeftRoute(page: LocateMap(latLng:widget.edit?LatLng(widget.result.latitude,widget.result.longitude):null))).then((latLng){
                     Result result=
                       Result(
                       id:          widget.edit?widget.result.id:  Uuid().v4(),
@@ -344,7 +343,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
   }
 
   addressChanged(){
-    Navigator.pop(context);
+
     Navigator.pop(context);
   }
 }

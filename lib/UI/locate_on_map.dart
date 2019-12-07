@@ -5,6 +5,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class LocateMap extends StatefulWidget {
+  var latLng;
+
+  LocateMap({this.latLng});
   @override
   _LocateMapState createState() => _LocateMapState();
 }
@@ -19,13 +22,26 @@ class _LocateMapState extends State<LocateMap> {
 
   bool singleCard = false;
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  CameraPosition _kGooglePlex;
 
   LatLng latLng;
-
+  @override
+  void initState() {
+    super.initState();
+    if(widget.latLng!=null){
+      latLng=widget.latLng;
+      _kGooglePlex = CameraPosition(
+        target: latLng,
+        zoom: 14.4746,
+      );
+      onMapTap(latLng);
+    }else{
+      _kGooglePlex = CameraPosition(
+        target: LatLng(37.42796133580664, -122.085749655962),
+        zoom: 14.4746,
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
