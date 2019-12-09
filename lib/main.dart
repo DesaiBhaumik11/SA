@@ -16,6 +16,7 @@ import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/brand_model.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
@@ -67,6 +68,8 @@ class MyApp extends StatelessWidget {
 
   final searchModel=SearchModel();
 
+  final mycartModal=MyCartModal();
+
   final brandModel=BrandModel();
 
   // This widget is the root of your application.
@@ -74,6 +77,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
 
+      ChangeNotifierProvider<MyCartModal>.value(value: mycartModal),
       ChangeNotifierProvider<AddressModal>.value(value: addressModal),
       ChangeNotifierProvider<ProductDetailModal>.value(value: productModal),
       ChangeNotifierProvider<CategoriesModel>.value(value: categories),

@@ -12,6 +12,7 @@ import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
@@ -252,7 +253,7 @@ class DashboardScreen extends StatelessWidget
                 height: 25,
                 width: 25,
                 child: CircularProgressIndicator())));
-            productModal.getProductDetail(result.id,(){
+              productModal.getProductDetail(result.id,(){
               Navigator.pop(context);
               Navigator.pushNamed(context, Const.productDetail);
             }) ;

@@ -2,12 +2,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
+import 'package:vegetos_flutter/models/product_common.dart';
+import 'package:vegetos_flutter/models/product_detail.dart';
+import 'package:vegetos_flutter/models/recommended_products.dart';
 
 class MyCartScreen extends StatefulWidget
 {
@@ -21,9 +26,27 @@ class MyCartScreen extends StatefulWidget
 
 class MyCartState extends State<MyCartScreen>
 {
+  MyCartModal myCartModal ;
+  RecommendedProductsModel  recommendedProductsModel ;
+
+
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
+    myCartModal = Provider.of<MyCartModal>(context) ;
+    recommendedProductsModel = Provider.of<RecommendedProductsModel>(context) ;
+
+    if(!recommendedProductsModel.loaded){
+      recommendedProductsModel.loadProducts();
+
+    }
+
+    if(!myCartModal.loaded){
+      myCartModal.getMyCart();
+      return Material(child: Center(child: CircularProgressIndicator(),),);
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Const.appBar,
@@ -105,7 +128,7 @@ class MyCartState extends State<MyCartScreen>
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
-                        child: Text('You have savd ₹104', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                        child: Text('You have savd ₹ 0', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
                             color: Colors.white, fontWeight: FontWeight.w500),),
                       )
                     ],
@@ -115,7 +138,7 @@ class MyCartState extends State<MyCartScreen>
                   alignment: Alignment.centerLeft,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('₹400', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                    child: Text("₹${myCartModal.totalCost}", style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                         color: Colors.white, fontWeight: FontWeight.w500),textAlign: TextAlign.left,),
                   ),
                 ),
@@ -147,7 +170,7 @@ class MyCartState extends State<MyCartScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('₹504', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                      child: Text("₹${myCartModal.totalCost}", style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
                     ),
                   ],
                 ),
@@ -162,7 +185,7 @@ class MyCartState extends State<MyCartScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('-₹104', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                      child: Text('-₹ 0', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
                     ),
                   ],
                 ),
@@ -199,7 +222,7 @@ class MyCartState extends State<MyCartScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('₹400', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                      child: Text("₹${myCartModal.totalCost}", style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
                     ),
                   ],
                 ),
@@ -219,15 +242,15 @@ class MyCartState extends State<MyCartScreen>
         Container(
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
-          child: Text('Items ifn your cart', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+          child: Text('Items in your cart', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
         ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 10,
+          itemCount: myCartModal.result.cartItems.length ,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
-              title: cartItemChild(),
+              title: cartItemChild(myCartModal.result.cartItems[index]),
               onTap: () {
 
               },
@@ -238,7 +261,7 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  Widget cartItemChild()
+  Widget cartItemChild(CartItem cartItem)
   {
     return Container(
       child: Card(
@@ -270,9 +293,14 @@ class MyCartState extends State<MyCartScreen>
                   child: Column(
                     children: <Widget>[
                       Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                        child: Text('Remove' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                            color: Colors.black, fontWeight: FontWeight.w500),),
+                      ), Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('Cherry Tomatoes', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('Cherry Tomatoes' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             color: Colors.black, fontWeight: FontWeight.w500),),
                       ),
                       Container(
@@ -292,7 +320,7 @@ class MyCartState extends State<MyCartScreen>
                                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text('₹101 ',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      child: Text("${cartItem.amount}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
                                       ),
@@ -302,7 +330,7 @@ class MyCartState extends State<MyCartScreen>
                                     margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text('₹120 ',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
+                                      child: Text("11" ,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w500,
                                           color: Colors.grey, decoration: TextDecoration.lineThrough),
                                       ),
@@ -315,20 +343,45 @@ class MyCartState extends State<MyCartScreen>
                               flex: 0,
                               child: Row(
                                 children: <Widget>[
-                                  Container(
+
+                                  InkWell(onTap: (){
+                                    cartItem.quantity ++ ;
+                                    myCartModal.totalCost = myCartModal.totalCost+ cartItem.amount ;
+
+
+                                    setState(() {
+
+                                    });
+
+                                  },child:   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                     child: Image.asset('assets/plus.png', height: 20.0, width: 20.0,),
-                                  ),
+                                  ),),
+
+
                                   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Text('1',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                    child: Text("${cartItem.quantity}" ,style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,)),
                                   ),
-                                  Container(
+
+                                  InkWell(onTap: (){
+
+                                    if( cartItem.quantity>0){
+                                      cartItem.quantity--  ;
+                                      myCartModal.totalCost = myCartModal.totalCost - cartItem.amount ;
+                                      setState(() {
+
+                                      });
+                                    }
+
+                                  },child:    Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                     child: Image.asset('assets/minus.png', height: 20.0, width: 20.0,),
-                                  ),
+                                  ),),
+
+
                                 ],
                               ),
                             )
@@ -385,7 +438,7 @@ class MyCartState extends State<MyCartScreen>
                       itemCount: 10,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        return childView(context);
+                        return childView(context , index );
                       }
                   ),
                 )
@@ -397,13 +450,23 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  Widget childView(BuildContext context)
-  {
+  Widget childView(BuildContext context, int index ) {
+
     return Stack(
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, Const.productDetail);
+
+            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator())));
+              productModal.getProductDetail(recommendedProductsModel.result[index].id ,(){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, Const.productDetail);
+            }) ;
+            //Navigator.pushNamed(context, Const.productDetail);
           },
           child: Container(
             width: 180.0,
@@ -434,9 +497,15 @@ class MyCartState extends State<MyCartScreen>
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                    child: Text('Parle Monacco Cheeselings Classic',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black)),
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(recommendedProductsModel.result[index].seoTags,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black)),
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
@@ -481,8 +550,8 @@ class MyCartState extends State<MyCartScreen>
                     ),
                     child: Align(
                       alignment: Alignment.center,
-                      child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        color: Colors.white, fontWeight: FontWeight.w500,)),
+                      child: InkWell(child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        color: Colors.white, fontWeight: FontWeight.w500,)),onTap: AddItem(index),)
                     ),
                   )
                 ],
@@ -496,11 +565,19 @@ class MyCartState extends State<MyCartScreen>
   }
 
 
-  void getMyCart(){
-    NetworkUtils.getRequest(endPoint: Constant.GetMyCards).then((e){
-      print("GetMyCards" + e) ;
+   AddItem(int index){
 
-    }) ;
+    Map<String , String> map = Map() ;
+    map["Id"] = "" ;
+    map["CartId"] = "" ;
+    map["ProductId"] = recommendedProductsModel.result[index].id;
+    map["ProductVariantId"] = recommendedProductsModel.result[index].id ;
+    map["Quantity"] = "1" ;
+    map["OfferId"] = "" ;
+    map["Amount"] = "1000" ;
+
+
+
   }
 
 }
