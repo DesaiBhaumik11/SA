@@ -44,8 +44,6 @@ class MyCartModal extends ChangeNotifier{
 
 
   void getMyCart(){
-
-    print("Get My Cart getMyCart Called");
     if(!_loading) {
       _loading=true;
       NetworkUtils.getRequest(endPoint: Constant.GetCart).then((r) {
@@ -60,7 +58,30 @@ class MyCartModal extends ChangeNotifier{
   }
 
 
+  claerCart(){
 
+    NetworkUtils.allDeleteRequest(endpoint: Constant.ClearCart).then((res){
+      print("claerCart response = $res");
+      getMyCart();
+    }).catchError((e){print("Error claerCart  $e");}) ;
+
+
+
+  }
+
+
+  void updateQuantity(String itemId , int quantity){
+
+//    print("${itemId}   >>> ${quantity}") ;
+    Map<String , String>  headersmap = Map() ;
+
+    NetworkUtils.postRequest(body: null,endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
+
+      print("updateQuantity REsponse>>> $res") ;
+
+    }) ;
+
+  }
 
   void setData(json) {
     result= Result.fromJson(json["Result"]);
@@ -68,14 +89,12 @@ class MyCartModal extends ChangeNotifier{
     message= json["Message"];
     isError = json["IsError"];
     loaded=true;
-
+    totalCost = 0.0 ;
     for(int i =0 ; i<result.cartItems.length ; i++){
       totalCost = totalCost+  result.cartItems[i].amount*result.cartItems[i].quantity ;
     }
 
     print(totalCost) ;
-
-
     notifyListeners();
   }
 

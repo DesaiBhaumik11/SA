@@ -218,4 +218,34 @@ abstract class NetworkUtils {
 
 
   }
+
+
+  static Future<String> allDeleteRequest(
+      {
+        String endpoint}) async{
+
+    String url = '$_baseUrl$endpoint';
+    print("allDeleteRequest url>>>>$url") ;
+    Map<String, String> headerMap = Map();
+
+    headerMap["device_token"] = deviceToken;
+    headerMap["Content-Type"] = "application/json";
+    headerMap["Authorization"] = authorization;
+
+    Response response = await delete(url, headers: headerMap);
+    if(response.statusCode==200){
+    }else{
+      Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
+    }
+    return response.body;
+
+
+
+  }
+
+
+
+
+
+
 }

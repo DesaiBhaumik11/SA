@@ -20,13 +20,14 @@ class Constant{
   static String AddCard  = "AddCard";
   static String UpdateCard  = "UpdateCard";
   static String DeleteCard  = "DeleteCard?cardId=";
+  static String UpdateQuantity  = "UpdateQuantity?itemId=";
   static String GetCart  = "GetCart";
   static String AddItem  = "AddItem";
   static String Count  = "Count";
   static String UpdateItem  = "UpdateItem";
-  static String DeleteItem  = "DeleteItem?cartItemId=";
+  static String DeleteItem  = "DeleteItem?itemId=";
   static String AddQuantity  = "/AddQuantity?itemId=";
-  static String ClearCart  = "ClearCart?cartId=";
+  static String ClearCart  = "ClearCart";
   static String Checkout  = "Checkout";
   static String GetAllCategories  = "GetAllCategories";
 

@@ -81,6 +81,16 @@ class MyCartState extends State<MyCartScreen>
         actions: <Widget>[
           InkWell(
             onTap: (){
+              confirmDelete() ;
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: Icon(Icons.delete, color: Colors.white,),
+            ),
+          ),
+
+          InkWell(
+            onTap: (){
               Navigator.push(context, SlideLeftRoute(page: SelectContact()));
             },
             child: Container(
@@ -106,6 +116,9 @@ class MyCartState extends State<MyCartScreen>
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
           onTap: () {
+
+            checkOutCall();
+
             Navigator.push(context, SlideLeftRoute(page: SetDeliveryDetails()));
           },
           child: Container(
@@ -292,12 +305,18 @@ class MyCartState extends State<MyCartScreen>
                 child: Container(
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('Remove' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
-                            color: Colors.black, fontWeight: FontWeight.w500),),
-                      ), Container(
+
+//                      InkWell(onTap: (){
+//                        removetoCart(cartItem.id) ;
+//                      },child:   Container(
+//                        alignment: Alignment.topRight,
+//                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+//                        child: Text('Remove' , style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
+//                            color: Colors.black, fontWeight: FontWeight.w500),),
+//
+//                      ),) ,
+
+                     Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                         child: Text('Cherry Tomatoes' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
@@ -348,6 +367,7 @@ class MyCartState extends State<MyCartScreen>
                                     cartItem.quantity ++ ;
                                     myCartModal.totalCost = myCartModal.totalCost+ cartItem.amount ;
 
+                                    updateQuantity(cartItem.id , cartItem.quantity) ;
 
                                     setState(() {
 
@@ -368,12 +388,16 @@ class MyCartState extends State<MyCartScreen>
 
                                   InkWell(onTap: (){
 
-                                    if( cartItem.quantity>0){
+                                    if( cartItem.quantity>1){
+                                      updateQuantity(cartItem.id , cartItem.quantity) ;
                                       cartItem.quantity--  ;
                                       myCartModal.totalCost = myCartModal.totalCost - cartItem.amount ;
                                       setState(() {
-
                                       });
+                                    }else{
+
+                                      removetoCart(cartItem.id) ;
+
                                     }
 
                                   },child:    Container(
@@ -579,5 +603,76 @@ class MyCartState extends State<MyCartScreen>
 
 
   }
+
+  removetoCart(String id) {
+
+    NetworkUtils.allDeleteRequest(endpoint: Constant.DeleteItem+id).then((res){
+      print("removetoCart Response = $res");
+
+      myCartModal.getMyCart() ;
+    }) ;
+  }
+
+
+  void updateQuantity(String itemId , int quantity){
+
+    myCartModal.updateQuantity(itemId,quantity) ;
+
+//
+//    print("${itemId}   >>> ${quantity}") ;
+//    Map<String , String>  headersmap = Map() ;
+//
+//    NetworkUtils.postRequest(body: null,endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
+//
+//      print("updateQuantity REsponse>>> $res") ;
+//
+//    }) ;
+
+
+
+  }
+
+  void confirmDelete() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("My Cart"),
+          content: new Text("Are you sure you want clear your cart items?"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                myCartModal.claerCart() ;
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void checkOutCall() {
+
+    NetworkUtils.getRequest(endPoint: Constant.Checkout).then((res){
+
+      print("checkOutCall Response>> $res");
+
+    }).catchError((e){
+      print("checkOutCall Error>> $e");
+    }) ;
+
+  }
+
 
 }
