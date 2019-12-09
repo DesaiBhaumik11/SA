@@ -12,6 +12,7 @@ import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
@@ -19,7 +20,7 @@ import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 class DashboardScreen extends StatelessWidget
-{
+{MyCartModal myCartModal ;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +30,17 @@ class DashboardScreen extends StatelessWidget
     final bestSelling=Provider.of<BestSellingProductModel>(context);
     final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
     final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
+
     final addressModal=Provider.of<AddressModal>(context);
+     myCartModal=Provider.of<MyCartModal>(context);
+
+    if(!myCartModal.loaded){
+      myCartModal.getMyCart() ;
+    }
 
     if(!addressModal.loaded){
       addressModal.getMyAddresses() ;
     }
-
-
     if(!cat.isLoaded){
       cat.loadCategories();
     }
@@ -95,6 +100,7 @@ class DashboardScreen extends StatelessWidget
       actions: <Widget>[
         GestureDetector(
           onTap: () {
+            myCartModal.loaded =false ;
             Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
           },
           child: Container(
@@ -112,7 +118,7 @@ class DashboardScreen extends StatelessWidget
                     child: CircleAvatar(
                       backgroundColor: Colors.orange,
                       radius: 8.0,
-                      child: Text('88',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                      child: Text("${myCartModal.result.cartItems.length}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                     ),
                   ),
                 )
@@ -252,7 +258,7 @@ class DashboardScreen extends StatelessWidget
                 height: 25,
                 width: 25,
                 child: CircularProgressIndicator())));
-            productModal.getProductDetail(result.id,(){
+              productModal.getProductDetail(result.id,(){
               Navigator.pop(context);
               Navigator.pushNamed(context, Const.productDetail);
             }) ;
@@ -943,7 +949,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
     //Navigator.pushNamed(context, Const.loginScreen);
 
     NetworkUtils.getRequest(endPoint: Constant.Logout).then((res){
-      print("logoutApi" +res) ;
+      print("logoutApi " +res) ;
 
       Navigator.pushNamed(context, Const.loginScreen);
 
