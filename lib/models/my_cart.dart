@@ -60,7 +60,7 @@ class MyCartModal extends ChangeNotifier{
 
   claerCart(){
 
-    NetworkUtils.allDeleteRequest(endpoint: Constant.ClearCart).then((res){
+    NetworkUtils.deleteRequest(endPoint: Constant.ClearCart).then((res){
       print("claerCart response = $res");
       getMyCart();
     }).catchError((e){print("Error claerCart  $e");}) ;

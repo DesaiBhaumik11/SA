@@ -606,7 +606,7 @@ class MyCartState extends State<MyCartScreen>
 
   removetoCart(String id) {
 
-    NetworkUtils.allDeleteRequest(endpoint: Constant.DeleteItem+id).then((res){
+    NetworkUtils.deleteRequest(endPoint: Constant.DeleteItem+id).then((res){
       print("removetoCart Response = $res");
 
       myCartModal.getMyCart() ;
