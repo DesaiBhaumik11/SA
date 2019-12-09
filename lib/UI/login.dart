@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
+import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
@@ -59,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('We will dend you a One Time Password', style: TextStyle(
+                Text('We will send you a One Time Password', style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 15
                 ),),
@@ -124,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           Utility.toastMessage("Enter Correct Number")  ;
                         }else{
-                          loginApi() ;
+                          validate();
                         }
 
                         // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
@@ -171,5 +174,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
 
+  }
+
+  void validate() {
+
+    NetworkUtils.postRequest(endpoint: "/Validate",body: json.encode({
+      "IsdCode": "<string>",
+      "Mobile": "<long>"
+    }));
   }
 }

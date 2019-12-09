@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
@@ -149,7 +150,7 @@ class _MyAddressesState extends State<MyAddresses> {
                                       showDialog(
                                           context: context,
                                           builder: (s) {
-                                            return FunkyOverlay();
+                                            return FunkyOverlay(addressModal.result[index].id);
                                           });
                                     }
                                   },
@@ -196,6 +197,10 @@ class _MyAddressesState extends State<MyAddresses> {
 }
 
 class FunkyOverlay extends StatefulWidget {
+  var id;
+
+  FunkyOverlay(this.id);
+
   @override
   State<StatefulWidget> createState() => FunkyOverlayState();
 }
@@ -263,7 +268,8 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Provider.of<AddressModal>(context).deleteAddress(widget.id,callback:(){Navigator.pop(context);});
+                                //  Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius:

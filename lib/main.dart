@@ -14,6 +14,7 @@ import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
+import 'package:vegetos_flutter/models/brand_model.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
@@ -69,6 +70,8 @@ class MyApp extends StatelessWidget {
 
   final mycartModal=MyCartModal();
 
+  final brandModel=BrandModel();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -81,7 +84,8 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<BestSellingProductModel>.value(value: bestSellingProducts),
       ChangeNotifierProvider<VegetosExclusiveModel>.value(value: vegetosExclusive),
       ChangeNotifierProvider<RecommendedProductsModel>.value(value: recommendedProducts),
-      ChangeNotifierProvider<SearchModel>.value(value: searchModel)
+      ChangeNotifierProvider<SearchModel>.value(value: searchModel),
+      ChangeNotifierProvider<BrandModel>.value(value: brandModel)
 
     ],child: MaterialApp(
         title: 'Vegetos',
@@ -133,6 +137,6 @@ class MyApp extends StatelessWidget {
           Const.sharedCart: (BuildContext context) => SharedCart(),
           Const.cartView: (BuildContext context) => CartView(),
         },
-        home: DashboardScreen()));
+        home: SplashScreen()));
   }
 }
