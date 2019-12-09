@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 class SplashScreen extends StatelessWidget {
   bool runOnce=true;
@@ -25,14 +27,21 @@ class SplashScreen extends StatelessWidget {
    if(runOnce){
      runOnce=false;
      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-     Future.delayed(const Duration(milliseconds: 3000), () {
-
-       getJwtToken() ;
-
-       Navigator.pushNamed(context, Const.welcome);
+     Future.delayed(const Duration(milliseconds: 3000), () async {
+        SharedPreferences prefs=await SharedPreferences.getInstance();
+        String uuid=prefs.getString("uuid")??Uuid().v4();
+        createDeviceToken();
      });
    }
-
+   navigate(){
+     SharedPreferences.getInstance().then((prefs){
+       if(prefs.getBool("login")??false){
+         Navigator.pushNamed(context, Const.welcome);
+       }else{
+         Navigator.pushNamed(context, Const.loginScreen);
+       }
+     });
+   }
     return Scaffold(
       body: Container(
         child: Stack(
@@ -121,4 +130,12 @@ class SplashScreen extends StatelessWidget {
 
   }
 
+  void createDeviceToken() {
+    //TODO: CREATE AND RETURN DEVICE TOKEN HERE
+  }
+  void appFirstStart(){
+    NetworkUtils.postRequest(endpoint: Constant.AppFirstStart).then((r){
+
+    });
+  }
 }

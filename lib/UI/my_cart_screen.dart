@@ -34,7 +34,7 @@ class MyCartState extends State<MyCartScreen>
   @override
   Widget build(BuildContext context) {
 
-    myCartModal = Provider.of<MyCartModal>(context) ;
+    myCartModal = Provider.of<MyCartModal>(context);
     recommendedProductsModel = Provider.of<RecommendedProductsModel>(context) ;
 
     if(!recommendedProductsModel.loaded){
