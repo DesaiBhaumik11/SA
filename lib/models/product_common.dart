@@ -20,7 +20,7 @@ class Result {
   int expiryPeriod;
   dynamic expiryPeriodType;
   dynamic barCodeType;
-  int alertQuantity;
+  double alertQuantity;
   dynamic productImage;
   dynamic unit;
   List<ProductExtraField> productExtraFields;
