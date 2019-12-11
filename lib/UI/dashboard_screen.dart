@@ -20,7 +20,10 @@ import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 class DashboardScreen extends StatelessWidget
-{MyCartModal myCartModal ;
+{
+  MyCartModal myCartModal ;
+  int cartSize=0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,8 @@ class DashboardScreen extends StatelessWidget
 
     if(!myCartModal.loaded){
       myCartModal.getMyCart() ;
+    }else{
+      cartSize=myCartModal.result.cartItems.length ;
     }
 
     if(!addressModal.loaded){
@@ -118,7 +123,7 @@ class DashboardScreen extends StatelessWidget
                     child: CircleAvatar(
                       backgroundColor: Colors.orange,
                       radius: 8.0,
-                      child: Text("${myCartModal.result.cartItems.length}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                      child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                     ),
                   ),
                 )
