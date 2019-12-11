@@ -31,6 +31,8 @@ class SplashScreen extends StatelessWidget {
         SharedPreferences prefs=await SharedPreferences.getInstance();
         String uuid=prefs.getString("uuid")??Uuid().v4();
         createDeviceToken();
+        Navigator.pushNamed(context, Const.welcome);
+
      });
    }
    navigate(){

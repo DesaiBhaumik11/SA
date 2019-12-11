@@ -535,7 +535,7 @@ class MyCartState extends State<MyCartScreen>
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('300 gm',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text('${recommendedProductsModel.result[index].alertQuantity} gm',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -547,7 +547,7 @@ class MyCartState extends State<MyCartScreen>
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text('₹101 ',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: Text('₹ ${recommendedProductsModel.result[index].alertQuantity}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                           ),
@@ -575,7 +575,7 @@ class MyCartState extends State<MyCartScreen>
                     child: Align(
                       alignment: Alignment.center,
                       child: InkWell(child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        color: Colors.white, fontWeight: FontWeight.w500,)),onTap: AddItem(index),)
+                        color: Colors.white, fontWeight: FontWeight.w500,)),onTap:(){ AddItem(index);},)
                     ),
                   )
                 ],
@@ -595,10 +595,15 @@ class MyCartState extends State<MyCartScreen>
     map["Id"] = "" ;
     map["CartId"] = "" ;
     map["ProductId"] = recommendedProductsModel.result[index].id;
-    map["ProductVariantId"] = recommendedProductsModel.result[index].id ;
+    map["ProductVariantId"] = recommendedProductsModel.result[index].productVariants[0].productDetails[0].productVariantId ;
     map["Quantity"] = "1" ;
     map["OfferId"] = "" ;
-    map["Amount"] = "1000" ;
+    map["Amount"] = "${recommendedProductsModel.result[index].alertQuantity}" ;
+
+     myCartModal.addTocart(map) ;
+
+
+
 
 
 

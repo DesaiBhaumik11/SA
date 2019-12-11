@@ -58,6 +58,19 @@ class MyCartModal extends ChangeNotifier{
   }
 
 
+  addTocart(Map map){
+
+    final body = jsonEncode(map) ;
+    print("addToCart Body" + body) ;
+
+    NetworkUtils.postRequest(body: body ,endpoint: Constant.AddItem).then((res){
+      print("addTocart response = $res");
+      getMyCart();
+    }).catchError((e){print("Error addTocart  $e");}) ;
+
+  }
+
+
   claerCart(){
 
     NetworkUtils.deleteRequest(endPoint: Constant.ClearCart).then((res){
@@ -105,7 +118,7 @@ class MyCartModal extends ChangeNotifier{
 
 class Result {
   String userId;
-  List<CartItem> cartItems;
+  List<CartItem> cartItems = List();
   DateTime createdOn;
   dynamic updatedOn;
 
