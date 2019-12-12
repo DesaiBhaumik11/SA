@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
@@ -123,10 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           Utility.toastMessage("Enter Correct Number")  ;
 
-                        }else{
-
-
-                          validate();
+                        }else{    validate();
 
                         }
 
@@ -147,9 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-
-
-
 
             SizedBox(height: 50),
 
@@ -177,12 +172,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void validate() {
 
-
+    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
     NetworkUtils.postRequest(endpoint: Constant.Login  ,body: json.encode({
       "IsdCode": "+91",
       "Mobile": ""+mobile})).then((res){
-        print("Login Response Here $res") ;
+        print("Login Response  $res") ;
+        progressDialog.dismiss();
 
+    }).catchError((e){
+      print("Login catchError $e") ;
+      progressDialog.dismiss();
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
@@ -211,16 +212,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: Theme.of(context).primaryColor,
                         onPressed: (){
                           if(mobile==""||mobile.length < 10||email==""){
-
                             Utility.toastMessage("Enter email or phone number")  ;
-
                           }else{
-
-
                             register();
-
                           }
-
                           // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
                         },
                         child: Padding(
@@ -265,14 +260,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void register() {
 
+    ProgressDialog dialog = Utility.progressDialog(context,"");
+    dialog.show() ;
     NetworkUtils.postRequest(endpoint: Constant.Register  ,body: json.encode({
       "Email":""+email,
       "Name":""+name,
       "ReferralCode":""+reffer_code,
       "IsdCode": "+91",
       "Mobile": ""+mobile})).then((res){
+        dialog.dismiss() ;
+        showDialog(
+            context: context,
+            builder: (s) {
+              Utility.toastMessage("Comming soon..");
+
+            });
       print("Login Response Here $res") ;
 
+    });
+  }
+
+
+
+  void validate(String code) {
+    ProgressDialog dialog = Utility.progressDialog(context,"");
+    dialog.show() ;
+    NetworkUtils.postRequest(endpoint: Constant.Validate  ,body: json.encode({
+      "Code":""+code,
+      "IsdCode": "+91",
+      "Mobile": ""+mobile})).then((res){
+      dialog.dismiss() ;
+      print("validate response $res") ;
+
+    }).catchError((e){
+      print("validate catchError $e") ;
     });
   }
 
