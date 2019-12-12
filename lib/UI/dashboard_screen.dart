@@ -11,6 +11,7 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
+import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
@@ -18,15 +19,19 @@ import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
+import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class DashboardScreen extends StatelessWidget
 {
   MyCartModal myCartModal ;
-  int cartSize=0;
+  static int cartSize=0;
+  AppFirstModal appFirstModal ;
+
 
 
   @override
   Widget build(BuildContext context) {
+    appFirstModal = Provider.of<AppFirstModal>(context);
     final cat=Provider.of<CategoriesModel>(context);
 
 
@@ -40,12 +45,12 @@ class DashboardScreen extends StatelessWidget
     if(!myCartModal.loaded){
       myCartModal.getMyCart() ;
     }else{
-      cartSize=myCartModal.result.cartItems.length ;
+      cartSize=myCartModal.result.productViewModel.length ;
     }
 
-    if(!addressModal.loaded){
-      addressModal.getMyAddresses() ;
-    }
+//    if(!addressModal.loaded){
+//      addressModal.getMyAddresses() ;
+//    }
     if(!cat.isLoaded){
       cat.loadCategories();
     }
@@ -123,7 +128,8 @@ class DashboardScreen extends StatelessWidget
                     child: CircleAvatar(
                       backgroundColor: Colors.orange,
                       radius: 8.0,
-                      child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                      child: Text("${myCartModal.cartItemSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                      //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                     ),
                   ),
                 )
@@ -280,7 +286,8 @@ class DashboardScreen extends StatelessWidget
                       Container(
                         child: Align(
                           alignment: Alignment.center,
-                          child: result.productImage==null||result.productImage.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):Image.network("${result.productImage}", height: 100.0, width: 100.0,),
+                          child: result.productMediaId==null||result.productMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):Image.network("${appFirstModal
+                          .ImageUrl}${result.productMediaId}", height: 100.0, width: 100.0,),
                         ),
                         margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
@@ -301,7 +308,7 @@ class DashboardScreen extends StatelessWidget
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(result.seoTags,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(result.seoTag,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),
@@ -312,7 +319,7 @@ class DashboardScreen extends StatelessWidget
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('${result.alertQuantity} gm',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text('${result.quantity} ${result.unit} ',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -324,7 +331,7 @@ class DashboardScreen extends StatelessWidget
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text('₹101 ',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: Text('₹ ${result.price}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                           ),
@@ -729,7 +736,7 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              Container(
+              InkWell(child: Container(
                 height: 50.0,
                 child: Align(
                   alignment: Alignment.center,
@@ -747,7 +754,16 @@ class DashboardScreen extends StatelessWidget
                     ],
                   ),
                 ),
-              ),
+              ),onTap: (){
+                //Navigator.pop(context) ;
+
+                WcFlutterShare.share(
+                    sharePopupTitle: 'Share',
+                    subject: 'This is subject',
+                    text: 'This is text',
+                    mimeType: 'text/plain');
+                //Share.share('check out my website https://example.com', subject: 'Look what I made!');
+              },),
               InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Const.aboutVegetos);

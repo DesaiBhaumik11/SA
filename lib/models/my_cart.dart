@@ -1,44 +1,50 @@
+// To parse this JSON data, do
+//
+//     final myCartModal = myCartModalFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
-MyCartModal myCartFromJson(String str) => MyCartModal.fromJson(json.decode(str));
+MyCartModal myCartModalFromJson(String str) => MyCartModal.fromJson(json.decode(str));
 
-String myCartToJson(MyCartModal data) => json.encode(data.toJson());
+String myCartModalToJson(MyCartModal data) => json.encode(data.toJson());
 
 class MyCartModal extends ChangeNotifier{
-  Result result;
+  String version;
   int statusCode;
   String message;
   bool isError;
-  double totalCost = 0.0 ;
+  Result result;
   bool _loading = false ;
   bool loaded = false ;
+  int cartItemSize = 0 ;
+  double totalCost = 0.0;
 
   MyCartModal({
-    this.result,
+    this.version,
     this.statusCode,
     this.message,
     this.isError,
+    this.result,
   });
 
   factory MyCartModal.fromJson(Map<String, dynamic> json) => MyCartModal(
-    result: Result.fromJson(json["Result"]),
+    version: json["Version"],
     statusCode: json["StatusCode"],
     message: json["Message"],
     isError: json["IsError"],
+    result: Result.fromJson(json["Result"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "Result": result.toJson(),
+    "Version": version,
     "StatusCode": statusCode,
     "Message": message,
     "IsError": isError,
-
+    "Result": result.toJson(),
   };
 
 
@@ -103,10 +109,10 @@ class MyCartModal extends ChangeNotifier{
     isError = json["IsError"];
     loaded=true;
     totalCost = 0.0 ;
-    for(int i =0 ; i<result.cartItems.length ; i++){
-      totalCost = totalCost+  result.cartItems[i].amount*result.cartItems[i].quantity ;
+    for(int i =0 ; i<result.productViewModel.length ; i++){
+      totalCost = totalCost+  result.totalAmount*result.productViewModel[i].quantity ;
     }
-
+    cartItemSize = result.productViewModel.length ;
     print(totalCost) ;
     notifyListeners();
   }
@@ -117,77 +123,105 @@ class MyCartModal extends ChangeNotifier{
 }
 
 class Result {
-  String userId;
-  List<CartItem> cartItems = List();
-  DateTime createdOn;
-  dynamic updatedOn;
+  String id;
+  String cartId;
+  List<ProductViewModel> productViewModel;
+  double totalAmount;
+  double deliveryChages;
+  double discount;
 
   Result({
-    this.userId,
-    this.cartItems,
-    this.createdOn,
-    this.updatedOn,
+    this.id,
+    this.cartId,
+    this.productViewModel,
+    this.totalAmount,
+    this.deliveryChages,
+    this.discount,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-    userId: json["UserId"],
-    cartItems: List<CartItem>.from(json["CartItems"].map((x) => CartItem.fromJson(x))),
-    createdOn: DateTime.parse(json["CreatedOn"]),
-    updatedOn: json["UpdatedOn"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "UserId": userId,
-    "CartItems": List<dynamic>.from(cartItems.map((x) => x.toJson())),
-    "CreatedOn": createdOn.toIso8601String(),
-    "UpdatedOn": updatedOn,
-  };
-}
-
-class CartItem {
-  String id;
-  String userId;
-  String productId;
-  String productVariantId;
-  int quantity;
-  String offerId;
-  double amount;
-  DateTime createdOn;
-  dynamic updatedOn;
-
-  CartItem({
-    this.id,
-    this.userId,
-    this.productId,
-    this.productVariantId,
-    this.quantity,
-    this.offerId,
-    this.amount,
-    this.createdOn,
-    this.updatedOn,
-  });
-
-  factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
     id: json["Id"],
-    userId: json["UserId"],
-    productId: json["ProductId"],
-    productVariantId: json["ProductVariantId"],
-    quantity: json["Quantity"],
-    offerId: json["OfferId"],
-    amount: json["Amount"],
-    createdOn: DateTime.parse(json["CreatedOn"]),
-    updatedOn: json["UpdatedOn"],
+    cartId: json["CartId"],
+    productViewModel: List<ProductViewModel>.from(json["ProductViewModel"].map((x) => ProductViewModel.fromJson(x))),
+    totalAmount: json["TotalAmount"],
+    deliveryChages: json["DeliveryChages"],
+    discount: json["Discount"],
   );
 
   Map<String, dynamic> toJson() => {
     "Id": id,
-    "UserId": userId,
-    "ProductId": productId,
+    "CartId": cartId,
+    "ProductViewModel": List<dynamic>.from(productViewModel.map((x) => x.toJson())),
+    "TotalAmount": totalAmount,
+    "DeliveryChages": deliveryChages,
+    "Discount": discount,
+  };
+}
+
+class ProductViewModel {
+  String name;
+  String description;
+  double price;
+  String unit;
+  dynamic categoryId;
+  String productVariantId;
+  String productVariantGroupId;
+  String productMediaId;
+  double offer;
+  String id;
+  String brandId;
+  double discountPercent;
+  String seoTag;
+  int quantity;
+
+  ProductViewModel({
+    this.name,
+    this.description,
+    this.price,
+    this.unit,
+    this.categoryId,
+    this.productVariantId,
+    this.productVariantGroupId,
+    this.productMediaId,
+    this.offer,
+    this.id,
+    this.brandId,
+    this.discountPercent,
+    this.seoTag,
+    this.quantity,
+  });
+
+  factory ProductViewModel.fromJson(Map<String, dynamic> json) => ProductViewModel(
+    name: json["Name"],
+    description: json["Description"],
+    price: json["Price"],
+    unit: json["Unit"],
+    categoryId: json["CategoryId"],
+    productVariantId: json["ProductVariantId"],
+    productVariantGroupId: json["ProductVariantGroupId"],
+    productMediaId: json["ProductMediaId"],
+    offer: json["Offer"],
+    id: json["Id"],
+    brandId: json["BrandId"],
+    discountPercent: json["DiscountPercent"],
+    seoTag: json["SEOTag"],
+    quantity: json["Quantity"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "Name": name,
+    "Description": description,
+    "Price": price,
+    "Unit": unit,
+    "CategoryId": categoryId,
     "ProductVariantId": productVariantId,
+    "ProductVariantGroupId": productVariantGroupId,
+    "ProductMediaId": productMediaId,
+    "Offer": offer,
+    "Id": id,
+    "BrandId": brandId,
+    "DiscountPercent": discountPercent,
+    "SEOTag": seoTag,
     "Quantity": quantity,
-    "OfferId": offerId,
-    "Amount": amount,
-    "CreatedOn": createdOn.toIso8601String(),
-    "UpdatedOn": updatedOn,
   };
 }

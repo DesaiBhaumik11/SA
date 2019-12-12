@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
 class Utility{
 
@@ -16,9 +15,6 @@ class Utility{
         fontSize: 16.0
     );
   }
-
-
-
 
 
 }

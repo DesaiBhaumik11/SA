@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 
 class CategoriesScreen extends StatelessWidget {
-
+  MyCartModal myCartModal ;
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,8 @@ class CategoriesScreen extends StatelessWidget {
     if(!categoriesModel.isLoaded){
       categoriesModel.loadCategories();
     }
+
+    myCartModal=Provider.of<MyCartModal>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Const.appBar,
@@ -42,7 +46,7 @@ class CategoriesScreen extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: Colors.orange,
                       radius: 8.0,
-                      child: Text('88',
+                      child: Text("${myCartModal.cartItemSize}",
                           style: TextStyle(
                               fontSize: 10.0,
                               fontFamily: 'GoogleSans',

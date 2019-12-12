@@ -259,11 +259,11 @@ class MyCartState extends State<MyCartScreen>
         ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: myCartModal.result.cartItems.length ,
+          itemCount: myCartModal.result.productViewModel.length ,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
-              title: cartItemChild(myCartModal.result.cartItems[index]),
+              title: cartItemChild(myCartModal.result.productViewModel[index]),
               onTap: () {
 
               },
@@ -274,7 +274,7 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  Widget cartItemChild(CartItem cartItem)
+  Widget cartItemChild(ProductViewModel cartItem)
   {
     return Container(
       child: Card(
@@ -339,7 +339,7 @@ class MyCartState extends State<MyCartScreen>
                                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text("${cartItem.amount}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      child: Text("${cartItem.price}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
                                       ),
@@ -365,7 +365,7 @@ class MyCartState extends State<MyCartScreen>
 
                                   InkWell(onTap: (){
                                     cartItem.quantity ++ ;
-                                    myCartModal.totalCost = myCartModal.totalCost+ cartItem.amount ;
+                                    myCartModal.totalCost = myCartModal.totalCost+ cartItem.price ;
 
                                     updateQuantity(cartItem.id , cartItem.quantity) ;
 
@@ -391,7 +391,7 @@ class MyCartState extends State<MyCartScreen>
                                     if( cartItem.quantity>1){
                                       updateQuantity(cartItem.id , cartItem.quantity) ;
                                       cartItem.quantity--  ;
-                                      myCartModal.totalCost = myCartModal.totalCost - cartItem.amount ;
+                                      myCartModal.totalCost = myCartModal.totalCost - cartItem.price ;
                                       setState(() {
                                       });
                                     }else{
@@ -524,7 +524,7 @@ class MyCartState extends State<MyCartScreen>
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(recommendedProductsModel.result[index].seoTags,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(recommendedProductsModel.result[index].seoTag,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),
@@ -535,7 +535,7 @@ class MyCartState extends State<MyCartScreen>
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('${recommendedProductsModel.result[index].alertQuantity} gm',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text('${recommendedProductsModel.result[index].quantity} ${recommendedProductsModel.result[index].unit}',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -547,7 +547,7 @@ class MyCartState extends State<MyCartScreen>
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text('₹ ${recommendedProductsModel.result[index].alertQuantity}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: Text('₹ ${recommendedProductsModel.result[index].price}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                           ),
@@ -595,10 +595,10 @@ class MyCartState extends State<MyCartScreen>
     map["Id"] = "" ;
     map["CartId"] = "" ;
     map["ProductId"] = recommendedProductsModel.result[index].id;
-    map["ProductVariantId"] = recommendedProductsModel.result[index].productVariants[0].productDetails[0].productVariantId ;
+    map["ProductVariantId"] = recommendedProductsModel.result[index].productVariantId ;
     map["Quantity"] = "1" ;
     map["OfferId"] = "" ;
-    map["Amount"] = "${recommendedProductsModel.result[index].alertQuantity}" ;
+    map["Amount"] = "${recommendedProductsModel.result[index].price}" ;
 
      myCartModal.addTocart(map) ;
 

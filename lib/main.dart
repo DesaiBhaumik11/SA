@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/payment_option_screen.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
+import 'package:vegetos_flutter/UI/register_screen.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/UI/welcome_screen.dart';
 import 'package:vegetos_flutter/UI/customer_support_2.dart';
@@ -13,6 +14,7 @@ import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
+import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/brand_model.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
@@ -71,12 +73,14 @@ class MyApp extends StatelessWidget {
   final mycartModal=MyCartModal();
 
   final brandModel=BrandModel();
+  final appFirstModal=AppFirstModal();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
 
+      ChangeNotifierProvider<AppFirstModal>.value(value: appFirstModal),
       ChangeNotifierProvider<MyCartModal>.value(value: mycartModal),
       ChangeNotifierProvider<AddressModal>.value(value: addressModal),
       ChangeNotifierProvider<ProductDetailModal>.value(value: productModal),
@@ -136,6 +140,7 @@ class MyApp extends StatelessWidget {
           Const.selectContact: (BuildContext context) => SelectContact(),
           Const.sharedCart: (BuildContext context) => SharedCart(),
           Const.cartView: (BuildContext context) => CartView(),
+          Const.registerScreen: (BuildContext context) => RegisterScreen(),
         },
         home: SplashScreen()));
   }

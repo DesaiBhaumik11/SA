@@ -16,24 +16,63 @@ import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/app_first_modal.dart';
 
 class SplashScreen extends StatelessWidget {
   bool runOnce=true;
+  AppFirstModal appFirstModal ;
+
 
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    appFirstModal = Provider.of<AppFirstModal>(context);
+
+
    if(runOnce){
+
      runOnce=false;
      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-     Future.delayed(const Duration(milliseconds: 3000), () async {
-        SharedPreferences prefs=await SharedPreferences.getInstance();
-        String uuid=prefs.getString("uuid")??Uuid().v4();
-        createDeviceToken();
-        Navigator.pushNamed(context, Const.welcome);
 
-     });
+     if(!appFirstModal.loaded){
+       runOnce=true ;
+       getJwtToken(context) ;
+
+     }else{
+
+       NetworkUtils.updateToken(appFirstModal.device_token , appFirstModal.result.token) ;
+       appFirstModal.getDefaults() ;
+
+       loginCheck(context);
+//       Future.delayed(const Duration(milliseconds: 3000), () async {
+//        SharedPreferences prefs=await SharedPreferences.getInstance();
+//        String uuid=prefs.getString("uuid")??Uuid().v4();
+//        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
+//
+//
+//        //createDeviceToken();
+//        Navigator.pushNamed(context, Const.welcome);
+//
+//       // getJwtToken(context) ;
+//
+//
+//     });
+
+     }
+
+
+
+//     Future.delayed(const Duration(milliseconds: 3000), () async {
+//        SharedPreferences prefs=await SharedPreferences.getInstance();
+//        String uuid=prefs.getString("uuid")??Uuid().v4();
+//        //createDeviceToken();
+//        Navigator.pushNamed(context, Const.welcome);
+//
+//        getJwtToken(context) ;
+//
+//
+//     });
    }
    navigate(){
      SharedPreferences.getInstance().then((prefs){
@@ -82,7 +121,7 @@ class SplashScreen extends StatelessWidget {
 
   String map="Map";
 
-  Future getJwtToken() async {
+  Future getJwtToken([BuildContext context]) async {
 
     String manufacturer,model,osVersion;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -119,25 +158,67 @@ class SplashScreen extends StatelessWidget {
     );
     String token = issueJwtHS256(claimSet, key);
 
-
-
     SharedPreferences.getInstance().then((prefs){
       prefs.setString("JWT_TOKEN",token) ;
 
     });
-
-
     print("JWT token  =  $token");
+    appFirstModal.updateDeviceToken(token) ;
+    appFirstModal.appFirstRun(token) ;
+    //print("appFirstModal  =  $appFirstModal.loaded");
+
+//    if(!appFirstModal.loaded){
+//      appFirstModal.appFirstRun(token) ;
+//    }else{
+//     // print(" App Token ${appFirstModal.result.token}") ;
+//
+//      Future.delayed(const Duration(milliseconds: 3000), () async {
+//        SharedPreferences prefs=await SharedPreferences.getInstance();
+//        String uuid=prefs.getString("uuid")??Uuid().v4();
+//        //createDeviceToken();
+//        Navigator.pushNamed(context, Const.welcome);
+//
+//       // getJwtToken(context) ;
+//
+//
+//      });
+//    }
+
 
 
   }
 
-  void createDeviceToken() {
-    //TODO: CREATE AND RETURN DEVICE TOKEN HERE
-  }
-  void appFirstStart(){
-    NetworkUtils.postRequest(endpoint: Constant.AppFirstStart).then((r){
+  void loginCheck(BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 3000), () async {
+      SharedPreferences prefs=await SharedPreferences.getInstance();
+      String uuid=prefs.getString("uuid")??Uuid().v4();
+      prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
+
+      SharedPreferences.getInstance().then((prefs){
+
+        if(prefs.getBool("LOGIN")==null){
+
+          Navigator.pushNamed(context, Const.welcome) ;
+          //Navigator.pushNamed(context, Const.dashboard) ;
+
+        }else{
+
+          Navigator.pushNamed(context, Const.dashboard);
+        }
+
+
+      }) ;
+
+      //createDeviceToken();
+
+
+      // getJwtToken(context) ;
+
 
     });
+
+
   }
+
+
 }
