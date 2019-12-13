@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
@@ -17,16 +18,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String mobile="" ;
-  String auth_token ="" ;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    SharedPreferences.getInstance().then((prefs){
-      auth_token = prefs.getString("AUTH_TOKEN");
 
-    }) ;
 
   }
 
@@ -126,8 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         if(mobile==""||mobile.length < 10){
 
                           Utility.toastMessage("Enter Correct Number")  ;
-                        }else{
-                          validate();
+
+                        }else{    validate();
+
                         }
 
                         // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
@@ -146,7 +144,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   )
                 ],
               ),
-            )
+            ),
+
+            SizedBox(height: 50),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                InkWell(child: Text('Register ', style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16
+                ),),onTap: (){
+                  Navigator.pushNamed(context, Const.registerScreen);
+                },) ,
+
+                SizedBox(width:20),
+              ],
+            ),
 
 
           ],
@@ -155,32 +169,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void loginApi() {
-
-    Map<String , String>headers = Map() ;
-    Map<String , String>map = Map() ;
-    map["IsdCode"]="+91" ;
-    map["Mobile"]=mobile ;
-
-    headers["device_token"] = "" ;
-    headers["Content-Type"] = "application/json" ;
-    headers["Authorization"] = auth_token ;
-
-
-    NetworkUtils.postRequest(body: map , endpoint: Constant.Login , headers: headers).then((e){
-
-      print(e) ;
-    });
-
-
-
-  }
 
   void validate() {
 
-    NetworkUtils.postRequest(endpoint: "/Validate",body: json.encode({
-      "IsdCode": "<string>",
-      "Mobile": "<long>"
-    }));
+    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+    NetworkUtils.postRequest(endpoint: Constant.Login  ,body: json.encode({
+      "IsdCode": "+91",
+      "Mobile": ""+mobile})).then((res){
+        print("Login Response  $res") ;
+        progressDialog.dismiss();
+
+    }).catchError((e){
+      print("Login catchError $e") ;
+      progressDialog.dismiss();
+    });
   }
 }

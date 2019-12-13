@@ -13,9 +13,11 @@ class Constant{
   static String RefreshToken  = "RefreshToken?expiredTokenString";
   static String Register  = "Register";
   static String Validate  = "Validate";
+  static String GetDefaults  = "GetDefaults";
   static String Login  = "Login";
   static String Logout  = "Logout";
   static String GetMyCards  = "GetMyCards";
+  static String GetShippingSlot  = "GetShippingSlot";
   static String GetById  = "GetById?cardtId=";
   static String AddCard  = "AddCard";
   static String UpdateCard  = "UpdateCard";

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_addresses.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 
 import 'payment_option_screen.dart';
 import 'choose_address.dart';
@@ -15,12 +17,12 @@ class SetDeliveryDetails extends StatefulWidget {
 class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
   final List<String> day = List();
-
   final List<int> date = List();
+  ShippingSlotModal shippingSlotModal ;
+
 
   List<String> days=["S","M","T","W","T","F","S",];
   var tappedIndex = -1;
-
   int selectedRadioTile;
 
   @override
@@ -45,6 +47,8 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
   @override
   Widget build(BuildContext context) {
+    shippingSlotModal=Provider.of<ShippingSlotModal>(context);
+
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
@@ -168,124 +172,131 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
               Container(
                 color: Colors.white,
 
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-
-  //                Container(
-  //                  height: 1,
-  //                  width: double.infinity,
-  //                  color: Colors.black12,
-  //                ),
-
-
-                    RadioListTile(
-                      value: 1,
-                      groupValue: selectedRadioTile,
-                      title: Text("7 AM - 11 AM", style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16
-                      ),),
-
-                      onChanged: (val) {
-                        print("Radio Tile pressed $val");
-                        setSelectedRadioTile(val);
-                      },
-                      activeColor: Const.orange,
-                      selected: true,
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.black12,
-                      ),
-                    ),
-
-                    RadioListTile(
-                      value: 2,
-                      groupValue: selectedRadioTile,
-                      title: Text("11 AM - 3 AM", style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: 16
-                      ),),
-
-                      onChanged: (val) {
-                        print("Radio Tile pressed $val");
-                        setSelectedRadioTile(val);
-                      },
-                      activeColor: Const.orange,
-                      selected: true,
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.black12,
-                      ),
-                    ),
-
-                    RadioListTile(
-                      value: 3,
-                      groupValue: selectedRadioTile,
-                      title: Text("3 AM - 7 AM", style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: 16
-                      ),),
-
-                      onChanged: (val) {
-                        print("Radio Tile pressed $val");
-                        setSelectedRadioTile(val);
-                      },
-                      activeColor: Const.orange,
-                      selected: true,
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.black12,
-                      ),
-                    ),
-
-                    RadioListTile(
-                      value: 4,
-                      groupValue: selectedRadioTile,
-                      title: Text("7 AM - 11 AM", style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: 16
-                      ),),
-
-                      onChanged: (val) {
-                        print("Radio Tile pressed $val");
-                        setSelectedRadioTile(val);
-                      },
-                      activeColor: Const.orange,
-                      selected: true,
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.black12,
-                      ),
-                    ),
-
-
-                  ],
-                )
+                child:shippingList(context),
+//                Column(
+//                  mainAxisAlignment: MainAxisAlignment.start,
+//                  children: <Widget>[
+//
+//  //                Container(
+//  //                  height: 1,
+//  //                  width: double.infinity,
+//  //                  color: Colors.black12,
+//  //                ),
+//
+//
+//                 //   shipingListView() ,
+//
+//
+//
+//
+//
+//                    RadioListTile(
+//                      value: 1,
+//                      groupValue: selectedRadioTile,
+//                      title: Text("7 AM - 11 AM", style: TextStyle(
+//                        fontWeight: FontWeight.w500,
+//                        color: Colors.black,
+//                        fontSize: 16
+//                      ),),
+//
+//                      onChanged: (val) {
+//                        print("Radio Tile pressed $val");
+//                        setSelectedRadioTile(val);
+//                      },
+//                      activeColor: Const.orange,
+//                      selected: true,
+//                    ),
+//
+//                    Padding(
+//                      padding: const EdgeInsets.symmetric(horizontal: 15),
+//                      child: Container(
+//                        height: 1,
+//                        width: double.infinity,
+//                        color: Colors.black12,
+//                      ),
+//                    ),
+//
+//                    RadioListTile(
+//                      value: 2,
+//                      groupValue: selectedRadioTile,
+//                      title: Text("11 AM - 3 AM", style: TextStyle(
+//                          fontWeight: FontWeight.w500,
+//                          color: Colors.black,
+//                          fontSize: 16
+//                      ),),
+//
+//                      onChanged: (val) {
+//                        print("Radio Tile pressed $val");
+//                        setSelectedRadioTile(val);
+//                      },
+//                      activeColor: Const.orange,
+//                      selected: true,
+//                    ),
+//
+//                    Padding(
+//                      padding: const EdgeInsets.symmetric(horizontal: 15),
+//                      child: Container(
+//                        height: 1,
+//                        width: double.infinity,
+//                        color: Colors.black12,
+//                      ),
+//                    ),
+//
+//                    RadioListTile(
+//                      value: 3,
+//                      groupValue: selectedRadioTile,
+//                      title: Text("3 AM - 7 AM", style: TextStyle(
+//                          fontWeight: FontWeight.w500,
+//                          color: Colors.black,
+//                          fontSize: 16
+//                      ),),
+//
+//                      onChanged: (val) {
+//                        print("Radio Tile pressed $val");
+//                        setSelectedRadioTile(val);
+//                      },
+//                      activeColor: Const.orange,
+//                      selected: true,
+//                    ),
+//
+//                    Padding(
+//                      padding: const EdgeInsets.symmetric(horizontal: 15),
+//                      child: Container(
+//                        height: 1,
+//                        width: double.infinity,
+//                        color: Colors.black12,
+//                      ),
+//                    ),
+//
+//                    RadioListTile(
+//                      value: 4,
+//                      groupValue: selectedRadioTile,
+//                      title: Text("7 AM - 11 AM", style: TextStyle(
+//                          fontWeight: FontWeight.w500,
+//                          color: Colors.black,
+//                          fontSize: 16
+//                      ),),
+//
+//                      onChanged: (val) {
+//                        print("Radio Tile pressed $val");
+//                        setSelectedRadioTile(val);
+//                      },
+//                      activeColor: Const.orange,
+//                      selected: true,
+//                    ),
+//
+//                    Padding(
+//                      padding: const EdgeInsets.symmetric(horizontal: 15),
+//                      child: Container(
+//                        height: 1,
+//                        width: double.infinity,
+//                        color: Colors.black12,
+//                      ),
+//                    ),
+//
+//
+//                  ],
+//                )
               ),
 
 
@@ -380,6 +391,46 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       physics: BouncingScrollPhysics(),
     );
   }
+
+
+  ListView shippingList(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return Column(
+
+          children: <Widget>[
+            RadioListTile(
+              value: shippingSlotModal.checkedValue==index?0:1 ,
+              groupValue: selectedRadioTile,
+              title: Text("${shippingSlotModal.result[index].timeFrom} - ${shippingSlotModal
+                  .result[index].timeTo}", style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16
+              ),),
+
+              onChanged: (val) {
+                print("Radio Tile pressed $val");
+                shippingSlotModal.updateCheckedValue(index);
+                //setSelectedRadioTile(index);
+              },
+              activeColor: Const.orange,
+              selected: shippingSlotModal.checkedValue==index ?true:false,
+            ),
+
+
+          ],
+        );
+      },
+      itemCount: shippingSlotModal.result.length,
+      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      physics: BouncingScrollPhysics(),
+    );
+  }
+
+
 }
 
 

@@ -8,6 +8,8 @@ import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/app_first_modal.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 
 class ProductDetailScreen extends StatefulWidget
@@ -23,6 +25,8 @@ class ProductDetailScreen extends StatefulWidget
 class ProductDetailScreenState extends State<ProductDetailScreen>
 {
    ProductDetailModal productModal ;
+   MyCartModal cartModal ;
+   AppFirstModal appFirstModal ;
 
   var pressed = false;
   bool descFlag = false;
@@ -54,12 +58,11 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   @override
   Widget build(BuildContext context) {
 
+    appFirstModal=Provider.of<AppFirstModal>(context);
+    cartModal=Provider.of<MyCartModal>(context);
+
      productModal=Provider.of<ProductDetailModal>(context);
      print("Product Detail provider" + productModal.result.id) ;
-
-
-
-
 
     // TODO: implement build
     return Scaffold(
@@ -74,7 +77,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             child: Image.asset('back.png', height: 25,),
           ),
         ),
-        title: Text(productModal.result.seoTags),
+        title: Text(productModal.result.seoTag),
         //title: Text('Washington Apple'),
         actions: <Widget>[
           Container(
@@ -100,7 +103,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       child: CircleAvatar(
                         backgroundColor: Colors.orange,
                         radius: 8.0,
-                        child: Text('88',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                        child: Text('${cartModal.cartItemSize}',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                       ),
                     ),
                   )
@@ -135,10 +138,13 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   Widget productImageSlides()
   {
     List<Image> imageList = [
-      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
-      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
-      Image.asset('assets/03-product.png', height: 100.0, width: 100.0,),
-      Image.asset('assets/04-product.png', height: 100.0, width: 100.0,),
+      Image.network("${appFirstModal
+          .ImageUrl}${productModal.result.productMediaId}", height: 100.0, width: 100.0,),
+    //  Image.asset('${appFirstModal}', height: 100.0, width: 100.0,),
+//      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+//      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
+//      Image.asset('assets/03-product.png', height: 100.0, width: 100.0,),
+//      Image.asset('assets/04-product.png', height: 100.0, width: 100.0,),
     ];
 
     return Stack(
@@ -149,7 +155,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           child: PageView.builder(
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
-            itemCount: 4,
+            itemCount: imageList.length,
             itemBuilder: (context, index) {
               return Container(
                 child: imageList[index],
@@ -171,7 +177,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
             alignment: Alignment.centerLeft,
 
-            child: Text(productModal.result.seoTags, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
+            child: Text(productModal.result.seoTag, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
                 fontWeight: FontWeight.w800),),
           ),
           Row(
@@ -180,7 +186,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text('₹101 ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                  child: Text('₹ ${productModal.result.price} ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w700,
                       color: Colors.black),
                   ),
@@ -218,7 +224,6 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     _onSelected(int index) {
       setState(() => _selectedIndex = index);
     }
-
     var unitList = Container(
       color: Colors.white,
       child: Row(
@@ -262,7 +267,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           Expanded(
             flex: 0,
-            child: Container(
+            child: InkWell(child: Container(
               padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
               margin: EdgeInsets.fromLTRB(5.0, 0.0, 10.0, 0.0),
               decoration: BoxDecoration(
@@ -272,7 +277,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               alignment: Alignment.center,
               height: 40.0,
               child: Text('+ ADD', style: TextStyle(color: Colors.white),),
-            ),
+            ),onTap: (){cartModal.addTocart(productModal.result);},)
           )
         ],
       ),
@@ -346,7 +351,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           Container(
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-              child: Text(Const.productDetailDesc, maxLines: descFlag ? 20 : 2,
+              child: Text("${productModal.result.description}", maxLines: descFlag ? 20 : 2,
                   style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                       fontWeight: FontWeight.w500))
           ),
@@ -398,7 +403,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('500 GM, 1KG', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
+                child: Text('${productModal.result.quantity} ${productModal.result.unit}', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
                     style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )

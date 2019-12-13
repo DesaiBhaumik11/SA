@@ -50,14 +50,6 @@ class WelcomeScreen extends State<WelcomeScreenState>
     super.initState();
     slideShow();
 
-    SharedPreferences.getInstance().then((r){
-
-      print(r.getString("JWT_TOKEN")) ;
-    });
-
-
-
-
   }
 
   @override

@@ -171,8 +171,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: result[index].productImage==null||result[index].productImage.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
-                            "${result[index].productImage}",
+                          child: result[index].seoTag==null||result[index].seoTag.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
+                            "${result[index].seoTag}",
                             height: 100.0,
                             width: 100.0,
                           ),
@@ -202,7 +202,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: <Widget>[
                         Text(
 
-                          result[index].seoTags,
+                          result[index].seoTag,
 
                           style: TextStyle(
                               fontSize: 17.0,
@@ -214,7 +214,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          "${result[index].alertQuantity} gm",
+                          "${result[index].quantity} ${result[index].unit}",
                           style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'GoogleSans',

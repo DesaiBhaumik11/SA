@@ -45,6 +45,7 @@ class Const
   static String selectContact = "/SelectContact";
   static String sharedCart = "/SharedCart";
   static String cartView = "/CartView";
+  static String registerScreen = "/RegisterScreen";
 
 
   // Paragraph Strings

@@ -90,6 +90,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
           Column(
             children:<Widget>[Expanded(child: Container()), FlatButton(
               onPressed: (){
+                //Navigator.pushNamed(context, Const.loginScreen);
                 Navigator.pushNamed(context, Const.dashboard);
               },
               child: Text(
