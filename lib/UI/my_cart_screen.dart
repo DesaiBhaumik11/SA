@@ -72,7 +72,7 @@ class MyCartState extends State<MyCartScreen>
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: Text('3 Items', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                  child: Text('${myCartModal.cartItemSize} Items', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
                 ),
               ],
             ),
@@ -116,9 +116,7 @@ class MyCartState extends State<MyCartScreen>
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
           onTap: () {
-
             checkOutCall();
-
             Navigator.push(context, SlideLeftRoute(page: SetDeliveryDetails()));
           },
           child: Container(
@@ -591,16 +589,16 @@ class MyCartState extends State<MyCartScreen>
 
    AddItem(int index){
 
-    Map<String , String> map = Map() ;
-    map["Id"] = "" ;
-    map["CartId"] = "" ;
-    map["ProductId"] = recommendedProductsModel.result[index].id;
-    map["ProductVariantId"] = recommendedProductsModel.result[index].productVariantId ;
-    map["Quantity"] = "1" ;
-    map["OfferId"] = "" ;
-    map["Amount"] = "${recommendedProductsModel.result[index].price}" ;
+//    Map<String , String> map = Map() ;
+//    map["Id"] = "" ;
+//    map["CartId"] = "" ;
+//    map["ProductId"] = recommendedProductsModel.result[index].id;
+//    map["ProductVariantId"] = recommendedProductsModel.result[index].productVariantId ;
+//    map["Quantity"] = "1" ;
+//    map["OfferId"] = "" ;
+//    map["Amount"] = "${recommendedProductsModel.result[index].price}" ;
 
-     myCartModal.addTocart(map) ;
+     myCartModal.addTocart(recommendedProductsModel.result[index] ) ;
 
 
 

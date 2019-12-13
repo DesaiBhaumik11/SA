@@ -19,8 +19,6 @@ class _MyAddressesState extends State<MyAddresses> {
   var address = TextStyle(
       fontWeight: FontWeight.w400, fontSize: 15, color: Color(0xff2d2d2d));
 
-
-
   @override
   Widget build(BuildContext context) {
      addressModal=Provider.of<AddressModal>(context);

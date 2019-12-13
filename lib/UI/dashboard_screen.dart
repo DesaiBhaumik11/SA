@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
+import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 
@@ -26,6 +27,7 @@ class DashboardScreen extends StatelessWidget
   MyCartModal myCartModal ;
   static int cartSize=0;
   AppFirstModal appFirstModal ;
+  ShippingSlotModal shippingSlotModal ;
 
 
 
@@ -41,6 +43,12 @@ class DashboardScreen extends StatelessWidget
 
     final addressModal=Provider.of<AddressModal>(context);
      myCartModal=Provider.of<MyCartModal>(context);
+    shippingSlotModal=Provider.of<ShippingSlotModal>(context);
+
+
+    if(!shippingSlotModal.loaded){
+      shippingSlotModal.getShippingSlot() ;
+    }
 
     if(!myCartModal.loaded){
       myCartModal.getMyCart() ;
@@ -349,19 +357,23 @@ class DashboardScreen extends StatelessWidget
                       ),
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Const.primaryColor
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        color: Colors.white, fontWeight: FontWeight.w500,)),
-                    ),
-                  )
+                 InkWell(child:  Container(
+                   margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                   padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                   decoration: BoxDecoration(
+                       borderRadius: BorderRadius.circular(5.0),
+                       color: Const.primaryColor
+                   ),
+                   child: Align(
+                     alignment: Alignment.center,
+                     child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                       color: Colors.white, fontWeight: FontWeight.w500,)),
+                   ),
+
+                 ),
+                 onTap: (){
+                   myCartModal.addTocart(result);
+                 },)
                 ],
               ),
             ),

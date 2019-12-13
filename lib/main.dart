@@ -22,6 +22,7 @@ import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
+import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 import 'UI/order_placed_screen.dart';
@@ -74,12 +75,14 @@ class MyApp extends StatelessWidget {
 
   final brandModel=BrandModel();
   final appFirstModal=AppFirstModal();
+  final shippingSlotModal=ShippingSlotModal();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
 
+      ChangeNotifierProvider<ShippingSlotModal>.value(value: shippingSlotModal),
       ChangeNotifierProvider<AppFirstModal>.value(value: appFirstModal),
       ChangeNotifierProvider<MyCartModal>.value(value: mycartModal),
       ChangeNotifierProvider<AddressModal>.value(value: addressModal),

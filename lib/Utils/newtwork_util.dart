@@ -17,8 +17,8 @@ typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
 abstract class NetworkUtils {
   //static String _baseUrl="http://artismicro.archisys.biz:5101/";
   static String _baseUrl = Constant.BASE_URL;
-
   static String awtToken = "";
+  static bool useLocalToken = true;
 
 
 
@@ -39,7 +39,6 @@ abstract class NetworkUtils {
 
   }
 
-
 //  static String deviceToken =
 //      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI4NyIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJzYW1zdW5nIiwibW9kZWwiOiJHYWxheHkgUzEwIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOS4wIiwicGxhdGZvcm0iOiJNb2JpbGUiLCJub3RpZmljYXRpb25pZCI6IiIsImlhdCI6MTU1ODk1NzQ0NiwibmJmIjoxNTU4OTU3NDQ2LCJleHAiOjE1NzU2MDk0NDYsImF1ZCI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.k5NPGlUfy2K4d9f-rgUUiCrA9N_9eO2S5xqNigu9rdw_iCI5NaIbYlB5ga_ISL356t9rBc43ZT7xtrVnyPp7Ww";
 //
@@ -51,12 +50,21 @@ abstract class NetworkUtils {
       String endpoint,
       Map<String, String> headers}) async {
 
-
-
     print("postRequest" + body.toString());
     String url = '$_baseUrl$endpoint';
 //    Map<String, String> headerMap = headers ?? new Map();
     Map<String, String> headerMap = Map();
+
+    if(useLocalToken){
+      deviceToken =
+      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI4NyIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJzYW1zdW5nIiwibW9kZWwiOiJHYWxheHkgUzEwIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOS4wIiwicGxhdGZvcm0iOiJNb2JpbGUiLCJub3RpZmljYXRpb25pZCI6IiIsImlhdCI6MTU1ODk1NzQ0NiwibmJmIjoxNTU4OTU3NDQ2LCJleHAiOjE1NzU2MDk0NDYsImF1ZCI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.k5NPGlUfy2K4d9f-rgUUiCrA9N_9eO2S5xqNigu9rdw_iCI5NaIbYlB5ga_ISL356t9rBc43ZT7xtrVnyPp7Ww";
+
+      authorization =
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
+
+    }
+
+
 
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
@@ -74,6 +82,14 @@ abstract class NetworkUtils {
   static Future<String> getRequest({String endPoint}) async {
     Map<String, String> headerMap = Map();
 
+    if(useLocalToken){
+      deviceToken =
+      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI4NyIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJzYW1zdW5nIiwibW9kZWwiOiJHYWxheHkgUzEwIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOS4wIiwicGxhdGZvcm0iOiJNb2JpbGUiLCJub3RpZmljYXRpb25pZCI6IiIsImlhdCI6MTU1ODk1NzQ0NiwibmJmIjoxNTU4OTU3NDQ2LCJleHAiOjE1NzU2MDk0NDYsImF1ZCI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.k5NPGlUfy2K4d9f-rgUUiCrA9N_9eO2S5xqNigu9rdw_iCI5NaIbYlB5ga_ISL356t9rBc43ZT7xtrVnyPp7Ww";
+
+      authorization =
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
+
+    }
 
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
@@ -81,7 +97,9 @@ abstract class NetworkUtils {
 
     String url = "$_baseUrl$endPoint";
     print("Url = $url");
-    print("Heades = $headerMap");
+    print("Heades = device_token>>>$deviceToken");
+    print("Heades = Authorization>>>$authorization");
+
     Response response = await get(url, headers: headerMap);
     return response.body;
 
@@ -244,9 +262,6 @@ abstract class NetworkUtils {
       Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
     return response.body;
-
-
-
   }
 
 

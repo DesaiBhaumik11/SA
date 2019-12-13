@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/verify_otp.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
@@ -214,9 +216,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if(mobile==""||mobile.length < 10||email==""){
                             Utility.toastMessage("Enter email or phone number")  ;
                           }else{
-                            register();
+
+
+                          //  register();
                           }
-                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                           Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),

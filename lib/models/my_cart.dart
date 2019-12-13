@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/product_common.dart' as bst;
 
 MyCartModal myCartModalFromJson(String str) => MyCartModal.fromJson(json.decode(str));
 
@@ -64,14 +65,23 @@ class MyCartModal extends ChangeNotifier{
   }
 
 
-  addTocart(Map map){
+  addTocart(bst.Result resultModal){
 
-    final body = jsonEncode(map) ;
+    final body= json.encode({
+      "Id":""+resultModal.id,
+      "CartId": "",
+      "ProductId": ""+resultModal.id,
+      "ProductVariantId": ""+resultModal.productVariantId,
+      "Quantity": "${resultModal.quantity}",
+      "OfferId": "",
+      "Amount": "${resultModal.price}"});
+
+
     print("addToCart Body" + body) ;
 
     NetworkUtils.postRequest(body: body ,endpoint: Constant.AddItem).then((res){
       print("addTocart response = $res");
-      getMyCart();
+       getMyCart();
     }).catchError((e){print("Error addTocart  $e");}) ;
 
   }
@@ -93,8 +103,8 @@ class MyCartModal extends ChangeNotifier{
 
 //    print("${itemId}   >>> ${quantity}") ;
     Map<String , String>  headersmap = Map() ;
-
-    NetworkUtils.postRequest(body: null,endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
+    print("updateQuantity itemId>>> $itemId quantity>>> $quantity") ;
+    NetworkUtils.postRequest(endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
 
       print("updateQuantity REsponse>>> $res") ;
 
@@ -113,7 +123,7 @@ class MyCartModal extends ChangeNotifier{
       totalCost = totalCost+  result.totalAmount*result.productViewModel[i].quantity ;
     }
     cartItemSize = result.productViewModel.length ;
-    print(totalCost) ;
+    print("Cart Size ${cartItemSize} , Total Cost ${totalCost}") ;
     notifyListeners();
   }
 

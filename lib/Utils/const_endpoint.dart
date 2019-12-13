@@ -17,6 +17,7 @@ class Constant{
   static String Login  = "Login";
   static String Logout  = "Logout";
   static String GetMyCards  = "GetMyCards";
+  static String GetShippingSlot  = "GetShippingSlot";
   static String GetById  = "GetById?cardtId=";
   static String AddCard  = "AddCard";
   static String UpdateCard  = "UpdateCard";
