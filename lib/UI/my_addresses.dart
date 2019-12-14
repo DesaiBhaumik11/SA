@@ -186,7 +186,7 @@ class _MyAddressesState extends State<MyAddresses> {
           ),
         );
       },
-      itemCount: addressModal.result.length ,
+      itemCount: addressModal.result.length==null?addressModal.result.length :0 ,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),

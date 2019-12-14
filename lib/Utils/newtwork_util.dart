@@ -73,7 +73,16 @@ abstract class NetworkUtils {
     Response response = await post(url, headers: headerMap, body: body??Map());
     if(response.statusCode==200){
     }else{
-      Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
+
+      if(response.statusCode==405){
+        refreshToken(body: body , endpoint: endpoint , requestType: "postRequest");
+      }else{
+
+      }
+
+
+
+        Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
     return response.body;
 
@@ -101,6 +110,15 @@ abstract class NetworkUtils {
     print("Heades = Authorization>>>$authorization");
 
     Response response = await get(url, headers: headerMap);
+    print("getRequest statusCode ${response.statusCode}");
+
+//    if(response.statusCode==200){
+//    }else if(response.statusCode==204){
+//      response.body=="204";
+//    }else{
+//
+//    }
+
     return response.body;
 
   }
@@ -296,6 +314,26 @@ abstract class NetworkUtils {
 
   }
 
+  static Future<String> refreshToken(
+      {body,
+        String endpoint,
+        String requestType}) async {
+    Map<String,String> headers = Map();
+    String url = '$_baseUrl'+ Constant.RefreshToken + deviceToken;
+    Response response = await post(url, headers: headers, body: body??Map());
+    if(response.statusCode==200){
+      print("refreshToken Response ${response}");
+      if(requestType=="postRequest"){
+        postRequest(body:  body , endpoint: endpoint);
+      }
+
+
+    }else{
+      Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
+    }
+    return response.body;
+
+  }
 
 
 

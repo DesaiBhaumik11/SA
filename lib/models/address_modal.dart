@@ -14,7 +14,7 @@ AddressModal addressModalFromJson(String str) => AddressModal.fromJson(json.deco
 String addressModalToJson(AddressModal data) => json.encode(data.toJson());
 
 class AddressModal extends ChangeNotifier{
-  List<Result> result;
+  List<Result> result=List();
   int statusCode;
   String message;
   bool isError;
@@ -50,8 +50,15 @@ class AddressModal extends ChangeNotifier{
       NetworkUtils.getRequest(endPoint: Constant.getMyAddresses).then((response){
         is_loading = false  ;
         print("getMyAddresses = $response");
-        setData(json.decode(response)) ;
         loaded = true ;
+        if(response==""){
+          // notifyListeners();
+        }else{
+          setData(json.decode(response)) ;
+        }
+
+
+
       });
     }
   }

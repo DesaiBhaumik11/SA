@@ -10,7 +10,7 @@ class Constant{
   static String UpdateAddress  = "UpdateAddress";
   static String DeleteAddress  = "DeleteAddress?addressId=";
   static String AppFirstStart  = "AppFirstStart";
-  static String RefreshToken  = "RefreshToken?expiredTokenString";
+  static String RefreshToken  = "/RefreshToken?expiredTokenString=";
   static String Register  = "Register";
   static String Validate  = "Validate";
   static String GetDefaults  = "GetDefaults";
