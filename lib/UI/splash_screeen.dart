@@ -1,6 +1,7 @@
 
 
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
@@ -21,9 +22,6 @@ import 'package:vegetos_flutter/models/app_first_modal.dart';
 class SplashScreen extends StatelessWidget {
   bool runOnce=true;
   AppFirstModal appFirstModal ;
-
-
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -189,6 +187,7 @@ class SplashScreen extends StatelessWidget {
   }
 
   void loginCheck(BuildContext context) {
+
     Future.delayed(const Duration(milliseconds: 3000), () async {
       SharedPreferences prefs=await SharedPreferences.getInstance();
       String uuid=prefs.getString("uuid")??Uuid().v4();

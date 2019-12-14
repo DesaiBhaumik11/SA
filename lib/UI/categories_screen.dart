@@ -3,20 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/app_first_modal.dart' as appfc;
 import 'package:vegetos_flutter/models/categories_model.dart';
-import 'package:vegetos_flutter/models/my_cart.dart';
+import 'package:vegetos_flutter/models/my_cart.dart'as bst;
 
 class CategoriesScreen extends StatelessWidget {
-  MyCartModal myCartModal ;
+  bst.MyCartModal myCartModal ;
+  appfc.AppFirstModal appFirstModal ;
 
   @override
   Widget build(BuildContext context) {
     final CategoriesModel categoriesModel =Provider.of<CategoriesModel>(context);
+    appFirstModal = Provider.of<appfc.AppFirstModal>(context);
     if(!categoriesModel.isLoaded){
       categoriesModel.loadCategories();
     }
 
-    myCartModal=Provider.of<MyCartModal>(context);
+    myCartModal=Provider.of<bst.MyCartModal>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Const.appBar,
@@ -66,7 +69,10 @@ class CategoriesScreen extends StatelessWidget {
           margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
           child: InkWell(
             onTap: () {
-              categoriesModel.setSubVisibility(index);
+              if(categoriesModel.result[index].subCategories.length>0){
+                categoriesModel.setSubVisibility(index);
+              }
+
             },
             child: Card(
               color: Colors.white,
@@ -107,7 +113,7 @@ class CategoriesScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Visibility(child: categoriesSubChild(),
+                  Visibility(child: categoriesSubChild(categoriesModel.result[index].subCategories),
                   visible:categoriesModel.result[index].showSubs,)
                 ],
               ),
@@ -121,42 +127,74 @@ class CategoriesScreen extends StatelessWidget {
 
 
 
-  Widget categoriesSubChild() {
-    var child = Container(
-      margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-      child: Column(
-        children: <Widget>[
+  Widget categoriesSubChild(List<Result>  subCategoriesList) {
 
-          Container(
+//    var child = Container(
+//      margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+//      child: Column(
+//        children: <Widget>[
+//
+//          Container(
+//
+//            child: Image.asset(
+//              'assets/04-product.png',
+//              height: 70.0,
+//              width: 70.0,
+//            ),
+//          ),
+//          Container(
+//            child: Text(Const.categoryTitle,
+//                style: TextStyle(
+//                    fontSize: 12.0,
+//                    fontFamily: 'GoogleSans',
+//                    fontWeight: FontWeight.w300)),
+//            alignment: Alignment.center,
+//          )
+//        ],
+//      ),
+//    );
 
-            child: Image.asset(
-              'assets/04-product.png',
-              height: 70.0,
-              width: 70.0,
-            ),
-          ),
-          Container(
-            child: Text(Const.categoryTitle,
-                style: TextStyle(
-                    fontSize: 12.0,
-                    fontFamily: 'GoogleSans',
-                    fontWeight: FontWeight.w300)),
-            alignment: Alignment.center,
-          )
-        ],
-      ),
-    );
+
+
 
     return GridView.count(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       crossAxisCount: 3,
+
+children: List.generate(subCategoriesList.length,(index){
+
+  return Container(
+    margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+    child: Column(
       children: <Widget>[
-        child,
-        child,
-        child,
-        child,
+
+        Container(
+
+          child: subCategoriesList[index].mediaId==null||subCategoriesList[index].mediaId.isEmpty?Image.asset("02-product.png",height: 70,width: 70,):
+          Image.network("${appFirstModal
+              .ImageUrl}${subCategoriesList[index].mediaId}", height: 70.0, width: 70.0,),
+        ),
+        Container(
+          child: Text(subCategoriesList[index].name,
+              style: TextStyle(
+                  fontSize: 12.0,
+                  fontFamily: 'GoogleSans',
+                  fontWeight: FontWeight.w300)),
+          alignment: Alignment.center,
+        )
       ],
+    ),
+  );
+
+}),
+
+//      children: <Widget>[
+//        child,
+//        child,
+//        child,
+//        child,
+//      ],
     );
   }
 }
