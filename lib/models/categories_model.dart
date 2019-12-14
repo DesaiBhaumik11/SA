@@ -1,26 +1,24 @@
 // To parse this JSON data, do
 //
-//     final categories = categoriesFromJson(jsonString);
+//     final categoriesModel = categoriesModelFromJson(jsonString);
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
-CategoriesModel categoriesFromJson(String str) =>
-    CategoriesModel.fromMap(json.decode(str));
+CategoriesModel categoriesModelFromJson(String str) => CategoriesModel.fromJson(json.decode(str));
 
-String categoriesToJson(CategoriesModel data) => json.encode(data.toMap());
+String categoriesModelToJson(CategoriesModel data) => json.encode(data.toJson());
 
-class CategoriesModel with ChangeNotifier {
+class CategoriesModel extends ChangeNotifier {
   List<Result> result;
   int statusCode;
   String message;
   bool isError;
+  bool _loading =false ;
   bool isLoaded = false;
-
-  bool _loading=false;
 
   CategoriesModel({
     this.result,
@@ -28,24 +26,27 @@ class CategoriesModel with ChangeNotifier {
     this.message,
     this.isError,
   });
-setSubVisibility(index){
-  result[index].showSubs=!(result[index].showSubs);
-  notifyListeners();
-}
-  factory CategoriesModel.fromMap(Map<String, dynamic> json) => CategoriesModel(
-        result: List<Result>.from(json["Result"].map((x) => Result.fromMap(x))),
-        statusCode: json["StatusCode"],
-        message: json["Message"],
-        isError: json["IsError"],
-      );
 
-  Map<String, dynamic> toMap() => {
-        "Result": List<dynamic>.from(result.map((x) => x.toMap())),
-        "StatusCode": statusCode,
-        "Message": message,
-        "IsError": isError,
-      };
+  factory CategoriesModel.fromJson(Map<String, dynamic> json) => CategoriesModel(
+    result: List<Result>.from(json["Result"].map((x) => Result.fromJson(x))),
+    statusCode: json["StatusCode"],
+    message: json["Message"],
+    isError: json["IsError"],
+  );
 
+  Map<String, dynamic> toJson() => {
+    "Result": List<dynamic>.from(result.map((x) => x.toJson())),
+    "StatusCode": statusCode,
+    "Message": message,
+    "IsError": isError,
+  };
+
+
+
+  setSubVisibility(index){
+    result[index].showSubs=!(result[index].showSubs);
+    notifyListeners();
+  }
   loadCategories() {
     if(!_loading) {
       _loading=true;
@@ -62,51 +63,72 @@ setSubVisibility(index){
 
   void setData(json) {
 
-    result= List<Result>.from(json["Result"].map((x) => Result.fromMap(x)));
+    result= List<Result>.from(json["Result"].map((x) => Result.fromJson(x)));
     statusCode= json["StatusCode"];
     message= json["Message"];
     isError= json["IsError"];
     isLoaded = true;
     notifyListeners();
   }
+
+
 }
 
 class Result {
   String id;
   String name;
-  String updatedBy;
+  String parentId;
+  String mediaId;
+  dynamic products;
+  List<Result> subCategories;
+  dynamic parent;
+  dynamic updatedBy;
   String createdBy;
   DateTime createdOn;
-  DateTime updatedOn;
+  dynamic updatedOn;
 
   var showSubs=false;
 
   Result({
     this.id,
     this.name,
+    this.parentId,
+    this.mediaId,
+    this.products,
+    this.subCategories,
+    this.parent,
     this.updatedBy,
     this.createdBy,
     this.createdOn,
     this.updatedOn,
   });
 
-  factory Result.fromMap(Map<String, dynamic> json) => Result(
-        id: json["Id"],
-        name: json["Name"],
-        updatedBy: json["UpdatedBy"],
-        createdBy: json["CreatedBy"],
-        createdOn: DateTime.parse(json["CreatedOn"]),
-        updatedOn: json["UpdatedOn"] == null
-            ? null
-            : DateTime.parse(json["UpdatedOn"]),
-      );
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    id: json["Id"],
+    name: json["Name"],
+    parentId: json["ParentId"] == null ? null : json["ParentId"],
+    mediaId: json["MediaId"],
+    products: json["Products"],
+    subCategories: json["SubCategories"] == null ? null : List<Result>.from(json["SubCategories"].map((x) => Result.fromJson(x))),
+    parent: json["Parent"],
+    updatedBy: json["UpdatedBy"],
+    createdBy: json["CreatedBy"],
+    createdOn: DateTime.parse(json["CreatedOn"]),
+    updatedOn: json["UpdatedOn"],
+  );
 
-  Map<String, dynamic> toMap() => {
-        "Id": id,
-        "Name": name,
-        "UpdatedBy": updatedBy,
-        "CreatedBy": createdBy,
-        "CreatedOn": createdOn.toIso8601String(),
-        "UpdatedOn": updatedOn == null ? null : updatedOn.toIso8601String(),
-      };
+  Map<String, dynamic> toJson() => {
+    "Id": id,
+    "Name": name,
+    "ParentId": parentId == null ? null : parentId,
+    "MediaId": mediaId,
+    "Products": products,
+    "SubCategories": subCategories == null ? null : List<dynamic>.from(subCategories.map((x) => x.toJson())),
+    "Parent": parent,
+    "UpdatedBy": updatedBy,
+    "CreatedBy": createdBy,
+    "CreatedOn": createdOn.toIso8601String(),
+    "UpdatedOn": updatedOn,
+  };
 }
+
