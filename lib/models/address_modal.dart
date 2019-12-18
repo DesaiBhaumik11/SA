@@ -50,24 +50,29 @@ class AddressModal extends ChangeNotifier{
       NetworkUtils.getRequest(endPoint: Constant.getMyAddresses).then((response){
         is_loading = false  ;
         print("getMyAddresses = $response");
-        loaded = true ;
-        if(response==""){
-          // notifyListeners();
-        }else{
+
+       {
           setData(json.decode(response)) ;
         }
-
-
+      }).catchError((e){
+        loaded =true ;
+        setData({});
+        //notifyListeners();
 
       });
     }
   }
 
   void setData(decode) {
-    result= List<Result>.from(decode["Result"].map((x) => Result.fromJson(x))) ;
-    statusCode= decode["StatusCode"] ;
-    message= decode["Message"];
-    isError= decode["IsError"] ;
+    result = List() ;
+    if(decode["Result"]!=null){
+      result.addAll(List<Result>.from(decode["Result"].map((x) => Result.fromJson(x)))) ;
+    }
+
+//    statusCode= decode["StatusCode"] ;
+//    message= decode["Message"];
+//    isError= decode["IsError"] ;
+    loaded = true ;
     notifyListeners() ;
   }
 
