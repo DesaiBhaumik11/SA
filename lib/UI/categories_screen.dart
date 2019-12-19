@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart' as appfc;
 import 'package:vegetos_flutter/models/categories_model.dart';
 import 'package:vegetos_flutter/models/my_cart.dart'as bst;
+
+import 'my_cart_screen.dart';
 
 class CategoriesScreen extends StatelessWidget {
   bst.MyCartModal myCartModal ;
@@ -34,32 +37,34 @@ class CategoriesScreen extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          Container(
-            margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-            child: Stack(
-              children: <Widget>[
-                Align(
-                  child: Icon(Icons.shopping_cart),
-                  alignment: Alignment.center,
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.orange,
-                      radius: 8.0,
-                      child: Text("${myCartModal.cartItemSize}",
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              fontFamily: 'GoogleSans',
-                              color: Colors.white)),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
+         InkWell(child:  Container(
+           margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+           child: Stack(
+             children: <Widget>[
+               Align(
+                 child: Icon(Icons.shopping_cart),
+                 alignment: Alignment.center,
+               ),
+               Container(
+                 margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
+                 child: Align(
+                   alignment: Alignment.topRight,
+                   child: CircleAvatar(
+                     backgroundColor: Colors.orange,
+                     radius: 8.0,
+                     child: Text("${myCartModal.cartItemSize}",
+                         style: TextStyle(
+                             fontSize: 10.0,
+                             fontFamily: 'GoogleSans',
+                             color: Colors.white)),
+                   ),
+                 ),
+               )
+             ],
+           ),
+         ),onTap: (){
+           Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+         },)
         ],
       ),
       body: !categoriesModel.isLoaded?Container():ListView.builder(

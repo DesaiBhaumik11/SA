@@ -9,7 +9,8 @@ import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
-import 'package:vegetos_flutter/models/my_cart.dart';
+import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
+
 import 'package:vegetos_flutter/models/product_common.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
@@ -26,7 +27,7 @@ class MyCartScreen extends StatefulWidget
 
 class MyCartState extends State<MyCartScreen>
 {
-  MyCartModal myCartModal ;
+  myCart.MyCartModal myCartModal ;
   RecommendedProductsModel  recommendedProductsModel ;
 
 
@@ -34,7 +35,7 @@ class MyCartState extends State<MyCartScreen>
   @override
   Widget build(BuildContext context) {
 
-    myCartModal = Provider.of<MyCartModal>(context);
+    myCartModal = Provider.of<myCart.MyCartModal>(context);
     recommendedProductsModel = Provider.of<RecommendedProductsModel>(context) ;
 
     if(!recommendedProductsModel.loaded){
@@ -257,11 +258,11 @@ class MyCartState extends State<MyCartScreen>
         ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: myCartModal.result.productViewModel.length ,
+          itemCount: myCartModal.result ==null?0:myCartModal.result.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
-              title: cartItemChild(myCartModal.result.productViewModel[index]),
+              title: cartItemChild(myCartModal.result[index]),
               onTap: () {
 
               },
@@ -272,7 +273,7 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  Widget cartItemChild(ProductViewModel cartItem)
+  Widget cartItemChild(myCart.Result cartItem)
   {
     return Container(
       child: Card(

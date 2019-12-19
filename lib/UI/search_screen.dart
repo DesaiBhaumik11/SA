@@ -4,7 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
 
@@ -16,14 +19,18 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   var wid = 1;
   Timer timer;
+  myCart.MyCartModal myCartModal ;
 
   bool search=false;
   @override
   Widget build(BuildContext context) {
+
+    myCartModal= Provider.of<myCart.MyCartModal>(context);
+
     final SearchModel searchModel=Provider.of<SearchModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
-      body: Column(
+      body: SafeArea(child: Column(
         children: <Widget>[
           Container(
             width: double.infinity,
@@ -78,7 +85,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {Navigator.push(context, SlideRightRoute(page: MyCartScreen()));},
                     child: Container(
                       margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                       child: Stack(
@@ -97,7 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: CircleAvatar(
                                 backgroundColor: Colors.orange,
                                 radius: 8.0,
-                                child: Text('3',
+                                child: Text('${myCartModal.cartItemSize}',
                                     style: TextStyle(
                                         fontSize: 10.0,
                                         fontFamily: 'GoogleSans',
@@ -141,7 +148,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Text(
                       'Filter',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     )
                   ],
                 ),
@@ -152,7 +159,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():buildList(context,searchModel.result)),
           ),
         ],
-      ),
+      ),),
     );
   }
 
