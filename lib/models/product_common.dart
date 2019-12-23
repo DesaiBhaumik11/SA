@@ -23,6 +23,7 @@ class Result {
   double discountPercent;
   String seoTag;
   int quantity;
+  List<ProductExtraField> productExtraFields =List() ;
 
   Result({
     this.name,
@@ -39,6 +40,7 @@ class Result {
     this.discountPercent,
     this.seoTag,
     this.quantity,
+    this.productExtraFields,
   });
 
   factory Result.fromMap(Map<String, dynamic> json) => Result(
@@ -56,6 +58,7 @@ class Result {
     discountPercent: json["DiscountPercent"],
     seoTag: json["SEOTag"],
     quantity: json["Quantity"],
+    productExtraFields: List<ProductExtraField>.from(json["productExtraFields"].map((x) => ProductExtraField.fromJson(x))),
   );
 
   Map<String, dynamic> toMap() => {
@@ -73,5 +76,61 @@ class Result {
     "DiscountPercent": discountPercent,
     "SEOTag": seoTag,
     "Quantity": quantity,
+    "productExtraFields": List<dynamic>.from(productExtraFields.map((x) => x.toJson())),
   };
+
+
+
+
+
+
+}
+
+
+
+
+class ProductExtraField {
+  String productId;
+  String language;
+  String title;
+  String value;
+  dynamic updatedBy;
+  String createdBy;
+  DateTime createdOn;
+  dynamic updatedOn;
+
+  ProductExtraField({
+    this.productId,
+    this.language,
+    this.title,
+    this.value,
+    this.updatedBy,
+    this.createdBy,
+    this.createdOn,
+    this.updatedOn,
+  });
+
+  factory ProductExtraField.fromJson(Map<String, dynamic> json) =>
+      ProductExtraField(
+        productId: json["ProductId"],
+        language: json["Language"],
+        title: json["Title"],
+        value: json["Value"],
+        updatedBy: json["UpdatedBy"],
+        createdBy: json["CreatedBy"],
+        createdOn: DateTime.parse(json["CreatedOn"]),
+        updatedOn: json["UpdatedOn"],
+      );
+
+  Map<String, dynamic> toJson() =>
+      {
+        "ProductId": productId,
+        "Language": language,
+        "Title": title,
+        "Value": value,
+        "UpdatedBy": updatedBy,
+        "CreatedBy": createdBy,
+        "CreatedOn": createdOn.toIso8601String(),
+        "UpdatedOn": updatedOn,
+      };
 }

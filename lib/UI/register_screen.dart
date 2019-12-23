@@ -266,12 +266,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     ProgressDialog dialog = Utility.progressDialog(context,"");
     dialog.show() ;
-    NetworkUtils.postRequest(endpoint: Constant.Register  ,body: json.encode({
+    NetworkUtils.postRequest(endpoint: Constant.Register  ,body: json.encode(
+        {
       "Email":""+email,
       "Name":""+name,
       "ReferralCode":""+reffer_code,
       "IsdCode": "+91",
-      "Mobile": ""+mobile})).then((res){
+      "Mobile": ""+mobile}
+
+      )).then((res){
         dialog.dismiss() ;
         showDialog(
             context: context,

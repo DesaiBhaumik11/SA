@@ -258,11 +258,11 @@ class MyCartState extends State<MyCartScreen>
         ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: myCartModal.result ==null?0:myCartModal.result.length,
+          itemCount: myCartModal.result ==null?0:myCartModal.result.cartItemViewModels.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
-              title: cartItemChild(myCartModal.result[index]),
+              title: cartItemChild(myCartModal.result.cartItemViewModels[index]),
               onTap: () {
 
               },
@@ -273,7 +273,7 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  Widget cartItemChild(myCart.Result cartItem)
+  Widget cartItemChild(myCart.CartItemViewModel cartItem)
   {
     return Container(
       child: Card(

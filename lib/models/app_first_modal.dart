@@ -88,17 +88,29 @@ class AppFirstModal extends ChangeNotifier {
       }).catchError((e) {
         _loading=false;
         print("appFirstRun error $e");
+
+        loaded=true;
+        notifyListeners();
+
+
+
+        //setData(json.decode(e));
+
+
+
       });
     }
   }
 
   void setData(json) {
 
-    version= json["Version"];
-    statusCode= json["StatusCode"];
-    message= json["Message"];
-    isError= json["IsError"];
-    result= Result.fromJson(json["Result"]);
+
+      version = json["Version"];
+      statusCode = json["StatusCode"];
+      message = json["Message"];
+      isError = json["IsError"];
+      result = Result.fromJson(json["Result"]);
+
     loaded=true;
     notifyListeners();
   }

@@ -53,7 +53,7 @@ class DashboardScreen extends StatelessWidget
     if(!myCartModal.loaded){
       myCartModal.getMyCart() ;
     }else{
-      cartSize=myCartModal.result.length ;
+      cartSize=myCartModal.result.cartItemViewModels.length ;
     }
 
 //    if(!addressModal.loaded){
