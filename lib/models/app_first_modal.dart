@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
@@ -73,7 +74,7 @@ class AppFirstModal extends ChangeNotifier {
 
 
 
-  appFirstRun(String jwtToken){
+  appFirstRun(String jwtToken,[call]){
     Map<String,String> headers = Map() ;
     Map<String,String> body = Map() ;
     headers["device_token"]=jwtToken ;
@@ -88,7 +89,9 @@ class AppFirstModal extends ChangeNotifier {
       }).catchError((e) {
         _loading=false;
         print("appFirstRun error $e");
-
+if(call!=null){
+  call();
+}
         loaded=true;
         notifyListeners();
 
@@ -110,7 +113,9 @@ class AppFirstModal extends ChangeNotifier {
       message = json["Message"];
       isError = json["IsError"];
       result = Result.fromJson(json["Result"]);
-
+      SharedPreferences.getInstance().then((r){
+        r.setString("AUTH_TOKEN", result.token);
+      });
     loaded=true;
     notifyListeners();
   }

@@ -34,23 +34,55 @@ class SplashScreen extends StatelessWidget {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     appFirstModal = Provider.of<AppFirstModal>(context);
 
-if(runOnce)
-  {
-    runOnce=false;
-    Timer(Duration(seconds: 2), (){
-      navigate(context);
-    });
-  }
+//if(runOnce)
+//  {
+//    runOnce=false;
+//    Timer(Duration(seconds: 2), (){
+//      navigate(context);
+//    });
+//  }
 
 
 
-//   if(runOnce){
+   if(runOnce) {
+     runOnce=false;
+     SharedPreferences.getInstance().then((prefs) {
+       String uuid = prefs.getString("uuid") ?? Uuid().v4();
+       prefs.setString("uuid", uuid);
+       getJwtToken(context, uuid).then((r) {
+          if(prefs.getString("AUTH_TOKEN")==null){
+            appFirstModal.appFirstRun(r,(){navigate(context);});
+          }else{
+            appFirstModal.getDefaults();
+            navigate(context);
+          }
+       });
+     });
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
 //
 //     runOnce=false;
 //     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -65,34 +97,34 @@ if(runOnce)
 //       appFirstModal.getDefaults() ;
 //
 //       loginCheck(context);
-////       Future.delayed(const Duration(milliseconds: 3000), () async {
-////        SharedPreferences prefs=await SharedPreferences.getInstance();
-////        String uuid=prefs.getString("uuid")??Uuid().v4();
-////        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
-////
-////
-////        //createDeviceToken();
-////        Navigator.pushNamed(context, Const.welcome);
-////
-////       // getJwtToken(context) ;
-////
-////
-////     });
+//       Future.delayed(const Duration(milliseconds: 3000), () async {
+//        SharedPreferences prefs=await SharedPreferences.getInstance();
+//
+//        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
+//
+//
+//        //createDeviceToken();
+//        Navigator.pushNamed(context, Const.welcome);
+//
+//       // getJwtToken(context) ;
+//
+//
+//     });
 //
 //     }
 //
 //
 //
-////     Future.delayed(const Duration(milliseconds: 3000), () async {
-////        SharedPreferences prefs=await SharedPreferences.getInstance();
-////        String uuid=prefs.getString("uuid")??Uuid().v4();
-////        //createDeviceToken();
-////        Navigator.pushNamed(context, Const.welcome);
-////
-////        getJwtToken(context) ;
-////
-////
-////     });
+//     Future.delayed(const Duration(milliseconds: 3000), () async {
+//        SharedPreferences prefs=await SharedPreferences.getInstance();
+//        String uuid=prefs.getString("uuid")??Uuid().v4();
+//        //createDeviceToken();
+//        Navigator.pushNamed(context, Const.welcome);
+//
+//        getJwtToken(context) ;
+//
+//
+//     });
 //   }
     return Scaffold(
       body: Container(
@@ -132,7 +164,7 @@ if(runOnce)
 
   String map="Map";
 
-  Future getJwtToken([BuildContext context]) async {
+  Future<String> getJwtToken(BuildContext context, [uuid]) async {
 
     String manufacturer,model,osVersion;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -150,7 +182,7 @@ if(runOnce)
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     Map<String,dynamic> map=Map();
-    map["id"]=              Uuid().v4();
+    map["id"]=              uuid;
     map["appversion"]=      packageInfo.version;
     map["appversioncode"]=  packageInfo.buildNumber;
     map["manufacturer"]=    Platform.isIOS?"Apple":manufacturer;
@@ -171,11 +203,12 @@ if(runOnce)
 
     SharedPreferences.getInstance().then((prefs){
       prefs.setString("JWT_TOKEN",token) ;
-
     });
     print("JWT token  =  $token");
-    appFirstModal.updateDeviceToken(token) ;
-    appFirstModal.appFirstRun(token) ;
+
+    appFirstModal.updateDeviceToken(token);
+//    appFirstModal.appFirstRun(token);
+    return token;
     //print("appFirstModal  =  $appFirstModal.loaded");
 
 //    if(!appFirstModal.loaded){
@@ -199,12 +232,9 @@ if(runOnce)
 
   }
 
-  void loginCheck(BuildContext context) {
-
-    Future.delayed(const Duration(milliseconds: 3000), () async {
+  void loginCheck(BuildContext context) async {
       SharedPreferences prefs=await SharedPreferences.getInstance();
-      String uuid=prefs.getString("uuid")??Uuid().v4();
-      prefs.setString("AUTH_TOKEN", appFirstModal.result==null?"":appFirstModal.result.token) ;
+      prefs.setString("AUTH_TOKEN", appFirstModal.result==null?null:appFirstModal.result.token) ;
 
       SharedPreferences.getInstance().then((prefs){
 
@@ -227,7 +257,7 @@ if(runOnce)
       // getJwtToken(context) ;
 
 
-    });
+
 
 
   }
