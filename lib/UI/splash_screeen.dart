@@ -204,7 +204,7 @@ if(runOnce)
     Future.delayed(const Duration(milliseconds: 3000), () async {
       SharedPreferences prefs=await SharedPreferences.getInstance();
       String uuid=prefs.getString("uuid")??Uuid().v4();
-      prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
+      prefs.setString("AUTH_TOKEN", appFirstModal.result==null?"":appFirstModal.result.token) ;
 
       SharedPreferences.getInstance().then((prefs){
 

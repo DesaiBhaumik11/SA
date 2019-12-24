@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
@@ -13,17 +14,20 @@ MyCartModal myCartModalFromJson(String str) => MyCartModal.fromJson(json.decode(
 
 String myCartModalToJson(MyCartModal data) => json.encode(data.toJson());
 
-class MyCartModal extends ChangeNotifier {
+class MyCartModal extends ChangeNotifier{
   String version;
   int statusCode;
   String message;
   bool isError;
-  List<Result> result;
+  Result result;
+
 
   bool _loading = false ;
   bool loaded = false ;
   int cartItemSize = 0 ;
   double totalCost = 0.0;
+
+
 
   MyCartModal({
     this.version,
@@ -38,7 +42,7 @@ class MyCartModal extends ChangeNotifier {
     statusCode: json["StatusCode"],
     message: json["Message"],
     isError: json["IsError"],
-    result: List<Result>.from(json["Result"].map((x) => Result.fromJson(x))),
+    result: Result.fromJson(json["Result"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -46,11 +50,8 @@ class MyCartModal extends ChangeNotifier {
     "StatusCode": statusCode,
     "Message": message,
     "IsError": isError,
-    "Result": List<dynamic>.from(result.map((x) => x.toJson())),
+    "Result": result.toJson(),
   };
-
-
-
 
 
 
@@ -71,8 +72,8 @@ class MyCartModal extends ChangeNotifier {
 
       "ProductId": ""+resultModal.id,
       "ProductVariantId": ""+resultModal.productVariantId,
-      "Quantity": "${resultModal.quantity}",
-      "OfferId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "Quantity": "${resultModal.quantity==0?1:resultModal.quantity}" ,
+      "OfferId": "",
       "Amount": "${resultModal.price}"});
 
 
@@ -138,19 +139,14 @@ class MyCartModal extends ChangeNotifier {
     statusCode= json["StatusCode"];
     message= json["Message"];
     isError= json["IsError"];
-    result= List<Result>.from(json["Result"].map((x) => Result.fromJson(x)));
+    result= Result.fromJson(json["Result"]);
 
-
-//    result= Result.fromJson(json["Result"]);
-//    statusCode= json["StatusCode"];
-//    message= json["Message"];
-//    isError = json["IsError"];
     loaded=true;
     totalCost = 0.0 ;
-    for(int i =0 ; i<result.length ; i++){
-      totalCost = totalCost+  result[i].price*result[i].quantity ;
+    for(int i =0 ; i<result.cartItemViewModels.length ; i++){
+      totalCost = totalCost+  result.cartItemViewModels[i].price*result.cartItemViewModels[i].quantity ;
     }
-    cartItemSize = result.length ;
+    cartItemSize = result.cartItemViewModels.length ;
     print("Cart Size ${cartItemSize} , Total Cost ${totalCost}") ;
     notifyListeners();
   }
@@ -162,6 +158,38 @@ class MyCartModal extends ChangeNotifier {
 }
 
 class Result {
+  String cartId;
+  List<CartItemViewModel> cartItemViewModels;
+  double totalAmount;
+  double deliveryCharges;
+  double discount;
+
+  Result({
+    this.cartId,
+    this.cartItemViewModels,
+    this.totalAmount,
+    this.deliveryCharges,
+    this.discount,
+  });
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    cartId: json["CartId"],
+    cartItemViewModels: List<CartItemViewModel>.from(json["CartItemViewModels"].map((x) => CartItemViewModel.fromJson(x))),
+    totalAmount: json["TotalAmount"],
+    deliveryCharges: json["DeliveryCharges"],
+    discount: json["Discount"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "CartId": cartId,
+    "CartItemViewModels": List<dynamic>.from(cartItemViewModels.map((x) => x.toJson())),
+    "TotalAmount": totalAmount,
+    "DeliveryCharges": deliveryCharges,
+    "Discount": discount,
+  };
+}
+
+class CartItemViewModel {
   String itemId;
   String name;
   String description;
@@ -178,8 +206,9 @@ class Result {
   String seoTag;
   String businessId;
   int quantity;
+  double cartItemTotal;
 
-  Result({
+  CartItemViewModel({
     this.itemId,
     this.name,
     this.description,
@@ -196,9 +225,10 @@ class Result {
     this.seoTag,
     this.businessId,
     this.quantity,
+    this.cartItemTotal,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory CartItemViewModel.fromJson(Map<String, dynamic> json) => CartItemViewModel(
     itemId: json["ItemId"],
     name: json["Name"],
     description: json["Description"],
@@ -215,6 +245,7 @@ class Result {
     seoTag: json["SEOTag"],
     businessId: json["BusinessId"],
     quantity: json["Quantity"],
+    cartItemTotal: json["CartItemTotal"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -234,5 +265,6 @@ class Result {
     "SEOTag": seoTag,
     "BusinessId": businessId,
     "Quantity": quantity,
+    "CartItemTotal": cartItemTotal,
   };
 }
