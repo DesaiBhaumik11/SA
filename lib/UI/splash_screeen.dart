@@ -22,65 +22,78 @@ import 'package:vegetos_flutter/models/app_first_modal.dart';
 class SplashScreen extends StatelessWidget {
   bool runOnce=true;
   AppFirstModal appFirstModal ;
+
+
+  navigate(context){
+    SharedPreferences.getInstance().then((prefs){
+      if(prefs.getBool("login")??false){
+        Navigator.pushNamedAndRemoveUntil(context, Const.welcome,(c)=>false);
+      }else{
+        Navigator.pushNamedAndRemoveUntil(context, Const.loginScreen,(c)=>false);
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     appFirstModal = Provider.of<AppFirstModal>(context);
 
+if(runOnce)
+  {
+    runOnce=false;
+    Timer(Duration(seconds: 2), (){
+      navigate(context);
+    });
+  }
 
-   if(runOnce){
 
-     runOnce=false;
-     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 
-     if(!appFirstModal.loaded){
-       runOnce=true ;
-       getJwtToken(context) ;
-
-     }else{
-
-       NetworkUtils.updateToken(appFirstModal.device_token , appFirstModal.result.token) ;
-       appFirstModal.getDefaults() ;
-
-       loginCheck(context);
-//       Future.delayed(const Duration(milliseconds: 3000), () async {
-//        SharedPreferences prefs=await SharedPreferences.getInstance();
-//        String uuid=prefs.getString("uuid")??Uuid().v4();
-//        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
+//   if(runOnce){
+//
+//     runOnce=false;
+//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+//
+//     if(!appFirstModal.loaded){
+//       runOnce=true ;
+//       getJwtToken(context) ;
+//
+//     }else{
+//
+//       NetworkUtils.updateToken(appFirstModal.device_token , appFirstModal.result.token) ;
+//       appFirstModal.getDefaults() ;
+//
+//       loginCheck(context);
+////       Future.delayed(const Duration(milliseconds: 3000), () async {
+////        SharedPreferences prefs=await SharedPreferences.getInstance();
+////        String uuid=prefs.getString("uuid")??Uuid().v4();
+////        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
+////
+////
+////        //createDeviceToken();
+////        Navigator.pushNamed(context, Const.welcome);
+////
+////       // getJwtToken(context) ;
+////
+////
+////     });
+//
+//     }
 //
 //
-//        //createDeviceToken();
-//        Navigator.pushNamed(context, Const.welcome);
 //
-//       // getJwtToken(context) ;
-//
-//
-//     });
-
-     }
-
-
-
-//     Future.delayed(const Duration(milliseconds: 3000), () async {
-//        SharedPreferences prefs=await SharedPreferences.getInstance();
-//        String uuid=prefs.getString("uuid")??Uuid().v4();
-//        //createDeviceToken();
-//        Navigator.pushNamed(context, Const.welcome);
-//
-//        getJwtToken(context) ;
-//
-//
-//     });
-   }
-   navigate(){
-     SharedPreferences.getInstance().then((prefs){
-       if(prefs.getBool("login")??false){
-         Navigator.pushNamed(context, Const.welcome);
-       }else{
-         Navigator.pushNamed(context, Const.loginScreen);
-       }
-     });
-   }
+////     Future.delayed(const Duration(milliseconds: 3000), () async {
+////        SharedPreferences prefs=await SharedPreferences.getInstance();
+////        String uuid=prefs.getString("uuid")??Uuid().v4();
+////        //createDeviceToken();
+////        Navigator.pushNamed(context, Const.welcome);
+////
+////        getJwtToken(context) ;
+////
+////
+////     });
+//   }
     return Scaffold(
       body: Container(
         child: Stack(
