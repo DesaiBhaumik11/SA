@@ -56,7 +56,9 @@ abstract class NetworkUtils {
     Map<String, String> headerMap = Map();
 
     if(useLocalToken){
-      deviceToken =
+      SharedPreferences prefs=await SharedPreferences.getInstance();
+
+      deviceToken = prefs.getString("AUTH_TOKEN")??
       "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
 
       authorization ="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlZjA4MDI0LWI4OTktNGNkOC05Y2Q1LTYwNTVlOTU1NjI4MiIsIm5hbWUiOiIrOTEtOTk3NDMxOTAyNiIsIm1vYmlsZSI6Ijk5NzQzMTkwMjYiLCJjb3VudHJ5Y29kZSI6Iis5MSIsImN1c3RvbWVyIjoidHJ1ZSIsIm5iZiI6MTU3NjU4MDc4MiwiZXhwIjoxNTkyMTMyNzgyLCJpYXQiOjE1NzY1ODA3ODIsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.aIZV4VJlj-VtTB7ownt2NScm7aKKSgRdrFiVwcO9nTo";
@@ -82,7 +84,7 @@ abstract class NetworkUtils {
 
       }
 
-
+      print("Response for$endpoint = ${response.body}");
 
         Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
@@ -94,7 +96,9 @@ abstract class NetworkUtils {
     Map<String, String> headerMap = Map();
 
     if(useLocalToken){
-      deviceToken =
+      SharedPreferences prefs=await SharedPreferences.getInstance();
+
+      deviceToken =prefs.getString("AUTH_TOKEN")??
       "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
 
       authorization ="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlZjA4MDI0LWI4OTktNGNkOC05Y2Q1LTYwNTVlOTU1NjI4MiIsIm5hbWUiOiIrOTEtOTk3NDMxOTAyNiIsIm1vYmlsZSI6Ijk5NzQzMTkwMjYiLCJjb3VudHJ5Y29kZSI6Iis5MSIsImN1c3RvbWVyIjoidHJ1ZSIsIm5iZiI6MTU3NjU4MDc4MiwiZXhwIjoxNTkyMTMyNzgyLCJpYXQiOjE1NzY1ODA3ODIsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.aIZV4VJlj-VtTB7ownt2NScm7aKKSgRdrFiVwcO9nTo";
@@ -113,7 +117,8 @@ abstract class NetworkUtils {
     print("Heades = Authorization>>>$authorization");
 
     Response response = await get(url, headers: headerMap);
-    print("getRequest statusCode ${response.statusCode}");
+    print("Response for$endPoint = ${response.body}");
+
 
 //    if(response.statusCode==200){
 //    }else if(response.statusCode==204){
@@ -264,10 +269,6 @@ abstract class NetworkUtils {
       {body,
         String endpoint,
         Map<String, String> headers}) async{
-
-
-
-
     print("Put Request" + body.toString());
     String url = '$_baseUrl$endpoint';
 //    Map<String, String> headerMap = headers ?? new Map();
@@ -282,6 +283,7 @@ abstract class NetworkUtils {
     }else{
       Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
+    print("Response for$endpoint = ${response.body}");
     return response.body;
   }
 
@@ -300,6 +302,7 @@ abstract class NetworkUtils {
       Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
     print("$endPoint response = ${response.body}");
+    print("Response for$endPoint = ${response.body}");
     return response.body;
   }
 

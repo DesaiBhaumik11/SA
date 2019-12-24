@@ -22,30 +22,84 @@ import 'package:vegetos_flutter/models/app_first_modal.dart';
 class SplashScreen extends StatelessWidget {
   bool runOnce=true;
   AppFirstModal appFirstModal ;
+
+
+  navigate(context){
+    SharedPreferences.getInstance().then((prefs){
+      if(prefs.getBool("login")??false){
+        Navigator.pushNamedAndRemoveUntil(context, Const.welcome,(c)=>false);
+      }else{
+        Navigator.pushNamedAndRemoveUntil(context, Const.loginScreen,(c)=>false);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     appFirstModal = Provider.of<AppFirstModal>(context);
 
+//if(runOnce)
+//  {
+//    runOnce=false;
+//    Timer(Duration(seconds: 2), (){
+//      navigate(context);
+//    });
+//  }
 
-   if(runOnce){
 
+
+   if(runOnce) {
      runOnce=false;
-     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+     SharedPreferences.getInstance().then((prefs) {
+       String uuid = prefs.getString("uuid") ?? Uuid().v4();
+       prefs.setString("uuid", uuid);
+       getJwtToken(context, uuid).then((r) {
+          if(prefs.getString("AUTH_TOKEN")==null){
+            appFirstModal.appFirstRun(r,(){navigate(context);});
+          }else{
+            appFirstModal.getDefaults();
+            navigate(context);
+          }
+       });
+     });
+   }
 
-     if(!appFirstModal.loaded){
-       runOnce=true ;
-       getJwtToken(context) ;
 
-     }else{
 
-       NetworkUtils.updateToken(appFirstModal.device_token , appFirstModal.result.token) ;
-       appFirstModal.getDefaults() ;
 
-       loginCheck(context);
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
+//
+//     runOnce=false;
+//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+//
+//     if(!appFirstModal.loaded){
+//       runOnce=true ;
+//       getJwtToken(context) ;
+//
+//     }else{
+//
+//       NetworkUtils.updateToken(appFirstModal.device_token , appFirstModal.result.token) ;
+//       appFirstModal.getDefaults() ;
+//
+//       loginCheck(context);
 //       Future.delayed(const Duration(milliseconds: 3000), () async {
 //        SharedPreferences prefs=await SharedPreferences.getInstance();
-//        String uuid=prefs.getString("uuid")??Uuid().v4();
+//
 //        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
 //
 //
@@ -56,11 +110,11 @@ class SplashScreen extends StatelessWidget {
 //
 //
 //     });
-
-     }
-
-
-
+//
+//     }
+//
+//
+//
 //     Future.delayed(const Duration(milliseconds: 3000), () async {
 //        SharedPreferences prefs=await SharedPreferences.getInstance();
 //        String uuid=prefs.getString("uuid")??Uuid().v4();
@@ -71,16 +125,7 @@ class SplashScreen extends StatelessWidget {
 //
 //
 //     });
-   }
-   navigate(){
-     SharedPreferences.getInstance().then((prefs){
-       if(prefs.getBool("login")??false){
-         Navigator.pushNamed(context, Const.welcome);
-       }else{
-         Navigator.pushNamed(context, Const.loginScreen);
-       }
-     });
-   }
+//   }
     return Scaffold(
       body: Container(
         child: Stack(
@@ -119,7 +164,7 @@ class SplashScreen extends StatelessWidget {
 
   String map="Map";
 
-  Future getJwtToken([BuildContext context]) async {
+  Future<String> getJwtToken(BuildContext context, [uuid]) async {
 
     String manufacturer,model,osVersion;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -137,7 +182,7 @@ class SplashScreen extends StatelessWidget {
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     Map<String,dynamic> map=Map();
-    map["id"]=              Uuid().v4();
+    map["id"]=              uuid;
     map["appversion"]=      packageInfo.version;
     map["appversioncode"]=  packageInfo.buildNumber;
     map["manufacturer"]=    Platform.isIOS?"Apple":manufacturer;
@@ -158,11 +203,12 @@ class SplashScreen extends StatelessWidget {
 
     SharedPreferences.getInstance().then((prefs){
       prefs.setString("JWT_TOKEN",token) ;
-
     });
     print("JWT token  =  $token");
-    appFirstModal.updateDeviceToken(token) ;
-    appFirstModal.appFirstRun(token) ;
+
+    appFirstModal.updateDeviceToken(token);
+//    appFirstModal.appFirstRun(token);
+    return token;
     //print("appFirstModal  =  $appFirstModal.loaded");
 
 //    if(!appFirstModal.loaded){
@@ -186,12 +232,9 @@ class SplashScreen extends StatelessWidget {
 
   }
 
-  void loginCheck(BuildContext context) {
-
-    Future.delayed(const Duration(milliseconds: 3000), () async {
+  void loginCheck(BuildContext context) async {
       SharedPreferences prefs=await SharedPreferences.getInstance();
-      String uuid=prefs.getString("uuid")??Uuid().v4();
-      prefs.setString("AUTH_TOKEN", appFirstModal.result==null?"":appFirstModal.result.token) ;
+      prefs.setString("AUTH_TOKEN", appFirstModal.result==null?null:appFirstModal.result.token) ;
 
       SharedPreferences.getInstance().then((prefs){
 
@@ -214,7 +257,7 @@ class SplashScreen extends StatelessWidget {
       // getJwtToken(context) ;
 
 
-    });
+
 
 
   }
