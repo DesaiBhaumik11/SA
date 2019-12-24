@@ -14,7 +14,7 @@ AddressModal addressModalFromJson(String str) => AddressModal.fromJson(json.deco
 String addressModalToJson(AddressModal data) => json.encode(data.toJson());
 
 class AddressModal extends ChangeNotifier{
-  List<Result> result;
+  List<Result> result=List();
   int statusCode;
   String message;
   bool isError;
@@ -50,17 +50,29 @@ class AddressModal extends ChangeNotifier{
       NetworkUtils.getRequest(endPoint: Constant.getMyAddresses).then((response){
         is_loading = false  ;
         print("getMyAddresses = $response");
-        setData(json.decode(response)) ;
-        loaded = true ;
+
+       {
+          setData(json.decode(response)) ;
+        }
+      }).catchError((e){
+        loaded =true ;
+        setData({});
+        //notifyListeners();
+
       });
     }
   }
 
   void setData(decode) {
-    result= List<Result>.from(decode["Result"].map((x) => Result.fromJson(x))) ;
-    statusCode= decode["StatusCode"] ;
-    message= decode["Message"];
-    isError= decode["IsError"] ;
+    result = List() ;
+    if(decode["Result"]!=null){
+      result.addAll(List<Result>.from(decode["Result"].map((x) => Result.fromJson(x)))) ;
+    }
+
+//    statusCode= decode["StatusCode"] ;
+//    message= decode["Message"];
+//    isError= decode["IsError"] ;
+    loaded = true ;
     notifyListeners() ;
   }
 

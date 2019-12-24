@@ -57,10 +57,10 @@ abstract class NetworkUtils {
 
     if(useLocalToken){
       deviceToken =
-      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI4NyIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJzYW1zdW5nIiwibW9kZWwiOiJHYWxheHkgUzEwIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOS4wIiwicGxhdGZvcm0iOiJNb2JpbGUiLCJub3RpZmljYXRpb25pZCI6IiIsImlhdCI6MTU1ODk1NzQ0NiwibmJmIjoxNTU4OTU3NDQ2LCJleHAiOjE1NzU2MDk0NDYsImF1ZCI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.k5NPGlUfy2K4d9f-rgUUiCrA9N_9eO2S5xqNigu9rdw_iCI5NaIbYlB5ga_ISL356t9rBc43ZT7xtrVnyPp7Ww";
+      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
 
-      authorization =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
+      authorization ="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlZjA4MDI0LWI4OTktNGNkOC05Y2Q1LTYwNTVlOTU1NjI4MiIsIm5hbWUiOiIrOTEtOTk3NDMxOTAyNiIsIm1vYmlsZSI6Ijk5NzQzMTkwMjYiLCJjb3VudHJ5Y29kZSI6Iis5MSIsImN1c3RvbWVyIjoidHJ1ZSIsIm5iZiI6MTU3NjU4MDc4MiwiZXhwIjoxNTkyMTMyNzgyLCJpYXQiOjE1NzY1ODA3ODIsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.aIZV4VJlj-VtTB7ownt2NScm7aKKSgRdrFiVwcO9nTo";
+     // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
 
     }
 
@@ -70,10 +70,21 @@ abstract class NetworkUtils {
     headerMap["Content-Type"] = "application/json";
     headerMap["Authorization"] = authorization;
 
+
+
     Response response = await post(url, headers: headerMap, body: body??Map());
     if(response.statusCode==200){
     }else{
-      Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
+
+      if(response.statusCode==405){
+        refreshToken(body: body , endpoint: endpoint , requestType: "postRequest");
+      }else{
+
+      }
+
+
+
+        Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
     return response.body;
 
@@ -84,10 +95,11 @@ abstract class NetworkUtils {
 
     if(useLocalToken){
       deviceToken =
-      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI4NyIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJzYW1zdW5nIiwibW9kZWwiOiJHYWxheHkgUzEwIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOS4wIiwicGxhdGZvcm0iOiJNb2JpbGUiLCJub3RpZmljYXRpb25pZCI6IiIsImlhdCI6MTU1ODk1NzQ0NiwibmJmIjoxNTU4OTU3NDQ2LCJleHAiOjE1NzU2MDk0NDYsImF1ZCI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.k5NPGlUfy2K4d9f-rgUUiCrA9N_9eO2S5xqNigu9rdw_iCI5NaIbYlB5ga_ISL356t9rBc43ZT7xtrVnyPp7Ww";
+      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
 
-      authorization =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
+      authorization ="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlZjA4MDI0LWI4OTktNGNkOC05Y2Q1LTYwNTVlOTU1NjI4MiIsIm5hbWUiOiIrOTEtOTk3NDMxOTAyNiIsIm1vYmlsZSI6Ijk5NzQzMTkwMjYiLCJjb3VudHJ5Y29kZSI6Iis5MSIsImN1c3RvbWVyIjoidHJ1ZSIsIm5iZiI6MTU3NjU4MDc4MiwiZXhwIjoxNTkyMTMyNzgyLCJpYXQiOjE1NzY1ODA3ODIsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.aIZV4VJlj-VtTB7ownt2NScm7aKKSgRdrFiVwcO9nTo";
+//      authorization =
+//      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
 
     }
 
@@ -101,6 +113,15 @@ abstract class NetworkUtils {
     print("Heades = Authorization>>>$authorization");
 
     Response response = await get(url, headers: headerMap);
+    print("getRequest statusCode ${response.statusCode}");
+
+//    if(response.statusCode==200){
+//    }else if(response.statusCode==204){
+//      response.body=="204";
+//    }else{
+//
+//    }
+
     return response.body;
 
   }
@@ -296,6 +317,26 @@ abstract class NetworkUtils {
 
   }
 
+  static Future<String> refreshToken(
+      {body,
+        String endpoint,
+        String requestType}) async {
+    Map<String,String> headers = Map();
+    String url = '$_baseUrl'+ Constant.RefreshToken + deviceToken;
+    Response response = await post(url, headers: headers, body: body??Map());
+    if(response.statusCode==200){
+      print("refreshToken Response ${response}");
+      if(requestType=="postRequest"){
+        postRequest(body:  body , endpoint: endpoint);
+      }
+
+
+    }else{
+      Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
+    }
+    return response.body;
+
+  }
 
 
 

@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
@@ -19,10 +20,14 @@ class MyCartModal extends ChangeNotifier{
   String message;
   bool isError;
   Result result;
+
+
   bool _loading = false ;
   bool loaded = false ;
   int cartItemSize = 0 ;
   double totalCost = 0.0;
+
+
 
   MyCartModal({
     this.version,
@@ -50,29 +55,24 @@ class MyCartModal extends ChangeNotifier{
 
 
 
-  void getMyCart(){
-    if(!_loading) {
-      _loading=true;
-      NetworkUtils.getRequest(endPoint: Constant.GetCart).then((r) {
-        _loading=false;
-        print("Get My Cart response = $r");
-        setData(json.decode(r));
-      }).catchError((e) {
-        _loading=false;
-        print("Error caught in Get My Cart $e");
-      });
-    }
-  }
-
-
   addTocart(bst.Result resultModal){
 
+
+
+//    {
+//      "ProductId": "a4a4ceb7-fa45-47e8-8106-6b85e15e1e4d",
+//    "ProductVariantId": "3eee7688-2684-49f1-812f-852731af0e65",
+//    "Quantity": 10,
+//    "OfferId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+//    "Amount": 200
+//    }
+//
+
     final body= json.encode({
-      "Id":""+resultModal.id,
-      "CartId": "",
+
       "ProductId": ""+resultModal.id,
       "ProductVariantId": ""+resultModal.productVariantId,
-      "Quantity": "${resultModal.quantity}",
+      "Quantity": "${resultModal.quantity==0?1:resultModal.quantity}" ,
       "OfferId": "",
       "Amount": "${resultModal.price}"});
 
@@ -81,7 +81,7 @@ class MyCartModal extends ChangeNotifier{
 
     NetworkUtils.postRequest(body: body ,endpoint: Constant.AddItem).then((res){
       print("addTocart response = $res");
-       getMyCart();
+      getMyCart();
     }).catchError((e){print("Error addTocart  $e");}) ;
 
   }
@@ -99,9 +99,30 @@ class MyCartModal extends ChangeNotifier{
   }
 
 
+  void getMyCart(){
+    if(!_loading) {
+      _loading=true;
+      NetworkUtils.getRequest(endPoint: Constant.GetCart).then((r) {
+        _loading=false;
+        print("Get My Cart response = $r");
+        setData(json.decode(r));
+      }).catchError((e) {
+        _loading=false;
+        print("Error caught in Get My Cart $e");
+
+        // loaded =true ;
+        // notifyListeners();
+        //setData(json.decode(e));
+
+      });
+    }
+  }
+
+
+
   void updateQuantity(String itemId , int quantity){
 
-//    print("${itemId}   >>> ${quantity}") ;
+    //    print("${itemId}   >>> ${quantity}") ;
     Map<String , String>  headersmap = Map() ;
     print("updateQuantity itemId>>> $itemId quantity>>> $quantity") ;
     NetworkUtils.postRequest(endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
@@ -113,16 +134,19 @@ class MyCartModal extends ChangeNotifier{
   }
 
   void setData(json) {
-    result= Result.fromJson(json["Result"]);
+
+    version= json["Version"];
     statusCode= json["StatusCode"];
     message= json["Message"];
-    isError = json["IsError"];
+    isError= json["IsError"];
+    result= Result.fromJson(json["Result"]);
+
     loaded=true;
     totalCost = 0.0 ;
-    for(int i =0 ; i<result.productViewModel.length ; i++){
-      totalCost = totalCost+  result.totalAmount*result.productViewModel[i].quantity ;
+    for(int i =0 ; i<result.cartItemViewModels.length ; i++){
+      totalCost = totalCost+  result.cartItemViewModels[i].price*result.cartItemViewModels[i].quantity ;
     }
-    cartItemSize = result.productViewModel.length ;
+    cartItemSize = result.cartItemViewModels.length ;
     print("Cart Size ${cartItemSize} , Total Cost ${totalCost}") ;
     notifyListeners();
   }
@@ -130,45 +154,43 @@ class MyCartModal extends ChangeNotifier{
 
 
 
+
 }
 
 class Result {
-  String id;
   String cartId;
-  List<ProductViewModel> productViewModel;
+  List<CartItemViewModel> cartItemViewModels;
   double totalAmount;
-  double deliveryChages;
+  double deliveryCharges;
   double discount;
 
   Result({
-    this.id,
     this.cartId,
-    this.productViewModel,
+    this.cartItemViewModels,
     this.totalAmount,
-    this.deliveryChages,
+    this.deliveryCharges,
     this.discount,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-    id: json["Id"],
     cartId: json["CartId"],
-    productViewModel: List<ProductViewModel>.from(json["ProductViewModel"].map((x) => ProductViewModel.fromJson(x))),
+    cartItemViewModels: List<CartItemViewModel>.from(json["CartItemViewModels"].map((x) => CartItemViewModel.fromJson(x))),
     totalAmount: json["TotalAmount"],
-    deliveryChages: json["DeliveryChages"],
+    deliveryCharges: json["DeliveryCharges"],
     discount: json["Discount"],
   );
 
   Map<String, dynamic> toJson() => {
-    "Id": id,
     "CartId": cartId,
-    "ProductViewModel": List<dynamic>.from(productViewModel.map((x) => x.toJson())),
+    "CartItemViewModels": List<dynamic>.from(cartItemViewModels.map((x) => x.toJson())),
     "TotalAmount": totalAmount,
-    "DeliveryChages": deliveryChages,
+    "DeliveryCharges": deliveryCharges,
     "Discount": discount,
   };
 }
 
-class ProductViewModel {
+class CartItemViewModel {
+  String itemId;
   String name;
   String description;
   double price;
@@ -182,9 +204,12 @@ class ProductViewModel {
   String brandId;
   double discountPercent;
   String seoTag;
+  String businessId;
   int quantity;
+  double cartItemTotal;
 
-  ProductViewModel({
+  CartItemViewModel({
+    this.itemId,
     this.name,
     this.description,
     this.price,
@@ -198,10 +223,13 @@ class ProductViewModel {
     this.brandId,
     this.discountPercent,
     this.seoTag,
+    this.businessId,
     this.quantity,
+    this.cartItemTotal,
   });
 
-  factory ProductViewModel.fromJson(Map<String, dynamic> json) => ProductViewModel(
+  factory CartItemViewModel.fromJson(Map<String, dynamic> json) => CartItemViewModel(
+    itemId: json["ItemId"],
     name: json["Name"],
     description: json["Description"],
     price: json["Price"],
@@ -215,10 +243,13 @@ class ProductViewModel {
     brandId: json["BrandId"],
     discountPercent: json["DiscountPercent"],
     seoTag: json["SEOTag"],
+    businessId: json["BusinessId"],
     quantity: json["Quantity"],
+    cartItemTotal: json["CartItemTotal"],
   );
 
   Map<String, dynamic> toJson() => {
+    "ItemId": itemId,
     "Name": name,
     "Description": description,
     "Price": price,
@@ -232,6 +263,8 @@ class ProductViewModel {
     "BrandId": brandId,
     "DiscountPercent": discountPercent,
     "SEOTag": seoTag,
+    "BusinessId": businessId,
     "Quantity": quantity,
+    "CartItemTotal": cartItemTotal,
   };
 }
