@@ -217,10 +217,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Utility.toastMessage("Enter email or phone number")  ;
                           }else{
 
-
-                          //  register();
+                            register();
                           }
-                           Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -276,32 +275,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       )).then((res){
         dialog.dismiss() ;
-        showDialog(
-            context: context,
-            builder: (s) {
-              Utility.toastMessage("Comming soon..");
 
-            });
-      print("Login Response Here $res") ;
+
+        Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP(mobile)));
+
+
+      print("Register Response Here $res") ;
 
     });
   }
 
 
-
-  void validate(String code) {
-    ProgressDialog dialog = Utility.progressDialog(context,"");
-    dialog.show() ;
-    NetworkUtils.postRequest(endpoint: Constant.Validate  ,body: json.encode({
-      "Code":""+code,
-      "IsdCode": "+91",
-      "Mobile": ""+mobile})).then((res){
-      dialog.dismiss() ;
-      print("validate response $res") ;
-
-    }).catchError((e){
-      print("validate catchError $e") ;
-    });
-  }
+//
+//  void validate(String code) {
+//    ProgressDialog dialog = Utility.progressDialog(context,"");
+//    dialog.show() ;
+//    NetworkUtils.postRequest(endpoint: Constant.Validate  ,body: json.encode({
+//      "Code":""+code,
+//      "IsdCode": "+91",
+//      "Mobile": ""+mobile})).then((res){
+//      dialog.dismiss() ;
+//      print("validate response $res") ;
+//
+//    }).catchError((e){
+//      print("validate catchError $e") ;
+//    });
+//  }
 
 }

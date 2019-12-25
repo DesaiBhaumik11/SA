@@ -1,16 +1,36 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_view/pin_view.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/update_profile.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 
 class VerifyOTP extends StatefulWidget {
+   String phone ;
+  VerifyOTP(String mobile) {
+    this.phone = mobile ;
+  }
+
+
   @override
-  _VerifyOTPState createState() => _VerifyOTPState();
+  _VerifyOTPState createState() => _VerifyOTPState(phone);
 }
 
 class _VerifyOTPState extends State<VerifyOTP> {
+  String phone  , code ;
+
+  _VerifyOTPState(String phone) {
+    this.phone=phone ;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +40,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
         children: <Widget>[
 
           SizedBox(height: 70),
-
-
           Image.asset('verify.png', height: 170, ),
 
           SizedBox(height: 20),
@@ -66,7 +84,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
             child: PinView (
                 count: 6, // count of the fields, excluding dashes
                 autoFocusFirstField: false,
-                submit: (){
+                submit: (e){
+                  code= e ;
+                  print("PinView Submit ${e}") ;
                 } // gets triggered when all the fields are filled
             ),
           ),
@@ -84,7 +104,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     child: RaisedButton(
                       color: Theme.of(context).primaryColor,
                       onPressed: (){
-                        Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
+                        validate() ;
+
+                        // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -118,6 +140,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
               InkWell(
                 onTap: (){
+
+
+
                   Navigator.of(context).push(SlideRightRoute(page: LoginScreen()));
                 },
                 child: Padding(
@@ -139,5 +164,21 @@ class _VerifyOTPState extends State<VerifyOTP> {
         ],
       ),
     );
+  }
+
+
+  void validate() {
+    ProgressDialog dialog = Utility.progressDialog(context,"");
+    dialog.show() ;
+    NetworkUtils.postRequest(endpoint: Constant.Validate  ,body: json.encode({
+      "Code":""+code,
+      "IsdCode": "+91",
+      "Mobile": ""+phone})).then((res){
+      dialog.dismiss() ;
+      print("validate response $res") ;
+
+    }).catchError((e){
+      print("validate catchError $e") ;
+    });
   }
 }

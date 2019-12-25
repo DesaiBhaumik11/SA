@@ -5,9 +5,11 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 
 AppFirstModal appFirstModalFromJson(String str) => AppFirstModal.fromJson(json.decode(str));
 
@@ -21,7 +23,6 @@ class AppFirstModal extends ChangeNotifier {
   Result result;
   bool loaded=false;
   bool _loading=false;
-  String device_token ="" ;
   String ImageUrl ="";
 
   AppFirstModal({
@@ -48,10 +49,6 @@ class AppFirstModal extends ChangeNotifier {
     "Result": result.toJson(),
   };
 
-
-  updateDeviceToken(String token){
-    device_token = token ;
-  }
 
 
   getDefaults(){
@@ -85,6 +82,9 @@ class AppFirstModal extends ChangeNotifier {
       NetworkUtils.appFirstRunPost(endpoint: Constant.AppFirstStart ,body:  body , headers: headers).then((r) {
         _loading=false;
         print("appFirstRun response = $r");
+
+
+
         setData(json.decode(r));
       }).catchError((e) {
         _loading=false;
@@ -106,18 +106,25 @@ if(call!=null){
   }
 
   void setData(json) {
+    version = json["Version"];
+    statusCode = json["StatusCode"];
 
+    if (statusCode == 200) {
 
-      version = json["Version"];
-      statusCode = json["StatusCode"];
-      message = json["Message"];
-      isError = json["IsError"];
-      result = Result.fromJson(json["Result"]);
-      SharedPreferences.getInstance().then((r){
-        r.setString("AUTH_TOKEN", result.token);
-      });
-    loaded=true;
+    message = json["Message"];
+    isError = json["IsError"];
+    result = Result.fromJson(json["Result"]);
+    SharedPreferences.getInstance().then((r) {
+      r.setString("AUTH_TOKEN", result.token);
+      NetworkUtils.updateToken(r);
+    });
+    loaded = true;
     notifyListeners();
+  }else{
+      Utility.toastMessage(message);
+    }
+
+
   }
 
 

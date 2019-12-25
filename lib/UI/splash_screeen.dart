@@ -54,10 +54,26 @@ class SplashScreen extends StatelessWidget {
      SharedPreferences.getInstance().then((prefs) {
        String uuid = prefs.getString("uuid") ?? Uuid().v4();
        prefs.setString("uuid", uuid);
+       prefs.setString("AUTH_TOKEN", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHB2ZXJzaW9uIjoiMS4wLjAiLCJhcHB2ZXJzaW9uY29kZSI6IjEiLCJhdWQiOlsiY29tLmFyY2hpc3lzLmFydGlzIl0sImV4cCI6MTU3NzM1NzI5OSwiaWF0IjoxNTc3MjcwODk5LCJpZCI6IjMyNDlhYTMxLTFlMTUtNDFhNi04NGExLWU5ODhjMTgzMzVhMyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIiwibWFudWZhY3R1cmVyIjoibW90b3JvbGEiLCJtb2RlbCI6Im1vdG9yb2xhIG9uZSBhY3Rpb24iLCJub3RpZmljYXRpb25pZCI6IjIzIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOSIsInBsYXRmb3JtIjoiYW5kcm9pZCJ9.8fAfAdgS05HyMRAneY40jvO5cl1zrDC48tbtFV2Tois");
+
+
+
        getJwtToken(context, uuid).then((r) {
-          if(prefs.getString("AUTH_TOKEN")==null){
-            appFirstModal.appFirstRun(r,(){navigate(context);});
+
+         print("AUTH_TOKEN Prefns ${prefs.getString("AUTH_TOKEN")}");
+          //if(prefs.getString("AUTH_TOKEN")==null){
+            if(true){
+
+            runOnce=true;
+            appFirstModal.appFirstRun(r,(){navigate(context);}) ;
+
+            NetworkUtils.updateToken(prefs );
+            appFirstModal.getDefaults();
+            navigate(context);
+
+
           }else{
+            NetworkUtils.updateToken(prefs );
             appFirstModal.getDefaults();
             navigate(context);
           }
@@ -184,19 +200,23 @@ class SplashScreen extends StatelessWidget {
     Map<String,dynamic> map=Map();
     map["id"]=              uuid;
     map["appversion"]=      packageInfo.version;
+
     map["appversioncode"]=  packageInfo.buildNumber;
     map["manufacturer"]=    Platform.isIOS?"Apple":manufacturer;
     map["model"]=           model;
     map["os"]=              Platform.isAndroid?"Android":"Ios";
     map["osversion"]=       osVersion;
     map["platform"]=        "Mobile";
-    map["notificationid"]=  "23";
-    print("Map = $map");
+    map["nbf"]=        "1577355877";
+//    map["platform"]=        "Mobile";
+    map["notificationid"]=  "";
+    print("Map = $map") ;
 
     final key = '2C39927D43F04E1CBAB1615841D94000';
     final claimSet = new JwtClaim(
       issuer: 'com.archisys.vegetos',
       audience: <String>['com.archisys.artis'],
+
       otherClaims: map,
     );
     String token = issueJwtHS256(claimSet, key);
@@ -205,8 +225,6 @@ class SplashScreen extends StatelessWidget {
       prefs.setString("JWT_TOKEN",token) ;
     });
     print("JWT token  =  $token");
-
-    appFirstModal.updateDeviceToken(token);
 //    appFirstModal.appFirstRun(token);
     return token;
     //print("appFirstModal  =  $appFirstModal.loaded");

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
@@ -124,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           Utility.toastMessage("Enter Correct Number")  ;
 
-                        }else{    validate();
+                        }else{    loginApi();
 
                         }
 
@@ -170,15 +171,31 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
-  void validate() {
+  void loginApi() {
 
     ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
     progressDialog.show() ;
     NetworkUtils.postRequest(endpoint: Constant.Login  ,body: json.encode({
       "IsdCode": "+91",
       "Mobile": ""+mobile})).then((res){
-        print("Login Response  $res") ;
+        print("loginApi Response login $res") ;
         progressDialog.dismiss();
+
+        final decoded = jsonDecode(res) as Map;
+
+
+        //final data = decoded['StatusCode'] as Map;
+
+
+        bool IsError = decoded['IsError'] ;
+
+        print("IsError  >> ${IsError}");
+
+        if(!IsError){
+          Fluttertoast.showToast(msg: "${decoded['Message']}" ,);
+        }else{
+
+        }
 
     }).catchError((e){
       print("Login catchError $e") ;

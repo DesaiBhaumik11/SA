@@ -18,24 +18,22 @@ abstract class NetworkUtils {
   //static String _baseUrl="http://artismicro.archisys.biz:5101/";
   static String _baseUrl = Constant.BASE_URL;
   static String awtToken = "";
-  static bool useLocalToken = true;
+  static bool useLocalToken = false;
 
 
 
   static String deviceToken ="" ;
-  static String authorization =
-      "";
+  static String authorization = "";
 
-  static updateToken(String device , String auth){
+  static updateToken(SharedPreferences prefs){
 
-    deviceToken = device ;
-    authorization = "Bearer " + auth ;
+    if(prefs.getString("JWT_TOKEN")==null){}else{
+      deviceToken = prefs.getString("JWT_TOKEN") ;
+    }
 
-    Map<String, String> headerMap = Map();
-    headerMap["device_token"] = deviceToken;
-    headerMap["Content-Type"] = "application/json";
-    headerMap["Authorization"] = authorization;
-    print("Update Devices tokens $headerMap") ;
+    if(prefs.getString("AUTH_TOKEN")==null){}else{
+      authorization = prefs.getString("AUTH_TOKEN") ;
+    }
 
   }
 
@@ -50,8 +48,12 @@ abstract class NetworkUtils {
       String endpoint,
       Map<String, String> headers}) async {
 
-    print("postRequest" + body.toString());
+
     String url = '$_baseUrl$endpoint';
+
+    print("postRequest url ${url} >> Body >>> ${body.toString()}");
+
+
 //    Map<String, String> headerMap = headers ?? new Map();
     Map<String, String> headerMap = Map();
 
