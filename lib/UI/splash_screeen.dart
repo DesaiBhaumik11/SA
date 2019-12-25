@@ -207,7 +207,7 @@ class SplashScreen extends StatelessWidget {
     map["os"]=              Platform.isAndroid?"Android":"Ios";
     map["osversion"]=       osVersion;
     map["platform"]=        "Mobile";
-    map["nbf"]=        "1577355877";
+ //   map["nbf"]=        "1577355877";
 //    map["platform"]=        "Mobile";
     map["notificationid"]=  "";
     print("Map = $map") ;
