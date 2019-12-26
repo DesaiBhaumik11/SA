@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/my_orders_modal.dart';
 
 class MyOrders extends StatefulWidget {
   @override
@@ -11,12 +14,22 @@ class MyOrders extends StatefulWidget {
 
 class _MyOrdersState extends State<MyOrders> {
 
+  MyOrdersModal myOrdersModal ;
+
    var text = TextStyle(
      fontWeight: FontWeight.w500,
    );
 
   @override
   Widget build(BuildContext context) {
+    myOrdersModal = Provider.of<MyOrdersModal>(context) ;
+
+    if(!myOrdersModal.loaded){
+      myOrdersModal.getOrders();
+
+
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Const.appBar,
@@ -227,17 +240,7 @@ class WhoopsOrder extends StatelessWidget {
 
 
 
-  void getMyOrder() {
 
-    NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((e){
-
-      print("GetOrders" + e) ;
-
-    }) ;
-
-
-
-  }
 
 
 }
