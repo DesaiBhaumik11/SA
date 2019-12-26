@@ -288,7 +288,7 @@ class MyCartState extends State<MyCartScreen>
                   children: <Widget>[
                     Container(
                       //child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
-                      child: Image.asset(cartItem.productMediaId==null?'assets/01-product.png':
+                      child: Image.network(cartItem.productMediaId==null?'assets/01-product.png':
                       '${DashboardScreen.appFirstModal.ImageUrl} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),
                     ),
                     Container(
