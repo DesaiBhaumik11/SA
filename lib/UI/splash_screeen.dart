@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
 
   navigate(context){
     SharedPreferences.getInstance().then((prefs){
-      if(prefs.getBool("login")??false){
+      if(prefs.getBool("login")==false ||prefs.getBool("login")==null ){
         Navigator.pushNamedAndRemoveUntil(context, Const.welcome,(c)=>false);
       }else{
         Navigator.pushNamedAndRemoveUntil(context, Const.loginScreen,(c)=>false);
@@ -56,6 +56,7 @@ class SplashScreen extends StatelessWidget {
 //       uuid = uuid+randomAlphaNumeric(10) ;
 
        prefs.setString("uuid", uuid);
+       prefs.setString("phone", "Guest User");
 
        getJwtToken(context, uuid).then((r) {
 
