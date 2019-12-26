@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class LocateMap extends StatefulWidget {
@@ -25,6 +26,8 @@ class _LocateMapState extends State<LocateMap> {
   CameraPosition _kGooglePlex;
 
   LatLng latLng;
+
+  GoogleMapController controller;
   @override
   void initState() {
     super.initState();
@@ -68,6 +71,14 @@ class _LocateMapState extends State<LocateMap> {
             mapType: MapType.normal,
             markers: markers,
             onTap: onMapTap,
+            myLocationEnabled: true,
+
+            onMapCreated: (c){
+              controller=c;
+              Location().getLocation().then((r){
+                controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
+              });
+            },
             initialCameraPosition: _kGooglePlex,
           ),
           Column(
