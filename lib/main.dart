@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/brand_model.dart';
 import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/my_orders_modal.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
@@ -79,6 +80,8 @@ class MyApp extends StatelessWidget {
   final shippingSlotModal=ShippingSlotModal();
   final myOrdersModal=MyOrdersModal();
 
+  var add=DefaultAddressModel();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -96,7 +99,8 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<VegetosExclusiveModel>.value(value: vegetosExclusive),
       ChangeNotifierProvider<RecommendedProductsModel>.value(value: recommendedProducts),
       ChangeNotifierProvider<SearchModel>.value(value: searchModel),
-      ChangeNotifierProvider<BrandModel>.value(value: brandModel)
+      ChangeNotifierProvider<BrandModel>.value(value: brandModel),
+      ChangeNotifierProvider<DefaultAddressModel>.value(value: add)
 
     ],child: MaterialApp(
         title: 'Vegetos',
