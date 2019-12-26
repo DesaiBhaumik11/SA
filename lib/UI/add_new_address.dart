@@ -88,7 +88,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       longitude:     latLng.longitude,
                       isDefault:     false
                     );
-                   widget.edit? Provider.of<AddressModal>(context).updateAddress(result,callback: addressChanged()):Provider.of<AddressModal>(context).addAddress(result,callback: addressChanged());
+                   widget.edit? Provider.of<AddressModal>(context).updateAddress(result,callback: addressChanged()):
+                   Provider.of<AddressModal>(context).addAddress(result,callback: addressChanged());
                   });
                 },
                 color: Theme.of(context).primaryColor,

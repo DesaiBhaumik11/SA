@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 
 import 'package:vegetos_flutter/models/product_common.dart';
@@ -28,9 +30,8 @@ class MyCartScreen extends StatefulWidget
 class MyCartState extends State<MyCartScreen>
 {
   myCart.MyCartModal myCartModal ;
+
   RecommendedProductsModel  recommendedProductsModel ;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +287,9 @@ class MyCartState extends State<MyCartScreen>
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                      //child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                      child: Image.network(cartItem.productMediaId==null?'assets/01-product.png':
+                      '${DashboardScreen.appFirstModal.ImageUrl} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),
                     ),
                     Container(
                       padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
@@ -318,7 +321,7 @@ class MyCartState extends State<MyCartScreen>
                      Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('Cherry Tomatoes' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('${cartItem.seoTag}' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             color: Colors.black, fontWeight: FontWeight.w500),),
                       ),
                       Container(
