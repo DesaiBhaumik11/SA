@@ -80,7 +80,7 @@ abstract class NetworkUtils {
 
     print("postRequest Headers ${headerMap.toString()}") ;
 
-    Response response = await post(url, headers: headerMap, body: body??Map());
+    Response response = await post(url, headers: headerMap, body: body);
     if(response.statusCode==200){
     }else{
 
