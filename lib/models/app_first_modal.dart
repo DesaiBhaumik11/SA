@@ -99,9 +99,9 @@ class AppFirstModal extends ChangeNotifier {
       }).catchError((e) {
         _loading=false;
         print("appFirstRun error $e");
-if(call!=null){
-  call();
-}
+      if(call!=null){
+        call();
+      }
         loaded=true;
         notifyListeners();
 
@@ -118,10 +118,7 @@ if(call!=null){
 
 
   void setDataLoginRToken(json, SharedPreferences prefs){
-
-
     result = Result.fromJson(json["Result"]);
-
     print("setDataLoginRToken   ${result.token}") ;
     prefs.setString("AUTH_TOKEN",result.token) ;
     prefs.setBool("login",true) ;

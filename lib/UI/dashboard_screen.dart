@@ -43,7 +43,7 @@ class DashboardScreen extends StatelessWidget
   Widget build(BuildContext context) {
 
     SharedPreferences.getInstance().then((prefs){
-      phoneNumber = prefs.getString("phone") ;
+      phoneNumber = prefs.getString("phone");
     }) ;
 
     appFirstModal = Provider.of<AppFirstModal>(context);
@@ -482,7 +482,7 @@ class DashboardScreen extends StatelessWidget
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Text('${phoneNumber}' ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                          child: Text('$phoneNumber' ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
                               color: Colors.black)),
                         )
                       ],

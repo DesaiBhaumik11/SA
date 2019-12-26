@@ -17,20 +17,24 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
-
+// login
+// AUTH_TOKEN
+//JWT_TOKEN
 class SplashScreen extends StatelessWidget {
   bool runOnce=true;
   AppFirstModal appFirstModal ;
 
 
-  navigate(context){
+  navigate(context)
+  {
     SharedPreferences.getInstance().then((prefs){
-      if(prefs.getBool("login")==false ||prefs.getBool("login")==null ){
-        Navigator.pushNamedAndRemoveUntil(context, Const.welcome,(c)=>false);
+      if(prefs.getBool("login")??false){
+        Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
       }else{
-        Navigator.pushNamedAndRemoveUntil(context, Const.loginScreen,(c)=>false);
+        Navigator.pushNamedAndRemoveUntil(context, Const.welcome,(c)=>false);
       }
-    });
+    }
+  );
   }
 
   @override
@@ -61,26 +65,24 @@ class SplashScreen extends StatelessWidget {
        getJwtToken(context, uuid).then((r) {
 
          print("AUTH_TOKEN Prefns ${prefs.getString("AUTH_TOKEN")}");
-          //if(prefs.getString("AUTH_TOKEN")==null){
-        // prefs.setBool("login", true) ;
-
-         if(prefs.getBool("login")??false ||prefs.getBool("login")==null ){
-
-            runOnce=true;
+          if(prefs.getString("AUTH_TOKEN")==null){
+         //prefs.setBool("login", true) ;
+          //print("Login status = ${(prefs.getBool("login")??false)}");
+       //  if(prefs.getBool("login")==null|| prefs.getBool("login")==false)
+       //  {
+            //runOnce=true;
             appFirstModal.appFirstRun(r,(){navigate(context);}) ;
 
 //            NetworkUtils.updateToken(prefs );
 //            appFirstModal.getDefaults();
 //            navigate(context);
-
-
           }else{
             NetworkUtils.updateToken(prefs );
             appFirstModal.getDefaults();
 
-            Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
+          //  Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
 
-            //navigate(context);
+            navigate(context);
           }
        });
      });
