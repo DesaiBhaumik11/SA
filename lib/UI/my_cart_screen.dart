@@ -90,7 +90,6 @@ class MyCartState extends State<MyCartScreen>
               child: Icon(Icons.delete, color: Colors.white,),
             ),
           ),
-
           InkWell(
             onTap: (){
               Navigator.push(context, SlideLeftRoute(page: SelectContact()));
@@ -109,6 +108,15 @@ class MyCartState extends State<MyCartScreen>
           child: Column(
             children: <Widget>[
               priceTotalBox(),
+              myCartModal.result==null||
+                  myCartModal.result.cartItemViewModels.length==0?
+              Container(padding: EdgeInsets.all(10),
+                  height: 200
+                  ,child:Card(child:
+                  Center(
+                    child: Text('No item in cart', style: TextStyle(color:Colors.black ,fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                  ),
+                  )):
               cartItemList(),
               horizontalList()
             ],
@@ -162,6 +170,8 @@ class MyCartState extends State<MyCartScreen>
         ),
       ),
     );
+
+
   }
 
   Widget priceTotalBox()
@@ -505,7 +515,7 @@ class MyCartState extends State<MyCartScreen>
                       Container(
                         child: Align(
                           alignment: Alignment.center,
-                          child: Image.asset('assets/product01.png', height: 100.0, width: 100.0,),
+                          child: Image.network('${DashboardScreen.appFirstModal.ImageUrl}${recommendedProductsModel.result[index].productMediaId}', height: 100.0, width: 100.0,),
                         ),
                         margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
@@ -577,7 +587,11 @@ class MyCartState extends State<MyCartScreen>
                     child: Align(
                       alignment: Alignment.center,
                       child: InkWell(child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        color: Colors.white, fontWeight: FontWeight.w500,)),onTap:(){ AddItem(index);},)
+                        color: Colors.white, fontWeight: FontWeight.w500,)),onTap:(){
+
+                        myCartModal.addTocart(recommendedProductsModel.result[index] ) ;
+
+                      },)
                     ),
                   )
                 ],
@@ -659,8 +673,11 @@ class MyCartState extends State<MyCartScreen>
             new FlatButton(
               child: new Text("Yes"),
               onPressed: () {
-                myCartModal.claerCart() ;
-                Navigator.of(context).pop();
+
+                  myCartModal.claerCart() ;
+                  Navigator.of(context).pop();
+
+
               },
             ),
           ],

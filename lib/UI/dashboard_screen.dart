@@ -72,9 +72,8 @@ class DashboardScreen extends StatelessWidget
         allCals = false ;
         myCartModal.getMyCart() ;
       }else{
-        cartSize=myCartModal.result.cartItemViewModels.length ;
+        cartSize=myCartModal.result==null?0:myCartModal.result.cartItemViewModels.length ;
       }
-
 
     }
 

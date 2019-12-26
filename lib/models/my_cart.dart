@@ -60,15 +60,6 @@ class MyCartModal extends ChangeNotifier{
 
 
 
-//    {
-//      "ProductId": "a4a4ceb7-fa45-47e8-8106-6b85e15e1e4d",
-//    "ProductVariantId": "3eee7688-2684-49f1-812f-852731af0e65",
-//    "Quantity": 10,
-//    "OfferId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//    "Amount": 200
-//    }
-//
-
     final body= json.encode({
 
       "ProductId": ""+resultModal.id,
@@ -93,7 +84,16 @@ class MyCartModal extends ChangeNotifier{
 
     NetworkUtils.deleteRequest(endPoint: Constant.ClearCart).then((res){
       print("claerCart response = $res");
-      getMyCart();
+     // getMyCart();
+
+      result.cartItemViewModels=List();
+
+       cartItemSize = 0 ;
+       totalCost = 0.0;
+
+      notifyListeners() ;
+
+
     }).catchError((e){print("Error claerCart  $e");}) ;
 
 
@@ -107,10 +107,17 @@ class MyCartModal extends ChangeNotifier{
       NetworkUtils.getRequest(endPoint: Constant.GetCart).then((r) {
         _loading=false;
         print("Get My Cart response = $r");
-        setData(json.decode(r));
+        setData(json.decode(r)) ;
       }).catchError((e) {
+        loaded=true;
         _loading=false;
-        print("Error caught in Get My Cart $e");
+        print("Error caught in Get My Cart $e") ;
+
+        cartItemSize=0 ;
+        totalCost =0 ;
+        result.cartItemViewModels = List();
+
+        notifyListeners() ;
 
         // loaded =true ;
         // notifyListeners();
@@ -141,27 +148,31 @@ class MyCartModal extends ChangeNotifier{
     statusCode= json["StatusCode"];
     message= json["Message"];
     isError= json["IsError"];
-    result= Result.fromJson(json["Result"]);
-
     loaded=true;
-    totalCost = 0.0 ;
-    for(int i =0 ; i<result.cartItemViewModels.length ; i++){
-      totalCost = totalCost+  result.cartItemViewModels[i].price*result.cartItemViewModels[i].quantity ;
+    try{
+      result= Result.fromJson(json["Result"]);
+
+
+      totalCost = 0.0 ;
+      for(int i =0 ; i<result.cartItemViewModels.length ; i++){
+        totalCost = totalCost+  result.cartItemViewModels[i].price*result.cartItemViewModels[i].quantity ;
+      }
+      cartItemSize = result.cartItemViewModels.length ;
+      print("Cart Size ${cartItemSize} , Total Cost ${totalCost}") ;
+
+    }catch(Exception){
+
+      cartItemSize=0 ;
+      totalCost =0 ;
     }
-    cartItemSize = result.cartItemViewModels.length ;
-    print("Cart Size ${cartItemSize} , Total Cost ${totalCost}") ;
-    notifyListeners();
+    notifyListeners() ;
   }
-
-
-
-
 
 }
 
 class Result {
   String cartId;
-  List<CartItemViewModel> cartItemViewModels;
+  List<CartItemViewModel> cartItemViewModels=List();
   double totalAmount;
   double deliveryCharges;
   double discount;
