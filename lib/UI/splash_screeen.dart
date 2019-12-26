@@ -60,7 +60,7 @@ class SplashScreen extends StatelessWidget {
 //       uuid = uuid+randomAlphaNumeric(10) ;
 
        prefs.setString("uuid", uuid);
-       prefs.setString("phone", "Guest User");
+     //  prefs.setString("phone", "Guest User");
 
        getJwtToken(context, uuid).then((r) {
 

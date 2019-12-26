@@ -1009,6 +1009,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
   void logoutApi() {
     //Navigator.pushNamed(context, Const.loginScreen);
 
+
     NetworkUtils.getRequest(endPoint: Constant.Logout).then((res){
       print("logoutApi " +res) ;
 

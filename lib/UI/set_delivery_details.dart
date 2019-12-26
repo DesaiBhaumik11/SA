@@ -1,9 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_addresses.dart';
+import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 
 import 'payment_option_screen.dart';
@@ -19,6 +27,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   final List<String> day = List();
   final List<int> date = List();
   ShippingSlotModal shippingSlotModal ;
+
 
 
   List<String> days=["S","M","T","W","T","F","S",];
@@ -44,11 +53,16 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       selectedRadioTile = val;
     });
   }
-
+DefaultAddressModel addressModel;
   @override
   Widget build(BuildContext context) {
     shippingSlotModal=Provider.of<ShippingSlotModal>(context);
-
+    if(addressModel==null){
+      addressModel=Provider.of<DefaultAddressModel>(context);
+    }
+    if(!addressModel.loaded){
+      addressModel.loadAddress(context);
+    }
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
@@ -75,7 +89,10 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
 
-              Container(
+              !addressModel.loaded?Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: SizedBox(height: 25,width: 35,child: CircularProgressIndicator(),)),
+              ): Container(
                 width: double.infinity,
 
                 color: Colors.white,
@@ -88,9 +105,8 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-
                           Text(
-                            'Home', style: TextStyle(
+                            addressModel.result.name, style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500
                           ),
@@ -128,19 +144,19 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                       ),
 
 
-                      Text('Partho Parekh', style: TextStyle(
+                      Text("", style: TextStyle(
                           color: Color(0xff2d2d2d),
                           fontWeight: FontWeight.w400,
                           fontSize: 16
                       ),),
 
-                      Text('Shayona Tilak 3, New SG Road, Gota,', style: TextStyle(
+                      Text(addressModel.result.addressLine1, style: TextStyle(
                           color: Color(0xff2d2d2d),
                           fontWeight: FontWeight.w400,
                           fontSize: 16
                       ),),
 
-                      Text('Ahmedabad, Gujarat 38248', style: TextStyle(
+                      Text(addressModel.result.addressLine2, style: TextStyle(
                           color: Color(0xff2d2d2d),
                           fontWeight: FontWeight.w400,
                           fontSize: 16
@@ -310,7 +326,9 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
         child: GestureDetector(
           onTap: () {
 
-            Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+            checkOutCall() ;
+
+            //Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
           },
           child: Container(
             color: Const.primaryColor,
@@ -431,12 +449,61 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   }
 
 
+
+
+
+  void checkOutCall() {
+
+
+    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+    NetworkUtils.postRequest(endpoint: Constant.Checkout  ,body: json.encode({
+      "DeliveryAddressId": "db9770e6-64f6-47d1-a986-9dd6a698ec83",
+      "Name": "business 2",
+      "AddressLine1": "this is my business 2 address",
+      "AddressLine2": "this is my business 2 address",
+      "City": "MUB",
+      "State": "MH",
+      "Country": "IND",
+      "Pin": "230532",
+      "MobileNo": "9022222222",
+      "LocationId": "db9770e6-64f6-47d1-a986-9dd6a698ec83",
+      "ShippingScheduleId": "f754b121-8082-4843-993a-c4f1a6442704",
+      "BusinessId": "1e683706-2c1f-4d34-90a6-6afc796461fe",
+      "ShippingDetails": "this is the shipping detail",
+      "SubTotal": "600",
+      "TaxAmount": "2",
+      "TotalAmount": "600",
+      "OfferAmount": "2",
+      "CheckoutItems": MyCartState.myCartModal.result.cartItemViewModels ,
+
+
+    })).then((res){
+      print("checkOutCall Response $res") ;
+      progressDialog.dismiss();
+
+    }).catchError((e){
+      print("checkOutCall catchError $e") ;
+      progressDialog.dismiss();
+    });
+  }
+
+
+  void checkfsdfOutCall() {
+
+
+
+
+    Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+
+
+
+
+
+  }
+
+
 }
 
 
-class GroupModel {
-  String text;
-  int index;
-  GroupModel({this.text, this.index});
-}
 

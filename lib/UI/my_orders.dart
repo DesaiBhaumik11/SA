@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/my_orders_modal.dart';
 
 class MyOrders extends StatefulWidget {
   @override
@@ -11,12 +14,20 @@ class MyOrders extends StatefulWidget {
 
 class _MyOrdersState extends State<MyOrders> {
 
+  MyOrdersModal myOrdersModal ;
+
    var text = TextStyle(
      fontWeight: FontWeight.w500,
    );
 
   @override
   Widget build(BuildContext context) {
+    myOrdersModal = Provider.of<MyOrdersModal>(context) ;
+
+    if(!myOrdersModal.loaded){
+      myOrdersModal.getOrders();
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Const.appBar,
@@ -35,7 +46,14 @@ class _MyOrdersState extends State<MyOrders> {
             'My Orders'
         ),
       ),
-      body: buildList(context),
+      body: myOrdersModal.result==null||
+          myOrdersModal.result.length==0? Container(padding: EdgeInsets.all(10),
+          height: 200
+          ,child:Card(child:
+          Center(
+            child: Text('No Orders Avalable', style: TextStyle(color:Colors.black ,fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+          ),
+          )):buildList(context),
     );
   }
 
@@ -150,7 +168,7 @@ class _MyOrdersState extends State<MyOrders> {
           ),
         );
       },
-      itemCount: 10,
+      itemCount: myOrdersModal.result==null?0:myOrdersModal.result.length ,
       padding: EdgeInsets.fromLTRB(15, 15, 15, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
@@ -227,17 +245,7 @@ class WhoopsOrder extends StatelessWidget {
 
 
 
-  void getMyOrder() {
 
-    NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((e){
-
-      print("GetOrders" + e) ;
-
-    }) ;
-
-
-
-  }
 
 
 }

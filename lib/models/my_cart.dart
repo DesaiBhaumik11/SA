@@ -134,8 +134,7 @@ class MyCartModal extends ChangeNotifier{
     //    print("${itemId}   >>> ${quantity}") ;
     Map<String , String>  headersmap = Map() ;
     print("updateQuantity itemId>>> $itemId quantity>>> $quantity") ;
-    NetworkUtils.postRequest(endpoint: Constant.UpdateQuantity+ itemId+"&quantity=$quantity" ,headers: headersmap).then((res){
-
+    NetworkUtils.postRequest(endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
       print("updateQuantity REsponse>>> $res") ;
 
     }) ;
