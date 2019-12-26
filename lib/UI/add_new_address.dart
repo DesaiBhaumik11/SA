@@ -343,8 +343,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
   }
 
   addressChanged(){
+    Navigator.pop(context) ;
 
-    Navigator.pop(context);
   }
 }
 

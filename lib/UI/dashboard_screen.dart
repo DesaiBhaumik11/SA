@@ -1,9 +1,16 @@
 
+import 'dart:io';
+
+import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
@@ -26,7 +33,7 @@ class DashboardScreen extends StatelessWidget
 {
   MyCartModal myCartModal ;
   static int cartSize=0;
-  AppFirstModal appFirstModal ;
+   static AppFirstModal appFirstModal ;
   ShippingSlotModal shippingSlotModal ;
 
 
@@ -984,10 +991,74 @@ class FunkyOverlayState extends State<FunkyOverlay>
     NetworkUtils.getRequest(endPoint: Constant.Logout).then((res){
       print("logoutApi " +res) ;
 
-      Navigator.pushNamed(context, Const.loginScreen);
+      String uuid =  Uuid().v4();
+      getJwtToken(uuid).then((token){
+
+        SharedPreferences.getInstance().then((prefs){
+
+          prefs.setBool("login", false) ;
+
+        }) ;
+
+        DashboardScreen.appFirstModal.appFirstRun(token , [Navigator.pushNamed(context, Const.loginScreen)]) ;
+
+      }) ;
+
+
 
     }) ;
 
+  }
+  Future<String> getJwtToken( [uuid]) async {
+
+    // uuid = uuid + randomAlphaNumeric(10) ;
+
+
+    String manufacturer,model,osVersion;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if(Platform.isAndroid){
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      manufacturer=androidInfo.manufacturer;
+      model=androidInfo.model;
+      osVersion=androidInfo.version.release;
+    }else{
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      model=iosInfo.model;
+      osVersion=iosInfo.utsname.version;
+    }
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    Map<String,dynamic> map=Map();
+    map["id"]=              uuid;
+    map["appversion"]=      packageInfo.version;
+
+    map["appversioncode"]=  packageInfo.buildNumber;
+    map["manufacturer"]=    Platform.isIOS?"Apple":manufacturer;
+    map["model"]=           model;
+    map["os"]=              Platform.isAndroid?"Android":"Ios";
+    map["osversion"]=       osVersion;
+//    map["platform"]=        Platform.isAndroid?"Android":"Ios";
+    //   map["nbf"]=        "1577355877";
+    map["platform"]=        "Mobile";
+    map["notificationid"]=  "";
+    print("Map = $map") ;
+
+    final key = '2C39927D43F04E1CBAB1615841D94000';
+    final claimSet = new JwtClaim(
+      issuer: 'com.archisys.vegetos',
+      audience: <String>['com.archisys.artis'],
+
+      otherClaims: map,
+    );
+    String token = issueJwtHS256(claimSet, key);
+
+    SharedPreferences.getInstance().then((prefs){
+      prefs.setString("JWT_TOKEN",token) ;
+    });
+    print("JWT token DASHBOARD  =  $token");
+
+    return token;
 
 
 

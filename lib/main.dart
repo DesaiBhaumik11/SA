@@ -125,7 +125,7 @@ class MyApp extends StatelessWidget {
           Const.expiredItems: (BuildContext context) => ExpiredItems(),
           Const.tellUsAbout: (BuildContext context) => TellUsAbout(),
           Const.loginScreen: (BuildContext context) => LoginScreen(),
-          Const.verifyOTP: (BuildContext context) => VerifyOTP(),
+          Const.verifyOTP: (BuildContext context) => VerifyOTP(""),
           Const.updateProfile: (BuildContext context) => UpdateProfile(),
           Const.myOrders: (BuildContext context) => MyOrders(),
           Const.myAddresses: (BuildContext context) => MyAddresses(),
