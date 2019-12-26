@@ -196,16 +196,22 @@ class _MyAddressesState extends State<MyAddresses> {
 class FunkyOverlay extends StatefulWidget {
   var id;
 
-  FunkyOverlay(this.id);
+  FunkyOverlay(id){
+    this.id=id;
+  }
 
   @override
-  State<StatefulWidget> createState() => FunkyOverlayState();
+  State<StatefulWidget> createState() => FunkyOverlayState(id);
 }
 
 class FunkyOverlayState extends State<FunkyOverlay>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation<double> scaleAnimation;
+  var id;
+  FunkyOverlayState(id){
+    this.id=id;
+  }
 
   @override
   void initState() {
@@ -265,7 +271,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
-                                  Provider.of<AddressModal>(context).deleteAddress(widget.id,callback:(){Navigator.pop(context);});
+                                  Provider.of<AddressModal>(context).deleteAddress(id,callback:(){Navigator.pop(context);});
                                 //  Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(
