@@ -118,6 +118,9 @@ class WelcomeScreen extends State<WelcomeScreenState>
                 padding: const EdgeInsets.only(bottom: 5),
                 child: FlatButton(
                   onPressed: (){
+                    SharedPreferences.getInstance().then((prefs){
+                      prefs.setString("phone", "Guest User");
+                    }) ;
                     Navigator.pushNamed(context, Const.setDeliveryLocation);
                   },
                   child: Text(

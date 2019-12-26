@@ -310,7 +310,9 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
         child: GestureDetector(
           onTap: () {
 
-            Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+            checkOutCall() ;
+
+            //Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
           },
           child: Container(
             color: Const.primaryColor,
@@ -430,13 +432,21 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
     );
   }
 
+  void checkOutCall() {
+
+
+
+
+    Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+
+
+
+
+
+  }
+
 
 }
 
 
-class GroupModel {
-  String text;
-  int index;
-  GroupModel({this.text, this.index});
-}
 

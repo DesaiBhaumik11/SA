@@ -19,7 +19,7 @@ class MyOrdersModal extends ChangeNotifier {
   bool isError;
 
   bool loaded=false;
-  bool _loading=false;
+  bool is_loading=false;
 
 
 
@@ -44,15 +44,37 @@ class MyOrdersModal extends ChangeNotifier {
     "IsError": isError,
   };
 
-
+  void setData(json) {
+    result = List() ;
+    if(json["Result"]!=null) {
+      result = List<Result>.from(json["Result"].map((x) => Result.fromJson(x)));
+      statusCode = json["StatusCode"];
+      message = json["Message"];
+      isError = json["IsError"];
+    }
+    loaded =true ;
+    notifyListeners() ;
+  }
 
    getOrders(){
 
-    NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((res){
 
-    }).catchError((e){
+     if(!is_loading){
+       is_loading = true ;
+       NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((response){
+         is_loading = false  ;
+         print("getOrders = $response");
 
-    }) ;
+         {
+           setData(json.decode(response)) ;
+         }
+       }).catchError((e){
+         loaded =true ;
+         setData({});
+         //notifyListeners();
+
+       });
+     }
 
 
   }

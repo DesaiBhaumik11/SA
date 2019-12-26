@@ -191,9 +191,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
         SharedPreferences.getInstance().then((prefs){
          // prefs.setString("AUTH_TOKEN",result["Token"]) ;
          // prefs.setBool("login", true);
-
-          appFirstModal.setDataLoginRToken(root ,prefs);
           prefs.setString("phone", "$phone");
+          appFirstModal.setDataLoginRToken(root ,prefs);
+
         });
         Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
       }else{

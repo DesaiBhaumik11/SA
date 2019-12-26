@@ -26,8 +26,6 @@ class _MyOrdersState extends State<MyOrders> {
 
     if(!myOrdersModal.loaded){
       myOrdersModal.getOrders();
-
-
     }
 
     return Scaffold(
@@ -48,7 +46,14 @@ class _MyOrdersState extends State<MyOrders> {
             'My Orders'
         ),
       ),
-      body: buildList(context),
+      body: myOrdersModal.result==null||
+          myOrdersModal.result.length==0? Container(padding: EdgeInsets.all(10),
+          height: 200
+          ,child:Card(child:
+          Center(
+            child: Text('No Orders Avalable', style: TextStyle(color:Colors.black ,fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+          ),
+          )):buildList(context),
     );
   }
 
@@ -163,7 +168,7 @@ class _MyOrdersState extends State<MyOrders> {
           ),
         );
       },
-      itemCount: 10,
+      itemCount: myOrdersModal.result==null?0:myOrdersModal.result.length ,
       padding: EdgeInsets.fromLTRB(15, 15, 15, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
