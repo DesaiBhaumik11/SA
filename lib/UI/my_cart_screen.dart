@@ -29,7 +29,7 @@ class MyCartScreen extends StatefulWidget
 
 class MyCartState extends State<MyCartScreen>
 {
-  myCart.MyCartModal myCartModal ;
+   static myCart.MyCartModal myCartModal ;
 
   RecommendedProductsModel  recommendedProductsModel ;
 
