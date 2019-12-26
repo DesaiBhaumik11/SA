@@ -91,17 +91,20 @@ class AddressModal extends ChangeNotifier{
       "IsDefault":     result.isDefault
     };
     NetworkUtils.postRequest(endpoint:Constant.AddAddress,body: json.encode(map)).then((r){
-      print("Address response = $r");
-      var root=json.decode(r);
-      if(root['IsError']){
-       Fluttertoast.showToast(msg: "error");
-      }else {
-        this.result.add(Result.fromJson((root['Result'])));
-        if(callback!=null){
-          callback();
-        }
-        notifyListeners();
-      }
+      print("addAddress response = $r");
+
+      getMyAddresses() ;
+
+//      var root=json.decode(r);
+//     {
+//        this.result.add(Result.fromJson((root['Result'])));
+//        if(callback!=null){
+//          callback();
+//        }
+//        notifyListeners();
+//      }
+    }).catchError((e){
+      print("Error Catch in addAddress  ${e}") ;
     });
   }
 

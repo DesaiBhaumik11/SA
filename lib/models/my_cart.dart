@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 
 MyCartModal myCartModalFromJson(String str) => MyCartModal.fromJson(json.decode(str));
@@ -81,6 +82,7 @@ class MyCartModal extends ChangeNotifier{
 
     NetworkUtils.postRequest(body: body ,endpoint: Constant.AddItem).then((res){
       print("addTocart response = $res");
+      Utility.toastMessage("Added to cart sucessfully");
       getMyCart();
     }).catchError((e){print("Error addTocart  $e");}) ;
 

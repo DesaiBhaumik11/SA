@@ -103,7 +103,7 @@ class _MyAddressesState extends State<MyAddresses> {
   ListView buildList(BuildContext context) {
 
     return ListView.builder(
-
+      reverse: true,
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {},
