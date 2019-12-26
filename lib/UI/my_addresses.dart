@@ -134,7 +134,7 @@ class _MyAddressesState extends State<MyAddresses> {
                         child: Container(),
                       ),
                       PopupMenuButton(
-                        itemBuilder: (c) => ["Edit", "Delete"]
+                        itemBuilder: (c) => ["Edit", "Delete","Set Default"]
                             .map((i) => PopupMenuItem(
                                     child: ListTile(
                                   onTap: () {
@@ -143,12 +143,14 @@ class _MyAddressesState extends State<MyAddresses> {
                                       Navigator.push(
                                           context,
                                           SlideLeftRoute(page: AddNewAddress(result:addressModal.result[index],edit: true)));
-                                    } else {
+                                    } else if(i=="Delete"){
                                       showDialog(
                                           context: context,
                                           builder: (s) {
                                             return FunkyOverlay(addressModal.result[index].id);
                                           });
+                                    }else{
+                                      NetworkUtils.getRequest(endPoint: "SetDefaultAddress?addressId=${addressModal.result[index].id}");
                                     }
                                   },
                                   title: Text(i),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_addresses.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 
 import 'payment_option_screen.dart';
@@ -44,11 +45,16 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       selectedRadioTile = val;
     });
   }
-
+DefaultAddressModel addressModel;
   @override
   Widget build(BuildContext context) {
     shippingSlotModal=Provider.of<ShippingSlotModal>(context);
-
+    if(addressModel==null){
+      addressModel=Provider.of<DefaultAddressModel>(context);
+    }
+    if(!addressModel.loaded){
+      addressModel.loadAddress(context);
+    }
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
@@ -75,7 +81,10 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
 
-              Container(
+              !addressModel.loaded?Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: SizedBox(height: 25,width: 35,child: CircularProgressIndicator(),)),
+              ): Container(
                 width: double.infinity,
 
                 color: Colors.white,
@@ -88,9 +97,8 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-
                           Text(
-                            'Home', style: TextStyle(
+                            addressModel.result.name, style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500
                           ),
@@ -128,19 +136,19 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                       ),
 
 
-                      Text('Partho Parekh', style: TextStyle(
+                      Text("", style: TextStyle(
                           color: Color(0xff2d2d2d),
                           fontWeight: FontWeight.w400,
                           fontSize: 16
                       ),),
 
-                      Text('Shayona Tilak 3, New SG Road, Gota,', style: TextStyle(
+                      Text(addressModel.result.addressLine1, style: TextStyle(
                           color: Color(0xff2d2d2d),
                           fontWeight: FontWeight.w400,
                           fontSize: 16
                       ),),
 
-                      Text('Ahmedabad, Gujarat 38248', style: TextStyle(
+                      Text(addressModel.result.addressLine2, style: TextStyle(
                           color: Color(0xff2d2d2d),
                           fontWeight: FontWeight.w400,
                           fontSize: 16
