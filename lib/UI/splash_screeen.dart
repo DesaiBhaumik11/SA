@@ -1,6 +1,4 @@
 
-
-
 import 'dart:async';
 import 'dart:io';
 
@@ -12,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
@@ -53,29 +52,34 @@ class SplashScreen extends StatelessWidget {
      runOnce=false;
      SharedPreferences.getInstance().then((prefs) {
        String uuid = prefs.getString("uuid") ?? Uuid().v4();
+
+//       uuid = uuid+randomAlphaNumeric(10) ;
+
        prefs.setString("uuid", uuid);
-       prefs.setString("AUTH_TOKEN", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHB2ZXJzaW9uIjoiMS4wLjAiLCJhcHB2ZXJzaW9uY29kZSI6IjEiLCJhdWQiOlsiY29tLmFyY2hpc3lzLmFydGlzIl0sImV4cCI6MTU3NzM1NzI5OSwiaWF0IjoxNTc3MjcwODk5LCJpZCI6IjMyNDlhYTMxLTFlMTUtNDFhNi04NGExLWU5ODhjMTgzMzVhMyIsImlzcyI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIiwibWFudWZhY3R1cmVyIjoibW90b3JvbGEiLCJtb2RlbCI6Im1vdG9yb2xhIG9uZSBhY3Rpb24iLCJub3RpZmljYXRpb25pZCI6IjIzIiwib3MiOiJBbmRyb2lkIiwib3N2ZXJzaW9uIjoiOSIsInBsYXRmb3JtIjoiYW5kcm9pZCJ9.8fAfAdgS05HyMRAneY40jvO5cl1zrDC48tbtFV2Tois");
-
-
 
        getJwtToken(context, uuid).then((r) {
 
          print("AUTH_TOKEN Prefns ${prefs.getString("AUTH_TOKEN")}");
           //if(prefs.getString("AUTH_TOKEN")==null){
-            if(true){
+        // prefs.setBool("login", true) ;
+
+         if(prefs.getBool("login")??false ||prefs.getBool("login")==null ){
 
             runOnce=true;
             appFirstModal.appFirstRun(r,(){navigate(context);}) ;
 
-            NetworkUtils.updateToken(prefs );
-            appFirstModal.getDefaults();
-            navigate(context);
+//            NetworkUtils.updateToken(prefs );
+//            appFirstModal.getDefaults();
+//            navigate(context);
 
 
           }else{
             NetworkUtils.updateToken(prefs );
             appFirstModal.getDefaults();
-            navigate(context);
+
+            Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
+
+            //navigate(context);
           }
        });
      });
@@ -206,9 +210,9 @@ class SplashScreen extends StatelessWidget {
     map["model"]=           model;
     map["os"]=              Platform.isAndroid?"Android":"Ios";
     map["osversion"]=       osVersion;
-    map["platform"]=        "Mobile";
+//    map["platform"]=        Platform.isAndroid?"Android":"Ios";
  //   map["nbf"]=        "1577355877";
-//    map["platform"]=        "Mobile";
+    map["platform"]=        "Mobile";
     map["notificationid"]=  "";
     print("Map = $map") ;
 

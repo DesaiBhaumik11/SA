@@ -274,13 +274,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "Mobile": ""+mobile}
 
       )).then((res){
+
         dialog.dismiss() ;
 
+        var root =json.decode(res);
 
-        Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP(mobile)));
+        if(root["StatusCode"]==200){
 
+          Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP(mobile)));
+        }else{
+          Utility.toastMessage("${root["Message"]}") ;
+        }
 
-      print("Register Response Here $res") ;
+        print("Register Response Here $res") ;
 
     });
   }

@@ -51,7 +51,7 @@ class AppFirstModal extends ChangeNotifier {
 
 
 
-  getDefaults(){
+  getDefaults([call]){
       NetworkUtils.getRequest(endPoint: Constant.GetDefaults ).then((r) {
         print("getDefaults response = $r");
 
@@ -61,9 +61,15 @@ class AppFirstModal extends ChangeNotifier {
         ImageUrl = data["ImageUrl"] ;
         print("getDefaults" +ImageUrl ) ;
 
+        if(call!=null){
+          call();
+        }
 
       }).catchError((e) {
 
+        if(call!=null){
+          call();
+        }
         print("getDefaults error $e");
       });
 
@@ -85,7 +91,11 @@ class AppFirstModal extends ChangeNotifier {
 
 
 
-        setData(json.decode(r));
+        setData( json.decode(r) , call);
+//        if(call!=null){
+//          call();
+//        }
+
       }).catchError((e) {
         _loading=false;
         print("appFirstRun error $e");
@@ -105,27 +115,47 @@ if(call!=null){
     }
   }
 
-  void setData(json) {
+
+
+  void setDataLoginRToken(json, SharedPreferences prefs){
+
+
+    result = Result.fromJson(json["Result"]);
+
+    print("setDataLoginRToken   ${result.token}") ;
+    prefs.setString("AUTH_TOKEN",result.token) ;
+    NetworkUtils.updateToken(prefs);
+  }
+
+
+  void setData(json,[call]) {
     version = json["Version"];
     statusCode = json["StatusCode"];
-
-    if (statusCode == 200) {
-
     message = json["Message"];
     isError = json["IsError"];
+
+    if (statusCode == 200) {
     result = Result.fromJson(json["Result"]);
     SharedPreferences.getInstance().then((r) {
       r.setString("AUTH_TOKEN", result.token);
       NetworkUtils.updateToken(r);
+      getDefaults(call);
     });
     loaded = true;
     notifyListeners();
   }else{
-      Utility.toastMessage(message);
-    }
+      if(message=="Another user is active on this device."){
 
 
-  }
+        SharedPreferences.getInstance().then((r) {
+          NetworkUtils.updateToken(r);
+          getDefaults(call);
+        });
+
+      }else{
+        Utility.toastMessage(message);
+      }
+    }}
 
 
 }

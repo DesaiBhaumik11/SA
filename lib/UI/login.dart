@@ -173,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void loginApi() {
 
+
     ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
     progressDialog.show() ;
     NetworkUtils.postRequest(endpoint: Constant.Login  ,body: json.encode({
@@ -182,19 +183,12 @@ class _LoginScreenState extends State<LoginScreen> {
         progressDialog.dismiss();
 
         final decoded = jsonDecode(res) as Map;
-
-
-        //final data = decoded['StatusCode'] as Map;
-
-
-        bool IsError = decoded['IsError'] ;
-
-        print("IsError  >> ${IsError}");
-
-        if(!IsError){
-          Fluttertoast.showToast(msg: "${decoded['Message']}" ,);
+        print("login Response  ${res}");
+        String message =decoded["Message"] ;
+        if(message=="User registered. Otp sent."){
+          Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP(mobile)));
         }else{
-
+          Utility.toastMessage(message) ;
         }
 
     }).catchError((e){
@@ -202,4 +196,5 @@ class _LoginScreenState extends State<LoginScreen> {
       progressDialog.dismiss();
     });
   }
+
 }

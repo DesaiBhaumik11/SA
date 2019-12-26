@@ -27,6 +27,9 @@ abstract class NetworkUtils {
 
   static updateToken(SharedPreferences prefs){
 
+    print("updateToken >>JWT_TOKEN ${prefs.getString("JWT_TOKEN")}") ;
+    print("updateToken >>AUTH_TOKEN ${prefs.getString("AUTH_TOKEN")}") ;
+
     if(prefs.getString("JWT_TOKEN")==null){}else{
       deviceToken = prefs.getString("JWT_TOKEN") ;
     }
@@ -57,24 +60,25 @@ abstract class NetworkUtils {
 //    Map<String, String> headerMap = headers ?? new Map();
     Map<String, String> headerMap = Map();
 
-    if(useLocalToken){
-      SharedPreferences prefs=await SharedPreferences.getInstance();
-
-      deviceToken = prefs.getString("AUTH_TOKEN")??
-      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
-
-      authorization ="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlZjA4MDI0LWI4OTktNGNkOC05Y2Q1LTYwNTVlOTU1NjI4MiIsIm5hbWUiOiIrOTEtOTk3NDMxOTAyNiIsIm1vYmlsZSI6Ijk5NzQzMTkwMjYiLCJjb3VudHJ5Y29kZSI6Iis5MSIsImN1c3RvbWVyIjoidHJ1ZSIsIm5iZiI6MTU3NjU4MDc4MiwiZXhwIjoxNTkyMTMyNzgyLCJpYXQiOjE1NzY1ODA3ODIsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.aIZV4VJlj-VtTB7ownt2NScm7aKKSgRdrFiVwcO9nTo";
-     // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
-
-    }
+//    if(useLocalToken){
+//      SharedPreferences prefs=await SharedPreferences.getInstance();
+//
+//      deviceToken = prefs.getString("AUTH_TOKEN")??
+//      "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
+//
+//      authorization ="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZlZjA4MDI0LWI4OTktNGNkOC05Y2Q1LTYwNTVlOTU1NjI4MiIsIm5hbWUiOiIrOTEtOTk3NDMxOTAyNiIsIm1vYmlsZSI6Ijk5NzQzMTkwMjYiLCJjb3VudHJ5Y29kZSI6Iis5MSIsImN1c3RvbWVyIjoidHJ1ZSIsIm5iZiI6MTU3NjU4MDc4MiwiZXhwIjoxNTkyMTMyNzgyLCJpYXQiOjE1NzY1ODA3ODIsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.aIZV4VJlj-VtTB7ownt2NScm7aKKSgRdrFiVwcO9nTo";
+//     // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
+//
+//    }
 
 
 
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
-    headerMap["Authorization"] = authorization;
+    headerMap["Authorization"] = "Bearer "+authorization;
 
 
+    print("postRequest Headers ${headerMap.toString()}") ;
 
     Response response = await post(url, headers: headerMap, body: body??Map());
     if(response.statusCode==200){
@@ -111,7 +115,8 @@ abstract class NetworkUtils {
 
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
-    headerMap["Authorization"] = authorization;
+    headerMap["Authorization"] = "Bearer "+authorization;
+
 
     String url = "$_baseUrl$endPoint";
     print("Url = $url");
