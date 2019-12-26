@@ -283,7 +283,8 @@ abstract class NetworkUtils {
 
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
-    headerMap["Authorization"] = authorization;
+    //headerMap["Authorization"] = authorization;
+    headerMap["Authorization"] = "Bearer "+authorization;
 
     Response response = await put(url, headers: headerMap, body: body??Map());
     if(response.statusCode==200){
@@ -301,7 +302,9 @@ abstract class NetworkUtils {
     Map<String, String> headerMap = Map();
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
-    headerMap["Authorization"] = authorization;
+    //headerMap["Authorization"] = authorization;
+    headerMap["Authorization"] = "Bearer "+authorization;
+
 
     Response response = await delete(url, headers: headerMap);
     if(response.statusCode==200){

@@ -140,9 +140,9 @@ class AddressModal extends ChangeNotifier{
 
   void deleteAddress(id, {callback}) {
     NetworkUtils.deleteRequest(endPoint: "${Constant.DeleteAddress}$id").then((r){
-      if(!json.decode(r)["isError"]){
+
         result.removeWhere((e)=>e.id==id);
-      }
+
       if(callback!=null){
         callback();
       }
