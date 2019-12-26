@@ -160,7 +160,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                       RaisedButton(
                         color: Theme.of(context).primaryColor,
                         onPressed: (){
-                          Navigator.pop(context);
+                          Navigator.pop(context) ;
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(50))

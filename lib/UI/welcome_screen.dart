@@ -57,9 +57,14 @@ class WelcomeScreen extends State<WelcomeScreenState>
     // TODO: implement build
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
 
-    return Scaffold(
-      body: slideShow()
-    );
+
+    return WillPopScope(onWillPop: (){
+
+    },
+      child: Scaffold(
+
+        body: slideShow()
+    ),) ;
   }
 
   Widget slideShow()

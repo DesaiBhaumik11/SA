@@ -35,11 +35,17 @@ class DashboardScreen extends StatelessWidget
   static int cartSize=0;
    static AppFirstModal appFirstModal ;
   ShippingSlotModal shippingSlotModal ;
-
+  bool allCals = true ;
+  String phoneNumber ;
 
 
   @override
   Widget build(BuildContext context) {
+
+    SharedPreferences.getInstance().then((prefs){
+      phoneNumber = prefs.getString("phone") ;
+    }) ;
+
     appFirstModal = Provider.of<AppFirstModal>(context);
     final cat=Provider.of<CategoriesModel>(context);
 
@@ -57,10 +63,19 @@ class DashboardScreen extends StatelessWidget
       shippingSlotModal.getShippingSlot() ;
     }
 
+
     if(!myCartModal.loaded){
       myCartModal.getMyCart() ;
     }else{
-      cartSize=myCartModal.result.cartItemViewModels.length ;
+
+      if(allCals){
+        allCals = false ;
+        myCartModal.getMyCart() ;
+      }else{
+        cartSize=myCartModal.result.cartItemViewModels.length ;
+      }
+
+
     }
 
 //    if(!addressModal.loaded){
@@ -467,7 +482,7 @@ class DashboardScreen extends StatelessWidget
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Text('987654321',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                          child: Text('${phoneNumber}' ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
                               color: Colors.black)),
                         )
                       ],
@@ -895,6 +910,13 @@ class FunkyOverlayState extends State<FunkyOverlay>
     });
 
     controller.forward();
+
+
+
+
+
+
+
   }
 
   @override
@@ -1000,11 +1022,9 @@ class FunkyOverlayState extends State<FunkyOverlay>
 
         }) ;
 
-        DashboardScreen.appFirstModal.appFirstRun(token , [Navigator.pushNamed(context, Const.loginScreen)]) ;
+        DashboardScreen.appFirstModal.appFirstRun(token , [Navigator.pushReplacementNamed(context, Const.loginScreen)]) ;
 
       }) ;
-
-
 
     }) ;
 
@@ -1059,8 +1079,6 @@ class FunkyOverlayState extends State<FunkyOverlay>
     print("JWT token DASHBOARD  =  $token");
 
     return token;
-
-
 
   }
 }

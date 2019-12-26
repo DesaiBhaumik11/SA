@@ -31,11 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: ListView(
-        physics: BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           children: <Widget>[
 
             SizedBox(height: 50),
@@ -49,8 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('Login with OTP', style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 19
+                    fontWeight: FontWeight.w500,
+                    fontSize: 19
                 ),),
               ],
             ),
@@ -82,10 +82,10 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Text(
-                'Enter your mobile number', style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black54,
-                fontSize: 15
+                  'Enter your mobile number', style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                  fontSize: 15
               )
               ),
             ),
@@ -99,8 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  counterText: '',
-                  contentPadding: EdgeInsets.symmetric(vertical: 10)
+                    counterText: '',
+                    contentPadding: EdgeInsets.symmetric(vertical: 10)
                 ),
                 style: TextStyle(
                   fontSize: 18,
@@ -118,30 +118,30 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      onPressed: (){
-                        if(mobile==""||mobile.length < 10){
+                      child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: (){
+                          if(mobile==""||mobile.length < 10){
 
-                          Utility.toastMessage("Enter Correct Number")  ;
+                            Utility.toastMessage("Enter Correct Number")  ;
 
-                        }else{    loginApi();
+                          }else{    loginApi();
 
-                        }
+                          }
 
-                        // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          'Login', style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18
+                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Login', style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18
+                          ),
+                          ),
                         ),
-                        ),
-                      ),
-                    )
+                      )
                   )
                 ],
               ),
@@ -167,7 +167,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-    );
+    ),
+    onWillPop: (){},) ;
   }
 
 

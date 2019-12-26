@@ -124,6 +124,7 @@ if(call!=null){
 
     print("setDataLoginRToken   ${result.token}") ;
     prefs.setString("AUTH_TOKEN",result.token) ;
+    prefs.setBool("login",true) ;
     NetworkUtils.updateToken(prefs);
   }
 
