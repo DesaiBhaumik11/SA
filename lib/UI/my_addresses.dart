@@ -134,10 +134,13 @@ class _MyAddressesState extends State<MyAddresses> {
                       SizedBox(
                         width: 4,
                       ),
+                      addressModal.result[index].isDefault?
                       Image.asset(
                         'tick-orange.png',
                         height: 18,
-                      ),
+                      ):Container(),
+
+
                       Expanded(
                         flex: 1,
                         child: Container(),
@@ -160,10 +163,13 @@ class _MyAddressesState extends State<MyAddresses> {
                                           });
                                     }else{
 
-                                      NetworkUtils.getRequest(endPoint: "${Constant.SetDefaultAddress}${addressModal.result[index].id}").then((res){
-                                        defaultAddressModel.loadAddress(context) ;
+                                      addressModal.defaultAddress = addressModal.result[index].name + " , " +
+                                          addressModal.result[index].city ;
 
-                                      });
+                                      addressModal.setDefaultAddress(addressModal.result[index].id) ;
+
+                                      defaultAddressModel.loadAddress(context) ;
+
                                     }
                                   },
                                   title: Text(i),

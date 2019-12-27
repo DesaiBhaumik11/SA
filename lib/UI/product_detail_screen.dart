@@ -77,7 +77,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             child: Image.asset('back.png', height: 25,),
           ),
         ),
-        title: Text(productModal.result.name),
+        title: Text(productModal.result.name==null?"":productModal.result.name),
         //title: Text('Washington Apple'),
         actions: <Widget>[
           Container(
@@ -177,7 +177,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
             alignment: Alignment.centerLeft,
 
-            child: Text(productModal.result.name, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
+            child: Text(productModal.result.name==null?"":productModal.result.name, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
                 fontWeight: FontWeight.w800),),
           ),
           Row(

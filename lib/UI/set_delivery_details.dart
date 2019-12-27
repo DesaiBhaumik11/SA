@@ -115,7 +115,7 @@ class  _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            addressModel.result.name, style: TextStyle(
+                            addressModel.result.name==null?"": addressModel.result.name, style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500
                           ),

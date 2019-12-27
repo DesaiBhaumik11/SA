@@ -239,7 +239,7 @@ class _SummaryState extends State<Summary> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
 
-                    Text('${PaymentOptionScreenState.addressModel.result.name}', style: TextStyle(
+                    Text('${PaymentOptionScreenState.addressModel.result.name==null?"":PaymentOptionScreenState.addressModel.result.name}', style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
                     ),),
