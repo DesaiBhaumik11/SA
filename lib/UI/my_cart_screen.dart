@@ -331,7 +331,7 @@ class MyCartState extends State<MyCartScreen>
                      Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('${cartItem.seoTag}' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('${cartItem.name}' , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             color: Colors.black, fontWeight: FontWeight.w500),),
                       ),
                       Container(
@@ -536,7 +536,7 @@ class MyCartState extends State<MyCartScreen>
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(recommendedProductsModel.result[index].seoTag,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(recommendedProductsModel.result[index].name,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),

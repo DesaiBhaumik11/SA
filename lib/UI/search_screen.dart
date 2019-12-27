@@ -181,8 +181,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: result[index].seoTag==null||result[index].seoTag.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
-                            "${result[index].seoTag}",
+                          child: result[index].name==null||result[index].name.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
+                            "${result[index].name}",
                             height: 100.0,
                             width: 100.0,
                           ),
@@ -212,7 +212,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: <Widget>[
                         Text(
 
-                          result[index].seoTag,
+                          result[index].name,
 
                           style: TextStyle(
                               fontSize: 17.0,

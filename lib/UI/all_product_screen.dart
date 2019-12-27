@@ -49,9 +49,11 @@ class _AllProductScreenState extends State<AllProductScreen> {
       ,body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
+
           color: Const.gray10,
           child: Column(
             mainAxisSize: MainAxisSize.max,
+
             children: <Widget>[
 
               name=="Best Selling Items"? bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):
@@ -76,6 +78,13 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
   Widget horizontalList(String s, List<bst.Result> products)
   {
+
+    var size = MediaQuery.of(context).size;
+
+
+    final double itemHeight = (size.height - kToolbarHeight - 150) / 2;
+    final double itemWidth = size.width / 2;
+
     return Stack(
       children: <Widget>[
         Container(
@@ -86,17 +95,42 @@ class _AllProductScreenState extends State<AllProductScreen> {
               children: <Widget>[
 
                 Container(
-                  height: 275.0,
+
 
                   margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: products.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return childView(context,products[index]);
-                      }
+                  child:GridView.count(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    childAspectRatio: (itemWidth / itemHeight) ,
+                    children: List.generate(products.length,(index){
+
+                      return childView(context,products[index]);
+
+                    }),
+
+//      children: <Widget>[
+//        child,
+//        child,
+//        child,
+//        child,
+//      ],
                   ),
+
+
+//                  ListView.builder(
+//                      physics: BouncingScrollPhysics(),
+//                      itemCount: products.length,
+//                      scrollDirection: Axis.horizontal,
+//                      itemBuilder: (context, index) {
+//                        return childView(context,products[index]);
+//                      }
+//                  ),
+
+
+
+
                 )
               ],
             ),
@@ -157,7 +191,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(result.seoTag,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(result.name,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),

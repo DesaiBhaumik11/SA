@@ -58,7 +58,7 @@ class OrderItemsState extends State<OrderItems>
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('${cartItem.seoTag}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('${cartItem.name}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             color: Colors.black, fontWeight: FontWeight.w500),),
                       ),
                       Container(
