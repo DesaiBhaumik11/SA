@@ -1,10 +1,23 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/order_placed_screen.dart';
 import 'package:vegetos_flutter/UI/promo_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
+import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
+import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
+
+import 'my_cart_screen.dart';
 
 class PaymentOptionScreen extends StatefulWidget
 {
@@ -21,8 +34,14 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
   bool isPromoAplied = true;
   bool wallet = true;
 
+   DefaultAddressModel addressModel;
+
+
+
   @override
   Widget build(BuildContext context) {
+    addressModel=Provider.of<DefaultAddressModel>(context);
+
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +72,10 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
         child: GestureDetector(
           onTap: () {
             //Navigator.pushNamed(context, Const.paymentOption);
-            Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
+
+            checkOutCall() ;
+
+           // Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
           },
           child: Container(
             color: Const.primaryColor,
@@ -373,4 +395,55 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
     );
   }
 
+
+  void checkOutCall() {
+
+
+
+    SharedPreferences.getInstance().then((prefs){
+      MyCartModal myCartModal = MyCartState.myCartModal ;
+      ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+      progressDialog.show() ;
+      NetworkUtils.postRequest(endpoint: Constant.Checkout  ,body: json.encode({
+
+        "DeliveryAddressId": "${addressModel.result.id}",
+        "Name": "${addressModel.result.name}",
+        "AddressLine1": "${addressModel.result.addressLine1}",
+        "AddressLine2": "${addressModel.result.addressLine2}",
+        "City": "${addressModel.result.city}",
+        "State": "${addressModel.result.state}",
+        "Country": "${addressModel.result.country}",
+        "Pin": "${addressModel.result.pin}",
+        "MobileNo": "${prefs.getString("phone")}",
+        "LocationId": "db9770e6-64f6-47d1-a986-9dd6a698ec83",
+        "ShippingScheduleId": "f754b121-8082-4843-993a-c4f1a6442704",
+        "BusinessId": "1e683706-2c1f-4d34-90a6-6afc796461fe",
+        "ShippingDetails": "this is the shipping detail",
+        "SubTotal": "${myCartModal.totalCost}",
+        "TaxAmount": "2",
+        "TotalAmount": "${myCartModal.totalCost}",
+        "OfferAmount": "2",
+        "CheckoutItems": MyCartState.myCartModal.result.cartItemViewModels ,
+
+      })).then((res){
+        print("checkOutCall Response $res") ;
+        progressDialog.dismiss();
+        var root = json.decode(res) ;
+
+        if(root["Message"] =="Request successful."){
+
+          Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
+
+        }else{
+          Utility.toastMessage(root["Message"]) ;
+        }
+      }).catchError((e){
+        print("checkOutCall catchError $e") ;
+        progressDialog.dismiss();
+      });
+
+    }) ;
+
+
+  }
 }

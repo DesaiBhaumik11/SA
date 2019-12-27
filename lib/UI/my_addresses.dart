@@ -8,6 +8,7 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
 
 class MyAddresses extends StatefulWidget {
   @override
@@ -16,12 +17,20 @@ class MyAddresses extends StatefulWidget {
 
 class _MyAddressesState extends State<MyAddresses> {
   AddressModal  addressModal ;
+  DefaultAddressModel defaultAddressModel ;
+
+
   var address = TextStyle(
       fontWeight: FontWeight.w400, fontSize: 15, color: Color(0xff2d2d2d));
 
   @override
   Widget build(BuildContext context) {
      addressModal=Provider.of<AddressModal>(context);
+
+     if(defaultAddressModel==null){
+       defaultAddressModel=Provider.of<DefaultAddressModel>(context);
+     }
+
 
     if(!addressModal.loaded){
       addressModal.getMyAddresses();
@@ -150,7 +159,11 @@ class _MyAddressesState extends State<MyAddresses> {
                                             return FunkyOverlay(addressModal.result[index].id);
                                           });
                                     }else{
-                                      NetworkUtils.getRequest(endPoint: "SetDefaultAddress?addressId=${addressModal.result[index].id}");
+
+                                      NetworkUtils.getRequest(endPoint: "${Constant.SetDefaultAddress}${addressModal.result[index].id}").then((res){
+                                        defaultAddressModel.loadAddress(context) ;
+
+                                      });
                                     }
                                   },
                                   title: Text(i),

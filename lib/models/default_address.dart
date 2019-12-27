@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 
@@ -43,19 +44,21 @@ class DefaultAddressModel with ChangeNotifier {
   };
 
   void loadAddress(context) {
-    NetworkUtils.getRequest(endPoint: "GetMyDefaultAddress").then((r){
+    NetworkUtils.getRequest(endPoint: Constant.GetMyDefaultAddress).then((r){
       var root=json.decode(r);
-      if(root["StatusCode"]==200){
         setData(root);
-      }
+
     });
   }
 
   void setData(json) {
-    result= Result.fromJson(json["Result"]);
     statusCode= json["StatusCode"];
     message= json["Message"];
     isError= json["IsError"];
+    if(statusCode==200){
+      result= Result.fromJson(json["Result"]);
+    }
+
     loaded=true;
     notifyListeners();
   }
