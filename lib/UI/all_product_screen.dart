@@ -191,7 +191,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(result.name,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(result.name==null?"":result.name,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),

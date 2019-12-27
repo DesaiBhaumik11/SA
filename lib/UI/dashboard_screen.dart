@@ -58,6 +58,12 @@ class DashboardScreen extends StatelessWidget
     defaultAddressModal = Provider.of<DefaultAddressModel>(context);
     final cat=Provider.of<CategoriesModel>(context);
 
+    if(!defaultAddressModal.loaded){
+      defaultAddressModal.loadAddress(context) ;
+    }else{
+
+    }
+
 
      bestSelling=Provider.of<BestSellingProductModel>(context);
      vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
@@ -178,7 +184,7 @@ class DashboardScreen extends StatelessWidget
       ],
       title: Stack(
         children: <Widget>[
-          Container(
+          InkWell(child: Container(
             margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
             child: Column(
               children: <Widget>[
@@ -189,13 +195,17 @@ class DashboardScreen extends StatelessWidget
                 ),
                 Row(
                   children: <Widget>[
-                    Text('No Location Found',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans'),),
+                    Text('${addressModal.defaultAddress}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans'),),
                     Icon(Icons.error, color: Colors.red, size: 20.0,)
                   ],
                 )
               ],
             ),
-          )
+          ),onTap: (){
+            Navigator.pushNamed(context, Const.myAddresses,);
+          },),
+
+
         ],
       ),
     );
@@ -346,7 +356,7 @@ class DashboardScreen extends StatelessWidget
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(result.name,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(result.name==null?"":result.name ,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),

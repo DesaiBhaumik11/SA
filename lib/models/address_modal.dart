@@ -17,7 +17,10 @@ class AddressModal extends ChangeNotifier{
   List<Result> result=List();
   int statusCode;
   String message;
+  String defaultAddress ="No Location Found";
   bool isError;
+
+
   bool loaded = false ;
   bool is_loading = false ;
 
@@ -63,10 +66,26 @@ class AddressModal extends ChangeNotifier{
     }
   }
 
+   setDefaultAddress(String id , ){
+     defaultAddress = "" ;
+    NetworkUtils.getRequest(endPoint: "${Constant.SetDefaultAddress}${id}").then((res){
+      getMyAddresses() ;
+
+    });
+  }
+
   void setData(decode) {
     result = List() ;
     if(decode["Result"]!=null){
       result.addAll(List<Result>.from(decode["Result"].map((x) => Result.fromJson(x)))) ;
+
+      for(int i=0 ; i<result.length ; i++){
+       if(result[i].isDefault){
+         defaultAddress = result[i].name + " , " + result[i].city ;
+       }
+      }
+
+
     }
 
 //    statusCode= decode["StatusCode"] ;
