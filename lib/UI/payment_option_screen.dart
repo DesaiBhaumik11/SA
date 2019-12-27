@@ -34,7 +34,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
   bool isPromoAplied = true;
   bool wallet = true;
 
-   DefaultAddressModel addressModel;
+    static DefaultAddressModel addressModel;
 
 
 
@@ -110,7 +110,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('₹504', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      child: Text('₹ ${MyCartState.myCartModal.result.totalAmount}', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
@@ -127,7 +127,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('-₹104', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      child: Text('-₹ ${MyCartState.myCartModal.result.discount}', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
@@ -166,7 +166,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('-₹62', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      child: Text('-₹ ${MyCartState.myCartModal.result.discount}', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
@@ -183,7 +183,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('-₹30', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      child: Text('-₹0.0', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],
@@ -201,7 +201,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('₹400', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                      child: Text('₹ ${MyCartState.myCartModal.result.totalAmount}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500, color: Colors.black),),
                     ),
                   ],
@@ -218,7 +218,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text('₹104', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      child: Text('₹0.0', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500, color: Const.locationGrey),),
                     ),
                   ],

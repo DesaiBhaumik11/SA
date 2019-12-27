@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,7 @@ import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/all_product_screen.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
@@ -118,12 +117,12 @@ class DashboardScreen extends StatelessWidget
               children: <Widget>[
                 searchBar(context),
                 adViewWidget(),
-                bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):Center(child: Padding(
+                bestSelling.loaded?horizontalList(context , "Best Selling Items",bestSelling.result):Center(child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: CircularProgressIndicator(),
                 ),),
-                vegitosExclusive.loaded?horizontalList("Vegeto's Exclusive",vegitosExclusive.result):Container(),
-                recommendedProducts.loaded?horizontalList("Recommended for you",recommendedProducts.result):Container(),
+                vegitosExclusive.loaded?horizontalList(context,"Vegeto's Exclusive",vegitosExclusive.result):Container(),
+                recommendedProducts.loaded?horizontalList(context,"Recommended for you",recommendedProducts.result):Container(),
 
 
               ],
@@ -411,7 +410,7 @@ class DashboardScreen extends StatelessWidget
 
   }
 
-  Widget horizontalList(String s, List<bst.Result> products)
+  Widget horizontalList(BuildContext context , String s, List<bst.Result> products)
   {
     return Stack(
       children: <Widget>[
@@ -429,17 +428,25 @@ class DashboardScreen extends StatelessWidget
                           fontWeight: FontWeight.w700,
                           color: Colors.black)),
                     ),
+
+
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: InkWell(child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w500,
-                              color: Colors.green)),
+                              color: Colors.green)),onTap: (){
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen(s))) ;
+
+                          },),
                         ),
                       ),
-                    )
+                    ),
+
+
                   ],
                 ),
                 Container(
@@ -542,11 +549,16 @@ class DashboardScreen extends StatelessWidget
                         margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
                         child: Image.asset('assets/home.png', height: 20.0, width: 20.0,),
                       ),
-                      Container(
+
+                      InkWell(child: Container(
                         margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
                         child: Text('Home',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
                             color: Colors.black)),
-                      )
+                      ),onTap: (){
+                        Navigator.pop(context) ;
+                      },)
+
+
                     ],
                   ),
                 ),
@@ -965,7 +977,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: (){
-                                   logoutApi() ;
+                                   logoutApi(context) ;
                                  // Navigator.pushNamed(context, Const.loginScreen);
                                 },
                                 shape: RoundedRectangleBorder(
@@ -1012,7 +1024,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
     );
   }
 
-  void logoutApi() {
+  void logoutApi([BuildContext context]) {
     //Navigator.pushNamed(context, Const.loginScreen);
 
 
