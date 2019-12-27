@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
@@ -21,11 +22,13 @@ class _SearchScreenState extends State<SearchScreen> {
   Timer timer;
   myCart.MyCartModal myCartModal ;
 
+
   bool search=false;
   @override
   Widget build(BuildContext context) {
 
-    myCartModal= Provider.of<myCart.MyCartModal>(context);
+    myCartModal= Provider.of<myCart.MyCartModal>(context) ;
+    myCartModal= Provider.of<myCart.MyCartModal>(context) ;
 
     final SearchModel searchModel=Provider.of<SearchModel>(context);
     return Scaffold(
@@ -445,13 +448,24 @@ class _SheetWidState extends State<SheetWid> {
   List<String> _checked = [];
 
   List<String> _category = [];
+  List<String> _category_items = [];
 
   List<String> _discount = [];
 
   List<String> _price = [];
-
+  category.CategoriesModel categoriesModel ;
   @override
   Widget build(BuildContext context) {
+
+    categoriesModel =Provider.of<category.CategoriesModel>(context);
+
+
+
+    for (var i = 0; i < categoriesModel.result.length ; i++) {
+      _category_items.add ("${categoriesModel.result[i].name}") ;
+    }
+
+
     return Container(
       color: Colors.white,
       child: new Wrap(
@@ -767,10 +781,7 @@ class _SheetWidState extends State<SheetWid> {
                               ),
                               children: <Widget>[
                                 CheckboxGroup(
-                                  labels: <String>[
-                                    "Demo",
-                                    "Demo1",
-                                  ],
+                                  labels: _category_items,
                                   checked: _category,
                                   labelStyle: radioTitle,
                                   onChange: (bool isChecked, String label,
