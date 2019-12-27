@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_addresses.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
@@ -12,6 +14,7 @@ import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/default_address.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 
 import 'payment_option_screen.dart';
@@ -22,17 +25,16 @@ class SetDeliveryDetails extends StatefulWidget {
   _SetDeliveryDetailsState createState() => _SetDeliveryDetailsState();
 }
 
-class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
+class  _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
   final List<String> day = List();
   final List<int> date = List();
   ShippingSlotModal shippingSlotModal ;
-
-
-
+  static DefaultAddressModel addressModel;
   List<String> days=["S","M","T","W","T","F","S",];
   var tappedIndex = -1;
   int selectedRadioTile;
+  bool defaultAddressFlag= false ;
 
   @override
   void initState() {
@@ -53,7 +55,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       selectedRadioTile = val;
     });
   }
-DefaultAddressModel addressModel;
+
   @override
   Widget build(BuildContext context) {
     shippingSlotModal=Provider.of<ShippingSlotModal>(context);
@@ -62,7 +64,13 @@ DefaultAddressModel addressModel;
     }
     if(!addressModel.loaded){
       addressModel.loadAddress(context);
+    }else{
+      if(addressModel.statusCode==200){
+        defaultAddressFlag= true ;
+      }
     }
+
+
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
@@ -92,7 +100,8 @@ DefaultAddressModel addressModel;
               !addressModel.loaded?Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(child: SizedBox(height: 25,width: 35,child: CircularProgressIndicator(),)),
-              ): Container(
+              ): defaultAddressFlag?
+              Container(
                 width: double.infinity,
 
                 color: Colors.white,
@@ -165,7 +174,22 @@ DefaultAddressModel addressModel;
                     ],
                   ),
                 ),
-              ),
+              ):
+              InkWell(child: Container(padding: EdgeInsets.all(10),
+                  height: 150
+                  ,child:Card(child:
+                  Center(
+                    child: Text('No Default Address Available plaese Select your Default Address',
+                      textAlign: TextAlign.center,
+                      style:
+                      TextStyle(color:Colors.black ,fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+
+                  ),
+                  )),onTap: (){
+
+                Navigator.pushNamed(context, Const.myAddresses,);
+
+              },) ,
 
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 20),
@@ -326,9 +350,15 @@ DefaultAddressModel addressModel;
         child: GestureDetector(
           onTap: () {
 
-            checkOutCall() ;
+            //checkOutCall() ;
 
-            //Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+            if(defaultAddressFlag){
+              Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+            }else{
+              Utility.toastMessage("Please add dfault address") ;
+            }
+
+
           },
           child: Container(
             color: Const.primaryColor,
@@ -450,58 +480,51 @@ DefaultAddressModel addressModel;
 
 
 
-
-
   void checkOutCall() {
+    SharedPreferences.getInstance().then((prefs){
+      MyCartModal myCartModal = MyCartState.myCartModal ;
+      ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+      progressDialog.show() ;
+      NetworkUtils.postRequest(endpoint: Constant.Checkout  ,body: json.encode({
 
+        "DeliveryAddressId": "${addressModel.result.id}",
+        "Name": "${addressModel.result.name}",
+        "AddressLine1": "${addressModel.result.addressLine1}",
+        "AddressLine2": "${addressModel.result.addressLine2}",
+        "City": "${addressModel.result.city}",
+        "State": "${addressModel.result.state}",
+        "Country": "${addressModel.result.country}",
+        "Pin": "${addressModel.result.pin}",
+        "MobileNo": "${prefs.getString("phone")}",
+        "LocationId": "db9770e6-64f6-47d1-a986-9dd6a698ec83",
+        "ShippingScheduleId": "f754b121-8082-4843-993a-c4f1a6442704",
+        "BusinessId": "1e683706-2c1f-4d34-90a6-6afc796461fe",
+        "ShippingDetails": "this is the shipping detail",
+        "SubTotal": "${myCartModal.totalCost}",
+        "TaxAmount": "2",
+        "TotalAmount": "${myCartModal.totalCost}",
+        "OfferAmount": "2",
+        "CheckoutItems": MyCartState.myCartModal.result.cartItemViewModels ,
 
-    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
-    NetworkUtils.postRequest(endpoint: Constant.Checkout  ,body: json.encode({
-      "DeliveryAddressId": "db9770e6-64f6-47d1-a986-9dd6a698ec83",
-      "Name": "business 2",
-      "AddressLine1": "this is my business 2 address",
-      "AddressLine2": "this is my business 2 address",
-      "City": "MUB",
-      "State": "MH",
-      "Country": "IND",
-      "Pin": "230532",
-      "MobileNo": "9022222222",
-      "LocationId": "db9770e6-64f6-47d1-a986-9dd6a698ec83",
-      "ShippingScheduleId": "f754b121-8082-4843-993a-c4f1a6442704",
-      "BusinessId": "1e683706-2c1f-4d34-90a6-6afc796461fe",
-      "ShippingDetails": "this is the shipping detail",
-      "SubTotal": "600",
-      "TaxAmount": "2",
-      "TotalAmount": "600",
-      "OfferAmount": "2",
-      "CheckoutItems": MyCartState.myCartModal.result.cartItemViewModels ,
+      })).then((res){
+        print("checkOutCall Response $res") ;
+        progressDialog.dismiss();
+        var root = json.decode(res) ;
 
+        if(root["Message"] =="Request successful."){
+          Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+        }else{
+          Utility.toastMessage(root["Message"]) ;
+        }
+      }).catchError((e){
+        print("checkOutCall catchError $e") ;
+        progressDialog.dismiss();
+      });
 
-    })).then((res){
-      print("checkOutCall Response $res") ;
-      progressDialog.dismiss();
-
-    }).catchError((e){
-      print("checkOutCall catchError $e") ;
-      progressDialog.dismiss();
-    });
-  }
-
-
-  void checkfsdfOutCall() {
-
-
-
-
-    Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
-
-
-
+    }) ;
 
 
   }
-
 
 }
 

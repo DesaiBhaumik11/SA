@@ -203,9 +203,11 @@ class Result {
 
 class CartItemViewModel {
   String itemId;
+  String ProductId;
   String name;
   String description;
   double price;
+  double Amount;
   String unit;
   dynamic categoryId;
   String productVariantId;
@@ -222,9 +224,11 @@ class CartItemViewModel {
 
   CartItemViewModel({
     this.itemId,
+    this.ProductId,
     this.name,
     this.description,
     this.price,
+    this.Amount,
     this.unit,
     this.categoryId,
     this.productVariantId,
@@ -242,9 +246,11 @@ class CartItemViewModel {
 
   factory CartItemViewModel.fromJson(Map<String, dynamic> json) => CartItemViewModel(
     itemId: json["ItemId"],
+    ProductId: json["ItemId"],
     name: json["Name"],
     description: json["Description"],
     price: json["Price"],
+    Amount: json["Price"],
     unit: json["Unit"],
     categoryId: json["CategoryId"],
     productVariantId: json["ProductVariantId"],
@@ -262,9 +268,11 @@ class CartItemViewModel {
 
   Map<String, dynamic> toJson() => {
     "ItemId": itemId,
+    "ProductId": ProductId,
     "Name": name,
     "Description": description,
     "Price": price,
+    "Amount": Amount,
     "Unit": unit,
     "CategoryId": categoryId,
     "ProductVariantId": productVariantId,

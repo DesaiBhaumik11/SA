@@ -20,6 +20,9 @@ import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
+import 'package:vegetos_flutter/models/default_address.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
@@ -35,6 +38,8 @@ class DashboardScreen extends StatelessWidget
   static int cartSize=0;
    static AppFirstModal appFirstModal ;
   ShippingSlotModal shippingSlotModal ;
+  static AddressModal addressModal ;
+  static DefaultAddressModel defaultAddressModal ;
   bool allCals = true ;
   String phoneNumber ;
 
@@ -47,6 +52,7 @@ class DashboardScreen extends StatelessWidget
     }) ;
 
     appFirstModal = Provider.of<AppFirstModal>(context);
+    defaultAddressModal = Provider.of<DefaultAddressModel>(context);
     final cat=Provider.of<CategoriesModel>(context);
 
 
@@ -54,9 +60,9 @@ class DashboardScreen extends StatelessWidget
     final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
     final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
 
-    final addressModal=Provider.of<AddressModal>(context);
+     addressModal=Provider.of<AddressModal>(context);
      myCartModal=Provider.of<MyCartModal>(context);
-    shippingSlotModal=Provider.of<ShippingSlotModal>(context);
+     shippingSlotModal=Provider.of<ShippingSlotModal>(context);
 
 
     if(!shippingSlotModal.loaded){
@@ -1017,11 +1023,11 @@ class FunkyOverlayState extends State<FunkyOverlay>
       getJwtToken(uuid).then((token){
 
         SharedPreferences.getInstance().then((prefs){
-
           prefs.setBool("login", false) ;
-
         }) ;
 
+        DashboardScreen.addressModal.loaded=false ;
+        DashboardScreen.defaultAddressModal.loaded=false ;
         DashboardScreen.appFirstModal.appFirstRun(token , [Navigator.pushReplacementNamed(context, Const.loginScreen)]) ;
 
       }) ;
