@@ -11,13 +11,25 @@ import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 
 class AllProductScreen extends StatefulWidget {
+  String name = "" ;
+
+  AllProductScreen(String name){
+    this.name = name ;
+  }
+
   @override
-  _AllProductScreenState createState() => _AllProductScreenState();
+  _AllProductScreenState createState() => _AllProductScreenState(name);
 }
 
 class _AllProductScreenState extends State<AllProductScreen> {
   MyCartModal myCartModal ;
   static AppFirstModal appFirstModal ;
+
+  String name ;
+
+  _AllProductScreenState(String name){
+    this.name = name ;
+  }
 
 
   @override
@@ -31,24 +43,28 @@ class _AllProductScreenState extends State<AllProductScreen> {
     final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
 
 
-
-
     return Scaffold(appBar: AppBar(
-      title: Text('Title'),
+      title: Text('${name}'),
     )
       ,body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
           color: Const.gray10,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
 
-
-              bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):Center(child: Padding(
+              name=="Best Selling Items"? bestSelling.loaded?horizontalList("Best Selling Items",bestSelling.result):
+              Center(child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: CircularProgressIndicator(),
-              ),),
+              ),)
+                  :name=="Vegeto's Exclusive"?vegitosExclusive.loaded?horizontalList("Vegeto's Exclusive",vegitosExclusive.result):Container():
+
+              recommendedProducts.loaded?horizontalList("Recommended for you",recommendedProducts.result):Container(),
+
+
+
 
 
             ],
@@ -68,29 +84,10 @@ class _AllProductScreenState extends State<AllProductScreen> {
             elevation: 0.0,
             child: Column(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
-                      child: Text(s,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black)),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.green)),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+
                 Container(
                   height: 275.0,
+
                   margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                   child: ListView.builder(
                       physics: BouncingScrollPhysics(),

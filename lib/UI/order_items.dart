@@ -1,7 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
+import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/my_cart.dart';
 
 class OrderItems extends StatefulWidget
 {
@@ -29,7 +32,7 @@ class OrderItemsState extends State<OrderItems>
   }
 
 
-  Widget itemSubChild()
+  Widget itemSubChild(CartItemViewModel cartItem)
   {
     var child = Container(
       child: Card(
@@ -42,7 +45,8 @@ class OrderItemsState extends State<OrderItems>
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                      //child: Image.network('assets/01-product.png', height: 100.0, width: 100.0,),
+                      child: Image.network('${DashboardScreen.appFirstModal.ImageUrl}${cartItem.productMediaId}', height: 100.0, width: 100.0,),
                     ),
                   ],
                 ),
@@ -54,7 +58,7 @@ class OrderItemsState extends State<OrderItems>
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('Cherry Tomatoes', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('${cartItem.seoTag}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             color: Colors.black, fontWeight: FontWeight.w500),),
                       ),
                       Container(
@@ -74,7 +78,7 @@ class OrderItemsState extends State<OrderItems>
                                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text('₹45 x 1 ',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      child: Text('₹ ${cartItem.price}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
                                       ),
@@ -89,7 +93,7 @@ class OrderItemsState extends State<OrderItems>
                                 children: <Widget>[
                                   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Text('₹45',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                    child: Text('₹ ${cartItem.discountPercent}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,)),
                                   ),
@@ -126,11 +130,11 @@ class OrderItemsState extends State<OrderItems>
         ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 5,
+          itemCount: MyCartState.myCartModal.result.cartItemViewModels.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
-              title: itemSubChild(),
+              title: itemSubChild(MyCartState.myCartModal.result.cartItemViewModels[index]),
             );
           },
         ),

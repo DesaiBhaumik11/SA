@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/custom_stepper.dart' as s;
+import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/order_items.dart';
 import 'package:vegetos_flutter/UI/customer_support_1.dart';
+import 'package:vegetos_flutter/UI/payment_option_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class OrderPlacedScreen extends StatefulWidget
@@ -237,14 +239,14 @@ class _SummaryState extends State<Summary> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
 
-                    Text('Home', style: TextStyle(
+                    Text('${PaymentOptionScreenState.addressModel.result.name}', style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
                     ),),
 
-                    Text('Partho Parekh', style: address,),
-                    Text('Shayona Tailak 3, New SG Road, Gota', style: address,),
-                    Text('Ahmedabad, Gujrat 38248', style: address,)
+                    Text('${PaymentOptionScreenState.addressModel.result.addressLine2}', style: address,),
+                    Text('${PaymentOptionScreenState.addressModel.result.addressLine2}', style: address,),
+                    Text('${PaymentOptionScreenState.addressModel.result.city}', style: address,)
 
                   ],
                 ),
@@ -298,7 +300,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Total Items', style: text,),
-                        Text('3 Items', style: text,),
+                        Text('${MyCartState.myCartModal.result.cartItemViewModels.length} Items', style: text,),
                       ],
                     ),
 
@@ -322,7 +324,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Discount/Promo', style: text,),
-                        Text('-₹62', style: text,),
+                        Text('-₹${MyCartState.myCartModal.result.discount}', style: text,),
                       ],
                     ),
 
@@ -332,7 +334,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Wallet', style: text,),
-                        Text('-₹32', style: text,),
+                        Text('-₹0.0', style: text,),
                       ],
                     ),
 
@@ -351,7 +353,7 @@ class _SummaryState extends State<Summary> {
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),),
-                        Text('₹308', style: TextStyle(
+                        Text('₹ ${MyCartState.myCartModal.result.totalAmount}', style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),),
