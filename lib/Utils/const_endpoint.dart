@@ -40,7 +40,7 @@ class Constant{
   static String GetRecommendedProducts  = "GetRecommendedProducts";
   static String GetProductById  = "GetProductById?id=";
   static String GetBrands  = "GetBrands";
-  static String SearchProduct  = "SearchProduct?searchString=";
+  static String SearchProduct  = "ProductVariant?searchString=";
   static String GetOrders  = "GetOrders";
   static String GetOrderById  = "GetOrderById?Id=";
 
