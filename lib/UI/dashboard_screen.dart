@@ -29,7 +29,7 @@ import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/recommended_products.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
-import 'package:wc_flutter_share/wc_flutter_share.dart';
+//import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class DashboardScreen extends StatelessWidget
 {
@@ -39,6 +39,10 @@ class DashboardScreen extends StatelessWidget
   ShippingSlotModal shippingSlotModal ;
   static AddressModal addressModal ;
   static DefaultAddressModel defaultAddressModal ;
+
+  BestSellingProductModel bestSelling ;
+  VegetosExclusiveModel vegitosExclusive ;
+  RecommendedProductsModel recommendedProducts ;
   bool allCals = true ;
   String phoneNumber ;
 
@@ -55,9 +59,9 @@ class DashboardScreen extends StatelessWidget
     final cat=Provider.of<CategoriesModel>(context);
 
 
-    final bestSelling=Provider.of<BestSellingProductModel>(context);
-    final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
-    final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
+     bestSelling=Provider.of<BestSellingProductModel>(context);
+     vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
+     recommendedProducts=Provider.of<RecommendedProductsModel>(context);
 
      addressModal=Provider.of<AddressModal>(context);
      myCartModal=Provider.of<MyCartModal>(context);
@@ -342,7 +346,7 @@ class DashboardScreen extends StatelessWidget
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(result.seoTag,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(result.name,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),
@@ -556,6 +560,12 @@ class DashboardScreen extends StatelessWidget
                             color: Colors.black)),
                       ),onTap: (){
                         Navigator.pop(context) ;
+
+                        recommendedProducts.loadProducts() ;
+                        bestSelling.loadProducts() ;
+                        bestSelling.loadProducts() ;
+
+
                       },)
 
 
@@ -808,11 +818,11 @@ class DashboardScreen extends StatelessWidget
               ),onTap: (){
                 //Navigator.pop(context) ;
 
-                WcFlutterShare.share(
-                    sharePopupTitle: 'Share',
-                    subject: 'This is subject',
-                    text: 'This is text',
-                    mimeType: 'text/plain');
+//                WcFlutterShare.share(
+//                    sharePopupTitle: 'Share',
+//                    subject: 'This is subject',
+//                    text: 'This is text',
+//                    mimeType: 'text/plain');
                 //Share.share('check out my website https://example.com', subject: 'Look what I made!');
               },),
               InkWell(

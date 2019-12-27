@@ -268,7 +268,7 @@ class CartItemViewModel {
 
   Map<String, dynamic> toJson() => {
     "ItemId": itemId,
-    "ProductId": ProductId,
+    "ProductId": itemId,
     "Name": name,
     "Description": description,
     "Price": price,
