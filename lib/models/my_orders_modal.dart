@@ -3,11 +3,9 @@
 //     final myOrdersModal = myOrdersModalFromJson(jsonString);
 
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
-
 MyOrdersModal myOrdersModalFromJson(String str) => MyOrdersModal.fromJson(json.decode(str));
 
 String myOrdersModalToJson(MyOrdersModal data) => json.encode(data.toJson());
@@ -20,7 +18,6 @@ class MyOrdersModal extends ChangeNotifier {
 
   bool loaded=false;
   bool is_loading=false;
-
 
 
   MyOrdersModal({
@@ -44,6 +41,7 @@ class MyOrdersModal extends ChangeNotifier {
     "IsError": isError,
   };
 
+
   void setData(json) {
     result = List() ;
     if(json["Result"]!=null) {
@@ -51,30 +49,29 @@ class MyOrdersModal extends ChangeNotifier {
       statusCode = json["StatusCode"];
       message = json["Message"];
       isError = json["IsError"];
+
+
     }
     loaded =true ;
     notifyListeners() ;
   }
 
-   getOrders(){
+  getOrders(){
+    if(!is_loading){
+      is_loading = true ;
+      NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((response){
+        is_loading = false  ;
+        print("getOrders = $response");
 
+        setData(json.decode(response)) ;
 
-     if(!is_loading){
-       is_loading = true ;
-       NetworkUtils.getRequest(endPoint: Constant.GetOrders).then((response){
-         is_loading = false  ;
-         print("getOrders = $response");
+      }).catchError((e){
+        loaded =true ;
+        setData({});
+        //notifyListeners();
 
-         {
-           setData(json.decode(response)) ;
-         }
-       }).catchError((e){
-         loaded =true ;
-         setData({});
-         //notifyListeners();
-
-       });
-     }
+      });
+    }
 
 
   }
@@ -85,7 +82,7 @@ class MyOrdersModal extends ChangeNotifier {
 class Result {
   dynamic invoiceNumber;
   dynamic offerId;
-  int offerAmount;
+  double offerAmount;
   dynamic quotationId;
   dynamic quotation;
   List<dynamic> returnItems;
@@ -101,11 +98,11 @@ class Result {
   String status;
   dynamic referenceNo;
   dynamic additionalNote;
-  int shippingCharges;
+  double shippingCharges;
   ShippingDetails shippingDetails;
-  int subTotal;
-  int taxAmount;
-  int totalAmount;
+  double subTotal;
+  double taxAmount;
+  double totalAmount;
   List<dynamic> transactionDocuments;
   dynamic updatedBy;
   String createdBy;
@@ -217,16 +214,16 @@ class TransactionLine {
   String transactionId;
   String productId;
   String productVariantId;
-  int quantity;
+  double quantity;
   String unitId;
   dynamic expiryDate;
   dynamic lotNumber;
   dynamic mfgDate;
   dynamic serialNumber;
   dynamic batchNumber;
-  int taxAmount;
-  int totalLineAmount;
-  int unitPrice;
+  double taxAmount;
+  double totalLineAmount;
+  double unitPrice;
   List<dynamic> transactionLineDocuments;
   List<dynamic> transactionLineTaxes;
 

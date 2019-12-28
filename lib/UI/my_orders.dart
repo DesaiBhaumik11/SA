@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
@@ -23,9 +24,9 @@ class _MyOrdersState extends State<MyOrders> {
   @override
   Widget build(BuildContext context) {
     myOrdersModal = Provider.of<MyOrdersModal>(context) ;
-
     if(!myOrdersModal.loaded){
       myOrdersModal.getOrders();
+
     }
 
     return Scaffold(
@@ -47,17 +48,17 @@ class _MyOrdersState extends State<MyOrders> {
         ),
       ),
       body: myOrdersModal.result==null||
-          myOrdersModal.result.length==0? Container(padding: EdgeInsets.all(10),
+            myOrdersModal.result.length==0? Container(padding: EdgeInsets.all(10),
           height: 200
           ,child:Card(child:
           Center(
             child: Text('No Orders Avalable', style: TextStyle(color:Colors.black ,fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
           ),
-          )):buildList(context),
+          )):buildList(context ,myOrdersModal.result),
     );
   }
 
-  ListView buildList(BuildContext context) {
+  ListView buildList(BuildContext context, List<Result> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
         return InkWell(
@@ -77,7 +78,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                          'VEG123456789', style: text,
+                          '${result[index].offerId==null?'NULL':result[index].offerId}', style: text,
                       )
                     ],
                   ),
@@ -92,7 +93,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                        '25 MAy 2019', style: text,
+                        '${result[index].transactionDate}', style: text,
                       )
                     ],
                   ),
@@ -107,7 +108,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                        '₹ 304', style: text,
+                        '₹ ${result[index].subTotal}', style: text,
                       )
                     ],
                   ),

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/all_product_screen.dart';
@@ -11,6 +12,7 @@ import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 
@@ -42,7 +44,6 @@ class MyCartState extends State<MyCartScreen>
 
     if(!recommendedProductsModel.loaded){
       recommendedProductsModel.loadProducts();
-
     }
 
     if(!myCartModal.loaded){
@@ -109,7 +110,9 @@ class MyCartState extends State<MyCartScreen>
           child: Column(
             children: <Widget>[
               priceTotalBox(),
-              myCartModal.result==null||
+                  myCartModal.result==null||
+                  myCartModal.result.cartItemViewModels==null||
+                  myCartModal.cartItemSize==0||
                   myCartModal.result.cartItemViewModels.length==0?
               Container(padding: EdgeInsets.all(10),
                   height: 200
@@ -127,7 +130,14 @@ class MyCartState extends State<MyCartScreen>
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
           onTap: () {
-            checkOutCall();
+           // checkOutCall();
+
+            myCartModal.result==null||
+                myCartModal.result.cartItemViewModels==null||
+                myCartModal.cartItemSize==0||
+                myCartModal.result.cartItemViewModels.length==0?
+                Utility.toastMessage("No item in Cart"):
+
             Navigator.push(context, SlideLeftRoute(page: SetDeliveryDetails()));
           },
           child: Container(
@@ -631,9 +641,18 @@ class MyCartState extends State<MyCartScreen>
 
   removetoCart(String id) {
 
+
+    if(myCartModal.result.cartItemViewModels.length==1&&
+    myCartModal.result.cartItemViewModels[0].quantity==0
+    ){
+      myCartModal.result==null ;
+      setState(() {
+
+      });
+    }
+
     NetworkUtils.deleteRequest(endPoint: Constant.DeleteItem+id).then((res){
       print("removetoCart Response = $res");
-
       myCartModal.getMyCart() ;
     }) ;
   }
@@ -690,17 +709,17 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  void checkOutCall() {
-
-    NetworkUtils.getRequest(endPoint: Constant.Checkout).then((res){
-
-      print("checkOutCall Response>> $res");
-
-    }).catchError((e){
-      print("checkOutCall Error>> $e");
-    }) ;
-
-  }
+//  void checkOutCall() {
+//
+//    NetworkUtils.getRequest(endPoint: Constant.Checkout).then((res){
+//
+//      print("checkOutCall Response>> $res");
+//
+//    }).catchError((e){
+//      print("checkOutCall Error>> $e");
+//    }) ;
+//
+//  }
 
 
 }

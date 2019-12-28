@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class TellUsAbout extends StatefulWidget {
@@ -160,7 +161,14 @@ class FunkyOverlayState extends State<FunkyOverlay>
                       RaisedButton(
                         color: Theme.of(context).primaryColor,
                         onPressed: (){
-                          Navigator.pop(context) ;
+
+
+                          Navigator.of(context)
+                              .pushNamedAndRemoveUntil(Const.dashboard , (Route<dynamic> route) => false);
+
+
+                          // Navigator.pop(context) ;
+
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(50))

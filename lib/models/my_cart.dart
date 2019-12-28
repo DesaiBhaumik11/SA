@@ -56,17 +56,18 @@ class MyCartModal extends ChangeNotifier{
 
 
 
-  addTocart(bst.Result resultModal){
+  addTocart(bst.Result resultModal, [bodyJson]){
 
 
+    print("addTocart") ;
 
-    final body= json.encode({
+    final body= resultModal==null?bodyJson:json.encode({
 
       "ProductId": ""+resultModal.id,
       "ProductVariantId": ""+resultModal.productVariantId,
       "Quantity": "${resultModal.quantity==0?1:resultModal.quantity}" ,
       "OfferId": "",
-      "Amount": "${resultModal.price}"});
+      "Amount": "${resultModal.price}"}) ;
 
 
     print("addToCart Body" + body) ;
@@ -150,8 +151,6 @@ class MyCartModal extends ChangeNotifier{
     loaded=true;
     try{
       result= Result.fromJson(json["Result"]);
-
-
       totalCost = 0.0 ;
       for(int i =0 ; i<result.cartItemViewModels.length ; i++){
         totalCost = totalCost+  result.cartItemViewModels[i].price*result.cartItemViewModels[i].quantity ;

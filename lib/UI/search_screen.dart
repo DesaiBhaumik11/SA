@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
+import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/search_products.dart' as sModal;
 
 class SearchScreen extends StatefulWidget {
@@ -24,8 +26,6 @@ class _SearchScreenState extends State<SearchScreen> {
   myCart.MyCartModal myCartModal ;
   String CAT_ID="";
   category.CategoriesModel categoriesModel ;
-
-
 
   bool search=false;
   @override
@@ -182,7 +182,18 @@ class _SearchScreenState extends State<SearchScreen> {
     return ListView.builder(
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () {},
+          onTap: () {
+
+            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator())));
+            productModal.getProductDetail(result[index].productId ,(){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, Const.productDetail);
+            }) ;
+          },
           child: Card(
             child: Container(
               padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
@@ -269,13 +280,17 @@ class _SearchScreenState extends State<SearchScreen> {
                         RaisedButton(
                           color: Theme.of(context).primaryColor,
                           onPressed: () {
+                            print("Add Clicked") ;
 
-                            Result resultCart = Result() ;
-                            resultCart.id ==  {result[index].productId};
-                            resultCart.productVariantId == {result[index].productVariantId};
-                            resultCart.quantity == {"1"};
-                            resultCart.price == {result[index].productPrice.price} ;
-                            myCartModal.addTocart(resultCart);
+                           final body= json.encode({
+
+                              "ProductId": ""+result[index].productId,
+                              "ProductVariantId": ""+result[index].productVariantId,
+                              "Quantity": "1" ,
+                              "OfferId": "",
+                              "Amount": "${result[index].productPrice.price}"}) ;
+
+                            myCartModal.addTocart(null , body);
 
 
                           },
