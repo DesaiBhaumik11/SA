@@ -22,6 +22,8 @@ class _SearchScreenState extends State<SearchScreen> {
   var wid = 1;
   Timer timer;
   myCart.MyCartModal myCartModal ;
+  String CAT_ID="";
+  category.CategoriesModel categoriesModel ;
 
 
 
@@ -30,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
 
     myCartModal= Provider.of<myCart.MyCartModal>(context) ;
-
+    categoriesModel =Provider.of<category.CategoriesModel>(context);
 
     final sModal.SearchModel searchModel=Provider.of<sModal.SearchModel>(context);
     return Scaffold(
@@ -75,7 +77,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             searchModel.searching(false);
                           }else{
                             searchModel.searching(true);
-                            searchModel.searchProducts(e);
+
+                            String id = _SheetWidState._category.isEmpty||_SheetWidState._category[0].isEmpty||_SheetWidState._category[0]==null? "":categoriesModel.result.singleWhere((result)=>result.name==_SheetWidState._category[0]).id ;
+
+                            String url = e + "&categoryId=${id}&brandId=&manufacturerId=" ;
+
+                            print("urlll>>> ${url}") ;
+
+                            searchModel.searchProducts(url);
                           }
 
                         });
@@ -184,7 +193,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: result[index].productDetails[0].name==null||
+                          child: result[index].productDetails==null||
+                              result[index].productDetails[0].name==null||
+
                               result[index].productDetails[0].name.isEmpty?
                           Image.asset('02-product.png',height: 100,width: 100,):Image.network(
                             "${DashboardScreen.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
@@ -216,8 +227,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
+                          result[index].productDetails==null||
+                          result[index].productDetails[0].name==null||
 
-                          result[index].productDetails[0].name,
+                              result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].name,
 
                           style: TextStyle(
                               fontSize: 17.0,
@@ -229,7 +242,10 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          "${result[index].productDetails[0].description} ${result[index].productDetails[0].description}",
+                          "${ result[index].productDetails==null||
+                              result[index].productDetails[0].name==null||
+
+                              result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].description}",
                           style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'GoogleSans',
@@ -240,7 +256,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          '₹100',
+                          '₹ ${result[index].productPrice==null?'null':result[index].productPrice.price}',
                           style: TextStyle(
                               fontSize: 20.0,
                               fontFamily: 'GoogleSans',
@@ -252,7 +268,17 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         RaisedButton(
                           color: Theme.of(context).primaryColor,
-                          onPressed: () {},
+                          onPressed: () {
+
+                            Result resultCart = Result() ;
+                            resultCart.id ==  {result[index].productId};
+                            resultCart.productVariantId == {result[index].productVariantId};
+                            resultCart.quantity == {"1"};
+                            resultCart.price == {result[index].productPrice.price} ;
+                            myCartModal.addTocart(resultCart);
+
+
+                          },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 5),
                             child: Row(
@@ -452,7 +478,7 @@ class _SheetWidState extends State<SheetWid> {
 
   List<String> _checked = [];
 
-  List<String> _category = [];
+  static List<String> _category = [];
   List<String> _category_items = [];
 
   List<String> _discount = [];
@@ -791,13 +817,20 @@ class _SheetWidState extends State<SheetWid> {
                                   labelStyle: radioTitle,
                                   onChange: (bool isChecked, String label,
                                           int index) =>
+
                                       print(
                                           "isChecked: $isChecked   label: $label  index: $index"),
+
                                   onSelected: (List selected) => setState(() {
                                     if (selected.length > 1) {
                                       selected.removeAt(0);
                                     } else {}
+
                                     _category = selected;
+                                    print("_category    ${_category}") ;
+
+
+
                                   }),
                                 ),
                               ],

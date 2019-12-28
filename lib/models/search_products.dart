@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
@@ -12,15 +12,13 @@ SearchModel searchModelFromJson(String str) => SearchModel.fromJson(json.decode(
 
 String searchModelToJson(SearchModel data) => json.encode(data.toJson());
 
-class SearchModel extends ChangeNotifier{
+class SearchModel extends ChangeNotifier {
   List<Result> result;
   String version;
   int statusCode;
   String message;
   bool isError;
-
   bool search=false;
-
   SearchModel({
     this.result,
     this.version,
@@ -45,10 +43,9 @@ class SearchModel extends ChangeNotifier{
     "IsError": isError,
   };
 
-
   searchProducts(s){
     NetworkUtils.getRequest(endPoint: Constant.SearchProduct + "$s").then((r){
-      print("Best selling product response = $r");
+      print("searchProducts REsponse = $r");
       setData(json.decode(r));
     }).catchError((e) {
       print("Error caught in search $e");
@@ -65,11 +62,9 @@ class SearchModel extends ChangeNotifier{
   }
 
   void searching(bool param0) {
-      search=param0;
+    search=param0;
     notifyListeners();
   }
-
-
 }
 
 class Result {
@@ -82,16 +77,16 @@ class Result {
   String brandId;
   String seoTags;
   bool isActive;
-  String categoryName;
+  CategoryName categoryName;
   String categoryParentId;
   String categoryMediaId;
   String manufacturerName;
   String brandName;
   List<Unit> units;
-  dynamic tags;
+  List<Tag> tags;
   List<ProductExtraField> productExtraFields;
-  dynamic productVariantAttributeGroups;
-  dynamic productAttributes;
+  List<ProductVariantAttributeGroup> productVariantAttributeGroups;
+  List<ProductAttribute> productAttributes;
   List<ProductDetail> productDetails;
   List<String> productVariantMedia;
   ProductTax productTax;
@@ -133,20 +128,20 @@ class Result {
     brandId: json["BrandId"],
     seoTags: json["SeoTags"],
     isActive: json["IsActive"],
-    categoryName: json["CategoryName"],
+    categoryName: categoryNameValues.map[json["CategoryName"]],
     categoryParentId: json["CategoryParentId"],
     categoryMediaId: json["CategoryMediaId"],
     manufacturerName: json["ManufacturerName"],
     brandName: json["BrandName"],
     units: List<Unit>.from(json["Units"].map((x) => Unit.fromJson(x))),
-    tags: json["Tags"],
-    productExtraFields: List<ProductExtraField>.from(json["ProductExtraFields"].map((x) => ProductExtraField.fromJson(x))),
-    productVariantAttributeGroups: json["ProductVariantAttributeGroups"],
-    productAttributes: json["ProductAttributes"],
-    productDetails: List<ProductDetail>.from(json["ProductDetails"].map((x) => ProductDetail.fromJson(x))),
-    productVariantMedia: List<String>.from(json["ProductVariantMedia"].map((x) => x)),
+    tags: json["Tags"] == null ? null : List<Tag>.from(json["Tags"].map((x) => Tag.fromJson(x))),
+    productExtraFields: json["ProductExtraFields"] == null ? null : List<ProductExtraField>.from(json["ProductExtraFields"].map((x) => ProductExtraField.fromJson(x))),
+    productVariantAttributeGroups: json["ProductVariantAttributeGroups"] == null ? null : List<ProductVariantAttributeGroup>.from(json["ProductVariantAttributeGroups"].map((x) => ProductVariantAttributeGroup.fromJson(x))),
+    productAttributes: json["ProductAttributes"] == null ? null : List<ProductAttribute>.from(json["ProductAttributes"].map((x) => ProductAttribute.fromJson(x))),
+    productDetails: json["ProductDetails"] == null ? null : List<ProductDetail>.from(json["ProductDetails"].map((x) => ProductDetail.fromJson(x))),
+    productVariantMedia: json["ProductVariantMedia"] == null ? null : List<String>.from(json["ProductVariantMedia"].map((x) => x)),
     productTax: ProductTax.fromJson(json["ProductTax"]),
-    productPrice: ProductPrice.fromJson(json["ProductPrice"]),
+    productPrice: json["ProductPrice"] == null ? null : ProductPrice.fromJson(json["ProductPrice"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -159,25 +154,66 @@ class Result {
     "BrandId": brandId,
     "SeoTags": seoTags,
     "IsActive": isActive,
-    "CategoryName": categoryName,
+    "CategoryName": categoryNameValues.reverse[categoryName],
     "CategoryParentId": categoryParentId,
     "CategoryMediaId": categoryMediaId,
     "ManufacturerName": manufacturerName,
     "BrandName": brandName,
     "Units": List<dynamic>.from(units.map((x) => x.toJson())),
-    "Tags": tags,
-    "ProductExtraFields": List<dynamic>.from(productExtraFields.map((x) => x.toJson())),
-    "ProductVariantAttributeGroups": productVariantAttributeGroups,
-    "ProductAttributes": productAttributes,
-    "ProductDetails": List<dynamic>.from(productDetails.map((x) => x.toJson())),
-    "ProductVariantMedia": List<dynamic>.from(productVariantMedia.map((x) => x)),
+    "Tags": tags == null ? null : List<dynamic>.from(tags.map((x) => x.toJson())),
+    "ProductExtraFields": productExtraFields == null ? null : List<dynamic>.from(productExtraFields.map((x) => x.toJson())),
+    "ProductVariantAttributeGroups": productVariantAttributeGroups == null ? null : List<dynamic>.from(productVariantAttributeGroups.map((x) => x.toJson())),
+    "ProductAttributes": productAttributes == null ? null : List<dynamic>.from(productAttributes.map((x) => x.toJson())),
+    "ProductDetails": productDetails == null ? null : List<dynamic>.from(productDetails.map((x) => x.toJson())),
+    "ProductVariantMedia": productVariantMedia == null ? null : List<dynamic>.from(productVariantMedia.map((x) => x)),
     "ProductTax": productTax.toJson(),
-    "ProductPrice": productPrice.toJson(),
+    "ProductPrice": productPrice == null ? null : productPrice.toJson(),
+  };
+}
+
+enum CategoryName { FRUITS, VEGETABLES, CEREALS, PULSES }
+
+final categoryNameValues = EnumValues({
+  "Cereals": CategoryName.CEREALS,
+  "Fruits": CategoryName.FRUITS,
+  "Pulses": CategoryName.PULSES,
+  "Vegetables ": CategoryName.VEGETABLES
+});
+
+class ProductAttribute {
+  String mediaId;
+  String hexColor;
+  int displayOrder;
+  String language;
+  String value;
+
+  ProductAttribute({
+    this.mediaId,
+    this.hexColor,
+    this.displayOrder,
+    this.language,
+    this.value,
+  });
+
+  factory ProductAttribute.fromJson(Map<String, dynamic> json) => ProductAttribute(
+    mediaId: json["MediaId"],
+    hexColor: json["HexColor"],
+    displayOrder: json["DisplayOrder"],
+    language: json["Language"],
+    value: json["Value"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "MediaId": mediaId,
+    "HexColor": hexColor,
+    "DisplayOrder": displayOrder,
+    "Language": language,
+    "Value": value,
   };
 }
 
 class ProductDetail {
-  String language;
+  Language language;
   String name;
   String summary;
   String description;
@@ -190,24 +226,31 @@ class ProductDetail {
   });
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
-    language: json["Language"],
+    language: languageValues.map[json["Language"]],
     name: json["Name"],
     summary: json["Summary"],
     description: json["Description"],
   );
 
   Map<String, dynamic> toJson() => {
-    "Language": language,
+    "Language": languageValues.reverse[language],
     "Name": name,
     "Summary": summary,
     "Description": description,
   };
 }
 
+enum Language { EN_US, HI_IN }
+
+final languageValues = EnumValues({
+  "En-US": Language.EN_US,
+  "Hi-IN": Language.HI_IN
+});
+
 class ProductExtraField {
-  String language;
-  String title;
-  String value;
+  Language language;
+  Title title;
+  Value value;
 
   ProductExtraField({
     this.language,
@@ -216,17 +259,33 @@ class ProductExtraField {
   });
 
   factory ProductExtraField.fromJson(Map<String, dynamic> json) => ProductExtraField(
-    language: json["Language"],
-    title: json["Title"],
-    value: json["Value"],
+    language: languageValues.map[json["Language"]],
+    title: titleValues.map[json["Title"]],
+    value: valueValues.map[json["Value"]],
   );
 
   Map<String, dynamic> toJson() => {
-    "Language": language,
-    "Title": title,
-    "Value": value,
+    "Language": languageValues.reverse[language],
+    "Title": titleValues.reverse[title],
+    "Value": valueValues.reverse[value],
   };
 }
+
+enum Title { DISCLAIMER, SHELF_LIFE, TERMS_AND_CONDITION }
+
+final titleValues = EnumValues({
+  "Disclaimer": Title.DISCLAIMER,
+  "Shelf Life": Title.SHELF_LIFE,
+  "Terms and Condition": Title.TERMS_AND_CONDITION
+});
+
+enum Value { DISCLAIMER_DETAIL, SHELF_LIFE_DETAIL, TERMS_AND_CONDITION_DETAILS }
+
+final valueValues = EnumValues({
+  "Disclaimer Detail": Value.DISCLAIMER_DETAIL,
+  "Shelf Life Detail": Value.SHELF_LIFE_DETAIL,
+  "Terms and Condition Details": Value.TERMS_AND_CONDITION_DETAILS
+});
 
 class ProductPrice {
   String productId;
@@ -320,7 +379,7 @@ class ProductTax {
     updatedBy: json["UpdatedBy"],
     createdBy: json["CreatedBy"],
     createdOn: DateTime.parse(json["CreatedOn"]),
-    updatedOn: DateTime.parse(json["UpdatedOn"]),
+    updatedOn: json["UpdatedOn"] == null ? null : DateTime.parse(json["UpdatedOn"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -332,21 +391,21 @@ class ProductTax {
     "UpdatedBy": updatedBy,
     "CreatedBy": createdBy,
     "CreatedOn": createdOn.toIso8601String(),
-    "UpdatedOn": updatedOn.toIso8601String(),
+    "UpdatedOn": updatedOn == null ? null : updatedOn.toIso8601String(),
   };
 }
 
 class Tax {
   String id;
-  String name;
+  TaxName name;
   double rate;
   dynamic parentId;
   dynamic baseTax;
   List<dynamic> taxes;
-  dynamic updatedBy;
+  String updatedBy;
   String createdBy;
   DateTime createdOn;
-  dynamic updatedOn;
+  DateTime updatedOn;
 
   Tax({
     this.id,
@@ -363,39 +422,116 @@ class Tax {
 
   factory Tax.fromJson(Map<String, dynamic> json) => Tax(
     id: json["Id"],
-    name: json["Name"],
+    name: taxNameValues.map[json["Name"]],
     rate: json["Rate"],
     parentId: json["ParentId"],
     baseTax: json["BaseTax"],
     taxes: List<dynamic>.from(json["Taxes"].map((x) => x)),
-    updatedBy: json["UpdatedBy"],
+    updatedBy: json["UpdatedBy"] == null ? null : json["UpdatedBy"],
     createdBy: json["CreatedBy"],
     createdOn: DateTime.parse(json["CreatedOn"]),
-    updatedOn: json["UpdatedOn"],
+    updatedOn: json["UpdatedOn"] == null ? null : DateTime.parse(json["UpdatedOn"]),
   );
 
   Map<String, dynamic> toJson() => {
     "Id": id,
-    "Name": name,
+    "Name": taxNameValues.reverse[name],
     "Rate": rate,
     "ParentId": parentId,
     "BaseTax": baseTax,
     "Taxes": List<dynamic>.from(taxes.map((x) => x)),
-    "UpdatedBy": updatedBy,
+    "UpdatedBy": updatedBy == null ? null : updatedBy,
     "CreatedBy": createdBy,
     "CreatedOn": createdOn.toIso8601String(),
-    "UpdatedOn": updatedOn,
+    "UpdatedOn": updatedOn == null ? null : updatedOn.toIso8601String(),
   };
 }
+
+enum TaxName { WSGST, GST }
+
+final taxNameValues = EnumValues({
+  "GST": TaxName.GST,
+  "WSGST": TaxName.WSGST
+});
+
+class ProductVariantAttributeGroup {
+  String groupName;
+  int displayOrder;
+
+  ProductVariantAttributeGroup({
+    this.groupName,
+    this.displayOrder,
+  });
+
+  factory ProductVariantAttributeGroup.fromJson(Map<String, dynamic> json) => ProductVariantAttributeGroup(
+    groupName: json["GroupName"],
+    displayOrder: json["DisplayOrder"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "GroupName": groupName,
+    "DisplayOrder": displayOrder,
+  };
+}
+
+class Tag {
+  String tagId;
+  bool showTagImage;
+  TagTitle tagTitle;
+  TagSeoNames tagSeoNames;
+  String tagMediaId;
+  bool allowDetail;
+
+  Tag({
+    this.tagId,
+    this.showTagImage,
+    this.tagTitle,
+    this.tagSeoNames,
+    this.tagMediaId,
+    this.allowDetail,
+  });
+
+  factory Tag.fromJson(Map<String, dynamic> json) => Tag(
+    tagId: json["TagId"],
+    showTagImage: json["ShowTagImage"],
+    tagTitle: tagTitleValues.map[json["TagTitle"]],
+    tagSeoNames: tagSeoNamesValues.map[json["TagSeoNames"]],
+    tagMediaId: json["TagMediaId"],
+    allowDetail: json["AllowDetail"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "TagId": tagId,
+    "ShowTagImage": showTagImage,
+    "TagTitle": tagTitleValues.reverse[tagTitle],
+    "TagSeoNames": tagSeoNamesValues.reverse[tagSeoNames],
+    "TagMediaId": tagMediaId,
+    "AllowDetail": allowDetail,
+  };
+}
+
+enum TagSeoNames { DHRUV, NON_VEGETERIAN }
+
+final tagSeoNamesValues = EnumValues({
+  "Dhruv": TagSeoNames.DHRUV,
+  "Non vegeterian": TagSeoNames.NON_VEGETERIAN
+});
+
+enum TagTitle { DHRUV, NON_VEG }
+
+final tagTitleValues = EnumValues({
+  "Dhruv": TagTitle.DHRUV,
+  "Non-Veg": TagTitle.NON_VEG
+});
 
 class Unit {
   String unitId;
   String baseUnitId;
   double baseUnitMultiplier;
   int decimalPlaces;
-  String language;
-  String code;
-  String name;
+  Language language;
+  Code code;
+  UnitName name;
 
   Unit({
     this.unitId,
@@ -412,9 +548,9 @@ class Unit {
     baseUnitId: json["BaseUnitId"],
     baseUnitMultiplier: json["BaseUnitMultiplier"],
     decimalPlaces: json["DecimalPlaces"],
-    language: json["Language"],
-    code: json["Code"],
-    name: json["Name"],
+    language: languageValues.map[json["Language"]],
+    code: codeValues.map[json["Code"]],
+    name: unitNameValues.map[json["Name"]],
   );
 
   Map<String, dynamic> toJson() => {
@@ -422,8 +558,40 @@ class Unit {
     "BaseUnitId": baseUnitId,
     "BaseUnitMultiplier": baseUnitMultiplier,
     "DecimalPlaces": decimalPlaces,
-    "Language": language,
-    "Code": code,
-    "Name": name,
+    "Language": languageValues.reverse[language],
+    "Code": codeValues.reverse[code],
+    "Name": unitNameValues.reverse[name],
   };
+}
+
+enum Code { KG, DZ, LITRE, EMPTY }
+
+final codeValues = EnumValues({
+  "Dz": Code.DZ,
+  "लीटर": Code.EMPTY,
+  "KG": Code.KG,
+  "Litre": Code.LITRE
+});
+
+enum UnitName { KILOGRAM, DOZEN, LITRE, EMPTY }
+
+final unitNameValues = EnumValues({
+  "Dozen": UnitName.DOZEN,
+  "लीटर": UnitName.EMPTY,
+  "Kilogram": UnitName.KILOGRAM,
+  "Litre": UnitName.LITRE
+});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap;
+  }
 }

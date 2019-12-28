@@ -380,7 +380,7 @@ class MyCartState extends State<MyCartScreen>
                                     cartItem.quantity ++ ;
                                     myCartModal.totalCost = myCartModal.totalCost+ cartItem.price ;
 
-                                    updateQuantity(cartItem.id , cartItem.quantity) ;
+                                    updateQuantity(cartItem.itemId , cartItem.quantity) ;
 
                                     setState(() {
 
@@ -402,14 +402,13 @@ class MyCartState extends State<MyCartScreen>
                                   InkWell(onTap: (){
 
                                     if( cartItem.quantity>1){
-                                      updateQuantity(cartItem.id , cartItem.quantity) ;
                                       cartItem.quantity--  ;
+                                      updateQuantity(cartItem.itemId , cartItem.quantity) ;
                                       myCartModal.totalCost = myCartModal.totalCost - cartItem.price ;
                                       setState(() {
                                       });
                                     }else{
-
-                                      removetoCart(cartItem.id) ;
+                                      removetoCart(cartItem.itemId) ;
 
                                     }
 
