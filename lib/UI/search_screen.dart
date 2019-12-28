@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
-import 'package:vegetos_flutter/models/search_products.dart';
+import 'package:vegetos_flutter/models/search_products.dart' as sModal;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -23,14 +24,15 @@ class _SearchScreenState extends State<SearchScreen> {
   myCart.MyCartModal myCartModal ;
 
 
+
   bool search=false;
   @override
   Widget build(BuildContext context) {
 
     myCartModal= Provider.of<myCart.MyCartModal>(context) ;
-    myCartModal= Provider.of<myCart.MyCartModal>(context) ;
 
-    final SearchModel searchModel=Provider.of<SearchModel>(context);
+
+    final sModal.SearchModel searchModel=Provider.of<sModal.SearchModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       body: SafeArea(child: Column(
@@ -159,14 +161,15 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
           Expanded(
-            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():buildList(context,searchModel.result)),
+            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():
+            buildList(context,searchModel.result)),
           ),
         ],
       ),),
     );
   }
 
-  ListView buildList(BuildContext context, List<Result> result) {
+  ListView buildList(BuildContext context, List<sModal.Result> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
         return GestureDetector(
@@ -181,8 +184,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: result[index].name==null||result[index].name.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
-                            "${result[index].name}",
+                          child: result[index].productDetails[0].name==null||
+                              result[index].productDetails[0].name.isEmpty?
+                          Image.asset('02-product.png',height: 100,width: 100,):Image.network(
+                            "${DashboardScreen.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
                             height: 100.0,
                             width: 100.0,
                           ),
@@ -212,7 +217,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: <Widget>[
                         Text(
 
-                          result[index].name,
+                          result[index].productDetails[0].name,
 
                           style: TextStyle(
                               fontSize: 17.0,
@@ -224,7 +229,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          "${result[index].quantity} ${result[index].unit}",
+                          "${result[index].productDetails[0].description} ${result[index].productDetails[0].description}",
                           style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'GoogleSans',

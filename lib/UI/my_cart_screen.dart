@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/all_product_screen.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
@@ -458,9 +459,13 @@ class MyCartState extends State<MyCartScreen>
                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child:InkWell(child:  Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w500,
-                              color: Colors.green)),
+                              color: Colors.green))
+
+                            ,onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))) ;
+                            },),
                         ),
                       ),
                     )

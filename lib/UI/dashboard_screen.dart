@@ -107,6 +107,8 @@ class DashboardScreen extends StatelessWidget
     if(!recommendedProducts.loaded){
       recommendedProducts.loadProducts();
     }
+
+    
     return Scaffold(
       drawer: Drawer(
         child: drawer(context),
