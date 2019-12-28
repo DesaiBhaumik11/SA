@@ -2,14 +2,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/all_product_screen.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 
@@ -41,7 +44,6 @@ class MyCartState extends State<MyCartScreen>
 
     if(!recommendedProductsModel.loaded){
       recommendedProductsModel.loadProducts();
-
     }
 
     if(!myCartModal.loaded){
@@ -108,7 +110,9 @@ class MyCartState extends State<MyCartScreen>
           child: Column(
             children: <Widget>[
               priceTotalBox(),
-              myCartModal.result==null||
+                  myCartModal.result==null||
+                  myCartModal.result.cartItemViewModels==null||
+                  myCartModal.cartItemSize==0||
                   myCartModal.result.cartItemViewModels.length==0?
               Container(padding: EdgeInsets.all(10),
                   height: 200
@@ -126,7 +130,14 @@ class MyCartState extends State<MyCartScreen>
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
           onTap: () {
-            checkOutCall();
+           // checkOutCall();
+
+            myCartModal.result==null||
+                myCartModal.result.cartItemViewModels==null||
+                myCartModal.cartItemSize==0||
+                myCartModal.result.cartItemViewModels.length==0?
+                Utility.toastMessage("No item in Cart"):
+
             Navigator.push(context, SlideLeftRoute(page: SetDeliveryDetails()));
           },
           child: Container(
@@ -379,7 +390,7 @@ class MyCartState extends State<MyCartScreen>
                                     cartItem.quantity ++ ;
                                     myCartModal.totalCost = myCartModal.totalCost+ cartItem.price ;
 
-                                    updateQuantity(cartItem.id , cartItem.quantity) ;
+                                    updateQuantity(cartItem.itemId , cartItem.quantity) ;
 
                                     setState(() {
 
@@ -401,14 +412,13 @@ class MyCartState extends State<MyCartScreen>
                                   InkWell(onTap: (){
 
                                     if( cartItem.quantity>1){
-                                      updateQuantity(cartItem.id , cartItem.quantity) ;
                                       cartItem.quantity--  ;
+                                      updateQuantity(cartItem.itemId , cartItem.quantity) ;
                                       myCartModal.totalCost = myCartModal.totalCost - cartItem.price ;
                                       setState(() {
                                       });
                                     }else{
-
-                                      removetoCart(cartItem.id) ;
+                                      removetoCart(cartItem.itemId) ;
 
                                     }
 
@@ -458,9 +468,13 @@ class MyCartState extends State<MyCartScreen>
                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child:InkWell(child:  Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w500,
-                              color: Colors.green)),
+                              color: Colors.green))
+
+                            ,onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))) ;
+                            },),
                         ),
                       ),
                     )
@@ -627,9 +641,18 @@ class MyCartState extends State<MyCartScreen>
 
   removetoCart(String id) {
 
+
+    if(myCartModal.result.cartItemViewModels.length==1&&
+    myCartModal.result.cartItemViewModels[0].quantity==0
+    ){
+      myCartModal.result==null ;
+      setState(() {
+
+      });
+    }
+
     NetworkUtils.deleteRequest(endPoint: Constant.DeleteItem+id).then((res){
       print("removetoCart Response = $res");
-
       myCartModal.getMyCart() ;
     }) ;
   }
@@ -686,17 +709,17 @@ class MyCartState extends State<MyCartScreen>
     );
   }
 
-  void checkOutCall() {
-
-    NetworkUtils.getRequest(endPoint: Constant.Checkout).then((res){
-
-      print("checkOutCall Response>> $res");
-
-    }).catchError((e){
-      print("checkOutCall Error>> $e");
-    }) ;
-
-  }
+//  void checkOutCall() {
+//
+//    NetworkUtils.getRequest(endPoint: Constant.Checkout).then((res){
+//
+//      print("checkOutCall Response>> $res");
+//
+//    }).catchError((e){
+//      print("checkOutCall Error>> $e");
+//    }) ;
+//
+//  }
 
 
 }

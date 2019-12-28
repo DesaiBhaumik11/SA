@@ -19,8 +19,6 @@ class AddressModal extends ChangeNotifier{
   String message;
   String defaultAddress ="No Location Found";
   bool isError;
-
-
   bool loaded = false ;
   bool is_loading = false ;
 

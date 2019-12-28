@@ -1,16 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
-import 'package:vegetos_flutter/models/search_products.dart';
+import 'package:vegetos_flutter/models/product_detail.dart';
+import 'package:vegetos_flutter/models/search_products.dart' as sModal;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -21,16 +24,17 @@ class _SearchScreenState extends State<SearchScreen> {
   var wid = 1;
   Timer timer;
   myCart.MyCartModal myCartModal ;
-
+  String CAT_ID="";
+  category.CategoriesModel categoriesModel ;
 
   bool search=false;
   @override
   Widget build(BuildContext context) {
 
     myCartModal= Provider.of<myCart.MyCartModal>(context) ;
-    myCartModal= Provider.of<myCart.MyCartModal>(context) ;
+    categoriesModel =Provider.of<category.CategoriesModel>(context);
 
-    final SearchModel searchModel=Provider.of<SearchModel>(context);
+    final sModal.SearchModel searchModel=Provider.of<sModal.SearchModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       body: SafeArea(child: Column(
@@ -73,7 +77,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             searchModel.searching(false);
                           }else{
                             searchModel.searching(true);
-                            searchModel.searchProducts(e);
+
+                            String id = _SheetWidState._category.isEmpty||_SheetWidState._category[0].isEmpty||_SheetWidState._category[0]==null? "":categoriesModel.result.singleWhere((result)=>result.name==_SheetWidState._category[0]).id ;
+
+                            String url = e + "&categoryId=${id}&brandId=&manufacturerId=" ;
+
+                            print("urlll>>> ${url}") ;
+
+                            searchModel.searchProducts(url);
                           }
 
                         });
@@ -159,18 +170,30 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
           Expanded(
-            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():buildList(context,searchModel.result)),
+            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():
+            buildList(context,searchModel.result)),
           ),
         ],
       ),),
     );
   }
 
-  ListView buildList(BuildContext context, List<Result> result) {
+  ListView buildList(BuildContext context, List<sModal.Result> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () {},
+          onTap: () {
+
+            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator())));
+            productModal.getProductDetail(result[index].productId ,(){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, Const.productDetail);
+            }) ;
+          },
           child: Card(
             child: Container(
               padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
@@ -181,8 +204,12 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: result[index].name==null||result[index].name.isEmpty?Image.asset('02-product.png',height: 100,width: 100,):Image.network(
-                            "${result[index].name}",
+                          child: result[index].productDetails==null||
+                              result[index].productDetails[0].name==null||
+
+                              result[index].productDetails[0].name.isEmpty?
+                          Image.asset('02-product.png',height: 100,width: 100,):Image.network(
+                            "${DashboardScreen.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
                             height: 100.0,
                             width: 100.0,
                           ),
@@ -211,8 +238,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
+                          result[index].productDetails==null||
+                          result[index].productDetails[0].name==null||
 
-                          result[index].name,
+                              result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].name,
 
                           style: TextStyle(
                               fontSize: 17.0,
@@ -224,7 +253,10 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          "${result[index].quantity} ${result[index].unit}",
+                          "${ result[index].productDetails==null||
+                              result[index].productDetails[0].name==null||
+
+                              result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].description}",
                           style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'GoogleSans',
@@ -235,7 +267,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           width: 5,
                         ),
                         Text(
-                          '₹100',
+                          '₹ ${result[index].productPrice==null?'null':result[index].productPrice.price}',
                           style: TextStyle(
                               fontSize: 20.0,
                               fontFamily: 'GoogleSans',
@@ -247,7 +279,21 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         RaisedButton(
                           color: Theme.of(context).primaryColor,
-                          onPressed: () {},
+                          onPressed: () {
+                            print("Add Clicked") ;
+
+                           final body= json.encode({
+
+                              "ProductId": ""+result[index].productId,
+                              "ProductVariantId": ""+result[index].productVariantId,
+                              "Quantity": "1" ,
+                              "OfferId": "",
+                              "Amount": "${result[index].productPrice.price}"}) ;
+
+                            myCartModal.addTocart(null , body);
+
+
+                          },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 5),
                             child: Row(
@@ -447,7 +493,7 @@ class _SheetWidState extends State<SheetWid> {
 
   List<String> _checked = [];
 
-  List<String> _category = [];
+  static List<String> _category = [];
   List<String> _category_items = [];
 
   List<String> _discount = [];
@@ -786,13 +832,20 @@ class _SheetWidState extends State<SheetWid> {
                                   labelStyle: radioTitle,
                                   onChange: (bool isChecked, String label,
                                           int index) =>
+
                                       print(
                                           "isChecked: $isChecked   label: $label  index: $index"),
+
                                   onSelected: (List selected) => setState(() {
                                     if (selected.length > 1) {
                                       selected.removeAt(0);
                                     } else {}
+
                                     _category = selected;
+                                    print("_category    ${_category}") ;
+
+
+
                                   }),
                                 ),
                               ],

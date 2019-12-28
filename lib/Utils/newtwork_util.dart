@@ -90,7 +90,7 @@ abstract class NetworkUtils {
 
       }
 
-      print("Response for$endpoint = ${response.body}");
+     // print("Response for$endpoint = ${response.body}");
 
         Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
@@ -123,7 +123,7 @@ abstract class NetworkUtils {
     print("Heades = Authorization>>>$authorization");
 
     Response response = await get(url, headers: headerMap);
-    print("Response for$endPoint = ${response.body}");
+  //  print("Response for$endPoint = ${response.body}");
 
 
 //    if(response.statusCode==200){
@@ -290,7 +290,7 @@ abstract class NetworkUtils {
     }else{
       Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
-    print("Response for$endpoint = ${response.body}");
+   // print("Response for$endpoint = ${response.body}");
     return response.body;
   }
 
@@ -310,8 +310,8 @@ abstract class NetworkUtils {
     }else{
       Fluttertoast.showToast(msg: "Error ${response.statusCode} ${response.reasonPhrase}",backgroundColor: Colors.redAccent,textColor: Colors.white);
     }
-    print("$endPoint response = ${response.body}");
-    print("Response for$endPoint = ${response.body}");
+   // print("$endPoint response = ${response.body}");
+   // print("Response for$endPoint = ${response.body}");
     return response.body;
   }
 

@@ -4,6 +4,7 @@ class Constant{
 
   static const String BASE_URL = "http://artismicro.archisys.biz:5101/";
 
+  static String ProceedTopayment  = "ProceedTopayment";
   static String getMyAddresses  = "GetMyAddresses";
   static String GetMyDefaultAddress  = "GetMyDefaultAddress";
   static String GetAddressById  = "GetAddressById?addressId=";

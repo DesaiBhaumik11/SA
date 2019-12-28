@@ -432,7 +432,10 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
 
         if(root["Message"] =="Request successful."){
 
-          Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
+          proceedTopayment() ;
+
+
+    //      Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
 
         }else{
           Utility.toastMessage(root["Message"]) ;
@@ -443,6 +446,43 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen>
       });
 
     }) ;
+
+
+  }
+
+  void proceedTopayment() {
+
+    MyCartModal myCartModal = MyCartState.myCartModal ;
+
+    NetworkUtils.postRequest(endpoint: Constant.ProceedTopayment  ,body: json.encode({
+
+      "PaymentMethod": "Card",
+      "TotalAmount": "${myCartModal.totalCost}",
+      "GatewayOrderId": "987654321",
+
+
+    })).then((res){
+      print("proceedTopayment Response $res") ;
+
+
+      Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
+//      var root = json.decode(res) ;
+//
+//      if(root["Message"] =="Request successful."){
+//
+//        //proceedTopayment() ;
+//
+//        Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
+//
+//      }else{
+//        Utility.toastMessage(root["Message"]) ;
+//      }
+
+    }).catchError((e){
+      print("proceedTopayment catchError $e") ;
+
+    });
+
 
 
   }

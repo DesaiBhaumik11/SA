@@ -43,7 +43,7 @@ class DefaultAddressModel with ChangeNotifier {
     "IsError": isError,
   };
 
-  void loadAddress(context) {
+  void loadAddress(context ) {
     NetworkUtils.getRequest(endPoint: Constant.GetMyDefaultAddress).then((r){
       var root=json.decode(r);
         setData(root);
