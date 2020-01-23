@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/register_screen.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
@@ -156,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.w500,
                     fontSize: 16
                 ),),onTap: (){
-                  Navigator.pushNamed(context, Const.registerScreen);
+                  Navigator.push(context, EnterExitRoute(enterPage: RegisterScreen()));
                 },) ,
 
                 SizedBox(width:20),
@@ -168,7 +170,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     ),
-    onWillPop: (){},) ;
+    onWillPop: (){
+      //Navigator.of(context).pop();
+    },) ;
   }
 
 

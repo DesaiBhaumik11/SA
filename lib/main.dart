@@ -109,21 +109,21 @@ class MyApp extends StatelessWidget {
           fontFamily: 'GoogleSans',
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: Const.initialRoute,
+        /*initialRoute: Const.initialRoute,
         routes: <String, WidgetBuilder>{
           Const.welcome: (BuildContext context) => WelcomeScreenState(),
           Const.dashboard: (BuildContext context) => DashboardScreen(),
           Const.categories: (BuildContext context) => CategoriesScreen(),
           Const.productDetail: (BuildContext context) => ProductDetailScreen(),
           Const.myCart: (BuildContext context) => MyCartScreen(),
-          Const.paymentOption: (BuildContext context) => PaymentOptionScreen(),Const.setDeliveryLocation: (BuildContext context) =>
+          Const.paymentOption: (BuildContext context) => PaymentOptionScreen(""),Const.setDeliveryLocation: (BuildContext context) =>
               SetDeliveryLocation(),
           Const.setLocationManually: (BuildContext context) =>SetLocationManually(),
           Const.locationServiceUnavailable: (BuildContext context) =>
               LocationServiceUnavailable(() {}),
           Const.searchScreen: (BuildContext context) => SearchScreen(),
           Const.setDeliveryDetails: (BuildContext context) =>
-              SetDeliveryDetails(),
+              SetDeliveryDetails(null),
           Const.orderPlacedScreen: (BuildContext context) =>
               OrderPlacedScreen(),
           Const.chooseAddress: (BuildContext context) => ChooseAddress(),
@@ -152,7 +152,7 @@ class MyApp extends StatelessWidget {
           Const.sharedCart: (BuildContext context) => SharedCart(),
           Const.cartView: (BuildContext context) => CartView(),
           Const.registerScreen: (BuildContext context) => RegisterScreen(),
-        },
+        },*/
         home: SplashScreen()));
   }
 }

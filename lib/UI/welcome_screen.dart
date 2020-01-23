@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
+import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class WelcomeScreenState extends StatefulWidget
@@ -19,9 +21,6 @@ class WelcomeScreenState extends StatefulWidget
 
 class WelcomeScreen extends State<WelcomeScreenState>
 {
-
-
-
   int currentPageValue;
 
   Widget circleBar(bool isActive)
@@ -58,9 +57,7 @@ class WelcomeScreen extends State<WelcomeScreenState>
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
 
 
-    return WillPopScope(onWillPop: (){
-
-    },
+    return WillPopScope(
       child: Scaffold(
 
         body: slideShow()
@@ -121,7 +118,9 @@ class WelcomeScreen extends State<WelcomeScreenState>
                     SharedPreferences.getInstance().then((prefs){
                       prefs.setString("phone", "Guest User");
                     }) ;
-                    Navigator.pushNamed(context, Const.setDeliveryLocation);
+                    Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: SetDeliveryLocation(),
+                        exitPage: WelcomeScreenState()),(c)=>false);
+                    //Navigator.pushNamed(context, Const.setDeliveryLocation);
                   },
                   child: Text(
                     'Skip'

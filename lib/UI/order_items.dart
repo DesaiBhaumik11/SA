@@ -46,7 +46,7 @@ class OrderItemsState extends State<OrderItems>
                   children: <Widget>[
                     Container(
                       //child: Image.network('assets/01-product.png', height: 100.0, width: 100.0,),
-                      child: Image.network('${DashboardScreen.appFirstModal.ImageUrl}${cartItem.productMediaId}', height: 100.0, width: 100.0,),
+                      child: Image.network('${DashboardScreenState.appFirstModal.ImageUrl}${cartItem.productMediaId}', height: 100.0, width: 100.0,),
                     ),
                   ],
                 ),

@@ -77,6 +77,7 @@ class CategoriesModel extends ChangeNotifier {
 class Result {
   String id;
   String name;
+  String Description;
   String parentId;
   String mediaId;
   dynamic products;
@@ -92,6 +93,7 @@ class Result {
   Result({
     this.id,
     this.name,
+    this.Description,
     this.parentId,
     this.mediaId,
     this.products,
@@ -106,6 +108,7 @@ class Result {
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["Id"],
     name: json["Name"],
+    Description: json["Description"],
     parentId: json["ParentId"] == null ? null : json["ParentId"],
     mediaId: json["MediaId"],
     products: json["Products"],
@@ -120,6 +123,7 @@ class Result {
   Map<String, dynamic> toJson() => {
     "Id": id,
     "Name": name,
+    "Description": Description,
     "ParentId": parentId == null ? null : parentId,
     "MediaId": mediaId,
     "Products": products,

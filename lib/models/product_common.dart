@@ -8,6 +8,8 @@ Result resultFromJson(String str) => Result.fromMap(json.decode(str));
 
 String resultToJson(Result data) => json.encode(data.toMap());
 
+
+
 class Result {
   String name;
   String description;
@@ -23,7 +25,9 @@ class Result {
   double discountPercent;
   String seoTag;
   int quantity;
+  double OfferPrice;
   List<ProductExtraField> productExtraFields =List() ;
+  List<ProductVariantAttributeGroups> varientGroupList = List();
 
   Result({
     this.name,
@@ -41,6 +45,8 @@ class Result {
     this.seoTag,
     this.quantity,
     this.productExtraFields,
+    this.OfferPrice,
+    this.varientGroupList,
   });
 
   factory Result.fromMap(Map<String, dynamic> json) => Result(
@@ -58,7 +64,10 @@ class Result {
     discountPercent: json["DiscountPercent"],
     seoTag: json["SEOTag"],
     quantity: json["Quantity"],
-    productExtraFields: List<ProductExtraField>.from(json["productExtraFields"].map((x) => ProductExtraField.fromJson(x))),
+    OfferPrice: json["OfferPrice"],
+    productExtraFields: json["productExtraFields"] != null ? ProductExtraField.parseList(json["productExtraFields"]) : null,
+    varientGroupList: json['ProductVariantAttributeGroups'] != null ?
+        ProductVariantAttributeGroups.parseList(json['ProductVariantAttributeGroups']) : null
   );
 
   Map<String, dynamic> toMap() => {
@@ -76,14 +85,17 @@ class Result {
     "DiscountPercent": discountPercent,
     "SEOTag": seoTag,
     "Quantity": quantity,
+    "OfferPrice": OfferPrice,
     "productExtraFields": List<dynamic>.from(productExtraFields.map((x) => x.toJson())),
   };
 
 
-
-
-
-
+  static List<Result> parseList(listData) {
+    var list = listData as List;
+    List<Result> jobList =
+    list.map((data) => Result.fromMap(data)).toList();
+    return jobList;
+  }
 }
 
 
@@ -133,4 +145,42 @@ class ProductExtraField {
         "CreatedOn": createdOn.toIso8601String(),
         "UpdatedOn": updatedOn,
       };
+
+  static List<ProductExtraField> parseList(listData) {
+    var list = listData as List;
+    List<ProductExtraField> jobList =
+    list.map((data) => ProductExtraField.fromJson(data)).toList();
+    return jobList;
+  }
+}
+
+class ProductVariantAttributeGroups
+{
+  String GroupName;
+
+  int DisplayOrder;
+
+  String ProductId;
+
+  ProductVariantAttributeGroups({
+    this.ProductId,
+    this.GroupName,
+    this.DisplayOrder,
+  });
+
+  factory ProductVariantAttributeGroups.fromJson(Map<String,dynamic> parsedData) {
+    return ProductVariantAttributeGroups(
+      ProductId: parsedData['ProductId'],
+      GroupName: parsedData['GroupName'],
+      DisplayOrder: parsedData['DisplayOrder'],
+    );
+  }
+
+
+  static List<ProductVariantAttributeGroups> parseList(listData) {
+    var list = listData as List;
+    List<ProductVariantAttributeGroups> jobList =
+    list.map((data) => ProductVariantAttributeGroups.fromJson(data)).toList();
+    return jobList;
+  }
 }

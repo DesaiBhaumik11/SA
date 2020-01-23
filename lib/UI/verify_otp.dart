@@ -2,16 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_view/pin_view.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/update_profile.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/pin_view.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 
@@ -195,7 +197,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
           appFirstModal.setDataLoginRToken(root ,prefs);
 
         });
-        Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
+        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
       }else{
         Utility.toastMessage("${root["Message"]}") ;
       }

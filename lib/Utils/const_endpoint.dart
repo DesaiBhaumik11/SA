@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class Constant{
 
   static const String BASE_URL = "http://artismicro.archisys.biz:5101/";
+  //static const String BASE_URL = "http://195.168.0.37:5011/";
+  //static final String BASE_URL = "http://195.168.0.85:5001/";
 
   static String ProceedTopayment  = "ProceedTopayment";
   static String getMyAddresses  = "GetMyAddresses";

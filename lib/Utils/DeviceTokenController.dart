@@ -6,23 +6,27 @@ import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
 
 class DeviceTokenController
 {
-  DeviceTokenController()
+  Future<String> ValidateDeviceToken() async
   {
-    SharedPreferences.getInstance().then((prefs) {
-      String getToken = prefs.getString("JWT_TOKEN");
-      String uuid = Uuid().v4();
-      if(getToken != null && getToken.isNotEmpty) {
-        bool isValid = validateJWTToken(getToken);
-        if(!isValid) {
-          getJwtToken(uuid);
-        }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String getToken = prefs.getString("JWT_TOKEN");
+    String uuid = prefs.getString("UUID");
+    if(getToken != null && getToken.isNotEmpty) {
+      bool isValid = validateJWTToken(getToken);
+      if(!isValid) {
+        String deviceToken = await getJwtToken(uuid);
+        return deviceToken;
       } else {
-        getJwtToken(uuid);
+        return getToken;
       }
-    });
+    } else {
+      String token = await getJwtToken(uuid);
+      return token;
+    }
   }
 
   Future<String> getJwtToken(String uuid) async {

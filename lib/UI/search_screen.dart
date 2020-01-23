@@ -3,17 +3,24 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/categories_screen.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
+import 'package:vegetos_flutter/UI/product_detail_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/search_products.dart' as sModal;
+import 'package:vegetos_flutter/models/search_products.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -27,7 +34,19 @@ class _SearchScreenState extends State<SearchScreen> {
   String CAT_ID="";
   category.CategoriesModel categoriesModel ;
 
+  String cartTotal = '0';
+
   bool search=false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    callGetCartAPI();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -99,7 +118,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {Navigator.push(context, SlideRightRoute(page: MyCartScreen()));},
+                    onTap: () {
+                      Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+                      },
                     child: Container(
                       margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                       child: Stack(
@@ -118,7 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: CircleAvatar(
                                 backgroundColor: Colors.orange,
                                 radius: 8.0,
-                                child: Text('${myCartModal.cartItemSize}',
+                                child: Text(cartTotal,
                                     style: TextStyle(
                                         fontSize: 10.0,
                                         fontFamily: 'GoogleSans',
@@ -146,7 +167,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
               ),
-              FlatButton(
+              /*FlatButton(
                 onPressed: () {
                   _settingModalBottomSheet(context);
                 },
@@ -166,7 +187,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     )
                   ],
                 ),
-              )
+              )*/
             ],
           ),
           Expanded(
@@ -181,147 +202,165 @@ class _SearchScreenState extends State<SearchScreen> {
   ListView buildList(BuildContext context, List<sModal.Result> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
+        if(result[index].productDetails != null && result[index].productDetails.isNotEmpty) {
+          return GestureDetector(
+            onTap: () {
 
-            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-                height: 25,
-                width: 25,
-                child: CircularProgressIndicator())));
-            productModal.getProductDetail(result[index].productId ,(){
-              Navigator.pop(context);
-              Navigator.pushNamed(context, Const.productDetail);
-            }) ;
-          },
-          child: Card(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          child: result[index].productDetails==null||
-                              result[index].productDetails[0].name==null||
-
-                              result[index].productDetails[0].name.isEmpty?
-                          Image.asset('02-product.png',height: 100,width: 100,):Image.network(
-                            "${DashboardScreen.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
-                            height: 100.0,
-                            width: 100.0,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.orange),
-                          child: Text(
-                            '12% OFF',
-                            style: TextStyle(
-                                fontSize: 10.0,
-                                fontFamily: 'GoogleSans',
-                                color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          result[index].productDetails==null||
-                          result[index].productDetails[0].name==null||
-
-                              result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].name,
-
-                          style: TextStyle(
-                              fontSize: 17.0,
-                              fontFamily: 'GoogleSans',
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "${ result[index].productDetails==null||
-                              result[index].productDetails[0].name==null||
-
-                              result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].description}",
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              fontFamily: 'GoogleSans',
-                              color: Color(0xff6c6c6c),
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          '₹ ${result[index].productPrice==null?'null':result[index].productPrice.price}',
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        RaisedButton(
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            print("Add Clicked") ;
-
-                           final body= json.encode({
-
-                              "ProductId": ""+result[index].productId,
-                              "ProductVariantId": ""+result[index].productVariantId,
-                              "Quantity": "1" ,
-                              "OfferId": "",
-                              "Amount": "${result[index].productPrice.price}"}) ;
-
-                            myCartModal.addTocart(null , body);
-
-
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                                Text(
-                                  'ADD',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13),
-                                ),
-                              ],
+              final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+              showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+                  height: 25,
+                  width: 25,
+                  child: CircularProgressIndicator())));
+              productModal.getProductDetail(result[index].productId ,(){
+                Navigator.pop(context);
+                Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result[index].productId)));
+              }) ;
+            },
+            child: Card(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            child:
+                                result[index].productVariantMedia==null||
+                                result[index].productVariantMedia[0].isEmpty?
+                            Image.asset('02-product.png',height: 100,width: 100,):Image.network(
+                              "${DashboardScreenState.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
+                              height: 100.0,
+                              width: 100.0,
                             ),
                           ),
-                        )
-                      ],
+                          result[index].productPrice.discountPercent != null && result[index].productPrice.discountPercent != 0 ?
+                          Container(
+                            padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: Colors.orange),
+                            child: Text(
+                                result[index].productPrice.discountPercent != null ?
+                                result[index].productPrice.discountPercent.toString() : null,
+                              style: TextStyle(
+                                  fontSize: 10.0,
+                                  fontFamily: 'GoogleSans',
+                                  color: Colors.white),
+                            ),
+                          ) : Container(),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              result[index].productDetails==null||
+                                  result[index].productDetails[0].name==null||
+                                  result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].name,
+
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontFamily: 'GoogleSans',
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+
+                            ),
+                            width: MediaQuery.of(context).size.width * 0.55,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.55,
+                            child: Text(
+                              "${ result[index].productDetails==null||
+                                  result[index].productDetails[0].description==null||
+                                  result[index].productDetails[0].description.isEmpty?"":result[index].productDetails[0].description}",
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontFamily: 'GoogleSans',
+                                  color: Color(0xff6c6c6c),
+                                  fontWeight: FontWeight.w500),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '₹ ${result[index].productPrice==null?'null':result[index].productPrice.price}',
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          RaisedButton(
+                            color: Theme.of(context).primaryColor,
+                            //color: Const.gray10,
+                            onPressed: () {
+                              print("Add Clicked") ;
+
+                              final body= json.encode({
+
+                                "ProductId": ""+result[index].productId,
+                                "ProductVariantId": ""+result[index].productVariantId,
+                                "Quantity": "1" ,
+                                "OfferId": "",
+                                "Amount": "${result[index].productPrice.price}"}) ;
+
+                              //myCartModal.addTocart(null , body);
+                              callAddToCartAPI(result[index].productId, result[index].productVariantId,
+                                  "1", "", result[index].productPrice.offerPrice.toString());
+                              //Fluttertoast.showToast(msg: 'Delivery location not found, Coming soon.');
+
+
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  Text(
+                                    'ADD',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
+          );
+        } else {
+          return Container();
+        }
       },
       itemCount: result.length,
       padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
@@ -380,7 +419,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         );
       },
-      itemCount: 4,
+      itemCount: 0,
       padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
@@ -394,6 +433,34 @@ class _SearchScreenState extends State<SearchScreen> {
           return SheetWid();
         });
   }
+
+  void callGetCartAPI() {
+    ApiCall().getCart().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
+        setState(() {
+          cartTotal = getCartResponseModel.cartItemViewModels.length.toString();
+        });
+      } else if(apiResponseModel.statusCode == 401) {
+
+      } else {
+
+      }
+    });
+  }
+
+  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
+    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        callGetCartAPI();
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      }
+    });
+  }
 }
 
 
@@ -403,17 +470,19 @@ class Whoops extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 120),
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 120),
         child: Container(
           color: Colors.white,
           width: double.infinity,
+          margin: EdgeInsets.only(top: 10.0),
+          padding: EdgeInsets.only(bottom: 15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.asset(
                 'no-result.png',
-                height: 140,
+                height: 200,
               ),
               SizedBox(
                 height: 10,
@@ -450,7 +519,9 @@ class Whoops extends StatelessWidget {
                 height: 10,
               ),
               RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, EnterExitRoute(enterPage: CategoriesScreen()));
+                },
                 color: Theme.of(context).primaryColor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),

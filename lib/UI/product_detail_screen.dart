@@ -1,19 +1,29 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
+import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/GetProductByIdModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 
 class ProductDetailScreen extends StatefulWidget
 {
+
+  String productId;
+
+  ProductDetailScreen(this.productId);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -24,7 +34,7 @@ class ProductDetailScreen extends StatefulWidget
 
 class ProductDetailScreenState extends State<ProductDetailScreen>
 {
-   ProductDetailModal productModal ;
+   GetProductByIdModel productModal;
    MyCartModal cartModal ;
    AppFirstModal appFirstModal ;
 
@@ -37,21 +47,24 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
   int _selectedIndex = 0;
 
+  String cartTotal = "0";
+
+  Future getProductById;
+
+   DashboardProductResponseModel model = DashboardProductResponseModel();
+
 
   @override
   void initState() {
     // TODO: implement initState
+    MyCartUtils.streamController.stream.listen((cartCount) {
+      setState(() {
+        cartTotal = cartCount;
+      });
+    });
+
+    getProductById = ApiCall().getProductDetailById(widget.productId);
     super.initState();
-//
-//    SharedPreferences.getInstance().then((prefs){
-//
-//
-//      getProductById(prefs.getString("product_id")) ;
-//
-//    }) ;
-
-
-
   }
 
 
@@ -61,8 +74,9 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     appFirstModal=Provider.of<AppFirstModal>(context);
     cartModal=Provider.of<MyCartModal>(context);
 
-     productModal=Provider.of<ProductDetailModal>(context);
-     print("Product Detail provider" + productModal.result.id) ;
+     //productModal=Provider.of<ProductDetailModal>(context);
+
+     //print("Product Detail provider" + productModal.result.id) ;
 
     // TODO: implement build
     return Scaffold(
@@ -77,13 +91,13 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             child: Image.asset('back.png', height: 25,),
           ),
         ),
-        title: Text(productModal.result.name==null?"":productModal.result.name),
+        title: Text("Product Detail"),
         //title: Text('Washington Apple'),
         actions: <Widget>[
-          Container(
+          /*Container(
             margin: EdgeInsets.fromLTRB(5.0, 0.0, 10.0, 0.0),
             child: Icon(Icons.search, color: Colors.white,),
-          ),
+          ),*/
           GestureDetector(
             onTap: () {
               Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
@@ -103,7 +117,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       child: CircleAvatar(
                         backgroundColor: Colors.orange,
                         radius: 8.0,
-                        child: Text('${cartModal.cartItemSize}',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                        child: Text(cartTotal ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                       ),
                     ),
                   )
@@ -115,31 +129,16 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
         ],
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          color: Const.gray10,
-          child: Column(
-            children: <Widget>[
-              productImageSlides(),
-              Container(color: Colors.grey, height: 1.0,),
-              nameAndPrice(),
-              Container(color: Colors.grey, height: 1.0,),
-              unitBar(),
-              aboutProduct(),
-              horizontalList(),
-            ],
-          ),
-        ),
-      ),
+      body: callproductDetailAPi(widget.productId),
     );
   }
 
   Widget productImageSlides()
   {
     List<Image> imageList = [
-      Image.network("${appFirstModal
-          .ImageUrl}${productModal.result.productMediaId}", height: 100.0, width: 100.0,),
+      Image.asset('assets/02-product.png', height: 50, width: 50.0,)
+      /*Image.network("${appFirstModal
+          .ImageUrl}${productModal.result.productMediaId}", height: 100.0, width: 100.0,),*/
     //  Image.asset('${appFirstModal}', height: 100.0, width: 100.0,),
 //      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
 //      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
@@ -177,7 +176,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
             alignment: Alignment.centerLeft,
 
-            child: Text(productModal.result.name==null?"":productModal.result.name, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
+            child: Text(productModal.ProductVariant[0].ProductDetail[0].Name, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
                 fontWeight: FontWeight.w800),),
           ),
           Row(
@@ -186,7 +185,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text('₹ ${productModal.result.price} ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                  child: Text('₹ ${productModal.ProductPrice.Result.OfferPrice != null ? productModal.ProductPrice.Result.OfferPrice.toString() : "0"} ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w700,
                       color: Colors.black),
                   ),
@@ -196,13 +195,13 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text('₹120 ',style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                  child: Text(productModal.ProductPrice.Result.Price != null ? '₹ ' + productModal.ProductPrice.Result.Price.toString() : '₹0' ,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w500,
                       color: Colors.grey, decoration: TextDecoration.lineThrough),
                   ),
                 ),
               ),
-              Container(
+              /*Container(
                 margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
                 padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                 decoration: BoxDecoration(
@@ -211,7 +210,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 ),
                 child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                     color: Colors.white),),
-              )
+              )*/
             ],
           )
         ],
@@ -234,11 +233,11 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
               height: 50.0,
               child: ListView.builder(
-                itemCount: 5,
+                itemCount: 1,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Container(
-                    width: 80.0,
+                    width: 100.0,
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
                     decoration: BoxDecoration(
@@ -251,7 +250,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       title: Row(
                         children: <Widget>[
                           Container(
-                            child: Text('500 GM', style: TextStyle(color: Colors.black, fontSize: 12.0, fontFamily: 'GoogleSans',
+                            child: Text(productModal.MinimumOrderQuantity.toString() + " " + productModal.Units[0].Name, style: TextStyle(color: Colors.black, fontSize: 12.0, fontFamily: 'GoogleSans',
                                 fontWeight: FontWeight.w500)),
                           )
                         ],
@@ -273,11 +272,17 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5.0),
                 color: Const.primaryColor,
+                //color: Const.gray10,
               ),
               alignment: Alignment.center,
               height: 40.0,
               child: Text('+ ADD', style: TextStyle(color: Colors.white),),
-            ),onTap: (){cartModal.addTocart(productModal.result);},)
+            ),onTap: (){
+              //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+              //cartModal.addTocart(productModal.result);
+              MyCartUtils().callAddToCartAPI(productModal.ProductId, productModal.ProductVariant[0].Id,
+                  productModal.IncrementalStep.toString(), "", productModal.ProductPrice.Result.OfferPrice.toString());
+              },)
           )
         ],
       ),
@@ -308,9 +313,9 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           description(),
           unit(),
-          disclaimer(),
-          shelfLife(),
-          termsAndCondition(),
+          //disclaimer(),
+          //shelfLife(),
+          //termsAndCondition(),
         ],
       ),
     );
@@ -320,6 +325,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -351,7 +357,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           Container(
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-              child: Text("${productModal.result.description}", maxLines: descFlag ? 20 : 2,
+              child: Text("${productModal.ProductVariant[0].ProductDetail[0].Description}", maxLines: descFlag ? 20 : 2,
                   style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                       fontWeight: FontWeight.w500))
           ),
@@ -403,7 +409,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('${productModal.result.quantity} ${productModal.result.unit}', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
+                child: Text('1 ${productModal.Units[0].Name}', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
                     style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
@@ -629,7 +635,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            Navigator.push(context, SlideRightRoute(page: ProductDetailScreen()));
+            //Navigator.push(context, SlideRightRoute(page: ProductDetailScreen()));
           },
           child: Container(
             width: 180.0,
@@ -703,7 +709,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                     padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
-                        color: Const.primaryColor
+                        //color: Const.primaryColor
+                        color: Const.gray10
                     ),
                     child: Align(
                       alignment: Alignment.center,
@@ -721,7 +728,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
   }
 
-  void getProductById(String id){
+  /*void getProductById(String id){
 
         NetworkUtils.getRequest(endPoint: Constant.GetProductById + id).then((res){
 
@@ -729,6 +736,56 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
     }) ;
 
+  }*/
+
+  Widget callproductDetailAPi(String productId) {
+    return FutureBuilder(
+      future: getProductById,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if(apiResponseModel.statusCode == 200) {
+            productModal = GetProductByIdModel.fromJson(apiResponseModel.Result);
+            return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                color: Const.gray10,
+                child: Column(
+                  children: <Widget>[
+                    productImageSlides(),
+                    Container(color: Colors.grey, height: 1.0,),
+                    nameAndPrice(),
+                    Container(color: Colors.grey, height: 1.0,),
+                    unitBar(),
+                    aboutProduct(),
+                    //horizontalList(),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Container();
+          }
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+
+  void callGetProductDetailByIdAPI(String productId) {
+    ApiCall().getProductDetailById(productId).then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        GetProductByIdModel responseModel = GetProductByIdModel.fromJson(apiResponseModel.Result);
+        productModal = responseModel;
+
+      } else if(apiResponseModel.statusCode == 401) {
+
+      } else {
+
+      }
+    });
   }
 
 

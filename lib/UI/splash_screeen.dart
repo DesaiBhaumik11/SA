@@ -7,150 +7,82 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
+import 'package:vegetos_flutter/UI/welcome_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
+import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
+import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
-// login
-// AUTH_TOKEN
-//JWT_TOKEN
-class SplashScreen extends StatelessWidget {
+
+class SplashScreen extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return SplashScreenState();
+  }
+
+}
+
+class SplashScreenState extends State<SplashScreen> {
+
   bool runOnce=true;
-  AppFirstModal appFirstModal ;
+  String version = "";
+  //AppFirstModal appFirstModal ;
 
-
-  navigate(context)
-  {
-    SharedPreferences.getInstance().then((prefs){
-      if(prefs.getBool("login")??false){
-        Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
-      }else{
-        Navigator.pushNamedAndRemoveUntil(context, Const.welcome,(c)=>false);
-      }
-    }
-  );
+  @override
+  void initState() {
+    // TODO: implement initState
+    getVeriosnCode();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    appFirstModal = Provider.of<AppFirstModal>(context);
 
-//if(runOnce)
-//  {
-//    runOnce=false;
-//    Timer(Duration(seconds: 2), (){
-//      navigate(context);
-//    });
-//  }
+    //appFirstModal = Provider.of<AppFirstModal>(context);
 
-
-
-   if(runOnce) {
+   /*if(runOnce) {
      runOnce=false;
      SharedPreferences.getInstance().then((prefs) {
        String uuid = prefs.getString("uuid") ?? Uuid().v4();
 
-//       uuid = uuid+randomAlphaNumeric(10) ;
-
        prefs.setString("uuid", uuid);
-     //  prefs.setString("phone", "Guest User");
 
-       getJwtToken(context, uuid).then((r) {
 
+
+       *//*TokenController().getJwtToken(uuid).then((r) {
          print("AUTH_TOKEN Prefns ${prefs.getString("AUTH_TOKEN")}");
           if(prefs.getString("AUTH_TOKEN")==null){
-         //prefs.setBool("login", true) ;
-          //print("Login status = ${(prefs.getBool("login")??false)}");
-       //  if(prefs.getBool("login")==null|| prefs.getBool("login")==false)
-       //  {
-            //runOnce=true;
             appFirstModal.appFirstRun(r,(){navigate(context);}) ;
-
-//            NetworkUtils.updateToken(prefs );
-//            appFirstModal.getDefaults();
-//            navigate(context);
           }else{
             NetworkUtils.updateToken(prefs );
             appFirstModal.getDefaults();
-
-          //  Navigator.pushNamedAndRemoveUntil(context, Const.dashboard,(c)=>false);
-
             navigate(context);
           }
-       });
+       });*//*
      });
-   }
+   }*/
 
+    checkUUID(context);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//
-//
-//
-//     runOnce=false;
-//     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-//
-//     if(!appFirstModal.loaded){
-//       runOnce=true ;
-//       getJwtToken(context) ;
-//
-//     }else{
-//
-//       NetworkUtils.updateToken(appFirstModal.device_token , appFirstModal.result.token) ;
-//       appFirstModal.getDefaults() ;
-//
-//       loginCheck(context);
-//       Future.delayed(const Duration(milliseconds: 3000), () async {
-//        SharedPreferences prefs=await SharedPreferences.getInstance();
-//
-//        prefs.setString("AUTH_TOKEN", appFirstModal.result.token) ;
-//
-//
-//        //createDeviceToken();
-//        Navigator.pushNamed(context, Const.welcome);
-//
-//       // getJwtToken(context) ;
-//
-//
-//     });
-//
-//     }
-//
-//
-//
-//     Future.delayed(const Duration(milliseconds: 3000), () async {
-//        SharedPreferences prefs=await SharedPreferences.getInstance();
-//        String uuid=prefs.getString("uuid")??Uuid().v4();
-//        //createDeviceToken();
-//        Navigator.pushNamed(context, Const.welcome);
-//
-//        getJwtToken(context) ;
-//
-//
-//     });
-//   }
     return Scaffold(
       body: Container(
+        width: MediaQuery.of(context).size.width,
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -175,6 +107,20 @@ class SplashScreen extends StatelessWidget {
                 alignment: FractionalOffset.bottomCenter,
                 child: Image.asset('assets/bottom_pattern.png'),
               ),
+            ),
+
+            Container(
+              margin: const EdgeInsets.only(bottom: 100.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text('Version : ' + version,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 14,
+                      color: Const.grey800
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -183,109 +129,106 @@ class SplashScreen extends StatelessWidget {
   }
 
 
-  String _counter="Token";
-
-  String map="Map";
-
-  Future<String> getJwtToken(BuildContext context, [uuid]) async {
-
-    String manufacturer,model,osVersion;
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
-    if(Platform.isAndroid){
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      manufacturer=androidInfo.manufacturer;
-      model=androidInfo.model;
-      osVersion=androidInfo.version.release;
-    }else{
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      model=iosInfo.model;
-      osVersion=iosInfo.utsname.version;
+  void checkUUID(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String uuid = prefs.getString("UUID");
+    if(uuid == null || uuid.isEmpty) {
+      uuid = Uuid().v4();
+      prefs.setString("UUID", uuid);
+      DeviceTokenController().ValidateDeviceToken().then((token) {
+        callAppFirstStartAPI(context);
+      });
+    } else {
+      DeviceTokenController().ValidateDeviceToken().then((token) async {
+        String authToken = await AuthTokenController().ValidateAuthToken();
+        if(authToken != null && authToken.isNotEmpty) {
+          callGetDefaultsAPI(context);
+        } else {
+          callAppFirstStartAPI(context);
+        }
+      });
     }
-
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    Map<String,dynamic> map=Map();
-    map["id"]=              uuid;
-    map["appversion"]=      packageInfo.version;
-
-    map["appversioncode"]=  packageInfo.buildNumber;
-    map["manufacturer"]=    Platform.isIOS?"Apple":manufacturer;
-    map["model"]=           model;
-    map["os"]=              Platform.isAndroid?"Android":"Ios";
-    map["osversion"]=       osVersion;
-//    map["platform"]=        Platform.isAndroid?"Android":"Ios";
- //   map["nbf"]=        "1577355877";
-    map["platform"]=        "Mobile";
-    map["notificationid"]=  "";
-    print("Map = $map") ;
-
-    final key = '2C39927D43F04E1CBAB1615841D94000';
-    final claimSet = new JwtClaim(
-      issuer: 'com.archisys.vegetos',
-      audience: <String>['com.archisys.artis'],
-
-      otherClaims: map,
-    );
-    String token = issueJwtHS256(claimSet, key);
-
-    SharedPreferences.getInstance().then((prefs){
-      prefs.setString("JWT_TOKEN",token) ;
-    });
-    print("JWT token  =  $token");
-//    appFirstModal.appFirstRun(token);
-    return token;
-    //print("appFirstModal  =  $appFirstModal.loaded");
-
-//    if(!appFirstModal.loaded){
-//      appFirstModal.appFirstRun(token) ;
-//    }else{
-//     // print(" App Token ${appFirstModal.result.token}") ;
-//
-//      Future.delayed(const Duration(milliseconds: 3000), () async {
-//        SharedPreferences prefs=await SharedPreferences.getInstance();
-//        String uuid=prefs.getString("uuid")??Uuid().v4();
-//        //createDeviceToken();
-//        Navigator.pushNamed(context, Const.welcome);
-//
-//       // getJwtToken(context) ;
-//
-//
-//      });
-//    }
-
-
-
   }
 
-  void loginCheck(BuildContext context) async {
+  Future<String> getVeriosnCode() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+    });
+  }
+
+  navigate(context)
+  {
+    SharedPreferences.getInstance().then((prefs){
+      String businessId = prefs.getString("BusinessLocationId");
+      String address = prefs.getString("FullAddress");
+      if(businessId != null && businessId.isNotEmpty && address != null && address.isNotEmpty) {
+        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+      } else {
+        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: WelcomeScreenState()),(c)=>false);
+      }
+    });
+  }
+
+  /*void loginCheck(BuildContext context) async {
       SharedPreferences prefs=await SharedPreferences.getInstance();
       prefs.setString("AUTH_TOKEN", appFirstModal.result==null?null:appFirstModal.result.token) ;
 
       SharedPreferences.getInstance().then((prefs){
 
         if(prefs.getBool("LOGIN")==null){
-
           Navigator.pushNamed(context, Const.welcome) ;
-          //Navigator.pushNamed(context, Const.dashboard) ;
-
         }else{
-
           Navigator.pushNamed(context, Const.dashboard);
         }
+      });
+  }*/
 
-
-      }) ;
-
-      //createDeviceToken();
-
-
-      // getJwtToken(context) ;
-
-
-
-
-
+  void callAppFirstStartAPI(BuildContext context) {
+    ApiCall().appFirstStart().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
+        });
+        callGetDefaultsAPI(context);
+      } else {
+        callRefreshTokenAPI(context);
+      }
+    });
   }
 
 
+  void callRefreshTokenAPI(BuildContext context) {
+    ApiCall().refreshToken().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
+        });
+        callGetDefaultsAPI(context);
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+      }
+    });
+  }
+
+  void callGetDefaultsAPI(BuildContext context) {
+    ApiCall().getDefaults().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        GetDefaultsResponseModel getDefaultsResponseModel = GetDefaultsResponseModel.fromJson(apiResponseModel.Result);
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("ImageURL", getDefaultsResponseModel.ImageUrl);
+          Future.delayed(Duration(seconds: 1)).then((_) {
+            navigate(context);
+          });
+        });
+      } else if(apiResponseModel.statusCode == 401) {
+        callRefreshTokenAPI(context);
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong!');
+        callRefreshTokenAPI(context);
+      }
+    });
+  }
 }

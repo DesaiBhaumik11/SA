@@ -101,7 +101,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Const.myOrders);
+                          //Navigator.pushNamed(context, Const.myOrders);
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -125,7 +125,7 @@ class _ProfileState extends State<Profile> {
                         color: Colors.black26,
                       ),
 
-                      InkWell(
+                      /*InkWell(
                         onTap: (){
                           Navigator.pushNamed(context, Const.mySubscriptions);
                         },
@@ -143,7 +143,7 @@ class _ProfileState extends State<Profile> {
                             ],
                           ),
                         ),
-                      ),
+                      ),*/
 
                       Container(
                         width: double.infinity,
@@ -153,7 +153,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Const.myCart);
+                          //Navigator.pushNamed(context, Const.myCart);
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -179,7 +179,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Const.myAddresses);
+                          //Navigator.pushNamed(context, Const.myAddresses);
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -206,7 +206,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Const.sharedCart);
+                          //Navigator.pushNamed(context, Const.sharedCart);
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -253,7 +253,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Const.wallet);
+                          //Navigator.pushNamed(context, Const.wallet);
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),

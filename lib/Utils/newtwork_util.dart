@@ -10,6 +10,8 @@ import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
+import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 
 typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
@@ -30,11 +32,15 @@ abstract class NetworkUtils {
     print("updateToken >>JWT_TOKEN ${prefs.getString("JWT_TOKEN")}") ;
     print("updateToken >>AUTH_TOKEN ${prefs.getString("AUTH_TOKEN")}") ;
 
-    if(prefs.getString("JWT_TOKEN")==null){}else{
+    if(prefs.getString("JWT_TOKEN")==null){
+      DeviceTokenController();
+    }else{
       deviceToken = prefs.getString("JWT_TOKEN") ;
     }
 
-    if(prefs.getString("AUTH_TOKEN")==null){}else{
+    if(prefs.getString("AUTH_TOKEN")==null){
+      AuthTokenController();
+    }else{
       authorization = prefs.getString("AUTH_TOKEN") ;
     }
 
@@ -71,6 +77,11 @@ abstract class NetworkUtils {
 //
 //    }
 
+    DeviceTokenController();
+    AuthTokenController();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String deviceToken = prefs.getString("JWT_TOKEN");
+    String authorization = prefs.getString("AUTH_TOKEN");
 
 
     headerMap["device_token"] = deviceToken;
@@ -101,7 +112,7 @@ abstract class NetworkUtils {
   static Future<String> getRequest({String endPoint}) async {
     Map<String, String> headerMap = Map();
 
-    if(useLocalToken){
+    /*if(useLocalToken){
       SharedPreferences prefs=await SharedPreferences.getInstance();
 
       deviceToken =prefs.getString("AUTH_TOKEN")?? "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOWQ0OTc4LWNjYTYtNGM5Ny04ZmZjLTNkMjAzZmI3OTI3OCIsImFwcHZlcnNpb24iOiIwLjAuMSIsImFwcHZlcnNpb25jb2RlIjoxLCJtYW51ZmFjdHVyZXIiOiJNb3RvIiwibW9kZWwiOiJHNiIsIm9zIjoiQW5kcm9pZCIsIm9zdmVyc2lvbiI6IjkuMCIsInBsYXRmb3JtIjoiTW9iaWxlIiwibm90aWZpY2F0aW9uaWQiOiIiLCJpYXQiOjE1NTg5NTc0NDYsIm5iZiI6MTU1ODk1NzQ0NiwiZXhwIjoxNTc3MjY5NDQyLCJhdWQiOiJjb20uYXJjaGlzeXMuYXJ0aXMiLCJpc3MiOiJjb20uYXJjaGlzeXMudmVnZXRvcyJ9.3Pl5ipLmVf7zji2S4lwXOmXMgVYbI2mB6jAE1d2kwG2JBafqwIhGI4wATvXS73x8o4lTiiC3sKprBGR8YDp0lA";
@@ -110,8 +121,12 @@ abstract class NetworkUtils {
 //      authorization =
 //      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1NjBjZmQ0OC1jM2U2LTQ4M2ItYTRhMi1iMTVkMWNjMjQxYzUiLCJ1bmlxdWVfbmFtZSI6Iis5MS05OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbW9iaWxlcGhvbmUiOiI5OTA0MDQzODczIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6Iis5MSIsIm5iZiI6MTU3NTEyNjY1OCwiZXhwIjoxNTkwNjc4NjU4LCJpYXQiOjE1NzUxMjY2NTgsImlzcyI6ImNvbS5hcmNoaXN5cy5hcnRpcyIsImF1ZCI6ImNvbS5hcmNoaXN5cy52ZWdldG9zIn0.q0y05HFa-QWkXiDI5Ftn_D40HXAOJ-A3UQX0OqEV12s";
 
-    }
-
+    }*/
+    DeviceTokenController();
+    AuthTokenController();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String deviceToken = prefs.getString("JWT_TOKEN");
+    String authorization = prefs.getString("AUTH_TOKEN");
     headerMap["device_token"] = deviceToken;
     headerMap["Content-Type"] = "application/json";
     headerMap["Authorization"] = "Bearer "+authorization;
@@ -297,12 +312,13 @@ abstract class NetworkUtils {
 
   static Future<String> deleteRequest({String endPoint}) async {
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String url="$_baseUrl$endPoint";
     Map<String, String> headerMap = Map();
-    headerMap["device_token"] = deviceToken;
+    headerMap["device_token"] = prefs.getString("JWT_TOKEN");
     headerMap["Content-Type"] = "application/json";
     //headerMap["Authorization"] = authorization;
-    headerMap["Authorization"] = "Bearer "+authorization;
+    headerMap["Authorization"] = "Bearer "+prefs.getString("AUTH_TOKEN");
 
 
     Response response = await delete(url, headers: headerMap);

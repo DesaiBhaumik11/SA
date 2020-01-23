@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
+/*
 class OrderSummery extends StatefulWidget
 {
   @override
@@ -207,7 +208,7 @@ class OrderSummeryState extends State<OrderSummery>
                       ),
                       Expanded(
                         flex: 0,
-                        child: Text('Debit Card', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        child: Text('Online', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                             fontWeight: FontWeight.w500, color: Const.locationGrey),),
                       ),
                     ],
@@ -224,7 +225,7 @@ class OrderSummeryState extends State<OrderSummery>
                       ),
                       Expanded(
                         flex: 0,
-                        child: Text('3 Items', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        child: Text('-', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                             fontWeight: FontWeight.w500, color: Const.locationGrey),),
                       ),
                     ],
@@ -241,7 +242,7 @@ class OrderSummeryState extends State<OrderSummery>
                       ),
                       Expanded(
                         flex: 0,
-                        child: Text('FREE', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        child: Text('-', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                             fontWeight: FontWeight.w500, color: Const.primaryColor),),
                       ),
                     ],
@@ -258,7 +259,7 @@ class OrderSummeryState extends State<OrderSummery>
                       ),
                       Expanded(
                         flex: 0,
-                        child: Text('- ₹62', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        child: Text('-', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                             fontWeight: FontWeight.w500, color: Const.locationGrey),),
                       ),
                     ],
@@ -275,7 +276,7 @@ class OrderSummeryState extends State<OrderSummery>
                       ),
                       Expanded(
                         flex: 0,
-                        child: Text('- ₹32', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        child: Text('-', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                             fontWeight: FontWeight.w500, color: Const.locationGrey),),
                       ),
                     ],
@@ -293,7 +294,7 @@ class OrderSummeryState extends State<OrderSummery>
                       ),
                       Expanded(
                         flex: 0,
-                        child: Text('₹400', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('-', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             fontWeight: FontWeight.w500, color: Colors.black),),
                       ),
                     ],
@@ -317,4 +318,4 @@ class OrderSummeryState extends State<OrderSummery>
     return paymentContent;
   }
 
-}
+}*/

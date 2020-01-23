@@ -24,7 +24,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   grouped_buttons: ^1.0.4
-  pin_view: ^1.0.1
+  #pin_view: ^1.0.1
   google_maps_flutter: ^0.5.21+11
   dotted_border: ^1.0.3
   provider: ^3.1.0+1
@@ -35,15 +35,29 @@ dependencies:
   package_info: ^0.4.0+11
   uuid: ^2.0.4
   progress_dialog: ^1.2.0
-  shared_preferences: ^0.5.4+8
+  shared_preferences: 0.5.6
   fluttertoast: ^3.1.3
 #  wc_flutter_share: ^0.1.1
   random_string: ^2.0.1
+  #Dependency added by prashant
+  geolocator: 5.1.5
+  geocoder: 0.2.1
+  #flutter_google_places_autocomplete: 0.1.3
+  flutter_google_places: 0.2.3
+  intl: 0.16.0
+  razorpay_flutter: 1.1.2
+  flutter_launcher_icons: 0.7.4
+  flutter_pagewise: 1.2.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/Logo.jpg"
 
 
 # For information on the generic Dart part of this file, see the
@@ -132,6 +146,11 @@ flutter:
     - purchase-wallet.png
     - order-cancelled.png
     - user-not-found-error.png
+    - Logo.jpg
+    - order_cancelled.png
+    - order_confirmed.png
+    - order_delivered.png
+    - order_placed.png
 
   fonts:
     - family: GoogleSans

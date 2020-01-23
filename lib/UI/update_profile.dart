@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+
+import 'dashboard_screen.dart';
 
 class UpdateProfile extends StatefulWidget {
   @override
@@ -31,7 +34,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
           FlatButton(
             onPressed: (){
-              Navigator.pushNamed(context, Const.dashboard);
+              Navigator.push(context, EnterExitRoute(enterPage: DashboardScreen()));
             },
             child: Text(
               'Skip for now',
@@ -161,7 +164,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         onPressed: (){
-                          Navigator.pushNamed(context, Const.dashboard);
+                          Navigator.push(context, EnterExitRoute(enterPage: DashboardScreen()));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),

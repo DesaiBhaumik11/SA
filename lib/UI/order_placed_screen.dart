@@ -1,16 +1,26 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/custom_stepper.dart' as s;
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/order_items.dart';
 import 'package:vegetos_flutter/UI/customer_support_1.dart';
 import 'package:vegetos_flutter/UI/payment_option_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/GetOrderByIdResponseModel.dart';
 
-class OrderPlacedScreen extends StatefulWidget
+class   OrderPlacedScreen extends StatefulWidget
 {
+
+  String orderId;
+
+  OrderPlacedScreen(this.orderId);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -25,10 +35,10 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
   Widget build(BuildContext context) {
     // TODO: implement build
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: Scaffold(
         backgroundColor: Color(0xffEDEDEE),
-        bottomNavigationBar: BottomAppBar(
+        /*bottomNavigationBar: BottomAppBar(
           child: GestureDetector(
             onTap: () {
               //Navigator.pushNamed(context, Const.paymentOption);
@@ -54,13 +64,14 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
               ),
             ),
           ),
-        ),
+        ),*/
         appBar: AppBar(
           backgroundColor: Const.appBar,
           elevation: 0,
           leading: InkWell(
             onTap: (){
-              Navigator.pop(context);
+              //Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
             },
             child: Padding(
               padding: EdgeInsets.all(15),
@@ -71,8 +82,8 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
               'Order Placed'
           ),
           bottom: TabBar(
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Colors.transparent,
+            //unselectedLabelColor: Colors.black,
+            //indicatorColor: Colors.transparent,
 
             tabs: [
               Padding(
@@ -82,31 +93,89 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
                   fontSize: 16
                 ),),
               ),
-              Padding(
+              /*Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Text('Items', style: TextStyle(
                 fontWeight: FontWeight.w500,
                     fontSize: 16
                 ),),
-              )
+              )*/
             ],
           ),
         ),
-        body:TabBarView(
-          children: <Widget>[
-            Summary(),
-            OrderItems(),
-
-          ],
-        ),
+        body:callGetOrderById(widget.orderId),
       ),
     );
 
   }
   
+  Widget TabBody(GetOrderByIdResponseModel model) {
+    return Container(
+      child: TabBarView(
+        children: <Widget>[
+          Summary(model),
+          //OrderItems(),
+        ],
+      ),
+    );
+  }
+
+
+  Widget callGetOrderById(String orderId) {
+    return FutureBuilder(
+      future: ApiCall().getOrderById(orderId),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if(apiResponseModel.statusCode == 200) {
+            GetOrderByIdResponseModel responseModel = GetOrderByIdResponseModel.fromJson(apiResponseModel.Result);
+            return TabBody(responseModel);
+          } else if(apiResponseModel.statusCode == 401) {
+            return somethingWentWrong();
+          } else {
+            return somethingWentWrong();
+          }
+        } else if(snapshot.connectionState == ConnectionState.waiting) {
+          return Container(child: Center(child: CircularProgressIndicator(),),);
+        } else {
+          return somethingWentWrong();
+        }
+      },
+    );
+  }
+
+  Widget somethingWentWrong() {
+    return InkWell(
+      onTap: () {
+        //callGetOrderById('');
+      },
+      child: Container(
+        height: 275.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.error, color: Colors.red, size: 25.0,),
+            Container(
+              margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+              child: Text("Items not loaded",
+                  style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
 }
 
 class Summary extends StatefulWidget {
+
+  GetOrderByIdResponseModel model;
+
+  Summary(this.model);
+
   @override
   _SummaryState createState() => _SummaryState();
 }
@@ -182,10 +251,11 @@ class _SummaryState extends State<Summary> {
                    Row(
                      children: <Widget>[
                        Expanded(
-                         child: Text('FRI 31 MAY 2019', style: text),
+                         child: Text(widget.model.ShippingOrder.ShippingSchedule.Date, style: text),
                        ),
                        Expanded(
-                         child: Text('11 AM - 3 PM', style: text),
+                         child: Text(widget.model.ShippingOrder.ShippingSchedule.TimeFrom + " - " +
+                             widget.model.ShippingOrder.ShippingSchedule.TimeTo, style: text),
                        )
                      ],
                    ),
@@ -239,14 +309,16 @@ class _SummaryState extends State<Summary> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
 
-                    Text('${PaymentOptionScreenState.addressModel.result.name==null?"":PaymentOptionScreenState.addressModel.result.name}', style: TextStyle(
+                    Text(widget.model.ShippingOrder.Name, style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
                     ),),
 
-                    Text('${PaymentOptionScreenState.addressModel.result.addressLine2}', style: address,),
-                    Text('${PaymentOptionScreenState.addressModel.result.addressLine2}', style: address,),
-                    Text('${PaymentOptionScreenState.addressModel.result.city}', style: address,)
+                    Text(widget.model.ShippingOrder.AddressLine1 + widget.model.ShippingOrder.AddressLine2 +
+                        widget.model.ShippingOrder.City + widget.model.ShippingOrder.State +
+                        widget.model.ShippingOrder.Country + widget.model.ShippingOrder.Pin, style: address,),
+                    //Text('${PaymentOptionScreenState.addressModel.result.addressLine2}', style: address,),
+                    //Text('${PaymentOptionScreenState.addressModel.result.city}', style: address,)
 
                   ],
                 ),
@@ -271,7 +343,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Order ID', style: text,),
-                        Text('VEG123456789', style: text,),
+                        Text(widget.model.OrderId, style: text,),
                       ],
                     ),
 
@@ -280,7 +352,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Inovice number', style: text,),
-                        Text('VEGINV123456', style: text,),
+                        Text(widget.model.InvoiceNumber, style: text,),
                       ],
                     ),
 
@@ -290,7 +362,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Payment option', style: text,),
-                        Text('Debit Card', style: text,),
+                        Text('Online', style: text,),
                       ],
                     ),
 
@@ -300,7 +372,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Total Items', style: text,),
-                        Text('${MyCartState.myCartModal.result.cartItemViewModels.length} Items', style: text,),
+                        Text(widget.model.ItemCount.toString() + ' Items', style: text,),
                       ],
                     ),
 
@@ -310,7 +382,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Delivery charges', style: text,),
-                        Text('FREE', style: TextStyle(
+                        Text(widget.model.DeliveryCharges.toString(), style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500,
                           fontSize: 16
@@ -324,19 +396,19 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Discount/Promo', style: text,),
-                        Text('-₹${MyCartState.myCartModal.result.discount}', style: text,),
+                        Text("-₹ " + widget.model.Discount.toString(), style: text,),
                       ],
                     ),
 
                     SizedBox(height: 5,),
 
-                    Row(
+                    /*Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Wallet', style: text,),
                         Text('-₹0.0', style: text,),
                       ],
-                    ),
+                    ),*/
 
                     SizedBox(height: 7,),
 
@@ -353,7 +425,7 @@ class _SummaryState extends State<Summary> {
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),),
-                        Text('₹ ${MyCartState.myCartModal.result.totalAmount}', style: TextStyle(
+                        Text("₹ " + widget.model.SubTotal.toString(), style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),),

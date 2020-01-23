@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
@@ -164,8 +165,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
 
 
                           Navigator.of(context)
-                              .pushNamedAndRemoveUntil(Const.dashboard , (Route<dynamic> route) => false);
-
+                              .pushAndRemoveUntil(EnterExitRoute(enterPage: DashboardScreen()) , (Route<dynamic> route) => false);
 
                           // Navigator.pop(context) ;
 

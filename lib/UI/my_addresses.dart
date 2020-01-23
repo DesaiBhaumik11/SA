@@ -146,7 +146,7 @@ class _MyAddressesState extends State<MyAddresses> {
                         child: Container(),
                       ),
                       PopupMenuButton(
-                        itemBuilder: (c) => ["Edit", "Delete","Set Default"]
+                        itemBuilder: (c) => [/*"Edit", */"Delete","Set Default"]
                             .map((i) => PopupMenuItem(
                                     child: ListTile(
                                   onTap: () {
@@ -292,7 +292,9 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
-                                  Provider.of<AddressModal>(context).deleteAddress(id,callback:(){Navigator.pop(context);});
+                                  Provider.of<AddressModal>(context).deleteAddress(id,callback:(){
+                                    Navigator.pop(context);
+                                  });
                                 //  Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(

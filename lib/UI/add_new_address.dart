@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   var tappedIndex = -1;
 
-  var addressLine1,addressLine2,city;
+  String addressLine1,addressLine2,city;
+
+  bool isDataFilled = false;
 
   @override
   void initState() {
@@ -72,27 +75,36 @@ class _AddNewAddressState extends State<AddNewAddress> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(context, SlideLeftRoute(page: LocateMap(latLng:widget.edit?LatLng(widget.result.latitude,widget.result.longitude):null))).then((latLng){
+
+                  /*if(fName.isEmpty || addressLine1.isEmpty || addressLine2.isEmpty || _radioValue1 == -1) {
+                    Fluttertoast.showToast(msg: 'Please fill the data to continue');
+                    return;
+                  }*/
+
+                  Navigator.push(context, SlideLeftRoute(
+                      page: LocateMap(latLng:widget.edit? LatLng(widget.result.latitude,widget.result.longitude):null,
+                    addressLine2: addressLine2,))).then((address){
+                      Address add = address;
                     Result result=
                       Result(
                   //    id:          widget.edit?widget.result.id:  Uuid().v4(),
                       name:          fName,
                      // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
-                      addressLine1:  addressLine1,
-                      addressLine2:  addressLine2,
-                      city:          "AMBD",
-                      country:       "DEMO",
-                      state:         "DEMO STATE",
-                      pin:           "151204",
-                      latitude:      latLng.latitude,
-                      longitude:     latLng.longitude,
-                      isDefault:     false
+                      addressLine1:  add.addressLine,
+                      addressLine2:  '',
+                      city:          add.subAdminArea,
+                      country:       add.countryName,
+                      state:         add.adminArea,
+                      pin:           add.postalCode,
+                      latitude:      add.coordinates.latitude,
+                      longitude:     add.coordinates.longitude,
+                      isDefault:     true
                     );
                    widget.edit? Provider.of<AddressModal>(context).updateAddress(result,callback: addressChanged()):
                    Provider.of<AddressModal>(context).addAddress(result,callback: addressChanged());
                   });
                 },
-                color: Theme.of(context).primaryColor,
+                color: isDataFilled ? Theme.of(context).primaryColor : Colors.grey[500],
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
@@ -123,6 +135,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   setState(() {
                     _radioValue1 = e;
                   });
+                  validation();
                 },
               ),
               new Text(
@@ -140,6 +153,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   setState(() {
                     _radioValue1 = e;
                   });
+                  validation();
                 },
               ),
               new Text(
@@ -157,6 +171,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   setState(() {
                     _radioValue1 = e;
                   });
+                  validation();
                 },
               ),
               new Text(
@@ -187,7 +202,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 TextFormField(
                   initialValue: fName,
                   style: text,
-                  onChanged: (e)=>fName=e,
+                  onChanged: (e) {
+                    setState(() {
+                      fName=e;
+                    });
+                    validation();
+                  },
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 7)
                   ),
@@ -205,7 +225,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 TextFormField(
                   initialValue: addressLine1,
                   style: text,
-                  onChanged: (e)=>addressLine1=e,
+                  onChanged: (e) {
+                    setState(() {
+                      addressLine1=e;
+                    });
+                    validation();
+                  },
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 7)),
                 ),
@@ -222,7 +247,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 TextFormField(
                   initialValue: addressLine2,
                   style: text,
-                  onChanged: (e)=>addressLine2=e,
+                  onChanged: (e) {
+                    setState(() {
+                      addressLine2=e;
+                    });
+                    validation();
+                  },
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 7)),
                 ),
@@ -335,12 +365,22 @@ class _AddNewAddressState extends State<AddNewAddress> {
           ],
         );
       },
-      itemCount: 4,
+      itemCount: 1,
       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
     );
+  }
+
+  void validation() {
+    setState(() {
+      if(_radioValue1 != -1 && fName.isNotEmpty && addressLine1.isNotEmpty && addressLine2.isNotEmpty) {
+        isDataFilled = true;
+      } else {
+        isDataFilled = false;
+      }
+    });
   }
 
   addressChanged(){

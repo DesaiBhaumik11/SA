@@ -1,19 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class LocateMap extends StatefulWidget {
   var latLng;
+  String addressLine2;
 
-  LocateMap({this.latLng});
+  LocateMap({this.addressLine2, this.latLng});
   @override
   _LocateMapState createState() => _LocateMapState();
 }
 
 class _LocateMapState extends State<LocateMap> {
+
   var text = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
@@ -27,9 +30,14 @@ class _LocateMapState extends State<LocateMap> {
 
   LatLng latLng;
 
+  TextEditingController textEditingController;
+
+  var completeAddress;
+
   GoogleMapController controller;
   @override
   void initState() {
+    textEditingController = TextEditingController(text: widget.addressLine2);
     super.initState();
     if(widget.latLng!=null){
       latLng=widget.latLng;
@@ -73,10 +81,13 @@ class _LocateMapState extends State<LocateMap> {
             onTap: onMapTap,
             myLocationEnabled: true,
 
-            onMapCreated: (c){
+            onMapCreated: (c) async {
               controller=c;
+              var add = await Geocoder.local.findAddressesFromQuery(widget.addressLine2);
+              controller.animateCamera(CameraUpdate.newLatLng(LatLng(add.first.coordinates.latitude, add.first.coordinates.longitude)));
+              onMapTap(LatLng(add.first.coordinates.latitude, add.first.coordinates.longitude));
               Location().getLocation().then((r){
-                controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
+                //controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
               });
             },
             initialCameraPosition: _kGooglePlex,
@@ -87,7 +98,8 @@ class _LocateMapState extends State<LocateMap> {
                 padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                 child: TextFormField(
                   style: text,
-                  initialValue: 'Sheetalnath Apartment,Pladi',
+                  //initialValue: widget.addressLine2,
+                  controller: textEditingController,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 13),
                       prefixIcon: Icon(Icons.search),
@@ -133,7 +145,7 @@ class _LocateMapState extends State<LocateMap> {
                             child: RaisedButton(
                               onPressed: () {
                                 if (latLng != null) {
-                                  Navigator.pop(context, latLng);
+                                  Navigator.pop(context, completeAddress);
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Please pick a location");
@@ -178,6 +190,13 @@ class _LocateMapState extends State<LocateMap> {
           ),
         );
         latLng = argument;
+        Geocoder.local.findAddressesFromCoordinates(Coordinates(argument.latitude, argument.longitude)).then((add) {
+          setState(() {
+            widget.addressLine2 = add.first.toString();
+            textEditingController.text = add.first.addressLine;
+            completeAddress = add.first;
+          });
+        });
       });
     });
   }

@@ -1,13 +1,16 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 //Pages Srings
 
 class Const
 {
-  static String initialRoute = "/";
+  /*static String initialRoute = "/";
   static String welcome = "/WelcomeScreen";
   static String dashboard = "/DashboardScreen";
   static String categories = "/CategoriesScreen";
@@ -45,7 +48,7 @@ class Const
   static String selectContact = "/SelectContact";
   static String sharedCart = "/SharedCart";
   static String cartView = "/CartView";
-  static String registerScreen = "/RegisterScreen";
+  static String registerScreen = "/RegisterScreen";*/
 
 
   // Paragraph Strings
@@ -118,5 +121,64 @@ class Const
   };
   static MaterialColor primaryColor = MaterialColor(0xFF009a00, color);
 
-  //static Color primaryColor = const Color(0xFF009a00);
+  static Color primaryColorGreen = Color(0xFF009a00);
+
+  static Map<String, dynamic> parseJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      Fluttertoast.showToast(msg: 'Invalid token');
+      throw Exception('invalid token');
+    }
+
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      Fluttertoast.showToast(msg: 'Invalid payload');
+      throw Exception('invalid payload');
+    }
+
+    return payloadMap;
+  }
+
+  static String _decodeBase64(String str) {
+    String output = str.replaceAll('-', '+').replaceAll('_', '/');
+
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        Fluttertoast.showToast(msg: 'Illigal base64url string!');
+        throw Exception('Illegal base64url string!"');
+    }
+
+    return utf8.decode(base64Url.decode(output));
+  }
+
+  //Transaction Status
+  /*{
+  Draft = 0,
+  Pending = 1,
+  Failed = 2,
+  Ordered = 3,
+  Confirmed = 4,
+  Rejected = 5,
+  Cancelled = 6,
+  InTransit = 7,
+  Received = 8
+  }*/
+
+
+  //PaymentStatus
+  /*[Display(Name = "Paid")]
+  Paid,
+  [Display(Name = "Due")]
+  Due,
+  [Display(Name = "Partial")]
+  Partial*/
 }

@@ -3,19 +3,33 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/models/CartCountModel.dart';
+import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/all_product_screen.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
+import 'package:vegetos_flutter/UI/login.dart';
+import 'package:vegetos_flutter/UI/my_addresses.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
+import 'package:vegetos_flutter/UI/my_orders.dart';
+import 'package:vegetos_flutter/UI/product_detail_screen.dart';
+import 'package:vegetos_flutter/UI/search_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/AutoSizeText.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
@@ -31,21 +45,69 @@ import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 //import 'package:wc_flutter_share/wc_flutter_share.dart';
 
-class DashboardScreen extends StatelessWidget
+class DashboardScreen extends StatefulWidget
 {
-  MyCartModal myCartModal ;
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return DashboardScreenState();
+  }
+
+}
+
+class DashboardScreenState extends State<DashboardScreen>
+{
+  //MyCartModal myCartModal ;
   static int cartSize=0;
    static AppFirstModal appFirstModal ;
-  ShippingSlotModal shippingSlotModal ;
   static AddressModal addressModal ;
-  static DefaultAddressModel defaultAddressModal ;
+  //static DefaultAddressModel defaultAddressModal ;
 
-  BestSellingProductModel bestSelling ;
-  VegetosExclusiveModel vegitosExclusive ;
-  RecommendedProductsModel recommendedProducts ;
+  //BestSellingProductModel bestSelling ;
+  //VegetosExclusiveModel vegitosExclusive ;
+  //RecommendedProductsModel recommendedProducts ;
   bool allCals = true ;
   String phoneNumber ;
 
+  bool isAnnonymous = true;
+
+  String deliveryAddress = '';
+  String cartTotal = '0';
+  String ImageURL = '';
+
+  Future bestSellingFuture;
+  Future exclusiveFuture;
+  Future recommendedFuture;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    SharedPreferences.getInstance().then((prefs) {
+      Map<String, dynamic> tokenMap = Const.parseJwt(prefs.getString('AUTH_TOKEN'));
+      if(tokenMap['anonymous'].toString().toLowerCase() == "true") {
+        setState(() {
+          isAnnonymous = true;
+        });
+      } else {
+        setState(() {
+          isAnnonymous = false;
+        });
+      }
+
+      String businessLocationId = prefs.getString('BusinessLocationId');
+      String address = prefs.getString('FullAddress');
+      if(businessLocationId != null && businessLocationId.isNotEmpty) {
+        deliveryAddress = address;
+      }
+
+      ImageURL = prefs.getString("ImageURL");
+    });
+    callCartCountAPI();
+    bestSellingFuture = ApiCall().bestSellingItems("1", "10");
+    exclusiveFuture = ApiCall().vegetosExclusive("1", "10");
+    recommendedFuture = ApiCall().recommendedForYou("1", "10");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,31 +117,31 @@ class DashboardScreen extends StatelessWidget
     }) ;
 
     appFirstModal = Provider.of<AppFirstModal>(context);
-    defaultAddressModal = Provider.of<DefaultAddressModel>(context);
+    //defaultAddressModal = Provider.of<DefaultAddressModel>(context);
     final cat=Provider.of<CategoriesModel>(context);
 
-    if(!defaultAddressModal.loaded){
+    /*if(!defaultAddressModal.loaded){
       defaultAddressModal.loadAddress(context) ;
     }else{
 
-    }
+    }*/
 
 
-     bestSelling=Provider.of<BestSellingProductModel>(context);
-     vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
-     recommendedProducts=Provider.of<RecommendedProductsModel>(context);
+     //bestSelling=Provider.of<BestSellingProductModel>(context);
+     //vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
+     //recommendedProducts=Provider.of<RecommendedProductsModel>(context);
 
      addressModal=Provider.of<AddressModal>(context);
-     myCartModal=Provider.of<MyCartModal>(context);
-     shippingSlotModal=Provider.of<ShippingSlotModal>(context);
+     //myCartModal=Provider.of<MyCartModal>(context);
+     /*shippingSlotModal=Provider.of<ShippingSlotModal>(context);
 
 
     if(!shippingSlotModal.loaded){
       shippingSlotModal.getShippingSlot() ;
-    }
+    }*/
 
 
-    if(!myCartModal.loaded){
+    /*if(!myCartModal.loaded){
       myCartModal.getMyCart() ;
     }else{
 
@@ -90,7 +152,7 @@ class DashboardScreen extends StatelessWidget
         cartSize=myCartModal.result==null?0:myCartModal.result.cartItemViewModels.length ;
       }
 
-    }
+    }*/
 
 //    if(!addressModal.loaded){
 //      addressModal.getMyAddresses() ;
@@ -98,7 +160,7 @@ class DashboardScreen extends StatelessWidget
     if(!cat.isLoaded){
       cat.loadCategories();
     }
-    if(!bestSelling.loaded){
+    /*if(!bestSelling.loaded){
       bestSelling.loadProducts();
     }
     if(!vegitosExclusive.loaded){
@@ -106,7 +168,7 @@ class DashboardScreen extends StatelessWidget
     }
     if(!recommendedProducts.loaded){
       recommendedProducts.loadProducts();
-    }
+    }*/
 
     
     return Scaffold(
@@ -121,21 +183,23 @@ class DashboardScreen extends StatelessWidget
           ];
         },
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          //physics: BouncingScrollPhysics(),
           child: Container(
             color: Const.gray10,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 searchBar(context),
-                adViewWidget(),
-                bestSelling.loaded?horizontalList(context , "Best Selling Items",bestSelling.result):Center(child: Padding(
+                //adViewWidget(),
+                /*bestSelling.loaded?horizontalList(context , "Best Selling Items",bestSelling.result):Center(child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: CircularProgressIndicator(),
-                ),),
-                vegitosExclusive.loaded?horizontalList(context,"Vegeto's Exclusive",vegitosExclusive.result):Container(),
-                recommendedProducts.loaded?horizontalList(context,"Recommended for you",recommendedProducts.result):Container(),
-
+                ),),*/
+                bestSellingContainer(),
+                //vegitosExclusive.loaded?horizontalList(context,"Vegeto's Exclusive",vegitosExclusive.result):Container(),
+                //recommendedProducts.loaded?horizontalList(context,"Recommended for you",recommendedProducts.result):Container(),
+                vegetosExclusiveContainer(),
+                recommendedContainer(),
 
               ],
             ),
@@ -151,12 +215,12 @@ class DashboardScreen extends StatelessWidget
     return SliverAppBar(
       automaticallyImplyLeading: true,
       floating: true,
-      pinned: false,
+      pinned: true,
       backgroundColor: Const.appBar,
       actions: <Widget>[
         GestureDetector(
           onTap: () {
-            myCartModal.loaded =false ;
+            //myCartModal.loaded =false ;
             Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
           },
           child: Container(
@@ -174,7 +238,8 @@ class DashboardScreen extends StatelessWidget
                     child: CircleAvatar(
                       backgroundColor: Colors.orange,
                       radius: 8.0,
-                      child: Text("${myCartModal.cartItemSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                      child: Text(cartTotal,
+                          style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                       //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                     ),
                   ),
@@ -192,19 +257,29 @@ class DashboardScreen extends StatelessWidget
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text('Set Delivery Location',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
+                    Text('Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Text('${addressModal.defaultAddress}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans'),),
-                    Icon(Icons.error, color: Colors.red, size: 20.0,)
+                    Container(
+                      child: AutoSizeText(
+                        deliveryAddress.isNotEmpty ? deliveryAddress : 'Location not set!',
+                        style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans'),
+                        minFontSize: 16.0,
+                        maxFontSize: 18.0,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                    ),
+                    deliveryAddress.isNotEmpty ? Icon(Icons.edit, color: Colors.white, size: 20.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,)
                   ],
                 )
               ],
             ),
           ),onTap: (){
-            Navigator.pushNamed(context, Const.myAddresses,);
+            Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()),);
           },),
 
 
@@ -251,7 +326,7 @@ class DashboardScreen extends StatelessWidget
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, Const.searchScreen);
+                        Navigator.push(context, EnterExitRoute(enterPage: SearchScreen()));
                       },
                       child: Row(
                         children: <Widget>[
@@ -308,8 +383,24 @@ class DashboardScreen extends StatelessWidget
     );
   }
 
-  Widget childView(BuildContext context, bst.Result result)
-  {
+  Widget childView(BuildContext context, ProductWithDefaultVarientModel result) {
+
+    String name = "";
+    String unit = "";
+    for(int i = 0; i < result.ProductDetails.length; i++) {
+      if(result.ProductDetails[i].Language == "En-US") {
+        name = result.ProductDetails[i].Name;
+        break;
+      }
+    }
+
+    for(int i = 0; i < result.Units.length; i++) {
+      if(result.Units[i].Language == "En-US") {
+        unit = result.Units[i].Name;
+        break;
+      }
+    }
+
     return Stack(
       children: <Widget>[
         GestureDetector(
@@ -319,38 +410,49 @@ class DashboardScreen extends StatelessWidget
                 height: 25,
                 width: 25,
                 child: CircularProgressIndicator())));
-              productModal.getProductDetail(result.id,(){
+              productModal.getProductDetail(result.ProductId,(){
               Navigator.pop(context);
-              Navigator.pushNamed(context, Const.productDetail);
+              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId)));
             }) ;
 
           },
           child: Container(
             width: 180.0,
-            height: 270.0,
+            height: 280.0,
             child: Card(
               child: Column(
                 children: <Widget>[
                   Stack(
+                    //alignment: Alignment.center,
                     children: <Widget>[
-                      Container(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: result.productMediaId==null||result.productMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):Image.network("${appFirstModal
-                          .ImageUrl}${result.productMediaId}", height: 100.0, width: 100.0,),
+                      Center(
+                        child: Container(
+                          width: 110.0,
+                          height: 110.0,
+                          //alignment: Alignment.center,
+                          child: Card(
+                            elevation: 0.0,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)
+                            ),
+                            /*child: result.productMediaId==null||result.productMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                            Image.network(ImageURL + result.productMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),*/
+                            child: Image.asset("02-product.png",height: 100,width: 100,),
+                          ),
+                          margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
-                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
+                      result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             color: Colors.orange
                         ),
-                        child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                        child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                             color: Colors.white),),
-                      ),
+                      ) : Container(),
                     ],
                   ),
                   Container(
@@ -358,7 +460,8 @@ class DashboardScreen extends StatelessWidget
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(result.name==null?"":result.name ,overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          child: Text(name ,
+                              overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),
@@ -369,7 +472,7 @@ class DashboardScreen extends StatelessWidget
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('${result.quantity} ${result.unit} ',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text(result.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -381,7 +484,7 @@ class DashboardScreen extends StatelessWidget
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text('₹ ${result.price}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: Text('₹ ${result.ProductPrice.OfferPrice != null ? result.ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                           ),
@@ -391,7 +494,7 @@ class DashboardScreen extends StatelessWidget
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text('₹120 ',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                          child: Text(result.ProductPrice.Price != null ? '₹' + result.ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w500,
                               color: Colors.grey, decoration: TextDecoration.lineThrough),
                           ),
@@ -400,10 +503,11 @@ class DashboardScreen extends StatelessWidget
                     ],
                   ),
                  InkWell(child:  Container(
-                   margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                   margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                    decoration: BoxDecoration(
                        borderRadius: BorderRadius.circular(5.0),
+                       //color: Const.gray10
                        color: Const.primaryColor
                    ),
                    child: Align(
@@ -414,7 +518,9 @@ class DashboardScreen extends StatelessWidget
 
                  ),
                  onTap: (){
-                   myCartModal.addTocart(result);
+                   //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+                   //myCartModal.addTocart(result);
+                   callAddToCartAPI(result.ProductId, result.ProductVariantId, "1", "", result.ProductPrice.OfferPrice.toString());
                  },)
                 ],
               ),
@@ -424,65 +530,6 @@ class DashboardScreen extends StatelessWidget
       ],
     );
 
-  }
-
-  Widget horizontalList(BuildContext context , String s, List<bst.Result> products)
-  {
-    return Stack(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-          child: Card(
-            elevation: 0.0,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
-                      child: Text(s,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black)),
-                    ),
-
-
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: InkWell(child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.green)),onTap: (){
-
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen(s))) ;
-
-                          },),
-                        ),
-                      ),
-                    ),
-
-
-                  ],
-                ),
-                Container(
-                  height: 275.0,
-                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: products.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return childView(context,products[index]);
-                      }
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-      ],
-    );
   }
 
   Widget drawer(BuildContext context)
@@ -496,7 +543,12 @@ class DashboardScreen extends StatelessWidget
             children: <Widget>[
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.profile);
+
+                  if(isAnnonymous) {
+                    Navigator.push(context, EnterExitRoute(enterPage: LoginScreen()));
+                  } else {
+                    //Navigator.pushNamed(context, Const.profile);
+                  }
                 },
                 child: Container(
                   height: 50.0,
@@ -522,7 +574,7 @@ class DashboardScreen extends StatelessWidget
                 height: 5.0,
                 color: Const.navMenuDevider,
               ),
-              Container(
+              /*Container(
                 height: 50.0,
                 child: Align(
                   alignment: Alignment.center,
@@ -554,7 +606,7 @@ class DashboardScreen extends StatelessWidget
               Container(
                 height: 5.0,
                 color: Const.navMenuDevider,
-              ),
+              ),*/
               Container(
                 height: 50.0,
                 child: Align(
@@ -573,9 +625,9 @@ class DashboardScreen extends StatelessWidget
                       ),onTap: (){
                         Navigator.pop(context) ;
 
-                        recommendedProducts.loadProducts() ;
+                        /*recommendedProducts.loadProducts() ;
                         bestSelling.loadProducts() ;
-                        bestSelling.loadProducts() ;
+                        bestSelling.loadProducts() ;*/
 
 
                       },)
@@ -587,7 +639,8 @@ class DashboardScreen extends StatelessWidget
               ),
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.myOrders);
+                  //Navigator.pushNamed(context, Const.myOrders);
+                  Navigator.push(context, EnterExitRoute(enterPage: MyOrders()));
                 },
                 child: Container(
                   height: 50.0,
@@ -609,7 +662,7 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              InkWell(
+              /*InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Const.mySubscriptions);
                 },
@@ -632,10 +685,10 @@ class DashboardScreen extends StatelessWidget
                     ),
                   ),
                 ),
-              ),
+              ),*/
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.myCart);
+                  Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen()));
                 },
                 child: Container(
                   height: 50.0,
@@ -659,7 +712,7 @@ class DashboardScreen extends StatelessWidget
               ),
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.myAddresses,);
+                  Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()));
                 },
                 child: Container(
                   height: 50.0,
@@ -681,7 +734,7 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              InkWell(
+              /*InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Const.sharedCart);
                 },
@@ -718,8 +771,8 @@ class DashboardScreen extends StatelessWidget
                     ),
                   ),
                 ),
-              ),
-              InkWell(
+              ),*/
+              /*InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Const.wallet);
                 },
@@ -742,8 +795,8 @@ class DashboardScreen extends StatelessWidget
                     ),
                   ),
                 ),
-              ),
-              InkWell(
+              ),*/
+              /*InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Const.offerzone);
                 },
@@ -766,12 +819,12 @@ class DashboardScreen extends StatelessWidget
                     ),
                   ),
                 ),
-              ),
+              ),*/
               Container(
                 height: 5.0,
                 color: Const.navMenuDevider,
               ),
-              Container(
+              /*Container(
                 height: 50.0,
                 child: Align(
                   alignment: Alignment.center,
@@ -789,8 +842,8 @@ class DashboardScreen extends StatelessWidget
                     ],
                   ),
                 ),
-              ),
-              Container(
+              ),*/
+              /*Container(
                 height: 50.0,
                 child: Align(
                   alignment: Alignment.center,
@@ -808,8 +861,8 @@ class DashboardScreen extends StatelessWidget
                     ],
                   ),
                 ),
-              ),
-              InkWell(child: Container(
+              ),*/
+              /*InkWell(child: Container(
                 height: 50.0,
                 child: Align(
                   alignment: Alignment.center,
@@ -836,10 +889,10 @@ class DashboardScreen extends StatelessWidget
 //                    text: 'This is text',
 //                    mimeType: 'text/plain');
                 //Share.share('check out my website https://example.com', subject: 'Look what I made!');
-              },),
+              },),*/
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.aboutVegetos);
+                  //Navigator.pushNamed(context, Const.aboutVegetos);
                 },
                 child: Container(
                   height: 50.0,
@@ -863,7 +916,7 @@ class DashboardScreen extends StatelessWidget
               ),
               InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, Const.aboutAppRelease);
+                  //Navigator.pushNamed(context, Const.aboutAppRelease);
                 },
                 child: Container(
                   height: 50.0,
@@ -885,7 +938,9 @@ class DashboardScreen extends StatelessWidget
                   ),
                 ),
               ),
-              InkWell(
+
+
+              !isAnnonymous ? InkWell(
                 onTap: (){
                   showDialog(
                       context: context,
@@ -912,7 +967,7 @@ class DashboardScreen extends StatelessWidget
                     ),
                   ),
                 ),
-              )
+              ) : Container()
             ],
           ),
         )
@@ -921,6 +976,327 @@ class DashboardScreen extends StatelessWidget
   }
 
 
+
+  Widget callBestSellingItemsAPI() {
+    return FutureBuilder(
+      future: bestSellingFuture,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if(apiResponseModel.statusCode == 200) {
+            DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+            return productList(responseModel.Results);
+          } else if(apiResponseModel.statusCode == 401) {
+            return somethingWentWrong(1);
+          } else {
+            return somethingWentWrong(1);
+          }
+        } else if(snapshot.connectionState == ConnectionState.waiting) {
+          return Container(child: Center(child: CircularProgressIndicator(),),height: 275.0,);
+        } else {
+          return somethingWentWrong(1);
+        }
+      },
+    );
+  }
+
+  Widget bestSellingContainer() {
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+            child: Card(
+              elevation: 0.0,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+                        child: Text('Best Selling Items',
+                            style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black)),
+                      ),
+
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green)),onTap: (){
+
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen('Best Selling Items'))) ;
+
+                            },),
+                          ),
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+                  callBestSellingItemsAPI(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget productList(List<ProductWithDefaultVarientModel> products) {
+    return Container(
+      height: 275.0,
+      margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+      child: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemCount: products.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return childView(context,products[index]);
+          }
+      ),
+    );
+  }
+
+
+
+  Widget callVegetosExclusiveProductAPI() {
+    return FutureBuilder(
+      future: exclusiveFuture,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if(apiResponseModel.statusCode == 200) {
+            DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+            return productList(responseModel.Results);
+          } else if(apiResponseModel.statusCode == 401) {
+            return somethingWentWrong(2);
+          } else {
+            return somethingWentWrong(2);
+          }
+        } else if(snapshot.connectionState == ConnectionState.waiting) {
+          return Container(child: Center(child: CircularProgressIndicator(),),height: 275.0,);
+        } else {
+          return somethingWentWrong(2);
+        }
+      },
+    );
+  }
+
+  Widget vegetosExclusiveContainer() {
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+            child: Card(
+              elevation: 0.0,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+                        child: Text("Vegeto's Exclusive",
+                            style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black)),
+                      ),
+
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green)),onTap: (){
+
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Vegeto's Exclusive"))) ;
+
+                            },),
+                          ),
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+                  callVegetosExclusiveProductAPI(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget callRecommendedForYouAPI() {
+    return FutureBuilder(
+      future: recommendedFuture,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if(apiResponseModel.statusCode == 200) {
+            DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+            return productList(responseModel.Results);
+          } else if(apiResponseModel.statusCode == 401) {
+            return somethingWentWrong(3);
+          } else {
+            return somethingWentWrong(3);
+          }
+        } else if(snapshot.connectionState == ConnectionState.waiting) {
+          return Container(child: Center(child: CircularProgressIndicator(),),height: 275.0,);
+        } else {
+          return somethingWentWrong(3);
+        }
+      },
+    );
+  }
+
+  Widget recommendedContainer() {
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+            child: Card(
+              elevation: 0.0,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+                        child: Text("Recommended for you",
+                            style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black)),
+                      ),
+
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green)),onTap: (){
+
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))) ;
+
+                            },),
+                          ),
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+                  callRecommendedForYouAPI(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget somethingWentWrong(int index) {
+    return InkWell(
+      onTap: () {
+        //1 == Best Selling
+        //2 == Vegetos Exclusive
+        //3 == Recommended
+        if(index == 1) {
+          callBestSellingItemsAPI();
+        } else if(index == 2) {
+          callVegetosExclusiveProductAPI();
+        } else if(index == 3) {
+          callRecommendedForYouAPI();
+        } else {
+
+        }
+      },
+      child: Container(
+        height: 275.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.error, color: Colors.red, size: 25.0,),
+            Container(
+              margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+              child: Text("Items not loaded",
+                  style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /*void callGetCartAPI() {
+    ApiCall().getCart().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
+        setState(() {
+          if(getCartResponseModel.cartItemViewModels != null) {
+            cartTotal = getCartResponseModel.cartItemViewModels.length.toString();
+          }
+        });
+      } else if(apiResponseModel.statusCode == 401) {
+
+      } else {
+
+      }
+    });
+  }*/
+
+  void callCartCountAPI() {
+    ApiCall().getCartCount().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
+        setState(() {
+          if(cartCountModel.count != null) {
+            cartTotal = cartCountModel.count.toString();
+          }
+        });
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      }
+    });
+  }
+
+  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
+    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        callCartCountAPI();
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      }
+    });
+  }
 
 }
 
@@ -1060,9 +1436,10 @@ class FunkyOverlayState extends State<FunkyOverlay>
           prefs.setBool("login", false) ;
         }) ;
 
-        DashboardScreen.addressModal.loaded=false ;
-        DashboardScreen.defaultAddressModal.loaded=false ;
-        DashboardScreen.appFirstModal.appFirstRun(token , [Navigator.pushReplacementNamed(context, Const.loginScreen)]) ;
+        DashboardScreenState.addressModal.loaded=false ;
+        //DashboardScreenState.defaultAddressModal.loaded=false ;
+        DashboardScreenState.appFirstModal.appFirstRun(token , [Navigator.pushReplacement(context,
+            EnterExitRoute(enterPage: LoginScreen()))]) ;
 
       }) ;
 
@@ -1122,40 +1499,3 @@ class FunkyOverlayState extends State<FunkyOverlay>
 
   }
 }
-
-
-
-/*
-class _sliverAppbarDelegate extends SliverPersistentHeaderDelegate
-{
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  _sliverAppbarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    // TODO: implement build
-    return SizedBox.expand(child: child,);
-  }
-
-  @override
-  // TODO: implement maxExtent
-  double get maxExtent => math.max(maxHeight, minHeight);
-
-  @override
-  // TODO: implement minExtent
-  double get minExtent => minHeight;
-
-  @override
-  bool shouldRebuild(_sliverAppbarDelegate oldDelegate) {
-    // TODO: implement shouldRebuild
-    return maxHeight != oldDelegate.maxExtent || minHeight != oldDelegate.minExtent || child != oldDelegate.child;
-  }
-
-}*/

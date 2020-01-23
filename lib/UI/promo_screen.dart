@@ -71,7 +71,7 @@ class _PromoCodeState extends State<PromoCode> {
 
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+                      Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen("")));
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -146,7 +146,7 @@ class _PromoCodeState extends State<PromoCode> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen()));
+                          Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen("")));
                         },
                         child: Container(
                           decoration: BoxDecoration(

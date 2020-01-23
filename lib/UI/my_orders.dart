@@ -1,11 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
+import 'package:vegetos_flutter/UI/order_placed_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/GetOrdersResponseModel.dart';
 import 'package:vegetos_flutter/models/my_orders_modal.dart';
 
 class MyOrders extends StatefulWidget {
@@ -15,7 +22,7 @@ class MyOrders extends StatefulWidget {
 
 class _MyOrdersState extends State<MyOrders> {
 
-  MyOrdersModal myOrdersModal ;
+  //MyOrdersModal myOrdersModal ;
 
    var text = TextStyle(
      fontWeight: FontWeight.w500,
@@ -23,11 +30,11 @@ class _MyOrdersState extends State<MyOrders> {
 
   @override
   Widget build(BuildContext context) {
-    myOrdersModal = Provider.of<MyOrdersModal>(context) ;
+    /*myOrdersModal = Provider.of<MyOrdersModal>(context) ;
     if(!myOrdersModal.loaded){
       myOrdersModal.getOrders();
 
-    }
+    }*/
 
     return Scaffold(
       appBar: AppBar(
@@ -47,38 +54,31 @@ class _MyOrdersState extends State<MyOrders> {
             'My Orders'
         ),
       ),
-      body: myOrdersModal.result==null||
-            myOrdersModal.result.length==0? Container(padding: EdgeInsets.all(10),
-          height: 200
-          ,child:Card(child:
-          Center(
-            child: Text('No Orders Avalable', style: TextStyle(color:Colors.black ,fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-          ),
-          )):buildList(context ,myOrdersModal.result),
+      body: callGetOrdersAPI(),
     );
   }
 
-  ListView buildList(BuildContext context, List<Result> result) {
+  ListView buildList(List<GetOrdersResponseModel> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
+        GetOrdersResponseModel model = result[index];
         return InkWell(
           onTap: (){
+
           },
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: <Widget>[
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         'Order ID',style: text,
                       ),
-
                       Text(
-                          '${result[index].offerId==null?'NULL':result[index].offerId}', style: text,
+                          '${model.offerId==null?'':model.offerId}', style: text,
                       )
                     ],
                   ),
@@ -93,7 +93,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                        '${result[index].transactionDate}', style: text,
+                        '${model.displayTransactionData}', style: text,
                       )
                     ],
                   ),
@@ -108,7 +108,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                        '₹ ${result[index].subTotal}', style: text,
+                        '₹ ${model.subTotal}', style: text,
                       )
                     ],
                   ),
@@ -123,12 +123,12 @@ class _MyOrdersState extends State<MyOrders> {
 
 //                      Image.asset('order-confirmed.png', height: 22,),
 
-                      Image.asset('order-delivered.png', height: 20,),
+                      Image.asset(displayOrderIcon(model.status), height: 20,),
 
                       SizedBox(width: 10,),
 
-                      Text(
-                        'Order Delivered', style: TextStyle(
+                      Text(displayOrderStatus(model.status),
+                        style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500
                       ),
@@ -141,7 +141,7 @@ class _MyOrdersState extends State<MyOrders> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Const.orderPlacedScreen);
+                          Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(result[index].id)));
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -150,7 +150,7 @@ class _MyOrdersState extends State<MyOrders> {
                           ),
 
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             child: Text('View details', style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -169,12 +169,83 @@ class _MyOrdersState extends State<MyOrders> {
           ),
         );
       },
-      itemCount: myOrdersModal.result==null?0:myOrdersModal.result.length ,
-      padding: EdgeInsets.fromLTRB(15, 15, 15, 20),
+      itemCount: result.length,
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
     );
   }
+
+  Widget callGetOrdersAPI() {
+    return FutureBuilder(
+      future: ApiCall().getOrders(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if(apiResponseModel.statusCode == 200) {
+            List<GetOrdersResponseModel> getOrdersResponseModelList = GetOrdersResponseModel.parseList(apiResponseModel.Result);
+            return buildList(getOrdersResponseModelList);
+          } else if(apiResponseModel.statusCode == 401){
+            return Container();
+          } else {
+            return Container();
+          }
+        } else if(snapshot.connectionState == ConnectionState.waiting) {
+          return Container(child: Center(child: CircularProgressIndicator(),));
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  String displayOrderIcon(int status) {
+    switch(status)
+    {
+      case 0:
+        return "assets/order_delivered.png";
+      case 1:
+        return "assets/order_confirmed.png";
+      case 2:
+        return "assets/order_cancelled.png";
+      case 3:
+        return "assets/order_delivered.png";
+      case 4:
+        return "assets/order_confirmed.png";
+      case 5:
+        return "assets/order_cancelled.png";
+      case 6:
+        return "assets/order_cancelled.png";
+      case 7:
+        return "assets/order_confirmed.png";
+      case 8:
+        return "assets/order_placed.png";
+    }
+  }
+
+   String displayOrderStatus(int status) {
+     switch(status)
+     {
+       case 0:
+         return "Order Draft";
+       case 1:
+         return "Order Pending";
+       case 2:
+         return "Order Failed";
+       case 3:
+         return "Ordered";
+       case 4:
+         return "Order Confirmed";
+       case 5:
+         return "Order Rejected";
+       case 6:
+         return "Order Cancelled";
+       case 7:
+         return "Order InTransit";
+       case 8:
+         return "Order Received";
+     }
+   }
 
 }
 
@@ -222,7 +293,7 @@ class WhoopsOrder extends StatelessWidget {
             RaisedButton(
               color: Color(0xff009a00),
               onPressed: (){
-                Navigator.pushNamed(context, Const.dashboard);
+                Navigator.push(context, EnterExitRoute(enterPage: DashboardScreen()));
               },
               child: Padding(
                 padding: const EdgeInsets.only(top: 12, bottom: 12),
@@ -250,3 +321,5 @@ class WhoopsOrder extends StatelessWidget {
 
 
 }
+
+

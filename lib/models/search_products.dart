@@ -53,7 +53,7 @@ class SearchModel extends ChangeNotifier {
   }
 
   void setData(json) {
-    result= List<Result>.from(json["Result"].map((x) => Result.fromJson(x))) ;
+    result= json["Result"] != null ? List<Result>.from(json["Result"].map((x) => Result.fromJson(x))) : null;
     version= json["Version"];
     statusCode= json["StatusCode"];
     message= json["Message"];
@@ -133,14 +133,14 @@ class Result {
     categoryMediaId: json["CategoryMediaId"],
     manufacturerName: json["ManufacturerName"],
     brandName: json["BrandName"],
-    units: List<Unit>.from(json["Units"].map((x) => Unit.fromJson(x))),
+    units: json["Units"] != null ? List<Unit>.from(json["Units"].map((x) => Unit.fromJson(x))) : null,
     tags: json["Tags"] == null ? null : List<Tag>.from(json["Tags"].map((x) => Tag.fromJson(x))),
     productExtraFields: json["ProductExtraFields"] == null ? null : List<ProductExtraField>.from(json["ProductExtraFields"].map((x) => ProductExtraField.fromJson(x))),
     productVariantAttributeGroups: json["ProductVariantAttributeGroups"] == null ? null : List<ProductVariantAttributeGroup>.from(json["ProductVariantAttributeGroups"].map((x) => ProductVariantAttributeGroup.fromJson(x))),
     productAttributes: json["ProductAttributes"] == null ? null : List<ProductAttribute>.from(json["ProductAttributes"].map((x) => ProductAttribute.fromJson(x))),
     productDetails: json["ProductDetails"] == null ? null : List<ProductDetail>.from(json["ProductDetails"].map((x) => ProductDetail.fromJson(x))),
     productVariantMedia: json["ProductVariantMedia"] == null ? null : List<String>.from(json["ProductVariantMedia"].map((x) => x)),
-    productTax: ProductTax.fromJson(json["ProductTax"]),
+    productTax: json["ProductTax"] != null ? ProductTax.fromJson(json["ProductTax"]) : null,
     productPrice: json["ProductPrice"] == null ? null : ProductPrice.fromJson(json["ProductPrice"]),
   );
 
@@ -350,13 +350,13 @@ class ProductPrice {
 class ProductTax {
   String productId;
   String taxId;
-  DateTime startDate;
-  DateTime endDate;
+  String startDate;
+  String endDate;
   Tax tax;
   dynamic updatedBy;
   String createdBy;
-  DateTime createdOn;
-  DateTime updatedOn;
+  String createdOn;
+  String updatedOn;
 
   ProductTax({
     this.productId,
@@ -373,25 +373,25 @@ class ProductTax {
   factory ProductTax.fromJson(Map<String, dynamic> json) => ProductTax(
     productId: json["ProductId"],
     taxId: json["TaxId"],
-    startDate: DateTime.parse(json["StartDate"]),
-    endDate: DateTime.parse(json["EndDate"]),
+    startDate: json["StartDate"] != null ? json["StartDate"] : null,
+    endDate: json["EndDate"] != null ? json["EndDate"] : null,
     tax: Tax.fromJson(json["Tax"]),
     updatedBy: json["UpdatedBy"],
     createdBy: json["CreatedBy"],
-    createdOn: DateTime.parse(json["CreatedOn"]),
-    updatedOn: json["UpdatedOn"] == null ? null : DateTime.parse(json["UpdatedOn"]),
+    createdOn: json["CreatedOn"] != null ? json["CreatedOn"] : null,
+    updatedOn: json["UpdatedOn"] == null ? null : json["UpdatedOn"],
   );
 
   Map<String, dynamic> toJson() => {
     "ProductId": productId,
     "TaxId": taxId,
-    "StartDate": startDate.toIso8601String(),
-    "EndDate": endDate.toIso8601String(),
+    "StartDate": startDate,
+    "EndDate": endDate,
     "Tax": tax.toJson(),
     "UpdatedBy": updatedBy,
     "CreatedBy": createdBy,
-    "CreatedOn": createdOn.toIso8601String(),
-    "UpdatedOn": updatedOn == null ? null : updatedOn.toIso8601String(),
+    "CreatedOn": createdOn,
+    "UpdatedOn": updatedOn == null ? null : updatedOn,
   };
 }
 
