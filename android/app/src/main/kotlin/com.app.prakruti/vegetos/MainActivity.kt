@@ -1,4 +1,4 @@
-package archisys.veg
+package com.app.prakruti.vegetos
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
