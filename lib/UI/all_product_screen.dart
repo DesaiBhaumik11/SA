@@ -285,7 +285,8 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     onTap: (){
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                       //myCartModal.addTocart(result);
-                      MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId, "1", "", result.ProductPrice.OfferPrice.toString());
+                      MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId, result.IncrementalStep.toString(),
+                          "", result.ProductPrice.OfferPrice.toString());
                     },)
                 ],
               ),

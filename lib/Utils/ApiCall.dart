@@ -8,6 +8,8 @@ import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:http/http.dart';
 import 'package:vegetos_flutter/models/CheckoutRequestModel.dart';
 
+import 'package:vegetos_flutter/models/GetCartResponseModel.dart' as cart;
+
 class ApiCall
 {
 
@@ -39,6 +41,8 @@ class ApiCall
   static final String Checkout = "/CheckOut";
   static final String GetOrders = "/GetOrders";
   static final String GetOrderById = "/GetOrderById";
+
+  static final String SearchProduct = "/SearchProduct";
 
   static final String GetProductDetailById = "/GetProductById";
 
@@ -141,8 +145,9 @@ class ApiCall
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String deviceToken = prefs.getString('JWT_TOKEN');
       Map<String, String> header = {'device_token' : deviceToken};
+      String token = "Bearer " + prefs.getString("AUTH_TOKEN");
 
-      final response = await get(ApiCall.baseURL + ApiCall.RefreshToken, headers: header);
+      final response = await post(ApiCall.baseURL + ApiCall.RefreshToken + "?expiredTokenString=" + token, headers: header);
       if(response.statusCode == 200) {
         var responseJson = _returnResponseJson(response);
         return ApiResponseModel.fromJson(responseJson);
@@ -460,11 +465,11 @@ class ApiCall
         "ShippingScheduleId": model.ShippingScheduleId,
         "BusinessId": model.BusinessId,
         "ShippingDetails": model.ShippingDetails,
-        "SubTotal": model.SubTotal,
-        "TaxAmount": model.TaxAmount,
-        "TotalAmount": model.TotalAmount,
-        "OfferAmount": model.OfferAmount,
-        "CheckoutItems": model.CheckoutItems,
+        "SubTotal": model.SubTotal.toString(),
+        "TaxAmount": model.TaxAmount.toString(),
+        "TotalAmount": model.TotalAmount.toString(),
+        "OfferAmount": model.OfferAmount.toString(),
+        "CheckoutItems": cart.CartItemViewModel.encondeToJson(model.CheckoutItems),
       });
 
 
@@ -654,6 +659,30 @@ class ApiCall
       Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
 
       final response = await get(ApiCall.baseURL + ApiCall.GetOrderById + "?transactionId=" + transactionId, headers: header);
+      print(response.request.url.toString());
+      print(response.body);
+      if(response.statusCode == 200) {
+        var responseJson = _returnResponseJson(response);
+        return ApiResponseModel.fromJson(responseJson);
+      } else {
+        ApiResponseModel apiResponseModel = ApiResponseModel();
+        apiResponseModel.statusCode = response.statusCode;
+        apiResponseModel.message = response.reasonPhrase;
+        return apiResponseModel;
+      }
+    } catch (e) {
+      return _internalCrash(e.toString());
+    }
+  }
+
+  Future<ApiResponseModel> searchProduct(String searchString) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("AUTH_TOKEN");
+      String deviceToken = prefs.getString('JWT_TOKEN');
+      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
+
+      final response = await get(ApiCall.baseURL + ApiCall.SearchProduct + "?searchString=" + searchString, headers: header);
       print(response.request.url.toString());
       print(response.body);
       if(response.statusCode == 200) {

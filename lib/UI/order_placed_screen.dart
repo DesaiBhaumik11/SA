@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/custom_stepper.dart' as s;
@@ -203,6 +204,8 @@ class _SummaryState extends State<Summary> {
 
   @override
   Widget build(BuildContext context) {
+
+    String day = DateFormat('dd/MM/yyyy').format(widget.model.ShippingOrder.ShippingSchedule.dateTime);
     return ListView(
       physics: BouncingScrollPhysics(),
       children: <Widget>[
@@ -251,7 +254,7 @@ class _SummaryState extends State<Summary> {
                    Row(
                      children: <Widget>[
                        Expanded(
-                         child: Text(widget.model.ShippingOrder.ShippingSchedule.Date, style: text),
+                         child: Text(day, style: text),
                        ),
                        Expanded(
                          child: Text(widget.model.ShippingOrder.ShippingSchedule.TimeFrom + " - " +

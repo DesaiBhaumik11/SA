@@ -165,4 +165,12 @@ class CartItemViewModel {
     list.map((data) => CartItemViewModel.fromJson(data)).toList();
     return jobList;
   }
+
+  static List encondeToJson(List<CartItemViewModel>list){
+    List jsonList = List();
+    list.map((item)=>
+        jsonList.add(item.toJson())
+    ).toList();
+    return jsonList;
+  }
 }

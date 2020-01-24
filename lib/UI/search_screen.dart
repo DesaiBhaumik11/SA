@@ -13,8 +13,10 @@ import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
@@ -38,11 +40,20 @@ class _SearchScreenState extends State<SearchScreen> {
 
   bool search=false;
 
+  bool isSearch = false;
+
+  List<ProductWithDefaultVarientModel> searchList;
+
   @override
   void initState() {
     // TODO: implement initState
+    MyCartUtils().callCartCountAPI();
+    MyCartUtils.streamController.stream.listen((cartCount) {
+      setState(() {
+        cartTotal = cartCount;
+      });
+    });
     super.initState();
-    callGetCartAPI();
   }
 
 
@@ -56,38 +67,40 @@ class _SearchScreenState extends State<SearchScreen> {
     final sModal.SearchModel searchModel=Provider.of<sModal.SearchModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
-      body: SafeArea(child: Column(
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            height: 81,
-            color: Const.appBar,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Image.asset(
-                        'back.png',
-                        height: 25,
+      body: Container(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              height: 61,
+              color: Const.appBar,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Image.asset(
+                          'back.png',
+                          height: 25,
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      onChanged: (e){
-                        search=true;
+                    Expanded(
+                      child: TextFormField(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        onChanged: (e){
+                          /*search=true;
                         if(timer!=null){
                           timer.cancel();
                         }
@@ -106,68 +119,74 @@ class _SearchScreenState extends State<SearchScreen> {
                             searchModel.searchProducts(url);
                           }
 
-                        });
-                      },
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Search...",
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 22,
-                              color: Colors.white)),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
-                      },
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                      child: Stack(
-                        children: <Widget>[
-                          Align(
-                            child: Image.asset(
-                              'cart.png',
-                              height: 23,
-                            ),
-                            alignment: Alignment.center,
-                          ),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(15.0, 15.0, 5.0, 0.0),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.orange,
-                                radius: 8.0,
-                                child: Text(cartTotal,
-                                    style: TextStyle(
-                                        fontSize: 10.0,
-                                        fontFamily: 'GoogleSans',
-                                        color: Colors.white)),
-                              ),
-                            ),
-                          )
-                        ],
+                        });*/
+
+                          if(e != null && e.isNotEmpty && e.length > 3) {
+                            Future.delayed((Duration(milliseconds: 500))).then((_) {
+                              callSearchProductAPI(e);
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Search...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 22,
+                                color: Colors.white)),
                       ),
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Visibility(
-                  visible: search &&searchModel.search &&searchModel.result!=null&&searchModel.result.length>0,
-                  child: Text('${searchModel.result!=null?searchModel.result.length:"0"} Result Found',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Align(
+                              child: Image.asset(
+                                'cart.png',
+                                height: 23,
+                              ),
+                              alignment: Alignment.center,
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(15.0, 15.0, 5.0, 0.0),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.orange,
+                                  radius: 8.0,
+                                  child: Text(cartTotal,
+                                      style: TextStyle(
+                                          fontSize: 10.0,
+                                          fontFamily: 'GoogleSans',
+                                          color: Colors.white)),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-              /*FlatButton(
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 10.0),
+                  child: Visibility(
+                    visible: searchList != null ? true : false,
+                    child: Text(searchList != null ? searchList.length.toString() + ' Result Found' : "0 Result found",
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                /*FlatButton(
                 onPressed: () {
                   _settingModalBottomSheet(context);
                 },
@@ -188,21 +207,39 @@ class _SearchScreenState extends State<SearchScreen> {
                   ],
                 ),
               )*/
-            ],
-          ),
-          Expanded(
-            child: !searchModel.search||!search?searchHistory(context):(searchModel.result==null||searchModel.result.length==0?Whoops():
-            buildList(context,searchModel.result)),
-          ),
-        ],
-      ),),
+              ],
+            ),
+            Expanded(
+              child: isSearch ? searchList != null && searchList.isNotEmpty ? buildList() : Whoops() : Container(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  ListView buildList(BuildContext context, List<sModal.Result> result) {
+  ListView buildList() {
     return ListView.builder(
       itemBuilder: (context, index) {
-        if(result[index].productDetails != null && result[index].productDetails.isNotEmpty) {
+        ProductWithDefaultVarientModel result = searchList[index];
+        String name = "";
+        String unit = "";
+        String desc = "";
+        for(int i = 0; i < result.ProductDetails.length; i++) {
+          if(result.ProductDetails[i].Language == "En-US") {
+            name = result.ProductDetails[i].Name;
+            desc = result.ProductDetails[i].Description;
+            break;
+          }
+        }
+
+        for(int i = 0; i < result.Units.length; i++) {
+          if(result.Units[i].Language == "En-US") {
+            unit = result.Units[i].Name;
+            break;
+          }
+        }
+        if(result.ProductDetails != null && result.ProductDetails.isNotEmpty) {
           return GestureDetector(
             onTap: () {
 
@@ -211,9 +248,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   height: 25,
                   width: 25,
                   child: CircularProgressIndicator())));
-              productModal.getProductDetail(result[index].productId ,(){
+              productModal.getProductDetail(result.ProductId ,(){
                 Navigator.pop(context);
-                Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result[index].productId)));
+                Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId)));
               }) ;
             },
             child: Card(
@@ -227,23 +264,24 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: <Widget>[
                           Container(
                             child:
-                                result[index].productVariantMedia==null||
-                                result[index].productVariantMedia[0].isEmpty?
+                            Image.asset('02-product.png',height: 100,width: 100,)
+                                /*result.productVariantMedia==null||
+                                result.productVariantMedia[0].isEmpty?
                             Image.asset('02-product.png',height: 100,width: 100,):Image.network(
                               "${DashboardScreenState.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
                               height: 100.0,
                               width: 100.0,
-                            ),
+                            )*/,
                           ),
-                          result[index].productPrice.discountPercent != null && result[index].productPrice.discountPercent != 0 ?
+                          result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ?
                           Container(
                             padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
                                 color: Colors.orange),
                             child: Text(
-                                result[index].productPrice.discountPercent != null ?
-                                result[index].productPrice.discountPercent.toString() : null,
+                                result.ProductPrice.DiscountPercent != null ?
+                                result.ProductPrice.DiscountPercent.toString() : null,
                               style: TextStyle(
                                   fontSize: 10.0,
                                   fontFamily: 'GoogleSans',
@@ -262,10 +300,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: <Widget>[
                           Container(
                             child: Text(
-                              result[index].productDetails==null||
-                                  result[index].productDetails[0].name==null||
-                                  result[index].productDetails[0].name.isEmpty?"":result[index].productDetails[0].name,
-
+                              name,
                               style: TextStyle(
                                   fontSize: 15.0,
                                   fontFamily: 'GoogleSans',
@@ -283,9 +318,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.55,
                             child: Text(
-                              "${ result[index].productDetails==null||
-                                  result[index].productDetails[0].description==null||
-                                  result[index].productDetails[0].description.isEmpty?"":result[index].productDetails[0].description}",
+                              desc,
                               style: TextStyle(
                                   fontSize: 12.0,
                                   fontFamily: 'GoogleSans',
@@ -299,7 +332,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 5,
                           ),
                           Text(
-                            '₹ ${result[index].productPrice==null?'null':result[index].productPrice.price}',
+                            '₹ ' + result.ProductPrice.OfferPrice.toString(),
                             style: TextStyle(
                                 fontSize: 20.0,
                                 fontFamily: 'GoogleSans',
@@ -313,22 +346,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Theme.of(context).primaryColor,
                             //color: Const.gray10,
                             onPressed: () {
-                              print("Add Clicked") ;
-
-                              final body= json.encode({
-
-                                "ProductId": ""+result[index].productId,
-                                "ProductVariantId": ""+result[index].productVariantId,
-                                "Quantity": "1" ,
-                                "OfferId": "",
-                                "Amount": "${result[index].productPrice.price}"}) ;
-
-                              //myCartModal.addTocart(null , body);
-                              callAddToCartAPI(result[index].productId, result[index].productVariantId,
-                                  "1", "", result[index].productPrice.offerPrice.toString());
-                              //Fluttertoast.showToast(msg: 'Delivery location not found, Coming soon.');
-
-
+                              MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId,
+                                  result.IncrementalStep.toString(), "", result.ProductPrice.OfferPrice.toString());
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 5),
@@ -362,7 +381,7 @@ class _SearchScreenState extends State<SearchScreen> {
           return Container();
         }
       },
-      itemCount: result.length,
+      itemCount: searchList.length,
       padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
@@ -461,6 +480,25 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
   }
+
+  void callSearchProductAPI(String searchString) {
+    ApiCall().searchProduct(searchString).then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        List<ProductWithDefaultVarientModel> productWithDefaultVarientModelList = ProductWithDefaultVarientModel.parseList(apiResponseModel.Result);
+        setState(() {
+          searchList = productWithDefaultVarientModelList;
+          FocusScope.of(context).requestFocus(FocusNode());
+          isSearch = true;
+        });
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      }
+    });
+  }
+
+
 }
 
 

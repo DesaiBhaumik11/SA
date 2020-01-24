@@ -1,9 +1,13 @@
 
+import 'package:intl/intl.dart';
+
 class GetAllShippingSlotModel
 {
   String Id;
 
   String Date;
+
+  DateTime dateTime;
 
   String TimeFrom;
 
@@ -20,6 +24,7 @@ class GetAllShippingSlotModel
   GetAllShippingSlotModel({
     this.Id,
     this.Date,
+    this.dateTime,
     this.TimeFrom,
     this.TimeTo,
     this.IsHoliday,
@@ -32,6 +37,7 @@ class GetAllShippingSlotModel
     return GetAllShippingSlotModel(
       Id: parsedData['Id'],
       Date: parsedData['Date'],
+      dateTime: DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(parsedData['Date']),
       TimeFrom: parsedData['TimeFrom'],
       TimeTo: parsedData['TimeTo'],
       IsHoliday: parsedData['IsHoliday'],

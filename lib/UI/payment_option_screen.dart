@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/ProceedToPaymentModel.dart';
 import 'package:vegetos_flutter/models/default_address.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
@@ -45,6 +46,15 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   String transactionId = '';
 
   static DefaultAddressModel addressModel;
+
+  GetCartResponseModel cartResponseModel;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    callGetMyCartAPI();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +87,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         color: Const.gray10,
         child: Column(
           children: <Widget>[
-            priceTotalBox(),
+            cartResponseModel != null ? priceTotalBox() : Container(),
             //promoContainer(),
             //walletContainer(),
           ],
@@ -110,6 +120,41 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     );
   }
 
+  Widget callGetMyCartAPI() {
+
+    ApiCall().getCart().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
+        setState(() {
+          cartResponseModel = getCartResponseModel;
+          /*if(model.discount != null) {
+            totalSaving = model.discount.toString();
+          } else {
+            totalSaving = "0";
+          }
+
+          if(model.SubTotal != null) {
+            checkoutTotal = model.SubTotal.toString();
+          } else {
+            checkoutTotal = "0";
+          }
+
+          if(model.cartItemViewModels != null) {
+            cartTotalItems = model.cartItemViewModels.length.toString();
+          } else {
+            cartTotalItems = "0";
+          }
+
+          setState(() {
+            isDataAvailable = true;
+          });*/
+        });
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+      }
+    });
+  }
+
   Widget priceTotalBox() {
     return Container(
       margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
@@ -136,7 +181,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                     Expanded(
                       flex: 0,
                       child: Text(
-                        '₹ ${MyCartState.myCartModal.result.totalAmount}',
+                        '₹ ${cartResponseModel.totalAmount}',
                         style: TextStyle(
                             fontSize: 15.0,
                             fontFamily: 'GoogleSans',
@@ -165,7 +210,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                     Expanded(
                       flex: 0,
                       child: Text(
-                        '-₹ ${MyCartState.myCartModal.result.discount}',
+                        '-₹ ${cartResponseModel.discount}',
                         style: TextStyle(
                             fontSize: 15.0,
                             fontFamily: 'GoogleSans',
@@ -203,7 +248,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                     Expanded(
                       flex: 0,
                       child: Text(
-                        'FREE',
+                        cartResponseModel.deliveryCharges.toString(),
                         style: TextStyle(
                             fontSize: 15.0,
                             fontFamily: 'GoogleSans',
@@ -232,7 +277,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                     Expanded(
                       flex: 0,
                       child: Text(
-                        '-₹ ${MyCartState.myCartModal.result.discount}',
+                        '-₹ ${cartResponseModel.discount}',
                         style: TextStyle(
                             fontSize: 15.0,
                             fontFamily: 'GoogleSans',
@@ -243,7 +288,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                   ],
                 ),
               ),
-              Container(
+              /*Container(
                 padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                 child: Row(
                   children: <Widget>[
@@ -271,7 +316,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                     ),
                   ],
                 ),
-              ),
+              ),*/
               Container(
                 color: Const.gray10,
                 height: 1.0,
@@ -295,7 +340,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
                     Expanded(
                       flex: 0,
                       child: Text(
-                        '₹ ${MyCartState.myCartModal.result.totalAmount}',
+                        '₹ ${cartResponseModel.SubTotal.toString()}',
                         style: TextStyle(
                             fontSize: 17.0,
                             fontFamily: 'GoogleSans',
@@ -537,87 +582,6 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     );
   }
 
-  /*void checkOutCall() {
-    SharedPreferences.getInstance().then((prefs) {
-
-      String businessLocationId = prefs.getString("BusinessLocationId");
-      String businessId = prefs.getString("BusinessId");
-
-      MyCartModal myCartModal = MyCartState.myCartModal;
-      ProgressDialog progressDialog = Utility.progressDialog(context, "");
-      progressDialog.show();
-      NetworkUtils.postRequest(
-          endpoint: Constant.Checkout,
-          body: json.encode({
-            "DeliveryAddressId": "${addressModel.result.id}",
-            "Name": "${addressModel.result.name}",
-            "AddressLine1": "${addressModel.result.addressLine1}",
-            "AddressLine2": "${addressModel.result.addressLine2}",
-            "City": "${addressModel.result.city}",
-            "State": "${addressModel.result.state}",
-            "Country": "${addressModel.result.country}",
-            "Pin": "${addressModel.result.pin}",
-            "MobileNo": "${prefs.getString("phone")}",
-            "LocationId": businessLocationId,
-            "ShippingScheduleId": widget.shippingSlotId,
-            "BusinessId": businessId,
-            "ShippingDetails": "this is the shipping detail",
-            "SubTotal": "${myCartModal.totalCost}",
-            "TaxAmount": "0",
-            "TotalAmount": "${myCartModal.totalCost}",
-            "OfferAmount": "0",
-            "CheckoutItems": MyCartState.myCartModal.result.cartItemViewModels,
-          })).then((res) {
-        print("checkOutCall Response $res");
-        var root = json.decode(res);
-        if (root["Message"] == "Request successful.") {
-          //proceedTopayment();
-
-          Future.delayed(Duration(seconds: 1)).then((_) {
-            //callProceedToCheckoutAPI(myCartModal.totalCost.round().toString(), progressDialog);
-          });
-
-          //      Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
-
-        } else {
-          Utility.toastMessage(root["Message"]);
-          progressDialog.dismiss();
-        }
-      }).catchError((e) {
-        print("checkOutCall catchError $e");
-        progressDialog.dismiss();
-      });
-    });
-  }*/
-
-  /*void proceedTopayment() {
-    MyCartModal myCartModal = MyCartState.myCartModal;
-
-    NetworkUtils.postRequest(
-        endpoint: Constant.ProceedTopayment,
-        body: json.encode({
-          "PaymentMethod": "0",
-          "TotalAmount": "${myCartModal.totalCost}",
-          "GatewayOrderId": "",
-        })).then((res) {
-      print("proceedTopayment Response $res");
-
-      //Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
-      var root = json.decode(res) ;
-
-      if(root["Message"] =="Request successful."){
-
-        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: OrderPlacedScreen()),(c)=>false);
-        //Navigator.of(context).push(SlideLeftRoute(page: OrderPlacedScreen()));
-
-      }else{
-        Utility.toastMessage(root["Message"]) ;
-      }
-    }).catchError((e) {
-      print("proceedTopayment catchError $e");
-    });
-  }*/
-
   void callProceedToCheckoutAPI(String totalAmount, ProgressDialog progressDialog) {
     ApiCall().proceedToPayment(totalAmount).then((apiResponseModel) {
       //implementRazorPay("");
@@ -634,7 +598,6 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
       }
     });
   }
-
 
   void implementRazorPay(String orderId, String amount, String tranId) {
     totalAmount = amount;

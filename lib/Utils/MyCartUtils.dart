@@ -19,9 +19,9 @@ class MyCartUtils
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
         callCartCountAPI();
       } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
     });
   }
@@ -35,9 +35,9 @@ class MyCartUtils
         }
         streamController.add(cartCount);
       } else if(apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
     });
   }

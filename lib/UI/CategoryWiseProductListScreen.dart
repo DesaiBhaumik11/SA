@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
@@ -50,8 +51,13 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
   @override
   void initState() {
     // TODO: implement initState
-    callGetCartAPI();
+    MyCartUtils().callCartCountAPI();
     getProductWithDefaultVarient = ApiCall().GetProductWithDefaultVarientAPI(categoryId);
+    MyCartUtils.streamController.stream.listen((cartCount) {
+      setState(() {
+        cartTotal = cartCount;
+      });
+    });
     super.initState();
   }
 
@@ -153,7 +159,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
       cardHeight = cardHeight - 120;
       aspectRatio = cardWidth / cardHeight;
     } else if(cardHeight > 650 && cardHeight < 700) {
-      cardHeight = cardHeight - 120;
+      cardHeight = cardHeight - 95;
       aspectRatio = cardWidth / cardHeight;
     } else if(cardHeight > 700 && cardHeight < 740) {
       cardHeight = cardHeight - 190;
@@ -323,7 +329,8 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                       //myCartModal.addTocart(result);
 
-                      callAddToCartAPI(model.ProductId, model.ProductVariantId, "1", "", model.ProductPrice.OfferPrice.toString());
+                      MyCartUtils().callAddToCartAPI(model.ProductId, model.ProductVariantId,
+                          model.IncrementalStep.toString(), "", model.ProductPrice.OfferPrice.toString());
                     },)
                 ],
               ),
@@ -395,7 +402,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
     );
   }
 
-  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
+  /*void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
     ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
@@ -421,6 +428,6 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
           //
       }
     });
-  }
+  }*/
 
 }

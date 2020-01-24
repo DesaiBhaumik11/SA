@@ -208,7 +208,7 @@ class SplashScreenState extends State<SplashScreen> {
         });
         callGetDefaultsAPI(context);
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
       }
     });
   }
@@ -226,7 +226,7 @@ class SplashScreenState extends State<SplashScreen> {
       } else if(apiResponseModel.statusCode == 401) {
         callRefreshTokenAPI(context);
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong!');
+        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong!');
         callRefreshTokenAPI(context);
       }
     });

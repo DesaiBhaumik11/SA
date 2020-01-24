@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/all_product_screen.dart';
@@ -55,7 +56,7 @@ class DashboardScreen extends StatefulWidget
 
 }
 
-class DashboardScreenState extends State<DashboardScreen>
+class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObserver
 {
   //MyCartModal myCartModal ;
   static int cartSize=0;
@@ -102,10 +103,16 @@ class DashboardScreenState extends State<DashboardScreen>
 
       ImageURL = prefs.getString("ImageURL");
     });
-    callCartCountAPI();
+    MyCartUtils().callCartCountAPI();
     bestSellingFuture = ApiCall().bestSellingItems("1", "10");
     exclusiveFuture = ApiCall().vegetosExclusive("1", "10");
     recommendedFuture = ApiCall().recommendedForYou("1", "10");
+
+    MyCartUtils.streamController.stream.listen((cartCount) {
+
+      cartTotal = cartCount;
+    });
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -209,6 +216,14 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.resumed) {
+      MyCartUtils().callCartCountAPI();
+    }
+  }
 
   Widget appBar(BuildContext context)
   {
@@ -520,7 +535,8 @@ class DashboardScreenState extends State<DashboardScreen>
                  onTap: (){
                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                    //myCartModal.addTocart(result);
-                   callAddToCartAPI(result.ProductId, result.ProductVariantId, "1", "", result.ProductPrice.OfferPrice.toString());
+                   MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId, result.IncrementalStep.toString(),
+                       "", result.ProductPrice.OfferPrice.toString());
                  },)
                 ],
               ),
@@ -1268,34 +1284,24 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }*/
 
-  void callCartCountAPI() {
-    ApiCall().getCartCount().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          if(cartCountModel.count != null) {
-            cartTotal = cartCountModel.count.toString();
-          }
-        });
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      }
-    });
-  }
-
-  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
+  /*void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
     ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-        callCartCountAPI();
+        MyCartUtils().callCartCountAPI();
       } else if (apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       } else {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
     });
+  }*/
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
 }
