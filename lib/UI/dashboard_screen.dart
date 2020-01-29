@@ -334,7 +334,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 ),
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(5.0, 5.0, 10.0, 5.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 5.0, 10.0, 3.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.white
@@ -476,7 +476,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Flexible(
                           child: Text(name ,
-                              overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                              overflow: TextOverflow.ellipsis, maxLines: 1 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),
