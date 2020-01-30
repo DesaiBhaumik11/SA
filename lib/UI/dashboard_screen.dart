@@ -273,6 +273,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 Row(
                   children: <Widget>[
                     Text('Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
+//                    Text(deliveryAddress.isNotEmpty ? 'Change Delivery Location' : 'Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
                   ],
                 ),
                 Row(
@@ -433,7 +434,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
           },
           child: Container(
             width: 180.0,
-            height: 280.0,
+//            height: 280.0,
             child: Card(
               child: Column(
                 children: <Widget>[
@@ -451,9 +452,9 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0)
                             ),
-                            /*child: result.productMediaId==null||result.productMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                            Image.network(ImageURL + result.productMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),*/
-                            child: Image.asset("02-product.png",height: 100,width: 100,),
+                            child: result.PrimaryMediaId==null||result.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                            Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                            child: Image.asset("02-product.png",height: 100,width: 100,),
                           ),
                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
@@ -476,7 +477,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Flexible(
                           child: Text(name ,
-                              overflow: TextOverflow.ellipsis, maxLines: 1 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                              overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black)),
                         ),

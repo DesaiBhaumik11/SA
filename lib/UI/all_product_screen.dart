@@ -45,8 +45,8 @@ class _AllProductScreenState extends State<AllProductScreen> {
   String cartTotal = '0';
   String ImageURL = '';
 
-  int pageNUmber = 0;
-  int pageSize = 0;
+  int pageNUmber = 1;
+  int pageSize = 10;
 
   _AllProductScreenState(String name){
     this.name = name ;
@@ -55,8 +55,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    pageNUmber++;
-    pageSize = pageSize + 10;
     if(name == 'Best Selling Items') {
       getProduct = ApiCall().bestSellingItems(pageNUmber.toString(), pageSize.toString());
     } else if(name == "Vegeto's Exclusive") {
@@ -164,9 +162,140 @@ class _AllProductScreenState extends State<AllProductScreen> {
       }
     }
 
-    return Column(
+//    return Column(
+//      children: <Widget>[
+//        InkWell(
+//          onTap: () {
+//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+//                height: 25,
+//                width: 25,
+//                child: CircularProgressIndicator())));
+//            productModal.getProductDetail(result.ProductId,(){
+//              Navigator.pop(context);
+//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId)));
+//            }) ;
+//
+//          },
+//          child: Container(
+//            //width: 180.0,
+//            //height: 300.0,
+//            child: Card(
+//              child: Column(
+//                children: <Widget>[
+//                  Stack(
+//                    alignment: Alignment.center,
+//                    children: <Widget>[
+//                      Container(
+//                        width: 100.0,
+//                        height: 100.0,
+//                        alignment: Alignment.center,
+//                        child: Card(
+//                          elevation: 0.0,
+//                          clipBehavior: Clip.antiAliasWithSaveLayer,
+//                          shape: RoundedRectangleBorder(
+//                              borderRadius: BorderRadius.circular(5.0)
+//                          ),
+//                          child: result.PrimaryMediaId==null||result.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,)
+//                              :Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150' , height: 110.0, width: 110.0,),
+////                          child: Image.asset("02-product.png",height: 100,width: 100,),
+//                        ),
+//                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+//                      ),
+//                      result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
+//                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
+//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+//                        decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.circular(5.0),
+//                            color: Colors.orange
+//                        ),
+//                        child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+//                            color: Colors.white),),
+//                      ) : Container(),
+//                    ],
+//                  ),
+//                  Container(
+////                    height: 35,
+//                    margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+//                    child: Row(
+//                      crossAxisAlignment: CrossAxisAlignment.center,
+//                      children: <Widget>[
+//                        Flexible(
+//                          child: Text(name,
+//                              overflow: TextOverflow.ellipsis, maxLines: 2 ,
+//                              style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
+//                              fontWeight: FontWeight.w700,
+//                              color: Colors.black)),
+//                        ),
+//                      ],
+//                    ),
+//                  ),//Expanded(child: Container(),flex: 1,),
+//                  Container(
+//                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+//                    child: Align(
+//                      alignment: Alignment.topLeft,
+//                      child: Text(result.MinimumOrderQuantity.toString() + " " + unit,
+//                        style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+//                          fontWeight: FontWeight.w500,
+//                          color: Colors.grey),
+//                      ),
+//                    ),
+//                  ),
+//                  Row(
+//                    children: <Widget>[
+//                      Container(
+//                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                        child: Align(
+//                          alignment: Alignment.topLeft,
+//                          child: Text('₹ ${result.ProductPrice.OfferPrice != null ? result.ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+//                              fontWeight: FontWeight.w700,
+//                              color: Colors.black),
+//                          ),
+//                        ),
+//                      ),
+//                      Container(
+//                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                        child: Align(
+//                          alignment: Alignment.topLeft,
+//                          child: Text(result.ProductPrice.Price != null ? '₹' + result.ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+//                              fontWeight: FontWeight.w500,
+//                              color: Colors.grey, decoration: TextDecoration.lineThrough),
+//                          ),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                  InkWell(child:  Container(
+//                    margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 7.0),
+//                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+//                    decoration: BoxDecoration(
+//                        borderRadius: BorderRadius.circular(5.0),
+//                        color: Const.primaryColor
+//                        //color: Const.gray10
+//                    ),
+//                    child: Align(
+//                      alignment: Alignment.center,
+//                      child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+//                        color: Colors.white, fontWeight: FontWeight.w500,)),
+//                    ),
+//
+//                  ),
+//                    onTap: (){
+//                      //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+//                      //myCartModal.addTocart(result);
+//                      MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId, result.IncrementalStep.toString(),
+//                          "", result.ProductPrice.OfferPrice.toString());
+//                    },)
+//                ],
+//              ),
+//            ),
+//          ),
+//        )
+//      ],
+//    );
+    return Stack(
       children: <Widget>[
-        InkWell(
+        GestureDetector(
           onTap: () {
             final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
             showDialog(context: context,builder: (c)=>Center(child: SizedBox(
@@ -180,32 +309,34 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
           },
           child: Container(
-            //width: 180.0,
-            //height: 300.0,
+            width: 180.0,
+//            height: 280.0,
             child: Card(
               child: Column(
                 children: <Widget>[
                   Stack(
-                    alignment: Alignment.center,
+                    //alignment: Alignment.center,
                     children: <Widget>[
-                      Container(
-                        width: 100.0,
-                        height: 100.0,
-                        alignment: Alignment.center,
-                        child: Card(
-                          elevation: 0.0,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)
+                      Center(
+                        child: Container(
+                          width: 110.0,
+                          height: 110.0,
+                          //alignment: Alignment.center,
+                          child: Card(
+                            elevation: 0.0,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)
+                            ),
+                            child: result.PrimaryMediaId==null||result.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                            Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                            child: Image.asset("02-product.png",height: 100,width: 100,),
                           ),
-                          /*child: result.productMediaId==null||result.productMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,)
-                              :Image.network(ImageURL + result.productMediaId + '&h=150&w=150' , height: 110.0, width: 110.0,),*/
-                          child: Image.asset("02-product.png",height: 100,width: 100,),
+                          margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
-                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
                       result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
-                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
+                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
@@ -217,27 +348,23 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     ],
                   ),
                   Container(
-                    height: 35,
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Flexible(
-                          child: Text(name,
-                              overflow: TextOverflow.ellipsis, maxLines: 2 ,
-                              style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black)),
+                          child: Text(name ,
+                              overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black)),
                         ),
                       ],
                     ),
-                  ),//Expanded(child: Container(),flex: 1,),
+                  ),Expanded(child: Container(),flex: 1,),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text(result.MinimumOrderQuantity.toString() + " " + unit,
-                        style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text(result.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -268,12 +395,12 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     ],
                   ),
                   InkWell(child:  Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 7.0),
+                    margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                     padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
-                        color: Const.primaryColor
                         //color: Const.gray10
+                        color: Const.primaryColor
                     ),
                     child: Align(
                       alignment: Alignment.center,
@@ -295,6 +422,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
         )
       ],
     );
+
 
   }
 
@@ -375,10 +503,13 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
     return Container(
       height: MediaQuery.of(context).size.height - 76,
+//      height: 275.0,
+
       child: PagewiseGridView.count(
         crossAxisCount: 2,
         crossAxisSpacing: 5.0,
-        childAspectRatio: aspectRatio,
+        mainAxisSpacing: 5.0,
+        childAspectRatio: aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
         padding: EdgeInsets.all(5.0),
         itemBuilder: (context, entry, index) {
           return childView(context, entry);
@@ -389,8 +520,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
         pageLoadController: PagewiseLoadController(
             pageSize: 10,
             pageFuture: (int pageIndex) {
-              pageNUmber++;
-              pageSize = pageSize + 10;
               return getFutureList();
             }),
         loadingBuilder: (context) {
@@ -428,6 +557,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
     ApiResponseModel apiResponseModel = await getProduct;
     if(apiResponseModel.statusCode == 200) {
       DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+      pageNUmber++;
       return responseModel.Results;
     } else if(apiResponseModel.statusCode == 401) {
       Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');

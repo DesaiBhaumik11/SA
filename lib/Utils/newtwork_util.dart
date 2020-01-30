@@ -10,6 +10,7 @@ import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
@@ -18,7 +19,7 @@ typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
 
 abstract class NetworkUtils {
   //static String _baseUrl="http://artismicro.archisys.biz:5101/";
-  static String _baseUrl = Constant.BASE_URL;
+  static String _baseUrl = ApiCall.baseURL + '/';
   static String awtToken = "";
   static bool useLocalToken = false;
 

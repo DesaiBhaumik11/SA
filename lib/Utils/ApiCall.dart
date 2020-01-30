@@ -14,8 +14,8 @@ class ApiCall
 {
 
   static final String baseURL = "http://artismicro.archisys.biz:5101";
-  //static final String baseURL = "http://195.168.0.37:5001";
-  //static final String baseURL = "http://195.168.0.85:5001";
+//  static final String baseURL = "http://195.168.0.37:5001";
+//  static final String baseURL = "http://195.168.0.77:5001";
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
   static final String SetLocation = "/SetLocation";

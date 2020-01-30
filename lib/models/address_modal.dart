@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
@@ -80,6 +81,7 @@ class AddressModal extends ChangeNotifier{
       for(int i=0 ; i<result.length ; i++){
        if(result[i].isDefault){
          defaultAddress = result[i].name + " , " + result[i].city ;
+          setDeliveryLocation(result[i].addressLine1);
        }
       }
 
@@ -91,6 +93,10 @@ class AddressModal extends ChangeNotifier{
 //    isError= decode["IsError"] ;
     loaded = true ;
     notifyListeners() ;
+  }
+  setDeliveryLocation(String location) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('FullAddress', location);
   }
 
   addAddress(Result result,{callback}){

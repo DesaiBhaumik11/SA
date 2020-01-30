@@ -12,6 +12,8 @@ class ProductWithDefaultVarientModel
 
   String ProductId;
 
+  String PrimaryMediaId;
+
   bool IsDefault;
 
   String CategoryId;
@@ -45,6 +47,7 @@ class ProductWithDefaultVarientModel
   ProductWithDefaultVarientModel({
     this.ProductVariantId,
     this.ProductId,
+    this.PrimaryMediaId,
     this.IsDefault,
     this.CategoryId,
     this.BrandId,
@@ -66,6 +69,7 @@ class ProductWithDefaultVarientModel
     return ProductWithDefaultVarientModel(
       ProductVariantId: parsedData['ProductVariantId'],
       ProductId: parsedData['ProductId'],
+      PrimaryMediaId: parsedData['PrimaryMediaId'],
       IsDefault: parsedData['IsDefault'],
       CategoryId: parsedData['CategoryId'],
       BrandId: parsedData['BrandId'],
