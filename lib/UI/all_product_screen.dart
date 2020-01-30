@@ -554,6 +554,18 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
   Future<List> getFutureList() async {
 
+if(pageNUmber>1) {
+  if (name == 'Best Selling Items') {
+    getProduct =
+        ApiCall().bestSellingItems(pageNUmber.toString(), pageSize.toString());
+  } else if (name == "Vegeto's Exclusive") {
+    getProduct =
+        ApiCall().vegetosExclusive(pageNUmber.toString(), pageSize.toString());
+  } else {
+    getProduct =
+        ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString());
+  }
+}
     ApiResponseModel apiResponseModel = await getProduct;
     if(apiResponseModel.statusCode == 200) {
       DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);

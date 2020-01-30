@@ -848,7 +848,7 @@ class MyCartState extends State<MyCartScreen>
 
   void callClearCartAPI() {
     ApiCall().clearCart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
+      if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
         callGetMyCartAPI();
       } else if(apiResponseModel.statusCode == 401){
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');

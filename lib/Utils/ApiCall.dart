@@ -469,7 +469,7 @@ class ApiCall
         "TaxAmount": model.TaxAmount.toString(),
         "TotalAmount": model.TotalAmount.toString(),
         "OfferAmount": model.OfferAmount.toString(),
-        "CheckoutItems": cart.CartItemViewModel.encondeToJson(model.CheckoutItems),
+//        "CheckoutItems": cart.CartItemViewModel.encondeToJson(model.CheckoutItems),
       });
 
 

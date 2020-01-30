@@ -14,6 +14,10 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/GetProductByIdModel.dart';
+import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
+import 'package:vegetos_flutter/models/ProductPriceModel.dart';
+import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
+import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
@@ -29,12 +33,17 @@ class ProductDetailScreen extends StatefulWidget
     // TODO: implement createState
     return ProductDetailScreenState();
   }
+  String ImageUrl="";
 
 }
 
 class ProductDetailScreenState extends State<ProductDetailScreen>
 {
    GetProductByIdModel productModal;
+   ProductPriceModel ProductPrice=new ProductPriceModel();
+   ProductDetailsModel ProductDetail=new ProductDetailsModel();
+   UnitsModel Units=new UnitsModel();
+   ProductVariantMedia productVariantMedia=new ProductVariantMedia();
    MyCartModal cartModal ;
    AppFirstModal appFirstModal ;
 
@@ -51,6 +60,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
   Future getProductById;
 
+  String ImageURL = "";
+
    DashboardProductResponseModel model = DashboardProductResponseModel();
 
 
@@ -63,6 +74,9 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
       });
     });
 
+    SharedPreferences.getInstance().then((prefs) {
+      ImageURL = prefs.getString("ImageURL");
+    });
     getProductById = ApiCall().getProductDetailById(widget.productId);
     super.initState();
   }
@@ -136,9 +150,9 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   Widget productImageSlides()
   {
     List<Image> imageList = [
-      Image.asset('assets/02-product.png', height: 50, width: 50.0,)
-      /*Image.network("${appFirstModal
-          .ImageUrl}${productModal.result.productMediaId}", height: 100.0, width: 100.0,),*/
+//      Image.asset('assets/02-product.png', height: 50, width: 50.0,)
+      productVariantMedia.MediaId==null||productVariantMedia.MediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+      Image.network("${ImageURL}${productVariantMedia.MediaId}", height: 100.0, width: 100.0,),
     //  Image.asset('${appFirstModal}', height: 100.0, width: 100.0,),
 //      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
 //      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
@@ -176,7 +190,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
             alignment: Alignment.centerLeft,
 
-            child: Text(productModal.ProductVariant[0].ProductDetail[0].Name, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
+            child: Text(ProductDetail.Name, style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', color: Colors.black,
                 fontWeight: FontWeight.w800),),
           ),
           Row(
@@ -185,7 +199,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text('₹ ${productModal.ProductPrice.Result.OfferPrice != null ? productModal.ProductPrice.Result.OfferPrice.toString() : "0"} ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                  child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : "0"} ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w700,
                       color: Colors.black),
                   ),
@@ -195,7 +209,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text(productModal.ProductPrice.Result.Price != null ? '₹ ' + productModal.ProductPrice.Result.Price.toString() : '₹0' ,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                  child: Text(ProductPrice.Price != null ? '₹ ' + ProductPrice.Price.toString() : '₹0' ,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w500,
                       color: Colors.grey, decoration: TextDecoration.lineThrough),
                   ),
@@ -250,7 +264,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       title: Row(
                         children: <Widget>[
                           Container(
-                            child: Text(productModal.MinimumOrderQuantity.toString() + " " + productModal.Units[0].Name, style: TextStyle(color: Colors.black, fontSize: 12.0, fontFamily: 'GoogleSans',
+                            child: Text(productModal.MinimumOrderQuantity.toString() + " " + Units.Name, style: TextStyle(color: Colors.black, fontSize: 12.0, fontFamily: 'GoogleSans',
                                 fontWeight: FontWeight.w500)),
                           )
                         ],
@@ -281,7 +295,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
               //cartModal.addTocart(productModal.result);
               MyCartUtils().callAddToCartAPI(productModal.ProductId, productModal.ProductVariant[0].Id,
-                  productModal.IncrementalStep.toString(), "", productModal.ProductPrice.Result.OfferPrice.toString());
+                  productModal.IncrementalStep.toString(), "", ProductPrice.OfferPrice.toString());
               },)
           )
         ],
@@ -357,7 +371,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           Container(
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-              child: Text("${productModal.ProductVariant[0].ProductDetail[0].Description}", maxLines: descFlag ? 20 : 2,
+              child: Text("${ProductDetail.Description}", maxLines: descFlag ? 20 : 2,
                   style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                       fontWeight: FontWeight.w500))
           ),
@@ -409,7 +423,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('1 ${productModal.Units[0].Name}', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
+                child: Text('1 ${Units.Name}', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
                     style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
@@ -746,6 +760,18 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ApiResponseModel apiResponseModel = snapshot.data;
           if(apiResponseModel.statusCode == 200) {
             productModal = GetProductByIdModel.fromJson(apiResponseModel.Result);
+            if(productModal.ProductVariant.length>0){
+              ProductPrice = productModal.ProductVariant[0].productPrice;
+              if(productModal.ProductVariant[0].ProductDetail.length>0){
+                ProductDetail = productModal.ProductVariant[0].ProductDetail[0];
+              }
+              if(productModal.Units.length>0){
+                Units=productModal.Units[0];
+              }
+              if(productModal.ProductVariant[0].productVariantMedia.length>0){
+                productVariantMedia = productModal.ProductVariant[0].productVariantMedia[0];
+              }
+            }
             return SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Container(

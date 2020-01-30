@@ -462,11 +462,11 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
     model.ShippingScheduleId = displayShippingSlotList[tappedIndex].Items[tappedIndexForRadio].Id;
     model.BusinessId = businessId;
     model.ShippingDetails = "No Details available";
-    model.SubTotal = myCartModal.totalAmount.toString();
+    model.SubTotal = myCartModal.SubTotal.toString();
     model.TaxAmount = "0";
     model.TotalAmount = myCartModal.totalAmount.toString();
     model.OfferAmount = "0";
-    model.CheckoutItems = cartList;
+//    model.CheckoutItems = cartList;
 
     callCheckoutAPI(model);
   }

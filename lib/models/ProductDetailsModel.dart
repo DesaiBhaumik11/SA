@@ -11,10 +11,10 @@ class ProductDetailsModel
   String Description;
 
   ProductDetailsModel({
-    this.Language,
-    this.Name,
-    this.Summary,
-    this.Description,
+    this.Language="",
+    this.Name="",
+    this.Summary="",
+    this.Description="",
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> parsedData) {

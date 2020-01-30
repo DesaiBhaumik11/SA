@@ -41,8 +41,6 @@ class GetProductByIdModel
 
   ProductTaxModel ProductTax;
 
-  Delete ProductPrice;
-
   Object ProductVariantMedia;
 
   GetProductByIdModel({
@@ -62,7 +60,6 @@ class GetProductByIdModel
     this.Units,
     this.ProductDetails,
     this.ProductTax,
-    this.ProductPrice,
     this.ProductVariantMedia,
   });
 
@@ -84,8 +81,8 @@ class GetProductByIdModel
       Units: parsedData['Units'] != null ? UnitsModel.parseList(parsedData['Units']) : null,
       ProductDetails: parsedData['ProductDetails'] != null ? ProductDetailsModel.parseList(parsedData['ProductDetails']) : null,
       ProductTax: parsedData['ProductTax'] != null ? ProductTaxModel.fromJson(parsedData['ProductTax']) : null,
-      ProductPrice: parsedData['ProductPrice'] != null ? Delete.fromJson(parsedData['ProductPrice']) : null,
-      ProductVariantMedia: parsedData['ProductVariantMedia'],
+//      ProductPrice: parsedData['ProductPrice'] != null ? Delete.fromJson(parsedData['ProductPrice']) : null,
+//      ProductVariantMedia: parsedData['ProductVariantMedia'],
     );
   }
 

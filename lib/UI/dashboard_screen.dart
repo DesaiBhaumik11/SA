@@ -287,7 +287,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.6,
                     ),
                     deliveryAddress.isNotEmpty ? Icon(Icons.edit, color: Colors.white, size: 20.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,)
                   ],

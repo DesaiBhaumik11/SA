@@ -39,7 +39,7 @@ class CheckoutRequestModel
 
   String OfferAmount;
 
-  List<CartItemViewModel> CheckoutItems;
+//  List<CartItemViewModel> CheckoutItems;
 
   CheckoutRequestModel({
     this.DeliveryAddressId,
@@ -59,6 +59,6 @@ class CheckoutRequestModel
     this.TaxAmount,
     this.TotalAmount,
     this.OfferAmount,
-    this.CheckoutItems,
+//    this.CheckoutItems,
   });
 }

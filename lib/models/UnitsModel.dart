@@ -17,13 +17,13 @@ class UnitsModel
   String Name;
 
   UnitsModel({
-    this.UnitId,
-    this.BaseUnitId,
-    this.BaseUnitMultiplier,
-    this.DecimalPlaces,
-    this.Language,
-    this.Code,
-    this.Name,
+    this.UnitId="",
+    this.BaseUnitId="",
+    this.BaseUnitMultiplier=0,
+    this.DecimalPlaces=0,
+    this.Language="",
+    this.Code="",
+    this.Name="",
   });
 
   factory UnitsModel.fromJson(Map<String, dynamic> parsedData) {

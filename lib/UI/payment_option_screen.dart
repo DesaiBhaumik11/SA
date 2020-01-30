@@ -644,8 +644,16 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     ApiCall().confirmPayment(paymentId, transactionId).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         //callClearCartAPI(progressDialog);
-        progressDialog.dismiss();
-        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: OrderPlacedScreen(transactionId)),(c)=>false);
+        ApiCall().clearCart().then((apiResponseModel) {
+          if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
+            progressDialog.dismiss();
+            Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: OrderPlacedScreen(transactionId)),(c)=>false);
+          } else if(apiResponseModel.statusCode == 401){
+            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+          } else {
+            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+          }
+        });
       } else if(apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
         Navigator.of(context).pop();

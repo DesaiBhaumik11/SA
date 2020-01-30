@@ -25,10 +25,10 @@ class GetCartResponseModel {
     return GetCartResponseModel(
       cartId: json["CartId"],
       cartItemViewModels: json["CartItemViewModels"] != null ? CartItemViewModel.parseList(json["CartItemViewModels"]) : null,
-      totalAmount: json["TotalAmount"],
-      deliveryCharges: json["DeliveryCharges"],
+      totalAmount: json["SubTotal"],
+      deliveryCharges: json["ShippingCharge"],
       discount: json["Discount"],
-      SubTotal: json["SubTotal"],
+      SubTotal: json["TotalAmount"],
     );
   }
 

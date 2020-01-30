@@ -81,7 +81,7 @@ class MyCartModal extends ChangeNotifier{
   }
 
 
-  claerCart(){
+  clearCart(){
 
     NetworkUtils.deleteRequest(endPoint: Constant.ClearCart).then((res){
       print("claerCart response = $res");

@@ -27,18 +27,18 @@ class ProductPriceModel
   String UpdatedOn;
 
   ProductPriceModel({
-    this.ProductId,
-    this.ProductVariantId,
-    this.ApplicableFrom,
-    this.IsTaxInclusive,
-    this.BusinessLocationId,
-    this.Price,
-    this.DiscountPercent,
-    this.OfferPrice,
-    this.UpdatedBy,
-    this.CreatedBy,
-    this.CreatedOn,
-    this.UpdatedOn,
+    this.ProductId="",
+    this.ProductVariantId="",
+    this.ApplicableFrom="",
+    this.IsTaxInclusive=false,
+    this.BusinessLocationId="",
+    this.Price=0,
+    this.DiscountPercent=0,
+    this.OfferPrice=0,
+    this.UpdatedBy="",
+    this.CreatedBy="",
+    this.CreatedOn="",
+    this.UpdatedOn="",
   });
 
   factory ProductPriceModel.fromJson(Map<String, dynamic> parsedData) {
