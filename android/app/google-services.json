@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "132864545566",
+    "firebase_url": "https://vegetos-f3a76.firebaseio.com",
+    "project_id": "vegetos-f3a76",
+    "storage_bucket": "vegetos-f3a76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132864545566:android:e738904661feb51c2def0f",
+        "android_client_info": {
+          "package_name": "com.app.prakruti.vegetos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132864545566-2b7o74mmr2i7q60g2pbkvqic5opvm1os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.prakruti.vegetos",
+            "certificate_hash": "2fe73074615ac6301b5a1cda8633e62a53209337"
+          }
+        },
+        {
+          "client_id": "132864545566-vovstvp9n45g5jt4193gucsck789jtjl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX9h4q-fVlMkIqfbtdxaIDTONQHo9Rz9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132864545566-vovstvp9n45g5jt4193gucsck789jtjl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

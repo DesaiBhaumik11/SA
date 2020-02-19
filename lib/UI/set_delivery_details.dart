@@ -61,9 +61,18 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
   bool isDefaultAddressAvailable = false;
   //bool isOnlyFirstTime = true;
-  AddressModel addressModel;
+  AddressModel addressModel=new AddressModel();
+
+  ProgressDialog progressDialog;
 
 
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -142,7 +151,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
               if (isDefaultAddressAvailable) {
                 checkouFunction();
               } else {
-                Utility.toastMessage("Please add dfault address");
+                Utility.toastMessage("Please add default address");
               }
             } else {
               Fluttertoast.showToast(msg: 'Please select time slot');
@@ -230,6 +239,10 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   }
 
   Widget shippingList(BuildContext context, DisplayShippingModel displayShippingSlot) {
+
+//    if(displayShippingSlot!=null){
+//      displayShippingSlot.Items.sort((a, b) => a.TimeFrom.compareTo(b.TimeFrom));
+//    }
     return displayShippingSlot != null
         ? ListView.builder(
             itemBuilder: (context, index) {
@@ -322,13 +335,6 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                     height: 10,
                   ),
                   Text(
-                    "",
-                    style: TextStyle(
-                        color: Color(0xff2d2d2d),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16),
-                  ),
-                  Text(
                     addressModel.addressLine1,
                     style: TextStyle(
                         color: Color(0xff2d2d2d),
@@ -342,14 +348,21 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16),
                   ),
+                  Text(
+                    addressModel.city + " , "+addressModel.state + " , " + addressModel.pin,
+                    style: TextStyle(
+                        color: Color(0xff2d2d2d),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16),
+                  ),
                 ],
               ),
             ),
-          ) : noAddress();
+          ) :  noAddress();
   }
 
   Widget noAddress() {
-    return InkWell(
+    return addressModel!=null && addressModel.isLoaded==true ? InkWell(
       child: Container(
           padding: EdgeInsets.all(10),
           height: 150,
@@ -374,6 +387,15 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
           updateAddress();
         });
       },
+    ) : InkWell(
+      child: Container(
+          padding: EdgeInsets.all(10),
+          height: 150,
+          child: Card(
+            child: Center(
+              child: Center(child: CircularProgressIndicator(),)
+            ),
+          )),
     );
   }
 
@@ -411,7 +433,16 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
             return Container();
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container();
+          return InkWell(
+            child: Container(
+                padding: EdgeInsets.all(10),
+                height: 350,
+                child: Card(
+                  child: Center(
+                      child: Center(child: CircularProgressIndicator(),)
+                  ),
+                )),
+          );
         } else {
           return Container();
         }
@@ -420,7 +451,8 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   }
 
   void updateAddress() {
-    ApiCall().getMyDefaultAddress().then((apiResponseModel) {
+    ApiCall().setContext(context).getMyDefaultAddress().then((apiResponseModel) {
+      addressModel.isLoaded=true;
       if(apiResponseModel.statusCode == 200) {
         AddressModel addModel = AddressModel.fromJson(apiResponseModel.Result);
         setState(() {
@@ -440,39 +472,57 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
     });
   }
 
-  void checkouFunction() async {
+  void checkouFunction()  {
 
-    List<cart.CartItemViewModel> cartList = myCartModal.cartItemViewModels;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String mobile = prefs.getString("phone");
-    String businessLocationId = prefs.getString("BusinessLocationId");
-    String businessId = prefs.getString("BusinessId");
+    progressDialog = Utility.progressDialog(
+        context, "Checking Delivery Location..");
+    progressDialog.show();
 
-    CheckoutRequestModel model = CheckoutRequestModel();
-    model.DeliveryAddressId = addressModel.id;
-    model.Name = addressModel.name;
-    model.AddressLine1 = addressModel.addressLine1;
-    model.AddressLine2 = addressModel.addressLine2;
-    model.City = addressModel.city;
-    model.State = addressModel.state;
-    model.Country = addressModel.country;
-    model.Pin = addressModel.pin;
-    model.MobileNo = mobile;
-    model.LocationId = businessLocationId;
-    model.ShippingScheduleId = displayShippingSlotList[tappedIndex].Items[tappedIndexForRadio].Id;
-    model.BusinessId = businessId;
-    model.ShippingDetails = "No Details available";
-    model.SubTotal = myCartModal.SubTotal.toString();
-    model.TaxAmount = "0";
-    model.TotalAmount = myCartModal.totalAmount.toString();
-    model.OfferAmount = "0";
+    ApiCall().setLocation(addressModel.pin).then((apiResponseModel) async {
+      if (apiResponseModel.statusCode != 200) {
+        if(progressDialog!=null && progressDialog.isShowing()){
+          progressDialog.dismiss();
+        }
+        Fluttertoast.showToast(
+            msg: "Delivery Location not available");
+        return;
+      }
+      progressDialog.update(message: "Loading..");
+      List<cart.CartItemViewModel> cartList = myCartModal.cartItemViewModels;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String mobile = prefs.getString("phone");
+      String businessLocationId = prefs.getString("BusinessLocationId");
+      String businessId = prefs.getString("BusinessId");
+
+      CheckoutRequestModel model = CheckoutRequestModel();
+      model.DeliveryAddressId = addressModel.id;
+      model.Name = addressModel.name;
+      model.AddressLine1 = addressModel.addressLine1;
+      model.AddressLine2 = addressModel.addressLine2;
+      model.City = addressModel.city;
+      model.State = addressModel.state;
+      model.Country = addressModel.country;
+      model.Pin = addressModel.pin;
+      model.MobileNo = mobile;
+      model.LocationId = businessLocationId;
+      model.ShippingScheduleId = displayShippingSlotList[tappedIndex].Items[tappedIndexForRadio].Id;
+      model.BusinessId = businessId;
+      model.ShippingDetails = "No Details available";
+      model.SubTotal = myCartModal.SubTotal.toString();
+      model.TaxAmount = "0";
+      model.TotalAmount = myCartModal.totalAmount.toString();
+      model.OfferAmount = "0";
 //    model.CheckoutItems = cartList;
 
-    callCheckoutAPI(model);
+      callCheckoutAPI(model);
+    });
   }
 
   void callCheckoutAPI(CheckoutRequestModel model) {
-    ApiCall().checkout(model).then((apiResponseModel) {
+    ApiCall().setContext(context).checkout(model).then((apiResponseModel) {
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
       if(apiResponseModel.statusCode == 200) {
         Navigator.push(
             context,
@@ -484,7 +534,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       } else if(apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? "Delivery location not available!" : 'Something went wrong.!');
       }
     });
   }

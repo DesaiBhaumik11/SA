@@ -6,13 +6,23 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/about_app_release.dart';
+import 'package:vegetos_flutter/UI/about_vegetos.dart';
+import 'package:vegetos_flutter/UI/splash_screeen.dart';
+import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
+import 'package:vegetos_flutter/Utils/Enumaration.dart';
+import 'package:vegetos_flutter/Utils/LifecycleEventHandler.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/AddressModel.dart';
+import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/all_product_screen.dart';
@@ -30,7 +40,12 @@ import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
+import 'package:vegetos_flutter/models/ProductPriceModel.dart';
+import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
+import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
@@ -79,6 +94,15 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   Future bestSellingFuture;
   Future exclusiveFuture;
   Future recommendedFuture;
+  ProgressDialog progressDialog ;
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -100,18 +124,15 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
       if(businessLocationId != null && businessLocationId.isNotEmpty) {
         deliveryAddress = address;
       }
-
       ImageURL = prefs.getString("ImageURL");
     });
-    MyCartUtils().callCartCountAPI();
+
+    getMyDefaultAddress();
+    count();
     bestSellingFuture = ApiCall().bestSellingItems("1", "10");
     exclusiveFuture = ApiCall().vegetosExclusive("1", "10");
     recommendedFuture = ApiCall().recommendedForYou("1", "10");
 
-    MyCartUtils.streamController.stream.listen((cartCount) {
-
-      cartTotal = cartCount;
-    });
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -167,17 +188,8 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
     if(!cat.isLoaded){
       cat.loadCategories();
     }
-    /*if(!bestSelling.loaded){
-      bestSelling.loadProducts();
-    }
-    if(!vegitosExclusive.loaded){
-      vegitosExclusive.loadProducts();
-    }
-    if(!recommendedProducts.loaded){
-      recommendedProducts.loadProducts();
-    }*/
 
-    
+
     return Scaffold(
       drawer: Drawer(
         child: drawer(context),
@@ -221,7 +233,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
     if(state == AppLifecycleState.resumed) {
-      MyCartUtils().callCartCountAPI();
+      count();
     }
   }
 
@@ -236,7 +248,11 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
         GestureDetector(
           onTap: () {
             //myCartModal.loaded =false ;
-            Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+//            Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+            Navigator.of(context).push(SlideRightRoute(page: MyCartScreen())).then((prefs) {
+              count();
+              getMyDefaultAddressByPrefs();
+            });
           },
           child: Container(
             margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
@@ -253,7 +269,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                     child: CircleAvatar(
                       backgroundColor: Colors.orange,
                       radius: 8.0,
-                      child: Text(cartTotal,
+                      child: Text(cartTotal!=null?cartTotal :"",
                           style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                       //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                     ),
@@ -295,8 +311,14 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               ],
             ),
           ),onTap: (){
-            Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()),);
-          },),
+//            Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()),);
+            Navigator.of(context).push(SlideRightRoute(page: MyAddresses())).then((prefs) {
+              count();
+              getMyDefaultAddressByPrefs();
+            });
+
+
+  },),
 
 
         ],
@@ -318,7 +340,9 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 GestureDetector(
                   onTap: () {
                     //Navigator.pushNamed(context, Const.categories);
-                    Navigator.push(context, SlideRightRoute(page: CategoriesScreen()));
+                    Navigator.push(context, SlideRightRoute(page: CategoriesScreen())).then((returnn){
+                      count();
+                    });
                   },
                   child: Container(
                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
@@ -399,21 +423,39 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
     );
   }
 
-  Widget childView(BuildContext context, ProductWithDefaultVarientModel result) {
+  Widget childView(BuildContext context, ProductWithDefaultVarientModel productVariant) {
 
     String name = "";
     String unit = "";
-    for(int i = 0; i < result.ProductDetails.length; i++) {
-      if(result.ProductDetails[i].Language == "En-US") {
-        name = result.ProductDetails[i].Name;
+    for(int i = 0; i < productVariant.ProductDetails.length; i++) {
+      if(productVariant.ProductDetails[i].Language == "En-US") {
+        name = productVariant.ProductDetails[i].Name;
         break;
       }
     }
 
-    for(int i = 0; i < result.Units.length; i++) {
-      if(result.Units[i].Language == "En-US") {
-        unit = result.Units[i].Name;
+    for(int i = 0; i < productVariant.Units.length; i++) {
+      if(productVariant.Units[i].Language == "En-US") {
+        unit = productVariant.Units[i].Name;
         break;
+      }
+    }
+
+    ProductPriceModel ProductPrice=new ProductPriceModel();
+    ProductDetailsModel ProductDetail=new ProductDetailsModel();
+    UnitsModel Units=new UnitsModel();
+    ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+
+    if(productVariant!=null){
+
+      if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+        ProductDetail = productVariant.ProductDetails[0];
+      }
+      if(productVariant.Units!=null && productVariant.Units.length>0){
+        Units=productVariant.Units[0];
+      }
+      if(productVariant.ProductPrice!=null){
+        ProductPrice = productVariant.ProductPrice;
       }
     }
 
@@ -421,16 +463,16 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-                height: 25,
-                width: 25,
-                child: CircularProgressIndicator())));
-              productModal.getProductDetail(result.ProductId,(){
-              Navigator.pop(context);
-              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId)));
-            }) ;
-
+//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+//                height: 25,
+//                width: 25,
+//                child: CircularProgressIndicator())));
+//              productModal.getProductDetail(productVariant.ProductId,(){
+//              Navigator.pop(context);
+//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
+//            }) ;
+            Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
           },
           child: Container(
             width: 180.0,
@@ -452,21 +494,21 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0)
                             ),
-                            child: result.PrimaryMediaId==null||result.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                            Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+                            child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                            Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
 //                            child: Image.asset("02-product.png",height: 100,width: 100,),
                           ),
                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
                       ),
-                      result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
+                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
                         margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             color: Colors.orange
                         ),
-                        child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                             color: Colors.white),),
                       ) : Container(),
                     ],
@@ -488,7 +530,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text(result.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text(productVariant.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -500,7 +542,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text('₹ ${result.ProductPrice.OfferPrice != null ? result.ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                           ),
@@ -510,7 +552,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text(result.ProductPrice.Price != null ? '₹' + result.ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                          child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w500,
                               color: Colors.grey, decoration: TextDecoration.lineThrough),
                           ),
@@ -536,8 +578,8 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                  onTap: (){
                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                    //myCartModal.addTocart(result);
-                   MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId, result.IncrementalStep.toString(),
-                       "", result.ProductPrice.OfferPrice.toString());
+                   addToCart(productVariant.ProductId, productVariant.ProductVariantId, productVariant.IncrementalStep.toString(),
+                       "", ProductPrice.OfferPrice.toString());
                  },)
                 ],
               ),
@@ -624,33 +666,28 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 height: 5.0,
                 color: Const.navMenuDevider,
               ),*/
-              Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset('assets/home.png', height: 20.0, width: 20.0,),
-                      ),
-
-                      InkWell(child: Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('Home',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                      ),onTap: (){
-                        Navigator.pop(context) ;
-
-                        /*recommendedProducts.loadProducts() ;
-                        bestSelling.loadProducts() ;
-                        bestSelling.loadProducts() ;*/
-
-
-                      },)
-
-
-                    ],
+              InkWell(
+                onTap: (){
+                  //Navigator.pushNamed(context, Const.myOrders);
+                  Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset('assets/home.png', height: 20.0, width: 20.0,),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Home',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -909,7 +946,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               },),*/
               InkWell(
                 onTap: (){
-                  //Navigator.pushNamed(context, Const.aboutVegetos);
+                  Navigator.push(context, EnterExitRoute(enterPage: AboutVegetos()));
                 },
                 child: Container(
                   height: 50.0,
@@ -933,7 +970,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               ),
               InkWell(
                 onTap: (){
-                  //Navigator.pushNamed(context, Const.aboutAppRelease);
+//                  Navigator.push(context, EnterExitRoute(enterPage: AboutAppRelease()));
                 },
                 child: Container(
                   height: 50.0,
@@ -955,7 +992,6 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                   ),
                 ),
               ),
-
 
               !isAnnonymous ? InkWell(
                 onTap: (){
@@ -1304,7 +1340,56 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+  void getMyDefaultAddressByPrefs(){
+    SharedPreferences.getInstance().then((prefs){
+      setState(() {
+        deliveryAddress = prefs.getString('FullAddress');
+      });
+    });
+  }
+  void getMyDefaultAddress(){
 
+    ApiCall().setContext(context).getMyDefaultAddress().then((apiResponseModel){
+      if(apiResponseModel.statusCode == 200) {
+        AddressModel addModel = AddressModel.fromJson(apiResponseModel.Result);
+        setState(() {
+          deliveryAddress = addModel.addressLine1;
+        });
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+        getMyDefaultAddressByPrefs();
+      }
+    });
+  }
+  void count(){
+    ApiCall().setContext(context).count().then((apiResponseModel){
+      String cartTotalStr="0";
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
+      if(apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
+        if(cartCountModel!=null && cartCountModel.count!=null) {
+          cartTotalStr = cartCountModel.count.toString();
+        }
+      }else{
+//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+      }
+      setState(() {
+        cartTotal = cartTotalStr;
+      });
+    });
+  }
+  void addToCart(productId, varientId, qty, offerId, amount){
+    progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      }
+      count();
+    });
+  }
 }
 
 
@@ -1382,7 +1467,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: (){
-                                   logoutApi(context) ;
+                                   logoutAPI(context) ;
                                  // Navigator.pushNamed(context, Const.loginScreen);
                                 },
                                 shape: RoundedRectangleBorder(
@@ -1429,30 +1514,38 @@ class FunkyOverlayState extends State<FunkyOverlay>
     );
   }
 
-  void logoutApi([BuildContext context]) {
-    //Navigator.pushNamed(context, Const.loginScreen);
 
-
-    NetworkUtils.getRequest(endPoint: Constant.Logout).then((res){
-      print("logoutApi " +res) ;
-
-      String uuid =  Uuid().v4();
-      getJwtToken(uuid).then((token){
-
-        SharedPreferences.getInstance().then((prefs){
-          prefs.setBool("login", false) ;
-        }) ;
-
-        DashboardScreenState.addressModal.loaded=false ;
-        //DashboardScreenState.defaultAddressModal.loaded=false ;
-        DashboardScreenState.appFirstModal.appFirstRun(token , [Navigator.pushReplacement(context,
-            EnterExitRoute(enterPage: LoginScreen()))]) ;
-
-      }) ;
-
-    }) ;
-
+  void logoutAPI(BuildContext context) {
+    ApiCall().logout().then((apiResponseModel) {
+      String uuid = Uuid().v4();
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setBool("login", false);
+        prefs.setString("UUID", uuid);
+        prefs.setString("JWT_TOKEN","");
+        prefs.setString("AUTH_TOKEN", "");
+        prefs.setString("phone", "Guest User");
+        DeviceTokenController().ValidateDeviceToken().then((token) {
+          callAppFirstStartAPI(context);
+        });
+      });
+    });
   }
+  void callAppFirstStartAPI(BuildContext context) {
+    ApiCall().appFirstStart().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
+          Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+        });
+      } else {
+        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: SplashScreen()),(c)=>false);
+      }
+    });
+  }
+
+
+
   Future<String> getJwtToken( [uuid]) async {
 
     // uuid = uuid + randomAlphaNumeric(10) ;

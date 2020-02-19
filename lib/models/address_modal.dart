@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 
@@ -77,11 +78,11 @@ class AddressModal extends ChangeNotifier{
     result = List() ;
     if(decode["Result"]!=null){
       result.addAll(List<Result>.from(decode["Result"].map((x) => Result.fromJson(x)))) ;
-
+      result.sort((a, b) => b.createdOn.compareTo(a.createdOn));
       for(int i=0 ; i<result.length ; i++){
        if(result[i].isDefault){
          defaultAddress = result[i].name + " , " + result[i].city ;
-          setDeliveryLocation(result[i].addressLine1);
+          setDeliveryLocation(result[i].addressLine1 + " , "+ result[i].addressLine2);
        }
       }
 
@@ -102,6 +103,7 @@ class AddressModal extends ChangeNotifier{
   addAddress(Result result,{callback}){
 
       Map<String,dynamic> map={
+        "NamePrefix" : result.namePrefix,
       "Name":          result.name,
       "AddressLine1":  result.addressLine1,
       "AddressLine2":  result.addressLine2,
@@ -109,12 +111,14 @@ class AddressModal extends ChangeNotifier{
       "Country":       result.country,
       "State":         result.state,
       "Pin":           result.pin,
+        "Title":           result.title,
       "Latitude":      result.latitude,
       "Longitude":     result.longitude,
       "IsDefault":     result.isDefault
     };
     NetworkUtils.postRequest(endpoint:Constant.AddAddress,body: json.encode(map)).then((r){
       print("addAddress response = $r");
+
 
       getMyAddresses() ;
 
@@ -132,39 +136,33 @@ class AddressModal extends ChangeNotifier{
   }
 
   updateAddress(Result result,{callback}) {
-    Map<String,dynamic> map={
-      "Id":            result.id,
-      "Name":          result.name,
-      "ContactId":     result.contactId,
-      "AddressLine1":  result.addressLine1,
-      "AddressLine2":  result.addressLine2,
-      "City":          result.city,
-      "Country":       result.country,
-      "State":         result.state,
-      "Pin":           result.pin,
-      "Latitude":      result.latitude,
-      "Longitude":     result.longitude,
-      "IsDefault":     result.isDefault
-    };
-    NetworkUtils.putRequest(endpoint:Constant.UpdateAddress,body: json.encode(map)).then((r){
-      print("Update request response $r");
-      var root=json.decode(r);
-      if(root['IsError']){
-        Fluttertoast.showToast(msg: "error in update");
-      }else {
+    ApiCall().updateAddress(result,callback: callback).then((apiResponseModel){
+      print("Update request response $apiResponseModel");
+      if(apiResponseModel.statusCode==200){
         getMyAddresses();
         if(callback!=null){
           callback();
         }
         notifyListeners();
+      }else{
+        Fluttertoast.showToast(msg: apiResponseModel.message);
       }
     });
+
   }
 
   void deleteAddress(id, {callback}) {
-    NetworkUtils.deleteRequest(endPoint: "${Constant.DeleteAddress}$id").then((r){
-
-        result.removeWhere((e)=>e.id==id);
+    ApiCall().deleteAddress(id).then((apiResponseModel){
+      result.removeWhere((e)=>e.id==id);
+      if(result.length>0){
+        int idx= result.indexWhere((e)=>e.isDefault==true);
+        if(idx==-1){
+          setDefaultAddress(result[0].id);
+        }
+      }else{
+        setFullAddress("");
+      }
+//
 
       if(callback!=null){
         callback();
@@ -172,11 +170,17 @@ class AddressModal extends ChangeNotifier{
       notifyListeners();
     });
   }
+  void setFullAddress(String address){
+    SharedPreferences.getInstance().then((prefs){
+      prefs.setString("FullAddres", address);
+    });
+  }
 
 }
 
 class Result {
   String id;
+  String namePrefix;
   String name;
   String contactId;
   String addressLine1;
@@ -185,6 +189,7 @@ class Result {
   String country;
   String state;
   String pin;
+  String title;
   double latitude;
   double longitude;
   bool isDefault;
@@ -195,6 +200,7 @@ class Result {
 
   Result({
     this.id,
+    this.namePrefix,
     this.name,
     this.contactId,
     this.addressLine1,
@@ -203,6 +209,7 @@ class Result {
     this.country,
     this.state,
     this.pin,
+    this.title,
     this.latitude,
     this.longitude,
     this.isDefault,
@@ -214,6 +221,7 @@ class Result {
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     id: json["Id"],
+    namePrefix: json["NamePrefix"],
     name: json["Name"],
     contactId: json["ContactId"],
     addressLine1: json["AddressLine1"],
@@ -222,6 +230,7 @@ class Result {
     country: json["Country"],
     state: json["State"],
     pin: json["Pin"],
+    title: json["Title"],
     latitude: json["Latitude"] == null ? null : json["Latitude"],
     longitude: json["Longitude"] == null ? null : json["Longitude"],
     isDefault: json["IsDefault"],
@@ -233,6 +242,7 @@ class Result {
 
   Map<String, dynamic> toJson() => {
     "Id": id,
+    "NamePrefix":namePrefix,
     "Name": name,
     "ContactId": contactId,
     "AddressLine1": addressLine1,
@@ -241,6 +251,7 @@ class Result {
     "Country": country,
     "State": state,
     "Pin": pin,
+    "Title": title,
     "Latitude": latitude == null ? null : latitude,
     "Longitude": longitude == null ? null : longitude,
     "IsDefault": isDefault,

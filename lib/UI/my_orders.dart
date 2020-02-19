@@ -178,12 +178,13 @@ class _MyOrdersState extends State<MyOrders> {
 
   Widget callGetOrdersAPI() {
     return FutureBuilder(
-      future: ApiCall().getOrders(),
+      future: ApiCall().setContext(context).getOrders(),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
           ApiResponseModel apiResponseModel = snapshot.data;
           if(apiResponseModel.statusCode == 200) {
             List<GetOrdersResponseModel> getOrdersResponseModelList = GetOrdersResponseModel.parseList(apiResponseModel.Result);
+
             return buildList(getOrdersResponseModelList);
           } else if(apiResponseModel.statusCode == 401){
             return Container();

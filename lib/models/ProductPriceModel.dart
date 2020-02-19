@@ -48,7 +48,7 @@ class ProductPriceModel
       ApplicableFrom: parsedData['ApplicableFrom'],
       IsTaxInclusive: parsedData['IsTaxInclusive'],
       BusinessLocationId: parsedData['BusinessLocationId'],
-      Price: parsedData['Price'],
+      Price: parsedData['Price']!=null ? parsedData['Price'] : 0,
       DiscountPercent: parsedData['DiscountPercent'],
       OfferPrice: parsedData['OfferPrice'],
       UpdatedBy: parsedData['UpdatedBy'],

@@ -20,9 +20,11 @@ import 'package:vegetos_flutter/UI/welcome_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
+import 'package:vegetos_flutter/Utils/Enumaration.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
@@ -41,7 +43,16 @@ class SplashScreenState extends State<SplashScreen> {
 
   bool runOnce=true;
   String version = "";
+  bool runOnlyOnce=false;
   //AppFirstModal appFirstModal ;
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -77,8 +88,10 @@ class SplashScreenState extends State<SplashScreen> {
        });*//*
      });
    }*/
-
-    checkUUID(context);
+    if(!runOnlyOnce) {
+      runOnlyOnce=true;
+      checkUUID(context);
+    }
 
     return Scaffold(
       body: Container(
@@ -190,10 +203,10 @@ class SplashScreenState extends State<SplashScreen> {
         AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
+          callGetDefaultsAPI(context);
         });
-        callGetDefaultsAPI(context);
       } else {
-        callRefreshTokenAPI(context);
+        callGetDefaultsAPI(context);
       }
     });
   }
@@ -207,14 +220,24 @@ class SplashScreenState extends State<SplashScreen> {
           prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
         });
         callGetDefaultsAPI(context);
-      } else {
+      } else if(apiResponseModel.statusCode == 401){
         //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+        SharedPreferences.getInstance().then((prefs) {
+          String uuid = Uuid().v4();
+          prefs.setString("JWT_TOKEN","");
+          prefs.setString("UUID", uuid);
+          DeviceTokenController().ValidateDeviceToken().then((token) {
+            callAppFirstStartAPI(context);
+          });
+        });
+      }else{
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
       }
     });
   }
 
   void callGetDefaultsAPI(BuildContext context) {
-    ApiCall().getDefaults().then((apiResponseModel) {
+    ApiCall().getDefaults().then((apiResponseModel){
       if(apiResponseModel.statusCode == 200) {
         GetDefaultsResponseModel getDefaultsResponseModel = GetDefaultsResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences.getInstance().then((prefs) {
@@ -224,9 +247,6 @@ class SplashScreenState extends State<SplashScreen> {
           });
         });
       } else if(apiResponseModel.statusCode == 401) {
-        callRefreshTokenAPI(context);
-      } else {
-        //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong!');
         callRefreshTokenAPI(context);
       }
     });

@@ -86,6 +86,8 @@ class AppFirstModal extends ChangeNotifier {
     if(!_loading) {
       _loading=true;
       NetworkUtils.appFirstRunPost(endpoint: Constant.AppFirstStart ,body:  body , headers: headers).then((r) {
+        print("ravdepp: "+Constant.AppFirstStart);
+        print(headers);
         _loading=false;
         print("appFirstRun response = $r");
 

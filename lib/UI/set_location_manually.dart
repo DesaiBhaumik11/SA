@@ -30,6 +30,14 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
   bool isProgress = false;
 
   @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     /*PluginGooglePlacePicker.initialize(
@@ -122,7 +130,7 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
               color: Colors.grey,
             ),
 
-            Expanded(
+            Container(
               child: Visibility(
                 visible: isProgress,
                 child: Center(
@@ -131,7 +139,7 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
               ),
             ),
 
-            Expanded(
+            Container(
               child: Visibility(
                 visible: falseResult,
                 child: Center(
@@ -284,7 +292,7 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
   }
 
   void callSetLocationApi(String pincode, String address) {
-    ApiCall().setLocation(pincode).then((apiResponseModel) async {
+    ApiCall().setContext(context).setLocation(pincode).then((apiResponseModel) async {
       if(apiResponseModel.statusCode == 200) {
         SetLocationResponseModel setLocationResponseModel = SetLocationResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

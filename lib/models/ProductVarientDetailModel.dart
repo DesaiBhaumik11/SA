@@ -35,16 +35,16 @@ class ProductVarientDetailModel
   factory ProductVarientDetailModel.fromJson(Map<String, dynamic> parsedData) {
     return ProductVarientDetailModel(
       Id: parsedData['Id'],
-        ProductId: parsedData['ProductId'],
-        PrimaryMediaId: parsedData['PrimaryMediaId'],
+        ProductId: parsedData['ProductId'] !=null ? parsedData['ProductId'] : "",
+        PrimaryMediaId: parsedData['PrimaryMediaId'] ,
         IsDefault: parsedData['IsDefault'],
         IsActive: parsedData['IsActive'],
         SubSku: parsedData['SubSku'],
         Status: parsedData['Status'],
         ProductAttribute: parsedData['ProductAttribute'],
-      ProductDetail: parsedData['ProductDetail'] != null ? ProductDetailsModel.parseList(parsedData['ProductDetail']) : null,
-      productVariantMedia: parsedData['ProductVariantMedia'] != null ? ProductVariantMedia.parseList(parsedData['ProductVariantMedia']) : null,
-      productPrice: parsedData['ProductPrice'] !=null ? ProductPriceModel.fromJson(parsedData['ProductPrice']) : null
+      ProductDetail: parsedData['ProductDetail'] != null ? ProductDetailsModel.parseList(parsedData['ProductDetail']) : new List(),
+      productVariantMedia: parsedData['ProductVariantMedia'] != null ? ProductVariantMedia.parseList(parsedData['ProductVariantMedia']) : new List(),
+      productPrice: parsedData['ProductPrice'] !=null ? ProductPriceModel.fromJson(parsedData['ProductPrice']) : new ProductPriceModel()
     );
   }
 

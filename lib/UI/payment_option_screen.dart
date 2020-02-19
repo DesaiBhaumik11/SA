@@ -50,6 +50,14 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   GetCartResponseModel cartResponseModel;
 
   @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     callGetMyCartAPI();
@@ -87,7 +95,16 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         color: Const.gray10,
         child: Column(
           children: <Widget>[
-            cartResponseModel != null ? priceTotalBox() : Container(),
+            cartResponseModel != null ? priceTotalBox() : InkWell(
+      child: Container(
+      padding: EdgeInsets.all(10),
+        height: 250,
+        child: Card(
+          child: Center(
+              child: Center(child: CircularProgressIndicator(),)
+          ),
+        )),
+    ),
             //promoContainer(),
             //walletContainer(),
           ],
@@ -96,10 +113,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
       bottomNavigationBar: BottomAppBar(
         child: GestureDetector(
           onTap: () {
-            ProgressDialog progressDialog = Utility.progressDialog(context, "");
-            progressDialog.show();
-            MyCartModal myCartModal = MyCartState.myCartModal;
-            callProceedToCheckoutAPI(myCartModal.totalCost.round().toString(), progressDialog);
+            callProceedToCheckoutAPI(cartResponseModel.SubTotal.toString());
           },
           child: Container(
             color: Const.primaryColor,
@@ -122,7 +136,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
 
   Widget callGetMyCartAPI() {
 
-    ApiCall().getCart().then((apiResponseModel) {
+    ApiCall().setContext(context).getCart().then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
         setState(() {
@@ -582,8 +596,10 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     );
   }
 
-  void callProceedToCheckoutAPI(String totalAmount, ProgressDialog progressDialog) {
-    ApiCall().proceedToPayment(totalAmount).then((apiResponseModel) {
+  void callProceedToCheckoutAPI(String totalAmount) {
+    ProgressDialog progressDialog = Utility.progressDialog(context, "");
+    progressDialog.show();
+    ApiCall().setContext(context).proceedToPayment(totalAmount).then((apiResponseModel) {
       //implementRazorPay("");
       if(apiResponseModel.statusCode == 200) {
         ProceedToPaymentModel proceedToPaymentModel = ProceedToPaymentModel.fromJson(apiResponseModel.Result);
@@ -600,23 +616,49 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   }
 
   void implementRazorPay(String orderId, String amount, String tranId) {
-    totalAmount = amount;
-    transactionId = tranId;
-    Razorpay razorpay = Razorpay();
-    var options = {
-      'key': 'rzp_test_GIzJZIWq8j3pzL',
-      //'amount': amount,
-      'name': 'Vegetos',
-      'description': 'Vegetos Checkout',
-      'order_id':orderId,
-    };
 
-    razorpay.open(options);
+    SharedPreferences.getInstance().then((prefs) {
+      Map<String, dynamic> tokenMap = Const.parseJwt(
+          prefs.getString('AUTH_TOKEN'));
+      String mobile="",email="";
 
-    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
+      if (tokenMap['mobile'] !=null && tokenMap['mobile'].toString().toLowerCase() != "") {
+        String isd="";
+        if (tokenMap['countrycode'] !=null && tokenMap['countrycode'].toString().toLowerCase() != "true") {
+          isd=tokenMap['countrycode'].toString();
+        }
+        mobile=isd + tokenMap['mobile'].toString();
+      }
+      if (tokenMap['email'] !=null && tokenMap['email'].toString().toLowerCase() != "true") {
+        email=tokenMap['email'].toString();
+      }
+
+
+
+      totalAmount = amount;
+      transactionId = tranId;
+      Razorpay razorpay = Razorpay();
+      var options = {
+        'key': 'rzp_test_GIzJZIWq8j3pzL',
+//        'amount': amount,
+        'name': 'Vegetos',
+        'description': 'Vegetos Checkout',
+        'order_id': orderId,
+        'prefill': {
+          'contact': mobile,
+          'email': email
+        }
+      };
+
+      razorpay.open(options);
+
+      razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+      razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+      razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    });
+    }
+
+
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
@@ -641,12 +683,14 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   void callPaymentConfirmAPI(String paymentId, String totalAmount, String transactionId) {
     ProgressDialog progressDialog = Utility.progressDialog(context, "");
     progressDialog.show();
-    ApiCall().confirmPayment(paymentId, transactionId).then((apiResponseModel) {
+    ApiCall().setContext(context).confirmPayment(paymentId, transactionId).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         //callClearCartAPI(progressDialog);
+        if(progressDialog!=null && progressDialog.isShowing()) {
+          progressDialog.dismiss();
+        }
         ApiCall().clearCart().then((apiResponseModel) {
           if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
-            progressDialog.dismiss();
             Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: OrderPlacedScreen(transactionId)),(c)=>false);
           } else if(apiResponseModel.statusCode == 401){
             Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
@@ -655,9 +699,15 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
           }
         });
       } else if(apiResponseModel.statusCode == 401) {
+        if(progressDialog!=null && progressDialog.isShowing()) {
+          progressDialog.dismiss();
+        }
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
         Navigator.of(context).pop();
       } else {
+        if(progressDialog!=null && progressDialog.isShowing()) {
+          progressDialog.dismiss();
+        }
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
         Navigator.of(context).pop();
       }

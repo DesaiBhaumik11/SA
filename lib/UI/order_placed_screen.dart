@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,9 +13,12 @@ import 'package:vegetos_flutter/UI/order_items.dart';
 import 'package:vegetos_flutter/UI/customer_support_1.dart';
 import 'package:vegetos_flutter/UI/payment_option_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/Enumaration.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/GetOrderByIdResponseModel.dart';
+import 'package:vegetos_flutter/models/temp.dart';
 
 class   OrderPlacedScreen extends StatefulWidget
 {
@@ -30,13 +35,19 @@ class   OrderPlacedScreen extends StatefulWidget
 
 }
 
-class OrderPlacedScreenState extends State<OrderPlacedScreen>
+class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerProviderStateMixin
 {
+
+  TabController controller;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    if(controller == null) {
+      controller=new TabController(length: 2, vsync: this);
+    }
+
     return DefaultTabController(
-      length: 1,
+      length: 2,
       child: Scaffold(
         backgroundColor: Color(0xffEDEDEE),
         /*bottomNavigationBar: BottomAppBar(
@@ -94,18 +105,25 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
                   fontSize: 16
                 ),),
               ),
-              /*Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Text('Items', style: TextStyle(
                 fontWeight: FontWeight.w500,
                     fontSize: 16
                 ),),
-              )*/
+              )
             ],
+            controller: controller,
           ),
         ),
-        body:callGetOrderById(widget.orderId),
+        body: WillPopScope(
+          onWillPop: () {
+            Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+          },
+          child: callGetOrderById(widget.orderId),
+        ),
       ),
+
     );
 
   }
@@ -114,9 +132,10 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
     return Container(
       child: TabBarView(
         children: <Widget>[
-          Summary(model),
-          //OrderItems(),
+          Summary(model,controller),
+          OrderItems(model),
         ],
+        controller: controller,
       ),
     );
   }
@@ -124,13 +143,16 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
 
   Widget callGetOrderById(String orderId) {
     return FutureBuilder(
-      future: ApiCall().getOrderById(orderId),
+      future: ApiCall().setContext(context).getOrderById(orderId),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
           ApiResponseModel apiResponseModel = snapshot.data;
           if(apiResponseModel.statusCode == 200) {
             GetOrderByIdResponseModel responseModel = GetOrderByIdResponseModel.fromJson(apiResponseModel.Result);
+//            GetOrderByIdResponseModelZ responseModelZ= GetOrderByIdResponseModelZ.fromJson(apiResponseModel.Result);
+//            responseModelZ.toString();
             return TabBody(responseModel);
+//            return Container(child: Center(child: Text("Not Working Now"),),);
           } else if(apiResponseModel.statusCode == 401) {
             return somethingWentWrong();
           } else {
@@ -174,14 +196,15 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen>
 class Summary extends StatefulWidget {
 
   GetOrderByIdResponseModel model;
-
-  Summary(this.model);
+  TabController controller;
+  
+  Summary(this.model,this.controller);
 
   @override
   _SummaryState createState() => _SummaryState();
 }
 
-class _SummaryState extends State<Summary> {
+class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
 
   var title= TextStyle(
     fontSize: 15,
@@ -201,11 +224,16 @@ class _SummaryState extends State<Summary> {
 
   var currentStep=1;
 
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
+  }
   @override
   Widget build(BuildContext context) {
-
-    String day = DateFormat('dd/MM/yyyy').format(widget.model.ShippingOrder.ShippingSchedule.dateTime);
+    String day_ = widget.model.shippingOrder.shippingSchedule!=null && widget.model.shippingOrder.shippingSchedule.date!=null ? widget.model.shippingOrder.shippingSchedule.date : "";
+     String day = day_.isNotEmpty ? DateFormat(EnumDateFormat.app).format(widget.model.shippingOrder.shippingSchedule.dateTime) : "";
     return ListView(
       physics: BouncingScrollPhysics(),
       children: <Widget>[
@@ -257,8 +285,8 @@ class _SummaryState extends State<Summary> {
                          child: Text(day, style: text),
                        ),
                        Expanded(
-                         child: Text(widget.model.ShippingOrder.ShippingSchedule.TimeFrom + " - " +
-                             widget.model.ShippingOrder.ShippingSchedule.TimeTo, style: text),
+                         child: Text(widget.model.shippingOrder.shippingSchedule.timeFrom + " - " +
+                             widget.model.shippingOrder.shippingSchedule.timeTo, style: text),
                        )
                      ],
                    ),
@@ -278,22 +306,41 @@ class _SummaryState extends State<Summary> {
                    SizedBox(
                      height: 100,
                      child: s.CustomStepper(
-
                        steps: [
-                       s.Step(title: Text("Booked"),   isActive: true,state: s.StepState.start),
-                       s.Step(title: Text("Confirmed"),state: currentStep==1?s.StepState.complete:s.StepState.indexed,isActive: currentStep==1,),
-                       s.Step(title: Text("Dispatched",),state: currentStep==2?s.StepState.complete:s.StepState.indexed,isActive: currentStep==2),
-                       s.Step(title: Text("Delivered"),state: currentStep==3?s.StepState.complete:s.StepState.indexed,isActive: currentStep==3)
+                       s.Step(title: Text("Draft"),   isActive: true,state: s.StepState.start),
+                       s.Step(title: Text("Confirmed"),state: currentStep>=1?s.StepState.complete:s.StepState.indexed,isActive: currentStep>=1,),
+                       s.Step(title: Text("Dispatched",),state: currentStep>=2?s.StepState.complete:s.StepState.indexed,isActive: currentStep>=2),
+                       s.Step(title: Text("Delivered"),state: currentStep==3?s.StepState.complete:s.StepState.complete,isActive: currentStep==3)
                      ],
                      type: s.StepperType.horizontal,
-                     currentStep: 1,
+                     currentStep: currentStep,
                      ),
-                   )
+                   ),
+
+                   Container(
+                     alignment: Alignment.bottomRight,
+                     child: InkWell(
+                       onTap: (){
+                        widget.controller.animateTo(1);
+
+                       },
+                       child:  Text(
+                         "Items Details >>",
+                         textAlign: TextAlign.end,style: TextStyle(
+                         fontWeight: FontWeight.w500,
+                         fontSize: 15,
+                       ),
+
+                       ),
+                     ),
+
+                   ),
 
                  ],
                ),
              ),
            ),
+
 
             Padding(
               padding: EdgeInsets.only(top: 17, left: 15, bottom: 5),
@@ -312,14 +359,14 @@ class _SummaryState extends State<Summary> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
 
-                    Text(widget.model.ShippingOrder.Name, style: TextStyle(
+                    Text(widget.model.shippingOrder.name, style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
                     ),),
 
-                    Text(widget.model.ShippingOrder.AddressLine1 + widget.model.ShippingOrder.AddressLine2 +
-                        widget.model.ShippingOrder.City + widget.model.ShippingOrder.State +
-                        widget.model.ShippingOrder.Country + widget.model.ShippingOrder.Pin, style: address,),
+                    Text(widget.model.shippingOrder.addressLine1 + widget.model.shippingOrder.addressLine2 +
+                        widget.model.shippingOrder.city + " , " +  widget.model.shippingOrder.state + " , " +
+                        widget.model.shippingOrder.country + " , " + widget.model.shippingOrder.pin, style: address,),
                     //Text('${PaymentOptionScreenState.addressModel.result.addressLine2}', style: address,),
                     //Text('${PaymentOptionScreenState.addressModel.result.city}', style: address,)
 
@@ -346,7 +393,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Order ID', style: text,),
-                        Text(widget.model.OrderId, style: text,),
+                        Text(widget.model.orderId, style: text,),
                       ],
                     ),
 
@@ -355,7 +402,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Inovice number', style: text,),
-                        Text(widget.model.InvoiceNumber, style: text,),
+                        Text(widget.model.invoiceNumber, style: text,),
                       ],
                     ),
 
@@ -375,7 +422,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Total Items', style: text,),
-                        Text(widget.model.ItemCount.toString() + ' Items', style: text,),
+                        Text(widget.model.itemCount.toString() + ' Items', style: text,),
                       ],
                     ),
 
@@ -385,7 +432,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Delivery charges', style: text,),
-                        Text(widget.model.DeliveryCharges.toString(), style: TextStyle(
+                        Text(widget.model.shippingCharges.toString(), style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500,
                           fontSize: 16
@@ -399,7 +446,7 @@ class _SummaryState extends State<Summary> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Discount/Promo', style: text,),
-                        Text("-₹ " + widget.model.Discount.toString(), style: text,),
+                        Text("-₹ " + widget.model.discount.toString(), style: text,),
                       ],
                     ),
 
@@ -428,7 +475,7 @@ class _SummaryState extends State<Summary> {
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),),
-                        Text("₹ " + widget.model.SubTotal.toString(), style: TextStyle(
+                        Text("₹ " + widget.model.totalAmount.toString(), style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),),

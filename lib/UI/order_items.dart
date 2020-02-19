@@ -1,9 +1,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/GetOrderByIdResponseModel.dart';
+import 'package:vegetos_flutter/models/OrderedItemsViewsModel.dart';
+import 'package:vegetos_flutter/models/ProductPriceModel.dart';
+import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 
 class OrderItems extends StatefulWidget
@@ -13,11 +18,33 @@ class OrderItems extends StatefulWidget
     // TODO: implement createState
     return OrderItemsState();
   }
+  GetOrderByIdResponseModel model;
 
+  OrderItems(this.model);
 }
 
 class OrderItemsState extends State<OrderItems>
 {
+  String ImageURL = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    SharedPreferences.getInstance().then((prefs) {
+      setState((){
+        ImageURL = prefs.getString("ImageURL");
+      });
+
+    });
+
+    super.initState();
+  }
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -32,8 +59,24 @@ class OrderItemsState extends State<OrderItems>
   }
 
 
-  Widget itemSubChild(CartItemViewModel cartItem)
+  Widget itemSubChild(OrderItemsViewModel orderItemsViewsModel)
   {
+    String unit = "";
+
+    ProductPriceModel ProductPrice = new ProductPriceModel();
+    if(orderItemsViewsModel!=null) {
+      if (orderItemsViewsModel.units != null &&
+          orderItemsViewsModel.units.length > 0) {
+        unit = orderItemsViewsModel.units[0].Name;
+      }
+
+        if (orderItemsViewsModel.productPrice != null) {
+          ProductPrice = orderItemsViewsModel.productPrice;
+        }
+
+    }
+
+
     var child = Container(
       child: Card(
         child: Container(
@@ -46,7 +89,8 @@ class OrderItemsState extends State<OrderItems>
                   children: <Widget>[
                     Container(
                       //child: Image.network('assets/01-product.png', height: 100.0, width: 100.0,),
-                      child: Image.network('${DashboardScreenState.appFirstModal.ImageUrl}${cartItem.productMediaId}', height: 100.0, width: 100.0,),
+                      child: orderItemsViewsModel.productVariantMedia==null||orderItemsViewsModel.productVariantMedia.length<=0 ?Image.asset("02-product.png",height: 100,width: 100,):
+                      Image.network(ImageURL + orderItemsViewsModel.productVariantMedia[0] + '&h=150&w=150', height: 110.0, width: 110.0,),
                     ),
                   ],
                 ),
@@ -58,13 +102,13 @@ class OrderItemsState extends State<OrderItems>
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('${cartItem.name}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                        child: Text('${orderItemsViewsModel.productDetails!=null && orderItemsViewsModel.productDetails.length>0 ? orderItemsViewsModel.productDetails[0].Name : ""}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                             color: Colors.black, fontWeight: FontWeight.w500),),
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                        child: Text(orderItemsViewsModel.minimumOrderQuantity.toString() + " "+ unit, style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
                             color: Const.dashboardGray, fontWeight: FontWeight.w500),),
                       ),
                       Container(
@@ -78,7 +122,7 @@ class OrderItemsState extends State<OrderItems>
                                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text('₹ ${cartItem.price}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      child: Text('₹ ${ProductPrice.Price.toString() +"x"+ (orderItemsViewsModel.quantity / orderItemsViewsModel.minimumOrderQuantity).round().toString() }',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
                                       ),
@@ -93,7 +137,7 @@ class OrderItemsState extends State<OrderItems>
                                 children: <Widget>[
                                   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Text('₹ ${cartItem.discountPercent}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                    child: Text('₹ ${orderItemsViewsModel.totalLineAmount!=null ? orderItemsViewsModel.totalLineAmount : ""}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,)),
                                   ),
@@ -122,19 +166,19 @@ class OrderItemsState extends State<OrderItems>
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-          child: Text('Exotic', style: TextStyle(fontFamily: 'GoogleSans',
-              fontWeight: FontWeight.w500, color: Const.locationGrey),),
-        ),
+//        Container(
+//          alignment: Alignment.centerLeft,
+//          margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+//          child: Text('Exotic', style: TextStyle(fontFamily: 'GoogleSans',
+//              fontWeight: FontWeight.w500, color: Const.locationGrey),),
+//        ),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: MyCartState.myCartModal.result.cartItemViewModels.length,
+          itemCount: widget.model.orderItemsViewsModel.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
-              title: itemSubChild(MyCartState.myCartModal.result.cartItemViewModels[index]),
+              title: itemSubChild(widget.model.orderItemsViewsModel[index]),
             );
           },
         ),

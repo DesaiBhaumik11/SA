@@ -44,7 +44,6 @@ class MyCartScreen extends StatefulWidget
 
 class MyCartState extends State<MyCartScreen>
 {
-   static myCart.MyCartModal myCartModal ;
 
   //RecommendedProductsModel  recommendedProductsModel ;
 
@@ -53,37 +52,42 @@ class MyCartState extends State<MyCartScreen>
   String checkoutTotal = "0";
   String ImageURL = '';
 
-  bool isDataAvailable = false;
+  bool isDataAvailable = true;
 
    Future recommendedFuture;
-
   GetCartResponseModel model = GetCartResponseModel();
 
   @override
   void initState() {
     // TODO: implement initState
-    callGetMyCartAPI();
     recommendedFuture = ApiCall().recommendedForYou("1", "10");
     SharedPreferences.getInstance().then((prefs) {
       ImageURL = prefs.getString("ImageURL");
     });
+    callGetMyCartAPI();
     super.initState();
   }
 
+   @override
+   void setState(fn) {
+     if(mounted){
+       super.setState(fn);
+     }
+   }
+
   @override
   Widget build(BuildContext context) {
-
-    myCartModal = Provider.of<myCart.MyCartModal>(context);
+//    myCartModal = Provider.of<myCart.MyCartModal>(context);
     /*recommendedProductsModel = Provider.of<RecommendedProductsModel>(context) ;
 
     if(!recommendedProductsModel.loaded){
       recommendedProductsModel.loadProducts();
     }*/
 
-    if(!myCartModal.loaded){
-      myCartModal.getMyCart();
-      return Material(child: Center(child: CircularProgressIndicator(),),);
-    }
+//    if(!myCartModal.loaded){
+//      myCartModal.getMyCart();
+//      return Material(child: Center(child: CircularProgressIndicator(),),);
+//    }
 
     return Scaffold(
       appBar: cartAppBar(),
@@ -91,7 +95,7 @@ class MyCartState extends State<MyCartScreen>
         child: Container(
           child: Column(
             children: <Widget>[
-              model.cartItemViewModels != null && model.cartItemViewModels.isNotEmpty ? cartWidgets() : noItemsInYourCart(),
+              model.cartItemViewModels != null && model.cartItemViewModels.isNotEmpty ? cartWidgets() :  !isDataAvailable ? noItemsInYourCart():Container(height:200,child: Center(child: CircularProgressIndicator(),),),
               recommendedContainer(),
             ],
           ),
@@ -508,9 +512,9 @@ class MyCartState extends State<MyCartScreen>
                              shape: RoundedRectangleBorder(
                                  borderRadius: BorderRadius.circular(5.0)
                              ),
-                             /*child: result.productMediaId==null||result.productMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                             Image.network(ImageURL + result.productMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),*/
-                             child: Image.asset("02-product.png",height: 100,width: 100,),
+                             child: result.PrimaryMediaId==null||result.PrimaryMediaId.toString().isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                             Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                             child: Image.asset("02-product.png",height: 100,width: 100,),
                            ),
                            margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                          ),
@@ -636,38 +640,44 @@ class MyCartState extends State<MyCartScreen>
   }
 
   Widget callGetMyCartAPI() {
-
-    ApiCall().getCart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          model = getCartResponseModel;
-          if(model.discount != null) {
-            totalSaving = model.discount.toString();
-          } else {
-            totalSaving = "0";
-          }
-
-          if(model.SubTotal != null) {
-            checkoutTotal = model.SubTotal.toString();
-          } else {
-            checkoutTotal = "0";
-          }
-
-          if(model.cartItemViewModels != null) {
-            cartTotalItems = model.cartItemViewModels.length.toString();
-          } else {
-            cartTotalItems = "0";
-          }
-
-          setState(() {
-            isDataAvailable = true;
-          });
-        });
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-      }
+    ApiCall().setContext(context).getCart().then((apiResponseModel) {
+      BindData(apiResponseModel);
     });
+  }
+
+  void BindData(ApiResponseModel apiResponseModel){
+    if(apiResponseModel.statusCode == 200) {
+      GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
+      setState(() {
+        model = getCartResponseModel;
+        if(model.discount != null) {
+          totalSaving = model.discount.toString();
+        } else {
+          totalSaving = "0";
+        }
+
+        if(model.SubTotal != null) {
+          checkoutTotal = model.SubTotal.toString();
+        } else {
+          checkoutTotal = "0";
+        }
+
+        if(model.cartItemViewModels != null) {
+          cartTotalItems = model.cartItemViewModels.length.toString();
+          isDataAvailable = true;
+        } else {
+          cartTotalItems = "0";
+          isDataAvailable = false;
+        }
+      });
+    } else if(apiResponseModel.statusCode == 204) {
+      setState(() {
+        model = null;
+        isDataAvailable = false;
+      });
+    }else{
+      Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+    }
   }
 
   Widget noItemsInYourCart() {
@@ -823,9 +833,14 @@ class MyCartState extends State<MyCartScreen>
   }
 
   void updateCartQuantity(String itemId, String quantity) {
-    ApiCall().updateQuantity(itemId, quantity).then((apiResponseModel) {
+    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+    ApiCall().setContext(context).updateQuantity(itemId, quantity).then((apiResponseModel) {
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
       if(apiResponseModel.statusCode == 200) {
-        callGetMyCartAPI();
+        BindData(apiResponseModel);
       } else if(apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
       } else {
@@ -835,9 +850,14 @@ class MyCartState extends State<MyCartScreen>
   }
 
   void deleteCartItem(String itemId) {
-     ApiCall().deleteItem(itemId).then((apiResponseModel) {
+    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+     ApiCall().setContext(context).deleteItem(itemId).then((apiResponseModel) {
+       if(progressDialog!=null && progressDialog.isShowing()){
+         progressDialog.dismiss();
+       }
        if(apiResponseModel.statusCode == 200) {
-         callGetMyCartAPI();
+         BindData(apiResponseModel);
        } else if(apiResponseModel.statusCode == 401) {
          Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
        } else {
@@ -847,9 +867,14 @@ class MyCartState extends State<MyCartScreen>
    }
 
   void callClearCartAPI() {
-    ApiCall().clearCart().then((apiResponseModel) {
+    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+    ApiCall().setContext(context).clearCart().then((apiResponseModel) {
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
       if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
-        callGetMyCartAPI();
+        BindData(apiResponseModel);
       } else if(apiResponseModel.statusCode == 401){
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
       } else {
@@ -906,10 +931,15 @@ class MyCartState extends State<MyCartScreen>
    }
 
    void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-     ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+     ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
+     progressDialog.show() ;
+     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+       if(progressDialog!=null && progressDialog.isShowing()){
+         progressDialog.dismiss();
+       }
        if(apiResponseModel.statusCode == 200) {
          Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-         callGetMyCartAPI();
+         BindData(apiResponseModel);
        } else if (apiResponseModel.statusCode == 401) {
          Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
        } else {

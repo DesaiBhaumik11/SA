@@ -4,7 +4,7 @@ class ProductVariantMedia
   String MediaId;
 
   ProductVariantMedia({
-    this.MediaId="",
+    this.MediaId,
   });
 
   factory ProductVariantMedia.fromJson(Map<String, dynamic> parsedData) {

@@ -1,5 +1,6 @@
 
 import 'package:intl/intl.dart';
+import 'package:vegetos_flutter/Utils/Enumaration.dart';
 
 class GetOrdersResponseModel
 {
@@ -82,7 +83,7 @@ class GetOrdersResponseModel
       businessId: json["BusinessId"],
       locationId: json["LocationId"],
       transactionDate: json["TransactionDate"] != null ? DateTime.parse(json["TransactionDate"]) : null,
-      displayTransactionData: json["TransactionDate"] != null ? DateFormat("DD MMM yyyy").format(DateTime.parse(json["TransactionDate"])) : null,
+      displayTransactionData: json["TransactionDate"] != null ? DateFormat(EnumDateFormat.dateMonth).format(DateTime.parse(json["TransactionDate"])) : null,
       status: json["Status"],
       referenceNo: json["ReferenceNo"],
       additionalNote: json["AdditionalNote"],
@@ -103,6 +104,7 @@ class GetOrdersResponseModel
     var list = listData as List;
     List<GetOrdersResponseModel> jobList =
     list.map((data) => GetOrdersResponseModel.fromJson(data)).toList();
+    jobList.sort((a, b) => b.createdOn.compareTo(a.createdOn));
     return jobList;
   }
 }

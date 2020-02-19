@@ -1,14 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/add_new_address.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/default_address.dart';
+
+import 'locate_on_map.dart';
 
 class MyAddresses extends StatefulWidget {
   @override
@@ -62,8 +69,41 @@ class _MyAddressesState extends State<MyAddresses> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              Navigator.push(context, SlideLeftRoute(page: AddNewAddress(edit: false)));
-            },
+              ProgressDialog progresDialog=Utility.progressDialog(context, "");
+              progresDialog.show();
+              Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
+                final coordinates = new Coordinates(position.latitude, position.longitude);
+                var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+                var first = addresses.first;
+                print("${first.featureName} : ${first.addressLine}");
+                if(progresDialog!=null && progresDialog.isShowing()){
+                  progresDialog.dismiss();
+                }
+                Navigator.push(context, SlideLeftRoute(
+                page: LocateMap(latLng:widget!=null? LatLng(position.latitude,position.longitude):null,
+                  addressLine2: "",))).then((address){
+                Address add = address;
+                Result result=
+                Result(
+                //    id:          widget.edit?widget.result.id:  Uuid().v4(),
+                name:          "",
+                // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
+                addressLine1:  add.addressLine,
+                addressLine2:  add.subLocality,
+                city:          add.locality,
+                country:       add.countryName,
+                state:         add.adminArea,
+                pin:           add.postalCode,
+                latitude:      add.coordinates.latitude,
+                longitude:     add.coordinates.longitude,
+                isDefault:     true
+                );
+                Navigator.push(context, SlideLeftRoute(page: AddNewAddress(result: result,edit: false)));
+                });
+//
+            });
+              },
+
             child: Container(
               width: double.infinity,
               color: Colors.white,
@@ -146,7 +186,7 @@ class _MyAddressesState extends State<MyAddresses> {
                         child: Container(),
                       ),
                       PopupMenuButton(
-                        itemBuilder: (c) => [/*"Edit", */"Delete","Set Default"]
+                        itemBuilder: (c) => ["Edit", "Delete","Set Default"]
                             .map((i) => PopupMenuItem(
                                     child: ListTile(
                                   onTap: () {
@@ -189,15 +229,15 @@ class _MyAddressesState extends State<MyAddresses> {
                     height: 10,
                   ),
                   Text(
-                    addressModal.result[index].name,
-                    style: address,
-                  ),
-                  Text(
                     addressModal.result[index].addressLine1,
                     style: address,
                   ),
                   Text(
                     addressModal.result[index].addressLine2,
+                    style: address,
+                  ),
+                  Text(
+                    addressModal.result[index].city + " , "+addressModal.result[index].state + " , " + addressModal.result[index].pin,
                     style: address,
                   )
                 ],

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/payment_option_screen.dart';
@@ -57,7 +58,8 @@ import 'UI/update_profile.dart';
 import 'UI/verify_otp.dart';
 import 'UI/wallet.dart';
 
-void main() => runApp(MyApp());
+void main() =>
+    runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   final categories=CategoriesModel();
@@ -85,6 +87,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return MultiProvider(providers: [
 
       ChangeNotifierProvider<MyOrdersModal>.value(value: myOrdersModal),

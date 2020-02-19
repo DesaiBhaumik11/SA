@@ -3,71 +3,71 @@ import 'GetAllShippingSlotModel.dart';
 
 class GetShippingOrderModel
 {
-  String TrancactionId;
+  String trancactionId;
 
-  String UserId;
+  String userId;
 
-  String LocationId;
+  String locationId;
 
-  String UserAddressId;
+  String userAddressId;
 
-  String ShippingScheduleId;
+  String shippingScheduleId;
 
-  String Name;
+  String name;
 
-  String AddressLine1;
+  String addressLine1;
 
-  String AddressLine2;
+  String addressLine2;
 
-  String City;
+  String city;
 
-  String State;
+  String state;
 
-  String Country;
+  String country;
 
-  String Pin;
+  String pin;
 
-  GetAllShippingSlotModel ShippingSchedule;
+  GetAllShippingSlotModel shippingSchedule;
 
-  String CreatedBy;
+  String createdBy;
 
-  String CreatedOn;
+  String createdOn;
 
   GetShippingOrderModel({
-    this.TrancactionId,
-    this.UserId,
-    this.LocationId,
-    this.UserAddressId,
-    this.ShippingScheduleId,
-    this.Name,
-    this.AddressLine1,
-    this.AddressLine2,
-    this.City,
-    this.State,
-    this.Country,
-    this.Pin,
-    this.ShippingSchedule,
-    this.CreatedBy,
-    this.CreatedOn,
+    this.trancactionId,
+    this.userId,
+    this.locationId,
+    this.userAddressId,
+    this.shippingScheduleId,
+    this.name,
+    this.addressLine1,
+    this.addressLine2,
+    this.city,
+    this.state,
+    this.country,
+    this.pin,
+    this.shippingSchedule,
+    this.createdBy,
+    this.createdOn,
   });
 
   factory GetShippingOrderModel.fromJson(Map<String, dynamic> parsedData) {
     return GetShippingOrderModel(
-      TrancactionId: parsedData['TrancactionId'],
-      UserId: parsedData['UserId'],
-      LocationId: parsedData['LocationId'],
-      UserAddressId: parsedData['UserAddressId'],
-      ShippingScheduleId: parsedData['ShippingScheduleId'],
-      Name: parsedData['Name'],
-      AddressLine1: parsedData['AddressLine1'],
-      AddressLine2: parsedData['AddressLine2'],
-      City: parsedData['City'],
-      State: parsedData['State'],
-      Country: parsedData['Country'],
-      Pin: parsedData['Pin'],
-      ShippingSchedule: parsedData['ShippingSchedule'] != null ? GetAllShippingSlotModel.fromJson(parsedData['ShippingSchedule']) : null,
-      CreatedBy: parsedData['CreatedBy'],
-      CreatedOn: parsedData['CreatedOn'],
+      trancactionId: parsedData['TrancactionId'],
+      userId: parsedData['UserId'],
+      locationId: parsedData['LocationId'],
+      userAddressId: parsedData['UserAddressId'],
+      shippingScheduleId: parsedData['ShippingScheduleId'],
+      name: parsedData['Name'],
+      addressLine1: parsedData['AddressLine1'],
+      addressLine2: parsedData['AddressLine2'],
+      city: parsedData['City'],
+      state: parsedData['State'],
+      country: parsedData['Country'],
+      pin: parsedData['Pin'],
+      shippingSchedule: parsedData['ShippingSchedule'] != null ? GetAllShippingSlotModel.fromJson(parsedData['ShippingSchedule']) : new GetAllShippingSlotModel(),
+      createdBy: parsedData['CreatedBy'],
+      createdOn: parsedData['CreatedOn'],
     );
   }
 

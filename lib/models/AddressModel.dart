@@ -2,6 +2,7 @@
 class AddressModel
 {
   String id;
+  String namePrefix;
   String name;
   String contactId;
   String addressLine1;
@@ -10,6 +11,7 @@ class AddressModel
   String country;
   String state;
   String pin;
+  String title;
   double latitude;
   double longitude;
   bool isDefault;
@@ -17,9 +19,11 @@ class AddressModel
   String createdBy;
   String createdOn;
   String updatedOn;
+  bool isLoaded=false;
 
   AddressModel({
     this.id,
+    this.namePrefix,
     this.name,
     this.contactId,
     this.addressLine1,
@@ -28,6 +32,7 @@ class AddressModel
     this.country,
     this.state,
     this.pin,
+    this.title,
     this.latitude,
     this.longitude,
     this.isDefault,
@@ -35,10 +40,12 @@ class AddressModel
     this.createdBy,
     this.createdOn,
     this.updatedOn,
+    this.isLoaded,
   });
 
   factory AddressModel.fromJson(Map<String, dynamic> json) => AddressModel(
     id: json["Id"],
+    namePrefix: json["NamePrefix"],
     name: json["Name"],
     contactId: json["ContactId"],
     addressLine1: json["AddressLine1"],
@@ -47,6 +54,7 @@ class AddressModel
     country: json["Country"],
     state: json["State"],
     pin: json["Pin"],
+    title: json["Title"],
     latitude: json["Latitude"] == null ? null : json["Latitude"],
     longitude: json["Longitude"] == null ? null : json["Longitude"],
     isDefault: json["IsDefault"],
@@ -54,10 +62,12 @@ class AddressModel
     createdBy: json["CreatedBy"],
     createdOn: json["CreatedOn"],
     updatedOn: json["UpdatedOn"] == null ? null : json["UpdatedOn"],
+    isLoaded: true,
   );
 
   Map<String, dynamic> toJson() => {
     "Id": id,
+    "NamePrefix" : namePrefix,
     "Name": name,
     "ContactId": contactId,
     "AddressLine1": addressLine1,
@@ -66,6 +76,7 @@ class AddressModel
     "Country": country,
     "State": state,
     "Pin": pin,
+    "Title": title,
     "Latitude": latitude == null ? null : latitude,
     "Longitude": longitude == null ? null : longitude,
     "IsDefault": isDefault,

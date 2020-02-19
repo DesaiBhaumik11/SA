@@ -64,7 +64,7 @@ class DeviceTokenController
         issuer: 'com.archisys.vegetos',
         audience: <String>['com.archisys.artis'],
         otherClaims: map,
-        maxAge: const Duration(minutes: 5)
+        maxAge: const Duration(minutes: 30)
     );
     String token = issueJwtHS256(claimSet, key);
 

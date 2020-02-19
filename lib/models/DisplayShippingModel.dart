@@ -20,7 +20,7 @@ class DisplayShippingModel
     return DisplayShippingModel(
       Key: parsedData['Key'],
       keyDate: DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(parsedData['Key']),
-      Items: parsedData['Items'] != null ? TimeSlotListModel.parseList(parsedData['Items']) : null,
+      Items: parsedData['Items'] != null ? TimeSlotListModel.parseList(parsedData['Items'],) : null,
     );
   }
 

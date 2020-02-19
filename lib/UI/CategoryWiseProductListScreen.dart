@@ -2,16 +2,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
+import 'package:vegetos_flutter/models/ProductPriceModel.dart';
+import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
+import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
@@ -42,21 +51,28 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
   String categoryName;
 
   MyCartModal myCartModal ;
-
+  String ImageURL = '';
   CategoryWiseProductListScreenState(this.categoryId, this.categoryName);
 
   String cartTotal = '0';
   Future getProductWithDefaultVarient;
+  ProgressDialog progressDialog ;
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
-    MyCartUtils().callCartCountAPI();
     getProductWithDefaultVarient = ApiCall().GetProductWithDefaultVarientAPI(categoryId);
-    MyCartUtils.streamController.stream.listen((cartCount) {
-      setState(() {
-        cartTotal = cartCount;
-      });
+    count();
+    SharedPreferences.getInstance().then((prefs) {
+      ImageURL = prefs.getString("ImageURL");
     });
     super.initState();
   }
@@ -100,7 +116,9 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
               ),
             ),
             onTap: () {
-              Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen()));
+              Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen())).then((returnn){
+                count();
+              });
             },
           )
         ],
@@ -173,12 +191,13 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
       margin: EdgeInsets.only(left: 5.0, right: 5.0, top: 5.0),
       child: GridView.count(
         crossAxisCount: 2,
+        crossAxisSpacing: 5.0,
+        mainAxisSpacing: 5.0,
         shrinkWrap: true,
-        childAspectRatio: aspectRatio,
+        padding: EdgeInsets.all(5.0),
+        childAspectRatio: aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
         physics: BouncingScrollPhysics(),
         //padding: const EdgeInsets.all(4.0),
-        mainAxisSpacing: 5.0,
-        crossAxisSpacing: 0.0,
         children: List.generate(products.length,(index){
           return childView(products[index]);
         }),
@@ -187,46 +206,62 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
   }
 
 
-  Widget childView(ProductWithDefaultVarientModel model) {
+  Widget childView(ProductWithDefaultVarientModel productVariant) {
 
-    String unit = '';
-    for(int i = 0; i < model.Units.length; i++) {
-      if(model.Units[i].Language == "En-US") {
-        unit = model.Units[i].Name;
+    String name = "";
+    String unit = "";
+    for(int i = 0; i < productVariant.ProductDetails.length; i++) {
+      if(productVariant.ProductDetails[i].Language == "En-US") {
+        name = productVariant.ProductDetails[i].Name;
         break;
       }
     }
 
-    String name = '';
-    for(int i = 0; i < model.ProductDetails.length; i++) {
-      if(model.ProductDetails[i].Language == "En-US") {
-        name = model.ProductDetails[i].Name;
+    for(int i = 0; i < productVariant.Units.length; i++) {
+      if(productVariant.Units[i].Language == "En-US") {
+        unit = productVariant.Units[i].Name;
+        break;
+      }
+    }
+    ProductPriceModel ProductPrice=new ProductPriceModel();
+    ProductDetailsModel ProductDetail=new ProductDetailsModel();
+    UnitsModel Units=new UnitsModel();
+    ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+
+    if(productVariant!=null){
+
+      if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+        ProductDetail = productVariant.ProductDetails[0];
+      }
+      if(productVariant.Units!=null && productVariant.Units.length>0){
+        Units=productVariant.Units[0];
+      }
+      if(productVariant.ProductPrice!=null){
+        ProductPrice = productVariant.ProductPrice;
       }
     }
 
-    List<String> mediaList = model.ProductVariantMedia != null ? List.from(model.ProductVariantMedia) : null;
 
     return Stack(
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            //final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-                height: 25,
-                width: 25,
-                child: CircularProgressIndicator())));
-
-            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-            productModal.getProductDetail(model.ProductId,(){
-              Navigator.pop(context);
-              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(model.ProductId)));
-            }) ;
-            //Navigator.of(context).push(EnterExitRoute(enterPage: ProductDetailScreen(), exitPage: CategoryWiseProductListScreen('', '')));
-
+//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+//                height: 25,
+//                width: 25,
+//                child: CircularProgressIndicator())));
+//            productModal.getProductDetail(productVariant.ProductId,(){
+//              Navigator.pop(context);
+//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
+//            }) ;
+            Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId))).then((returnn){
+              count();
+            });
           },
           child: Container(
-            //width: 180.0,
-            height: 280.0,
+            width: 180.0,
+//            height: 280.0,
             child: Card(
               child: Column(
                 children: <Widget>[
@@ -244,21 +279,21 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0)
                             ),
-                            child: mediaList != null && mediaList.isNotEmpty ?
-                            Image.network("${appFirstModal.ImageUrl}${mediaList[0] + '&h=150&w=150'}", height: 110.0, width: 110.0,) :
-                            Image.asset("02-product.png",height: 100,width: 100,),
+                            child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                            Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                            child: Image.asset("02-product.png",height: 100,width: 100,),
                           ),
                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
                       ),
-                      model.ProductPrice.DiscountPercent != null && model.ProductPrice.DiscountPercent != 0 ? Container(
+                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0.0 ? Container(
                         margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             color: Colors.orange
                         ),
-                        child: Text(model.ProductPrice.DiscountPercent != null ? model.ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                             color: Colors.white),),
                       ) : Container(),
                     ],
@@ -268,8 +303,8 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                     child: Row(
                       children: <Widget>[
                         Flexible(
-                          child: Text(name ,overflow: TextOverflow.ellipsis, maxLines: 2 ,
-                              style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
+                          child: Text(name ,
+                              overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black)),
                         ),
@@ -280,7 +315,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('1 ' + unit ,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                      child: Text(productVariant.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                       ),
@@ -292,7 +327,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text(model.ProductPrice.OfferPrice != null ? '₹ ' + model.ProductPrice.OfferPrice.toString() : '₹ 0',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                          child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                           ),
@@ -302,7 +337,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child: Text(model.ProductPrice.Price != null ? '₹' + model.ProductPrice.Price.toString() : '₹ 0',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                          child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
                               fontWeight: FontWeight.w500,
                               color: Colors.grey, decoration: TextDecoration.lineThrough),
                           ),
@@ -315,8 +350,8 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                     padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5.0),
-                      //color: Const.gray10
-                      color: Const.primaryColor
+                        //color: Const.gray10
+                        color: Const.primaryColor
                     ),
                     child: Align(
                       alignment: Alignment.center,
@@ -327,18 +362,150 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                   ),
                     onTap: (){
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                      //myCartModal.addTocart(result);
-
-                      MyCartUtils().callAddToCartAPI(model.ProductId, model.ProductVariantId,
-                          model.IncrementalStep.toString(), "", model.ProductPrice.OfferPrice.toString());
+                      //myCartModal.addTocart(productModal);
+                      addToCart(productVariant.ProductId, productVariant.ProductVariantId, productVariant.IncrementalStep.toString(),
+                          "", ProductPrice.OfferPrice.toString());
                     },)
                 ],
               ),
             ),
           ),
-        ),
+        )
       ],
     );
+//    return Stack(
+//      children: <Widget>[
+//        GestureDetector(
+//          onTap: () {
+//            //final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+//                height: 25,
+//                width: 25,
+//                child: CircularProgressIndicator())));
+//
+//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+//            productModal.getProductDetail(model.ProductId,(){
+//              Navigator.pop(context);
+//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(model.ProductId)));
+//            }) ;
+//            //Navigator.of(context).push(EnterExitRoute(enterPage: ProductDetailScreen(), exitPage: CategoryWiseProductListScreen('', '')));
+//
+//          },
+//          child: Container(
+//            //width: 180.0,
+//            height: 280.0,
+//            child: Card(
+//              child: Column(
+//                children: <Widget>[
+//                  Stack(
+//                    //alignment: Alignment.center,
+//                    children: <Widget>[
+//                      Center(
+//                        child: Container(
+//                          width: 110.0,
+//                          height: 110.0,
+//                          //alignment: Alignment.center,
+//                          child: Card(
+//                            elevation: 0.0,
+//                            clipBehavior: Clip.antiAliasWithSaveLayer,
+//                            shape: RoundedRectangleBorder(
+//                                borderRadius: BorderRadius.circular(5.0)
+//                            ),
+//                            child: mediaList != null && mediaList.isNotEmpty ?
+//                            Image.network("${appFirstModal.ImageUrl}${mediaList[0] + '&h=150&w=150'}", height: 110.0, width: 110.0,) :
+//                            Image.asset("02-product.png",height: 100,width: 100,),
+//                          ),
+//                          margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+//                        ),
+//                      ),
+//                      productPriceModel.DiscountPercent != null && productPriceModel.DiscountPercent != 0 ? Container(
+//                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
+//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+//                        decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.circular(5.0),
+//                            color: Colors.orange
+//                        ),
+//                        child: Text(productPriceModel.DiscountPercent != null ? productPriceModel.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+//                            color: Colors.white),),
+//                      ) : Container(),
+//                    ],
+//                  ),
+//                  Container(
+//                    margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+//                    child: Row(
+//                      children: <Widget>[
+//                        Flexible(
+//                          child: Text(name ,overflow: TextOverflow.ellipsis, maxLines: 2 ,
+//                              style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
+//                                  fontWeight: FontWeight.w700,
+//                                  color: Colors.black)),
+//                        ),
+//                      ],
+//                    ),
+//                  ),Expanded(child: Container(),flex: 1,),
+//                  Container(
+//                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+//                    child: Align(
+//                      alignment: Alignment.topLeft,
+//                      child: Text('1 ' + unit ,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+//                          fontWeight: FontWeight.w500,
+//                          color: Colors.grey),
+//                      ),
+//                    ),
+//                  ),
+//                  Row(
+//                    children: <Widget>[
+//                      Container(
+//                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                        child: Align(
+//                          alignment: Alignment.topLeft,
+//                          child: Text(productPriceModel.OfferPrice != null ? '₹ ' + productPriceModel.OfferPrice.toString() : '₹ 0',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+//                              fontWeight: FontWeight.w700,
+//                              color: Colors.black),
+//                          ),
+//                        ),
+//                      ),
+//                      Container(
+//                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                        child: Align(
+//                          alignment: Alignment.topLeft,
+//                          child: Text(productPriceModel.Price != null ? '₹' + productPriceModel.Price.toString() : '₹ 0',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+//                              fontWeight: FontWeight.w500,
+//                              color: Colors.grey, decoration: TextDecoration.lineThrough),
+//                          ),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                  InkWell(child:  Container(
+//                    margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+//                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+//                    decoration: BoxDecoration(
+//                        borderRadius: BorderRadius.circular(5.0),
+//                      //color: Const.gray10
+//                      color: Const.primaryColor
+//                    ),
+//                    child: Align(
+//                      alignment: Alignment.center,
+//                      child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+//                        color: Colors.white, fontWeight: FontWeight.w500,)),
+//                    ),
+//
+//                  ),
+//                    onTap: (){
+//                      //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+//                      //myCartModal.addTocart(result);
+//
+//                      MyCartUtils().callAddToCartAPI(model.ProductId, model.ProductVariantId,
+//                          model.IncrementalStep.toString(), "", productPriceModel.OfferPrice.toString());
+//                    },)
+//                ],
+//              ),
+//            ),
+//          ),
+//        ),
+//      ],
+//    );
 
   }
 
@@ -400,6 +567,35 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
         ],
       ),
     );
+  }
+  void count(){
+    ApiCall().setContext(context).count().then((apiResponseModel){
+      String cartTotalStr="0";
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
+      if(apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
+        if(cartCountModel!=null && cartCountModel.count!=null) {
+          cartTotalStr = cartCountModel.count.toString();
+        }
+      }else{
+//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+      }
+      setState(() {
+        cartTotal = cartTotalStr;
+      });
+    });
+  }
+  void addToCart(productId, varientId, qty, offerId, amount){
+    progressDialog  = Utility.progressDialog(context, "") ;
+    progressDialog.show() ;
+    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      }
+      count();
+    });
   }
 
   /*void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {

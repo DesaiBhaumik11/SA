@@ -189,7 +189,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
       var root = json.decode(res) ;
 
-      if(root["Message"]=="Otp validated."){
+      if(root["StatusCode"]==200){
         SharedPreferences.getInstance().then((prefs){
          // prefs.setString("AUTH_TOKEN",result["Token"]) ;
          // prefs.setBool("login", true);
@@ -206,4 +206,24 @@ class _VerifyOTPState extends State<VerifyOTP> {
       print("validate catchError $e") ;
     });
   }
+
+//  void validate() {
+//    ProgressDialog dialog = Utility.progressDialog(context,"");
+//    dialog.show() ;
+//    ApiCall().validate(code, phone).then((apiResponseModel){
+//      if(apiResponseModel.statusCode == 200) {
+//        appFirstStartResponseModel =  AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+//        SharedPreferences.getInstance().then((prefs){
+//          prefs.setString("phone", "$phone");
+//          prefs.setBool("login",true) ;
+////          prefs.setString("AUTH_TOKEN",appFirstModal.token) ;
+//        });
+//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+//      } else if(apiResponseModel.statusCode == 401) {
+//        Utility.toastMessage("${apiResponseModel.message}") ;
+//      } else {
+//        Utility.toastMessage("${apiResponseModel.message}") ;
+//      }
+//    });
+//  }
 }

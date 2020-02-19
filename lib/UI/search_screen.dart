@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
@@ -15,8 +16,13 @@ import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
+import 'package:vegetos_flutter/models/ProductPriceModel.dart';
+import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
+import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart';
@@ -39,10 +45,20 @@ class _SearchScreenState extends State<SearchScreen> {
   String cartTotal = '0';
 
   bool search=false;
+  String ImageURL='';
 
   bool isSearch = false;
 
   List<ProductWithDefaultVarientModel> searchList;
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
+
 
   @override
   void initState() {
@@ -52,6 +68,12 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() {
         cartTotal = cartCount;
       });
+    });
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        ImageURL = prefs.getString("ImageURL");
+      });
+
     });
     super.initState();
   }
@@ -221,37 +243,51 @@ class _SearchScreenState extends State<SearchScreen> {
   ListView buildList() {
     return ListView.builder(
       itemBuilder: (context, index) {
-        ProductWithDefaultVarientModel result = searchList[index];
+        ProductWithDefaultVarientModel productVariant = searchList[index];
         String name = "";
         String unit = "";
         String desc = "";
-        for(int i = 0; i < result.ProductDetails.length; i++) {
-          if(result.ProductDetails[i].Language == "En-US") {
-            name = result.ProductDetails[i].Name;
-            desc = result.ProductDetails[i].Description;
+        for(int i = 0; i < productVariant.ProductDetails.length; i++) {
+          if(productVariant.ProductDetails[i].Language == "En-US") {
+            name = productVariant.ProductDetails[i].Name;
+            desc = productVariant.ProductDetails[i].Description;
             break;
           }
         }
 
-        for(int i = 0; i < result.Units.length; i++) {
-          if(result.Units[i].Language == "En-US") {
-            unit = result.Units[i].Name;
+        for(int i = 0; i < productVariant.Units.length; i++) {
+          if(productVariant.Units[i].Language == "En-US") {
+            unit = productVariant.Units[i].Name;
             break;
           }
         }
-        if(result.ProductDetails != null && result.ProductDetails.isNotEmpty) {
+
+        ProductPriceModel ProductPrice=new ProductPriceModel();
+        ProductDetailsModel ProductDetail=new ProductDetailsModel();
+        UnitsModel Units=new UnitsModel();
+        ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+
+        if(productVariant!=null){
+
+          if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+            ProductDetail = productVariant.ProductDetails[0];
+          }
+          if(productVariant.Units!=null && productVariant.Units.length>0){
+            Units=productVariant.Units[0];
+          }
+          if(productVariant.ProductPrice!=null){
+            ProductPrice = productVariant.ProductPrice;
+          }
+        }
+
+        if(ProductDetail != null) {
           return GestureDetector(
             onTap: () {
 
-              final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-              showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-                  height: 25,
-                  width: 25,
-                  child: CircularProgressIndicator())));
-              productModal.getProductDetail(result.ProductId ,(){
-                Navigator.pop(context);
-                Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId)));
-              }) ;
+//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
+              Navigator.of(context).push(SlideRightRoute(page: ProductDetailScreen(productVariant.ProductId))).then((prefs) {
+                count();
+              });
             },
             child: Card(
               child: Container(
@@ -263,25 +299,25 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Stack(
                         children: <Widget>[
                           Container(
-                            child:
-                            Image.asset('02-product.png',height: 100,width: 100,)
-                                /*result.productVariantMedia==null||
-                                result.productVariantMedia[0].isEmpty?
-                            Image.asset('02-product.png',height: 100,width: 100,):Image.network(
-                              "${DashboardScreenState.appFirstModal.ImageUrl + result[index].productVariantMedia[0]}",
-                              height: 100.0,
-                              width: 100.0,
-                            )*/,
-                          ),
-                          result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ?
+                            child: Card(
+                              elevation: 0.0,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)
+                              ),
+                              child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                              Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                            child: Image.asset("02-product.png",height: 100,width: 100,),
+                            ),),
+                          ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?
                           Container(
                             padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
                                 color: Colors.orange),
                             child: Text(
-                                result.ProductPrice.DiscountPercent != null ?
-                                result.ProductPrice.DiscountPercent.toString() : null,
+                                ProductPrice.DiscountPercent != null ?
+                                ProductPrice.DiscountPercent.toString() : null,
                               style: TextStyle(
                                   fontSize: 10.0,
                                   fontFamily: 'GoogleSans',
@@ -332,7 +368,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 5,
                           ),
                           Text(
-                            '₹ ' + result.ProductPrice.OfferPrice.toString(),
+                            '₹ ' + ProductPrice.OfferPrice.toString(),
                             style: TextStyle(
                                 fontSize: 20.0,
                                 fontFamily: 'GoogleSans',
@@ -346,8 +382,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Theme.of(context).primaryColor,
                             //color: Const.gray10,
                             onPressed: () {
-                              MyCartUtils().callAddToCartAPI(result.ProductId, result.ProductVariantId,
-                                  result.IncrementalStep.toString(), "", result.ProductPrice.OfferPrice.toString());
+                              MyCartUtils().callAddToCartAPI(productVariant.ProductId, productVariant.ProductVariantId,
+                                  productVariant.IncrementalStep.toString(), "", productVariant.ProductPrice.OfferPrice.toString());
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 5),
@@ -454,7 +490,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void callGetCartAPI() {
-    ApiCall().getCart().then((apiResponseModel) {
+    ApiCall().setContext(context).getCart().then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
         setState(() {
@@ -467,9 +503,23 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
   }
+  void count(){
+    ApiCall().setContext(context).count().then((apiResponseModel){
+      String cartTotalStr="0";
+      if(apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
+        if(cartCountModel!=null && cartCountModel.count!=null) {
+          cartTotalStr = cartCountModel.count.toString();
+        }
+      }
+      setState(() {
+        cartTotal = cartTotalStr;
+      });
+    });
+  }
 
   void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
         callGetCartAPI();
@@ -482,7 +532,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void callSearchProductAPI(String searchString) {
-    ApiCall().searchProduct(searchString).then((apiResponseModel) {
+    ApiCall().setContext(context).searchProduct(searchString).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         List<ProductWithDefaultVarientModel> productWithDefaultVarientModelList = ProductWithDefaultVarientModel.parseList(apiResponseModel.Result);
         setState(() {

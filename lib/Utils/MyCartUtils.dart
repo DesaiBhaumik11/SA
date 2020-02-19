@@ -26,7 +26,7 @@ class MyCartUtils
     });
   }
 
-  void callCartCountAPI() {
+  String callCartCountAPI() {
     ApiCall().getCartCount().then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
@@ -39,6 +39,7 @@ class MyCartUtils
       } else {
         //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
+      return cartCount;
     });
   }
 }

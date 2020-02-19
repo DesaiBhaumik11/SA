@@ -40,7 +40,7 @@ class ProductWithDefaultVarientModel
 
   ProductTaxModel ProductTax;
 
-  ProductPriceModel ProductPrice;
+  ProductPriceModel ProductPrice=new ProductPriceModel();
 
   Object ProductVariantMedia;
 

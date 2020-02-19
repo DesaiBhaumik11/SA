@@ -1,168 +1,23 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pagewise/flutter_pagewise.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
-import 'package:vegetos_flutter/Animation/slide_route.dart';
-import 'package:vegetos_flutter/UI/ProductChildRow.dart';
-import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
-import 'package:vegetos_flutter/Utils/utility.dart';
-import 'package:vegetos_flutter/models/CartCountModel.dart';
-import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
-import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
-import 'package:vegetos_flutter/models/ApiResponseModel.dart';
-import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
 import 'package:vegetos_flutter/models/ProductPriceModel.dart';
 import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'package:vegetos_flutter/models/UnitsModel.dart';
-import 'package:vegetos_flutter/models/app_first_modal.dart';
-import 'package:vegetos_flutter/models/best_selling_product.dart';
-import 'package:vegetos_flutter/models/my_cart.dart';
-import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/product_detail.dart';
-import 'package:vegetos_flutter/models/recommended_products.dart';
-import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
-import 'my_cart_screen.dart';
+class ProductChildRow{
 
+  static String ImageURL = '';
 
-class AllProductScreen extends StatefulWidget {
-  String name = "" ;
-
-  AllProductScreen(String name){
-    this.name = name ;
-  }
-
-  @override
-  _AllProductScreenState createState() => _AllProductScreenState(name);
-}
-
-class _AllProductScreenState extends State<AllProductScreen> {
-  MyCartModal myCartModal ;
-  static AppFirstModal appFirstModal ;
-
-  String name ;
-
-  Future getProduct;
-  String cartTotal = '0';
-  String ImageURL = '';
-
-  int pageNUmber = 1;
-  bool isFromOutside=false;
-  int pageSize = 10;
-  ProgressDialog progressDialog ;
-
-  _AllProductScreenState(String name){
-    this.name = name ;
-  }
-
-  @override
-  void setState(fn) {
-    // TODO: implement setState
-    if(mounted) {
-      super.setState(fn);
-    }
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    if(name == 'Best Selling Items') {
-      getProduct = ApiCall().bestSellingItems(pageNUmber.toString(), pageSize.toString());
-    } else if(name == "Vegeto's Exclusive") {
-      getProduct = ApiCall().vegetosExclusive(pageNUmber.toString(), pageSize.toString());
-    } else {
-      getProduct = ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString());
-    }
-
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() {
-        ImageURL = prefs.getString("ImageURL");
-      });
-
-    });
-    count();
-
-    super.initState();
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-
-
-    //appFirstModal=Provider.of<AppFirstModal>(context);
-     //myCartModal=Provider.of<MyCartModal>(context);
-    //final bestSelling=Provider.of<BestSellingProductModel>(context);
-    //final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
-    //final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
-
-    return Scaffold(
-      backgroundColor: Const.gray10,
-      appBar: AppBar(
-        title: Text('${name}'),
-        actions: <Widget>[
-          InkWell(
-            onTap: () {
-              //myCartModal.loaded =false ;
-              Navigator.push(context, SlideRightRoute(page: MyCartScreen())).then((returnn){
-                pageNUmber=1;
-                isFromOutside=true;
-                count();
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    child: Icon(Icons.shopping_cart),
-                    alignment: Alignment.center,
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.orange,
-                        radius: 8.0,
-                        child: Text(cartTotal,
-                            style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
-                        //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-    )
-      ,body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-
-            productList(),
-
-          ],
-        ),
-      ),);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Widget childView(BuildContext context, ProductWithDefaultVarientModel productVariant) {
+  static Widget _ProductChildRow(BuildContext context, ProductWithDefaultVarientModel productVariant) {
 
     String name = "";
     String unit = "";
@@ -332,21 +187,16 @@ class _AllProductScreenState extends State<AllProductScreen> {
       children: <Widget>[
         GestureDetector(
           onTap: () {
-//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-//                height: 25,
-//                width: 25,
-//                child: CircularProgressIndicator())));
-//            productModal.getProductDetail(productVariant.ProductId,(){
-//              Navigator.pop(context);
-//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
-//            }) ;
-//            Navigator.pop(context);
-            Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId))).then((returnn){
-              pageNUmber=1;
-              isFromOutside=true;
-              count();
-            });
+            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
+            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator())));
+            productModal.getProductDetail(productVariant.ProductId,(){
+              Navigator.pop(context);
+              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
+            }) ;
+
           },
           child: Container(
             width: 180.0,
@@ -452,7 +302,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     onTap: (){
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                       //myCartModal.addTocart(productModal);
-                      addToCart(productVariant.ProductId, productVariant.ProductVariantId, productVariant.IncrementalStep.toString(),
+                      MyCartUtils().callAddToCartAPI(productVariant.ProductId, productVariant.ProductVariantId, productVariant.IncrementalStep.toString(),
                           "", ProductPrice.OfferPrice.toString());
                     },)
                 ],
@@ -464,188 +314,5 @@ class _AllProductScreenState extends State<AllProductScreen> {
     );
 
 
-  }
-  void addToCart(productId, varientId, qty, offerId, amount){
-    progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
-    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      }
-      count();
-    });
-  }
-  void count(){
-    ApiCall().setContext(context).count().then((apiResponseModel){
-      String cartTotalStr=cartTotal;
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
-      if(apiResponseModel.statusCode == 200) {
-        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
-        if(cartCountModel!=null && cartCountModel.count!=null) {
-          cartTotalStr = cartCountModel.count.toString();
-        }
-      }else{
-//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
-      }
-      setState(() {
-        cartTotal = cartTotalStr;
-      });
-    });
-  }
-
-
-  Widget somethingWentWrong() {
-    return Container(
-      height: 275.0,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Colors.red, size: 25.0,),
-          Container(
-            margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
-            child: Text("Items not loaded",
-                style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /*void callGetCartAPI() {
-    ApiCall().getCart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          if(getCartResponseModel.cartItemViewModels != null) {
-            cartTotal = getCartResponseModel.cartItemViewModels.length.toString();
-          }
-        });
-      } else if(apiResponseModel.statusCode == 401) {
-
-      } else {
-
-      }
-    });
-  }
-
-  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-        callGetCartAPI();
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      }
-    });
-  }*/
-
-  Widget productList() {
-
-    double cardWidth = MediaQuery.of(context).size.width;
-    double cardHeight = MediaQuery.of(context).size.height - 76;
-    double aspectRatio = 0.01;
-
-    if(cardHeight < 550) {
-      cardHeight = cardHeight + 20;
-      aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 550 && cardHeight < 600){
-      cardHeight = cardHeight - 20;
-      aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 600 && cardHeight < 650) {
-      cardHeight = cardHeight - 120;
-      aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 650 && cardHeight < 700) {
-      cardHeight = cardHeight - 120;
-      aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 700 && cardHeight < 740) {
-      cardHeight = cardHeight - 190;
-      aspectRatio = cardWidth / cardHeight;
-    } else {
-      cardHeight = cardHeight - 200;
-      aspectRatio = cardWidth / cardHeight;
-    }
-
-    return Container(
-      height: MediaQuery.of(context).size.height - 76,
-//      height: 275.0,
-
-      child: PagewiseGridView.count(
-        crossAxisCount: 2,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
-        childAspectRatio: aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
-        padding: EdgeInsets.all(5.0),
-        itemBuilder: (context, entry, index) {
-          return childView(context, entry);
-        },
-        noItemsFoundBuilder: (context) {
-          return Container(child: Center(child: Text('Data Not Found'),),);
-        },
-        pageLoadController: PagewiseLoadController(
-            pageSize: 10,
-            pageFuture: (int pageIndex) {
-              return getFutureList();
-            }),
-        loadingBuilder: (context) {
-          return Container(child: Center(child: CircularProgressIndicator(),), height: MediaQuery.of(context).size.height,);
-        },
-      ),
-    );
-  }
-
-  Widget getList() {
-    /*FutureBuilder(
-      future: ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString()),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done) {
-          ApiResponseModel apiResponseModel = snapshot.data;
-          if(apiResponseModel.statusCode == 200) {
-            DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
-            return responseModel.Results;
-          } else if(apiResponseModel.statusCode == 401) {
-            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-          } else {
-            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-          }
-        } else if(snapshot.connectionState == ConnectionState.waiting) {
-          return ListView();
-        } else {
-          return ListView();
-        }
-      },
-    );*/
-  }
-
-  Future<List> getFutureList() async {
-
-if(pageNUmber>1 || isFromOutside) {
-  isFromOutside=false;
-  if (name == 'Best Selling Items') {
-    getProduct =
-        ApiCall().bestSellingItems(pageNUmber.toString(), pageSize.toString());
-  } else if (name == "Vegeto's Exclusive") {
-    getProduct =
-        ApiCall().vegetosExclusive(pageNUmber.toString(), pageSize.toString());
-  } else {
-    getProduct =
-        ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString());
-  }
-}
-    ApiResponseModel apiResponseModel = await getProduct;
-    if(apiResponseModel.statusCode == 200) {
-      DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
-      pageNUmber++;
-      return responseModel.Results;
-    } else if(apiResponseModel.statusCode == 401) {
-      Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-    } else {
-      Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-    }
   }
 }

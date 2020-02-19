@@ -16,11 +16,20 @@ class ApiResponseModel<T> {
 
   String Version;
 
-  ApiResponseModel({this.statusCode, this.message, this.Result, this.isError, this.Version, this.serverTime});
+  bool tokenExpired=false;
+
+  ApiResponseModel({
+    this.statusCode=-1,
+    this.message,
+    this.Result,
+    this.isError,
+    this.Version,
+    this.serverTime,
+    this.tokenExpired});
 
   factory ApiResponseModel.fromJson(Map<String, dynamic> parsedData) {
     return ApiResponseModel(
-        statusCode: parsedData['StatusCode'],
+        statusCode: parsedData['StatusCode']!=null ? parsedData['StatusCode'] :-1 ,
         message: parsedData['Message'],
         Result: parsedData['Result'],
         isError: parsedData['isError'],

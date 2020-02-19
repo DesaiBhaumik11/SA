@@ -46,68 +46,86 @@ class _AboutVegetosState extends State<AboutVegetos> {
           physics: BouncingScrollPhysics(),
           children: <Widget>[
 
+//            Container(
+//              color: Colors.white,
+//              child: ExpansionTile(
+//                initiallyExpanded: true,
+//                backgroundColor: Colors.white,
+//                title: Text(
+//                  'About Vegetos', style: title,
+//                ),
+//                children: <Widget>[
+//
+//                  Padding(
+//                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
+//                    child: Text(Const.aboutVegetos1, style: text,),
+//                  )
+//
+//                ],
+//              ),
+//            ),
+//
+//
+//            SizedBox(height: 15,),
+//
+//            Container(
+//              color: Colors.white,
+//              child: ExpansionTile(
+//                backgroundColor: Colors.white,
+//                title: Text(
+//                  'Privacy Policy', style: title,
+//                ),
+//                children: <Widget>[
+//
+//                  Padding(
+//                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
+//                    child: Text(Const.termsConditions, style: text,),
+//                  )
+//
+//                ],
+//              ),
+//            ),
+//
+//            SizedBox(height: 15,),
+//
+//            Container(
+//              color: Colors.white,
+//              child: ExpansionTile(
+//                backgroundColor: Colors.white,
+//                title: Text(
+//                  'Terms & Conditions', style: title,
+//                ),
+//                children: <Widget>[
+//
+//                  Padding(
+//                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
+//                    child: Text(Const.termsConditions, style: text,),
+//                  )
+//
+//                ],
+//              ),
+//            ),
+//
+//            SizedBox(height: 15,),
+
             Container(
               color: Colors.white,
               child: ExpansionTile(
-                initiallyExpanded: true,
                 backgroundColor: Colors.white,
                 title: Text(
-                  'About Vegetos', style: title,
+                  'Contact Us', style: title,
                 ),
                 children: <Widget>[
 
                   Padding(
                     padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
-                    child: Text(Const.aboutVegetos1, style: text,),
+                    child: Text(Const.contactus, style: text,),
                   )
 
                 ],
               ),
             ),
-
-
-            SizedBox(height: 15,),
-
-            Container(
-              color: Colors.white,
-              child: ExpansionTile(
-                backgroundColor: Colors.white,
-                title: Text(
-                  'Privacy Policy', style: title,
-                ),
-                children: <Widget>[
-
-                  Padding(
-                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
-                    child: Text(Const.termsConditions, style: text,),
-                  )
-
-                ],
-              ),
-            ),
-
-            SizedBox(height: 15,),
-
-            Container(
-              color: Colors.white,
-              child: ExpansionTile(
-                backgroundColor: Colors.white,
-                title: Text(
-                  'Terms & Conditions', style: title,
-                ),
-                children: <Widget>[
-
-                  Padding(
-                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
-                    child: Text(Const.termsConditions, style: text,),
-                  )
-
-                ],
-              ),
-            ),
-
             SizedBox(height: 30,),
-
           ],
         ),
       ),

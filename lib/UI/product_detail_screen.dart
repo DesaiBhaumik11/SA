@@ -64,6 +64,13 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
    DashboardProductResponseModel model = DashboardProductResponseModel();
 
+   @override
+   void setState(fn) {
+     // TODO: implement setState
+     if(mounted) {
+       super.setState(fn);
+     }
+   }
 
   @override
   void initState() {
@@ -77,7 +84,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     SharedPreferences.getInstance().then((prefs) {
       ImageURL = prefs.getString("ImageURL");
     });
-    getProductById = ApiCall().getProductDetailById(widget.productId);
+    getProductById = ApiCall().setContext(context).getProductDetailById(widget.productId);
     super.initState();
   }
 
@@ -760,15 +767,15 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ApiResponseModel apiResponseModel = snapshot.data;
           if(apiResponseModel.statusCode == 200) {
             productModal = GetProductByIdModel.fromJson(apiResponseModel.Result);
-            if(productModal.ProductVariant.length>0){
+            if(productModal.ProductVariant!=null && productModal.ProductVariant.length>0){
               ProductPrice = productModal.ProductVariant[0].productPrice;
-              if(productModal.ProductVariant[0].ProductDetail.length>0){
+              if(productModal.ProductVariant[0].ProductDetail!=null && productModal.ProductVariant[0].ProductDetail.length>0){
                 ProductDetail = productModal.ProductVariant[0].ProductDetail[0];
               }
-              if(productModal.Units.length>0){
+              if(productModal.Units!=null && productModal.Units.length>0){
                 Units=productModal.Units[0];
               }
-              if(productModal.ProductVariant[0].productVariantMedia.length>0){
+              if(productModal.ProductVariant[0].productVariantMedia!=null && productModal.ProductVariant[0].productVariantMedia.length>0){
                 productVariantMedia = productModal.ProductVariant[0].productVariantMedia[0];
               }
             }
@@ -801,7 +808,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
 
   void callGetProductDetailByIdAPI(String productId) {
-    ApiCall().getProductDetailById(productId).then((apiResponseModel) {
+    ApiCall().setContext(context).getProductDetailById(productId).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         GetProductByIdModel responseModel = GetProductByIdModel.fromJson(apiResponseModel.Result);
         productModal = responseModel;

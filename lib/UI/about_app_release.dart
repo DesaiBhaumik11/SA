@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
 class AboutAppRelease extends StatefulWidget {
@@ -8,6 +9,15 @@ class AboutAppRelease extends StatefulWidget {
 }
 
 class _AboutAppReleaseState extends State<AboutAppRelease> {
+
+  String version="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    getVeriosnCode();
+    super.initState();
+  }
+
   var text = TextStyle(
       fontWeight: FontWeight.w500, color: Colors.black54, fontSize: 13);
 
@@ -60,7 +70,7 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
                           style: text,
                         ),
                         Text(
-                          'Date: Version History: V.1.22',
+                          'Version History: '+version,
                           style: text,
                         ),
                       ],
@@ -118,5 +128,11 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
         ),
       ),
     );
+  }
+  Future<String> getVeriosnCode() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+    });
   }
 }

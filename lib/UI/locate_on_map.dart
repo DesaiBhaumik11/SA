@@ -4,7 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 
 class LocateMap extends StatefulWidget {
   var latLng;
@@ -33,6 +36,7 @@ class _LocateMapState extends State<LocateMap> {
   TextEditingController textEditingController;
 
   var completeAddress;
+  String pincode="";
 
   GoogleMapController controller;
   @override
@@ -86,9 +90,9 @@ class _LocateMapState extends State<LocateMap> {
               var add = await Geocoder.local.findAddressesFromQuery(widget.addressLine2);
               controller.animateCamera(CameraUpdate.newLatLng(LatLng(add.first.coordinates.latitude, add.first.coordinates.longitude)));
               onMapTap(LatLng(add.first.coordinates.latitude, add.first.coordinates.longitude));
-              Location().getLocation().then((r){
-                //controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
-              });
+//              Location().getLocation().then((r){
+//                //controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
+//              });
             },
             initialCameraPosition: _kGooglePlex,
           ),
@@ -97,12 +101,31 @@ class _LocateMapState extends State<LocateMap> {
               Padding(
                 padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.search,onFieldSubmitted: (value){
+                    search();
+                },
                   style: text,
                   //initialValue: widget.addressLine2,
                   controller: textEditingController,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 13),
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: (){
+                          search();
+                        },
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: (){
+                          if(textEditingController!=null){
+                            setState(() {
+                              textEditingController.text="";
+                            });
+
+                          }
+                        },
+                      ),
                       filled: true,
                       fillColor: Colors.white,
                       border: InputBorder.none),
@@ -145,7 +168,7 @@ class _LocateMapState extends State<LocateMap> {
                             child: RaisedButton(
                               onPressed: () {
                                 if (latLng != null) {
-                                  Navigator.pop(context, completeAddress);
+                                  checkLocation();
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Please pick a location");
@@ -179,6 +202,38 @@ class _LocateMapState extends State<LocateMap> {
     );
   }
 
+  void search(){
+    if(textEditingController!=null && textEditingController.text.toString().isNotEmpty) {
+      Geocoder.local.findAddressesFromQuery(
+          textEditingController.text.toString()).then((add) {
+        controller.animateCamera(CameraUpdate.newLatLng(LatLng(
+            add.first.coordinates.latitude, add.first.coordinates.longitude)));
+        onMapTap(LatLng(
+            add.first.coordinates.latitude, add.first.coordinates.longitude));
+//                  Location().getLocation().then((r){
+////                    controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
+//                  });
+      });
+    }
+  }
+
+  void checkLocation() {
+    ProgressDialog progressDialog = Utility.progressDialog(
+        context, "Checking Delivery Location..");
+    progressDialog.show();
+    ApiCall().setLocation(pincode).then((apiResponseModel) {
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
+      if (apiResponseModel.statusCode == 200) {
+        Navigator.pop(context, completeAddress);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Delivery Location not available");
+      }
+    });
+  }
+
   void onMapTap(LatLng argument) {
     _createMarkerImageFromAsset("assets/locate-on-map.png").then((b) {
       setState(() {
@@ -195,6 +250,7 @@ class _LocateMapState extends State<LocateMap> {
             widget.addressLine2 = add.first.toString();
             textEditingController.text = add.first.addressLine;
             completeAddress = add.first;
+            pincode= add.first.postalCode;
           });
         });
       });

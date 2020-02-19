@@ -3,26 +3,43 @@
 //this file created by prashant for remaining api calls on 08-01-2020
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
+import 'package:vegetos_flutter/UI/login.dart';
+import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:http/http.dart';
+import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/CheckoutRequestModel.dart';
 
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart' as cart;
+import 'package:vegetos_flutter/models/address_modal.dart';
+
+import 'DeviceTokenController.dart';
 
 class ApiCall
 {
 
   static final String baseURL = "http://artismicro.archisys.biz:5101";
 //  static final String baseURL = "http://195.168.0.37:5001";
-//  static final String baseURL = "http://195.168.0.77:5001";
+//  static final String baseURL = "http://195.168.0.110:5001";
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
   static final String SetLocation = "/SetLocation";
   static final String AppFirstStart = "/AppFirstStart";
-  static final String RefreshToken = "/RefreshToken?expiredTokenString=";
+  static final String RefreshToken = "/RefreshToken";
   static final String GetDefaults = "/GetDefaults";
+  static final String Register  = "/Register";
+  static final String Login  = "/Login";
+  static final String Logout  = "/Logout";
+  static final String Validate  = "/Validate";
 
+  static final String GetMyAddresses  = "GetMyAddresses";
+  static final String DeleteAddress  = "/DeleteAddress";
+  static final String AddAddress  = "/AddAddress";
+  static final String UpdateAddress  = "/UpdateAddress";
   static final String BestSellingProducts = "/GetBestSellingProducts";
   static final String VegetosExclusive = "/GetVegetosExclusive";
   static final String RecommendedForYou = "/GetRecommendedProducts";
@@ -48,6 +65,166 @@ class ApiCall
 
   static final String GetMyDefaultAddress = "/GetMyDefaultAddress";
 
+  BuildContext context;
+
+
+  ApiCall setContext(BuildContext context){
+    this.context=context;
+    return this;
+  }
+
+  Future<ApiResponseModel> _get(String URL) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("AUTH_TOKEN");
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
+      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
+
+      final response = await get(ApiCall.baseURL + URL , headers: header);
+      return getResponse(response,true);
+    } catch (e) {
+      return _internalCrash(e.toString());
+    }
+  }
+
+  Future<ApiResponseModel> _post(String URL,var apiRequestBody) async{
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("AUTH_TOKEN");
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
+      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken ,'Content-Type' : 'application/json'};
+
+      final response = await post(ApiCall.baseURL + URL, headers: header , body: apiRequestBody);
+      return getResponse(response,true);
+    } catch (e) {
+      return _internalCrash(e.toString());
+    }
+  }
+
+  Future<ApiResponseModel> _put(String URL,var apiRequestBody) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("AUTH_TOKEN");
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
+      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken ,'Content-Type' : 'application/json'};
+
+      final response = await put(ApiCall.baseURL + URL, headers: header , body: apiRequestBody);
+      return getResponse(response,true);
+    } catch (e) {
+      return _internalCrash(e.toString());
+    }
+  }
+
+  Future<ApiResponseModel> _delete(String URL) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("AUTH_TOKEN");
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
+      Map<String, String> headerMap = Map();
+      headerMap["device_token"] = deviceToken;
+      headerMap["Content-Type"] = "application/json";
+      headerMap["Authorization"] = "Bearer "+token;
+
+      final response = await delete(ApiCall.baseURL + URL,
+          headers: headerMap);
+      return getResponse(response,true);
+    } catch (e) {
+      return _internalCrash(e.toString());
+    }
+  }
+
+
+
+  ApiResponseModel getResponse(var response,bool isRedirect){
+    print(response.request.url);
+    print(response.request.headers);
+    print(response.body);
+    if(response.statusCode == 200) {
+      var responseJson = _returnResponseJson(response);
+      return ApiResponseModel.fromJson(responseJson);
+    }else {
+      return errorResponse(response,isRedirect);
+    }
+  }
+
+  ApiResponseModel errorResponse(var response,bool isRedirect){
+    ApiResponseModel apiResponseModel = ApiResponseModel();
+    if(response.headers.containsKey("token-expired")){
+      String value=response.headers['token-expired'].toString();
+      apiResponseModel.tokenExpired=value=="true"?true:false;
+    }
+    if(response.statusCode==401){
+      if(apiResponseModel.tokenExpired==true && isRedirect) {
+        return redirect(response);
+      }else{
+        if(context!=null){
+          String uuid = Uuid().v4();
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setBool("login", false);
+            prefs.setString("UUID", uuid);
+            prefs.setString("JWT_TOKEN","");
+            prefs.setString("AUTH_TOKEN", "");
+            prefs.setString("phone", "Guest User");
+            DeviceTokenController().ValidateDeviceToken().then((token) {
+              ApiCall().appFirstStart().then((apiResponseModel) {
+                if(apiResponseModel.statusCode == 200) {
+                  AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+                  SharedPreferences.getInstance().then((prefs) {
+                    prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
+                    Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+                  });
+                } else {
+                  Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: SplashScreen()),(c)=>false);
+                }
+              });
+            });
+          });
+
+        }
+      }
+    }
+    apiResponseModel.statusCode = response.statusCode;
+    apiResponseModel.message = response.reasonPhrase;
+    return apiResponseModel;
+  }
+
+  ApiResponseModel redirect(var response){
+    String method=response.request.method;
+    String url=response.request.url.toString();
+    String body="";
+    if(method=="POST"){
+      body=response.body.toString();
+    }
+    refreshToken().then((apiResponseModel){
+      if(apiResponseModel.statusCode == 200) {
+        AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
+          String deviceToken = prefs.getString('JWT_TOKEN');
+          Map<String, String> headerMap = Map();
+          headerMap["device_token"] = deviceToken;
+          headerMap["Content-Type"] = "application/json";
+          headerMap["Authorization"] = "Bearer "+appFirstStartResponseModel.token;
+          print(response.request.url);
+          print(response.request.headers);
+          if(method=="POST"){
+            post(url,headers: headerMap,body: body).then((res){
+              return getResponse(res, false);
+            });
+          }else if(method=="GET"){
+            get(url,headers: headerMap).then((res){
+              return getResponse(res, false);
+            });
+          }else{
+            return errorResponse(response,false);
+          }
+        });
+      } else {
+        return errorResponse(response,false);
+      }
+    });
+  }
+
   dynamic _returnResponseJson(var response) {
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
@@ -67,22 +244,60 @@ class ApiCall
   }
 
   Future<ApiResponseModel> GetProductWithDefaultVarientAPI(String categoryId) async {
+    return _get(ApiCall.GetProductWithDefaultVariantByIds + "?categoryId=" + categoryId);
+  }
 
+  Future<ApiResponseModel> setLocation(String pincode) async {
+    return _get(ApiCall.SetLocation + "?pinCode=" + pincode);
+  }
+
+  Future<ApiResponseModel> bestSellingItems(String pageNumber, String pageSize) async {
+    return _get(ApiCall.BestSellingProducts + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
+  }
+
+  Future<ApiResponseModel> vegetosExclusive(String pageNumber, String pageSize) async {
+    return _get(ApiCall.VegetosExclusive + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
+  }
+
+  Future<ApiResponseModel> recommendedForYou(String pageNumber, String pageSize) async {
+    return _get(ApiCall.RecommendedForYou + "?pageNumber=" +
+        pageNumber + "&pageSize=" + pageSize);
+  }
+
+  Future<ApiResponseModel> getAllShippingSchedule() async {
+    return _get(ApiCall.GetAllShippingSchedule);
+  }
+
+
+  Future<ApiResponseModel> proceedToPayment(String totalAmount) async {
+    return _get(ApiCall.ProceedToPayment);
+  }
+
+  Future<ApiResponseModel> confirmPayment(String paymanetId, String transactionId) async {
+    return _get(ApiCall.ConfirmPayment +
+        "?transactionId=" + transactionId + "&razorPaymentId=" + paymanetId);
+  }
+
+
+  Future<ApiResponseModel> getDefaults() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
 
-      final response = await get(ApiCall.baseURL + ApiCall.GetProductWithDefaultVariantByIds + "?categoryId=" + categoryId, headers: header);
-      print("Headers : => " + header.toString());
-      print("URL : => " + response.request.url.toString());
+      final response = await get(ApiCall.baseURL + ApiCall.GetDefaults, headers: header);
+      print(response.request.url.toString());
       print(response.body);
       if(response.statusCode == 200) {
         var responseJson = _returnResponseJson(response);
         return ApiResponseModel.fromJson(responseJson);
       } else {
         ApiResponseModel apiResponseModel = ApiResponseModel();
+        if(response.headers.containsKey("token-expired")){
+          String value=response.headers['token-expired'].toString();
+          apiResponseModel.tokenExpired=value=="true"?true:false;
+        }
         apiResponseModel.statusCode = response.statusCode;
         apiResponseModel.message = response.reasonPhrase;
         return apiResponseModel;
@@ -90,18 +305,158 @@ class ApiCall
     } catch (e) {
       return _internalCrash(e.toString());
     }
+//    return _get(ApiCall.GetDefaults);
   }
 
-  Future<ApiResponseModel> setLocation(String pincode) async {
+  Future<ApiResponseModel> checkout(CheckoutRequestModel model) async {
+    var apiRequestBody = json.encode({
+      "DeliveryAddressId": model.DeliveryAddressId,
+      "Name": model.Name,
+      "AddressLine1": model.AddressLine1,
+      "AddressLine2": model.AddressLine2,
+      "City": model.City,
+      "State": model.State,
+      "Country": model.Country,
+      "Pin": model.Pin,
+      "MobileNo": model.MobileNo,
+      "LocationId": model.LocationId,
+      "ShippingScheduleId": model.ShippingScheduleId,
+      "BusinessId": model.BusinessId,
+      "ShippingDetails": model.ShippingDetails,
+      "SubTotal": model.SubTotal.toString(),
+      "TaxAmount": model.TaxAmount.toString(),
+      "TotalAmount": model.TotalAmount.toString(),
+      "OfferAmount": model.OfferAmount.toString(),
+//        "CheckoutItems": cart.CartItemViewModel.encondeToJson(model.CheckoutItems),
+    });
+    return _post(ApiCall.Checkout, apiRequestBody);
+  }
 
+
+  Future<ApiResponseModel> getOrders() async {
+    return _get(ApiCall.GetOrders);
+  }
+
+  Future<ApiResponseModel> clearCart() async {
+    return _delete(ApiCall.ClearCart);
+  }
+
+  Future<ApiResponseModel> updateQuantity(String itemId, String qty) async {
+    return _post(ApiCall.UpdateQuantity + "?itemId=" + itemId + "&quantity=" + qty, null);
+  }
+
+  Future<ApiResponseModel> deleteItem(String itemId) async {
+   return _delete(ApiCall.DeleteItem + "?itemId=" + itemId);
+  }
+
+  Future<ApiResponseModel> getProductDetailById(String productId) async {
+    return _get(ApiCall.GetProductDetailById + "?id=" + productId);
+  }
+
+  Future<ApiResponseModel> getCartCount() async {
+    return _get(ApiCall.CartCount);
+  }
+
+  Future<ApiResponseModel> getOrderById(String transactionId) async {
+    return _get(ApiCall.GetOrderById + "?transactionId=" + transactionId);
+  }
+
+  Future<ApiResponseModel> searchProduct(String searchString) async {
+    return _get(ApiCall.SearchProduct + "?searchString=" + searchString);
+  }
+
+  Future<ApiResponseModel> validate(String code, String phone) async {
+    var apiRequestBody = json.encode({
+      "Code":""+code,
+      "IsdCode": "+91",
+      "Mobile": ""+phone
+    });
+    return _post(ApiCall.Validate, apiRequestBody);
+  }
+
+  Future<ApiResponseModel> login(String phone) async {
+    var apiRequestBody = json.encode({
+      "IsdCode": "+91",
+      "Mobile": ""+phone
+    });
+   return _post(ApiCall.Login, apiRequestBody);
+  }
+
+  Future<ApiResponseModel> logout() async {
+    return _get(ApiCall.Logout);
+  }
+
+  // Address
+  Future<ApiResponseModel> getMyAddress() async {
+    return _get(ApiCall.GetMyAddresses);
+  }
+  Future<ApiResponseModel> updateAddress(Result result,{callback}) async {
+    var apiRequestBody = json.encode({
+      "Id":            result.id,
+      "NamePrefix":    result.namePrefix,
+      "Name":          result.name,
+      "ContactId":     result.contactId,
+      "AddressLine1":  result.addressLine1,
+      "AddressLine2":  result.addressLine2,
+      "City":          result.city,
+      "Country":       result.country,
+      "State":         result.state,
+      "Pin":           result.pin,
+      "Title":         result.title,
+      "Latitude":      result.latitude,
+      "Longitude":     result.longitude,
+      "IsDefault":     result.isDefault
+    });
+    return _put(ApiCall.UpdateAddress,apiRequestBody);
+  }
+  Future<ApiResponseModel> getMyDefaultAddress() async {
+    return _get(ApiCall.GetMyDefaultAddress);
+  }
+//  Future<ApiResponseModel> addAddress(Result result) async {
+//    var apiRequestBody = json.encode({
+//      "ProductId": productId,
+//      "ProductVariantId": varientId,
+//      "Quantity": qty,
+//      "OfferId": offerId,
+//      "Amount": amount,
+//    });
+//    return _post(ApiCall.AddAddress,apiRequestBody);
+//  }
+
+  Future<ApiResponseModel> deleteAddress(String id) async {
+    return _delete(ApiCall.DeleteAddress + "?addressId="+id);
+  }
+
+  //cart
+  Future<ApiResponseModel> getCart() async {
+    return _get(ApiCall.GetCart);
+  }
+  Future<ApiResponseModel> count() async {
+    return _get(ApiCall.CartCount);
+  }
+
+  Future<ApiResponseModel> addToCart(String productId, String varientId, String qty, String offerId, String amount) async {
+    var apiRequestBody = json.encode({
+      "ProductId": productId,
+      "ProductVariantId": varientId,
+      "Quantity": qty,
+      "OfferId": offerId,
+      "Amount": amount,
+    });
+    return _post(ApiCall.AddToCart,apiRequestBody);
+  }
+
+
+  Future<ApiResponseModel> refreshToken() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
+      Map<String, String> header = {'device_token' : deviceToken};
+      String token =  prefs.getString("AUTH_TOKEN");
 
-      final response = await get(ApiCall.baseURL + ApiCall.SetLocation + "?pinCode=" + pincode, headers: header);
-      print(response.body);
+      final response = await post(ApiCall.baseURL + ApiCall.RefreshToken + "?expiredTokenString=" + token, headers: header);
+      print(response.request.url);
+      print(response.request.headers);
       if(response.statusCode == 200) {
         var responseJson = _returnResponseJson(response);
         return ApiResponseModel.fromJson(responseJson);
@@ -120,57 +475,10 @@ class ApiCall
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String deviceToken = prefs.getString('JWT_TOKEN');
+      String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'device_token' : deviceToken};
 
       final response = await post(ApiCall.baseURL + ApiCall.AppFirstStart, headers: header);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> refreshToken() async {
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'device_token' : deviceToken};
-      String token = "Bearer " + prefs.getString("AUTH_TOKEN");
-
-      final response = await post(ApiCall.baseURL + ApiCall.RefreshToken + "?expiredTokenString=" + token, headers: header);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> bestSellingItems(String pageNumber, String pageSize) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-      print(pageNumber + pageSize);
-      final response = await get(ApiCall.baseURL + ApiCall.BestSellingProducts + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize,
-          headers: header);
       print(response.request.url);
       print(response.request.headers);
       print(response.body);
@@ -188,515 +496,9 @@ class ApiCall
     }
   }
 
-  Future<ApiResponseModel> vegetosExclusive(String pageNumber, String pageSize) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-      print(pageNumber + pageSize);
-      final response = await get(ApiCall.baseURL + ApiCall.VegetosExclusive + "?pageNumber=" + pageNumber + "&pageSize=" + pageSize,
-          headers: header);
-      print(response.request.url);
-      print(response.request.headers);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
 
-  Future<ApiResponseModel> recommendedForYou(String pageNumber, String pageSize) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-      print(pageNumber + pageSize);
-      final response = await get(ApiCall.baseURL + ApiCall.RecommendedForYou + "?pageNumber=" +
-          pageNumber + "&pageSize=" + pageSize, headers: header);
-      print(response.request.url);
-      print(response.request.headers);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
+  
 
-  Future<ApiResponseModel> getAllShippingSchedule() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetAllShippingSchedule, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-
-  Future<ApiResponseModel> proceedToPayment(String totalAmount) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      /*Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken,
-        };
-      header["Content-Type"] = "application/json";*/
-
-      Map<String, String> headerMap = Map();
-      headerMap["device_token"] = deviceToken;
-      headerMap["Content-Type"] = "application/json";
-      headerMap["Authorization"] = "Bearer "+token;
-
-      Response response = await get(ApiCall.baseURL + ApiCall.ProceedToPayment, headers: headerMap);
-      print(response.request.url.toString());
-      print(headerMap);
-      //print(requestApiBody);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> confirmPayment(String paymanetId, String transactionId) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-      //Map<String, String> requestApiBody = {"razorPaymentId":paymanetId, "totalAmount":totalAmount, "GatewayOrderId":""};
-
-      final response = await get(ApiCall.baseURL + ApiCall.ConfirmPayment +
-          "?transactionId=" + transactionId + "&razorPaymentId=" + paymanetId, headers: header);
-      print(response.request.url.toString());
-      print(header);
-      //print(requestApiBody);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> addToCart(String productId, String varientId, String qty, String offerId, String amount) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      //Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-      Map<String, String> headerMap = Map();
-      headerMap["device_token"] = deviceToken;
-      headerMap["Content-Type"] = "application/json";
-      headerMap["Authorization"] = "Bearer "+token;
-      /*Map<String, String> requestApiBody = {
-        "ProductId":productId,
-        "ProductVariantId":varientId,
-        "Quantity":qty,
-        "OfferId":offerId,
-        "Amount":amount,
-      };*/
-
-      final response = await post(ApiCall.baseURL + ApiCall.AddToCart, headers: headerMap, body: json.encode({
-        "ProductId": productId,
-        "ProductVariantId": varientId,
-        "Quantity": qty,
-        "OfferId": offerId,
-        "Amount": amount,
-      }),);
-      print(response.request.url.toString());
-      print(headerMap);
-      //print(requestApiBody);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> getCart() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetCart, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> getMyDefaultAddress() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetMyDefaultAddress, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> getDefaults() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetDefaults, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> checkout(CheckoutRequestModel model) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> headerMap = Map();
-      headerMap["device_token"] = deviceToken;
-      headerMap["Content-Type"] = "application/json";
-      headerMap["Authorization"] = "Bearer "+token;
-
-      var apiRequestBody = json.encode({
-        "DeliveryAddressId": model.DeliveryAddressId,
-        "Name": model.Name,
-        "AddressLine1": model.AddressLine1,
-        "AddressLine2": model.AddressLine2,
-        "City": model.City,
-        "State": model.State,
-        "Country": model.Country,
-        "Pin": model.Pin,
-        "MobileNo": model.MobileNo,
-        "LocationId": model.LocationId,
-        "ShippingScheduleId": model.ShippingScheduleId,
-        "BusinessId": model.BusinessId,
-        "ShippingDetails": model.ShippingDetails,
-        "SubTotal": model.SubTotal.toString(),
-        "TaxAmount": model.TaxAmount.toString(),
-        "TotalAmount": model.TotalAmount.toString(),
-        "OfferAmount": model.OfferAmount.toString(),
-//        "CheckoutItems": cart.CartItemViewModel.encondeToJson(model.CheckoutItems),
-      });
-
-
-      final response = await post(ApiCall.baseURL + ApiCall.Checkout, headers: headerMap, body: apiRequestBody,);
-      print(response.request.url.toString());
-      print(headerMap);
-      print(apiRequestBody);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-
-  Future<ApiResponseModel> getOrders() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetOrders, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> clearCart() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      //Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-      Map<String, String> headerMap = Map();
-      headerMap["device_token"] = deviceToken;
-      headerMap["Content-Type"] = "application/json";
-      headerMap["Authorization"] = "Bearer "+token;
-
-      final response = await delete(ApiCall.baseURL + ApiCall.ClearCart, headers: headerMap);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> updateQuantity(String itemId, String qty) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> headerMap = Map();
-      headerMap["device_token"] = deviceToken;
-      headerMap["Content-Type"] = "application/json";
-      headerMap["Authorization"] = "Bearer "+token;
-
-      final response = await post(ApiCall.baseURL + ApiCall.UpdateQuantity + "?itemId=" + itemId + "&quantity=" + qty,
-          headers: headerMap);
-      print(response.request.url.toString());
-      print(headerMap);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> deleteItem(String itemId) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> headerMap = Map();
-      headerMap["device_token"] = deviceToken;
-      headerMap["Content-Type"] = "application/json";
-      headerMap["Authorization"] = "Bearer "+token;
-
-      final response = await delete(ApiCall.baseURL + ApiCall.DeleteItem + "?itemId=" + itemId,
-          headers: headerMap);
-      print(response.request.url.toString());
-      print(headerMap);
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> getProductDetailById(String productId) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetProductDetailById + "?id=" + productId, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> getCartCount() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.CartCount, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> getOrderById(String transactionId) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.GetOrderById + "?transactionId=" + transactionId, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
-
-  Future<ApiResponseModel> searchProduct(String searchString) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("AUTH_TOKEN");
-      String deviceToken = prefs.getString('JWT_TOKEN');
-      Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
-
-      final response = await get(ApiCall.baseURL + ApiCall.SearchProduct + "?searchString=" + searchString, headers: header);
-      print(response.request.url.toString());
-      print(response.body);
-      if(response.statusCode == 200) {
-        var responseJson = _returnResponseJson(response);
-        return ApiResponseModel.fromJson(responseJson);
-      } else {
-        ApiResponseModel apiResponseModel = ApiResponseModel();
-        apiResponseModel.statusCode = response.statusCode;
-        apiResponseModel.message = response.reasonPhrase;
-        return apiResponseModel;
-      }
-    } catch (e) {
-      return _internalCrash(e.toString());
-    }
-  }
 
 }
+

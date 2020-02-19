@@ -67,37 +67,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
 
 
-            SizedBox(height: 30),
+//            SizedBox(height: 30),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Text(
-                  'Enter your Reffer Code', style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54,
-                  fontSize: 15
-              )
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                maxLength: 100,
-                onChanged: (e){
-                  reffer_code = e ;
-                },
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                    counterText: '',
-                    contentPadding: EdgeInsets.symmetric(vertical: 10)
-                ),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+//            Padding(
+//              padding: const EdgeInsets.only(left: 15),
+//              child: Text(
+//                  'Enter your Reffer Code', style: TextStyle(
+//                  fontWeight: FontWeight.w500,
+//                  color: Colors.black54,
+//                  fontSize: 15
+//              )
+//              ),
+//            ),
+//
+//            Padding(
+//              padding: const EdgeInsets.symmetric(horizontal: 15),
+//              child: TextFormField(
+//                maxLength: 100,
+//                onChanged: (e){
+//                  reffer_code = e ;
+//                },
+//                keyboardType: TextInputType.text,
+//                decoration: InputDecoration(
+//                    counterText: '',
+//                    contentPadding: EdgeInsets.symmetric(vertical: 10)
+//                ),
+//                style: TextStyle(
+//                  fontSize: 18,
+//                  fontWeight: FontWeight.w500,
+//                ),
+//              ),
+//            ),
 
 
 
@@ -122,6 +122,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   name = e ;
                 },
                 keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                    counterText: '',
+                    contentPadding: EdgeInsets.symmetric(vertical: 10)
+                ),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+
+
+            SizedBox(height: 30),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Text(
+                  'Enter your mobile number', style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                  fontSize: 15
+              )
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: TextFormField(
+                maxLength: 10,
+                onChanged: (e){
+                  mobile = e ;
+                },
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     counterText: '',
                     contentPadding: EdgeInsets.symmetric(vertical: 10)
@@ -170,37 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
 
-            SizedBox(height: 30),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Text(
-                  'Enter your mobile number', style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54,
-                  fontSize: 15
-              )
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                maxLength: 10,
-                onChanged: (e){
-                  mobile = e ;
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    counterText: '',
-                    contentPadding: EdgeInsets.symmetric(vertical: 10)
-                ),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
 
             SizedBox(height: 30),
 
@@ -213,8 +216,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         onPressed: (){
-                          if(mobile==""||mobile.length < 10||email==""){
-                            Utility.toastMessage("Enter email or phone number")  ;
+                          if(mobile==""||mobile.length < 10){
+                            Utility.toastMessage("Enter phone number")  ;
                           }else{
 
                             register();

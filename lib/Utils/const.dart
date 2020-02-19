@@ -81,6 +81,7 @@ class Const
   static String aboutVegetos1 = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.';
   static String privacyPolicy = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.';
   static String termsConditions = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.';
+  static String contactus ='\nEmail : info@vegetos.in\n\nContact Number : 079-40393628\n';
 
   static String aboutAppRelease1 = 'Now you can use promo codes in vegetos, promo covers more than 5000+ products. shop today to get avail the offers.';
   static String aboutAppRelease2 = 'Introducing payment options like UPI, Payment, PhonePe etc. starting from 1 june 2019 12:00 AM';
@@ -105,6 +106,7 @@ class Const
   static const appBar = Color(0xff47870d);
   static const greyLight = Color(0xffCED1D8);
   static const cancel = Color(0xffD00033);
+
 
   static Map<int, Color> color =
   {
@@ -181,4 +183,5 @@ class Const
   Due,
   [Display(Name = "Partial")]
   Partial*/
+
 }

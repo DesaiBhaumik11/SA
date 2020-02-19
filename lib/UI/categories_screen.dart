@@ -2,14 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/CategoryWiseProductListScreen.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart' as appfc;
 import 'package:vegetos_flutter/models/categories_model.dart';
-import 'package:vegetos_flutter/models/my_cart.dart' as bst;
 
 import 'my_cart_screen.dart';
 
@@ -22,19 +24,38 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class CategoriesScreenState extends State<CategoriesScreen> {
-  bst.MyCartModal myCartModal;
-  appfc.AppFirstModal appFirstModal;
 
+  String ImageURL = '';
+  String cartTotal = '0';
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        ImageURL = prefs.getString("ImageURL");
+      });
+    });
+    count();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final CategoriesModel categoriesModel =
         Provider.of<CategoriesModel>(context);
-    appFirstModal = Provider.of<appfc.AppFirstModal>(context);
+
     if (!categoriesModel.isLoaded) {
       categoriesModel.loadCategories();
     }
 
-    myCartModal = Provider.of<bst.MyCartModal>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Const.appBar,
@@ -68,7 +89,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                       child: CircleAvatar(
                         backgroundColor: Colors.orange,
                         radius: 8.0,
-                        child: Text("${myCartModal.cartItemSize}",
+                        child: Text("${cartTotal}",
                             style: TextStyle(
                                 fontSize: 10.0,
                                 fontFamily: 'GoogleSans',
@@ -80,7 +101,9 @@ class CategoriesScreenState extends State<CategoriesScreen> {
               ),
             ),
             onTap: () {
-              Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+              Navigator.push(context, SlideRightRoute(page: MyCartScreen())).then((returnn){
+                count();
+              });
             },
           )
         ],
@@ -112,10 +135,13 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                               child: Card(
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 elevation: 0.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0)
+                                ),
                                 child: categoriesModel.result[index].mediaId !=
                                         null
                                     ? Image.network(
-                                        appFirstModal.ImageUrl +
+                                        ImageURL +
                                             categoriesModel
                                                 .result[index].mediaId +
                                             "&h=100&w=100",
@@ -123,11 +149,12 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                                         width: 100,
                                       )
                                     : Image.asset(
-                                        'assets/vegitables.png',
+                                        '02-product.png',
                                         height: 100.0,
                                         width: 100.0,
                                       ),
                               ),
+
                             ),
                             Expanded(
                               child: Column(
@@ -181,6 +208,23 @@ class CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
+  void count(){
+    ApiCall().setContext(context).count().then((apiResponseModel){
+      String cartTotalStr="0";
+      if(apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
+        if(cartCountModel!=null && cartCountModel.count!=null) {
+          cartTotalStr = cartCountModel.count.toString();
+        }
+      }else{
+//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+      }
+      setState(() {
+        cartTotal = cartTotalStr;
+      });
+    });
+  }
+
   Widget categoriesSubChild(
       List<Result> subCategoriesList, BuildContext context) {
     return GridView.count(
@@ -194,7 +238,9 @@ class CategoriesScreenState extends State<CategoriesScreen> {
             Navigator.of(context).push(EnterExitRoute(
                 enterPage: CategoryWiseProductListScreen(
                     subCategoriesList[index].id, subCategoriesList[index].name),
-                exitPage: CategoriesScreen()));
+                exitPage: CategoriesScreen())).then((returnn){
+                  count();
+            });
           },
           child: Container(
             margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
@@ -209,7 +255,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                           width: 70,
                         )
                       : Image.network(
-                          "${appFirstModal.ImageUrl}${subCategoriesList[index].mediaId}",
+                          "${ImageURL}${subCategoriesList[index].mediaId}",
                           height: 70.0,
                           width: 70.0,
                         ),
