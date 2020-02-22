@@ -24,8 +24,8 @@ class   OrderPlacedScreen extends StatefulWidget
 {
 
   String orderId;
-
-  OrderPlacedScreen(this.orderId);
+  bool IsFromPayment;
+  OrderPlacedScreen(this.orderId,this.IsFromPayment);
 
   @override
   State<StatefulWidget> createState() {
@@ -82,8 +82,13 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
           elevation: 0,
           leading: InkWell(
             onTap: (){
-              //Navigator.pop(context);
-              Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+              if(widget.IsFromPayment) {
+                Navigator.pushAndRemoveUntil(
+                    context, EnterExitRoute(enterPage: DashboardScreen()), (
+                    c) => false);
+              }else{
+                Navigator.pop(context);
+              }
             },
             child: Padding(
               padding: EdgeInsets.all(15),
@@ -118,7 +123,13 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
         ),
         body: WillPopScope(
           onWillPop: () {
-            Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+            if(widget.IsFromPayment) {
+              Navigator.pushAndRemoveUntil(
+                  context, EnterExitRoute(enterPage: DashboardScreen()), (
+                  c) => false);
+            }else{
+              Navigator.pop(context);
+            }
           },
           child: callGetOrderById(widget.orderId),
         ),
@@ -412,7 +423,7 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Payment option', style: text,),
-                        Text('Online', style: text,),
+                        Text(EnumPaymentMode.getPaymentModeStr(widget.model.paymentMode), style: text,),
                       ],
                     ),
 

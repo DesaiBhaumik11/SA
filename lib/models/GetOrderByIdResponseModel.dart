@@ -1,4 +1,5 @@
 
+import 'package:vegetos_flutter/Utils/Enumaration.dart';
 import 'package:vegetos_flutter/models/OrderedItemsViewsModel.dart';
 
 import 'GetShippingOrderModel.dart';
@@ -42,7 +43,7 @@ class GetOrderByIdResponseModel
     this.totalPaid,
     this.orderId="",
     this.shippingOrder,
-    this.paymentMode=2,
+    this.paymentMode,
     this.orderItemsViewsModel,
     this.itemCount,
     this.discount
@@ -64,7 +65,7 @@ class GetOrderByIdResponseModel
       totalPaid: json["TotalPaid"],
       orderId: json["OrderId"],
       shippingOrder: json['ShippingOrder'] != null ? GetShippingOrderModel.fromJson(json['ShippingOrder']) : null,
-      paymentMode: json['PaymentMode'],
+      paymentMode: json['PaymentMode'] !=null ? json['PaymentMode'] : PaymentMode.Online.index,
       orderItemsViewsModel: json['OrderItemsViewModel'] != null ? OrderItemsViewModel.parseList(json['OrderItemsViewModel']) : null,
       itemCount: json['ItemCount'],
       discount: json['Discount']!=null ? json['Discount'] : 0.0,

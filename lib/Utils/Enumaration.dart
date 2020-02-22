@@ -72,3 +72,38 @@ enum DeliveryStatus {
     Received,
 }
 
+class EnumPaymentMode extends Enumaration{
+    static final String Cash = "Cash";
+    static final String Card = "Card";
+    static final String Online = "Online";
+    static final String Bank = "Bank";
+    static final String Wallet = "Wallet";
+    static final String COD = "COD";
+
+    static String getPaymentModeStr(int mode){
+        if(mode==0){
+            return EnumPaymentMode.Cash;
+        }else if(mode==1){
+            return EnumPaymentMode.Card;
+        }else if(mode==2){
+            return EnumPaymentMode.Online;
+        }else if(mode==3){
+            return EnumPaymentMode.Bank;
+        }else if(mode==4){
+            return EnumPaymentMode.Wallet;
+        }else if(mode==5){
+            return EnumPaymentMode.COD;
+        }
+
+
+    }
+}
+enum PaymentMode {
+    Cash,
+    Card,
+    Online,
+    Bank,
+    Wallet,
+    COD
+}
+

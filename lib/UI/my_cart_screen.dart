@@ -50,6 +50,7 @@ class MyCartState extends State<MyCartScreen>
   String cartTotalItems = "0";
   String totalSaving = "0";
   String checkoutTotal = "0";
+  bool isCountLoading=false;
   String ImageURL = '';
 
   bool isDataAvailable = true;
@@ -95,7 +96,7 @@ class MyCartState extends State<MyCartScreen>
         child: Container(
           child: Column(
             children: <Widget>[
-              model.cartItemViewModels != null && model.cartItemViewModels.isNotEmpty ? cartWidgets() :  !isDataAvailable ? noItemsInYourCart():Container(height:200,child: Center(child: CircularProgressIndicator(),),),
+              model != null && model.cartItemViewModels != null && model.cartItemViewModels.isNotEmpty ? cartWidgets() :  !isDataAvailable ? noItemsInYourCart():Container(height:200,child: Center(child: CircularProgressIndicator(),),),
               recommendedContainer(),
             ],
           ),
@@ -326,7 +327,8 @@ class MyCartState extends State<MyCartScreen>
                             ),
                             Expanded(
                               flex: 0,
-                              child: Row(
+                              child:
+                              Row(
                                 children: <Widget>[
 
                                   InkWell(onTap: (){
@@ -424,7 +426,9 @@ class MyCartState extends State<MyCartScreen>
                                  fontWeight: FontWeight.w500,
                                  color: Colors.green)),onTap: (){
 
-                               Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))) ;
+                               Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))).then((value){
+                                 callGetMyCartAPI();
+                               }) ;
 
                              },),
                            ),
@@ -487,8 +491,10 @@ class MyCartState extends State<MyCartScreen>
                  width: 25,
                  child: CircularProgressIndicator())));
              productModal.getProductDetail(result.ProductId,(){
-               Navigator.pop(context);
-               Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId)));
+//               Navigator.pop(context);
+               Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(result.ProductId))).then((value){
+                 callGetMyCartAPI();
+               });
              }) ;
 
            },
@@ -579,7 +585,8 @@ class MyCartState extends State<MyCartScreen>
                        ),
                      ],
                    ),
-                   InkWell(child:  Container(
+                   InkWell(child:
+                   Container(
                      margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                      padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                      decoration: BoxDecoration(
@@ -662,7 +669,7 @@ class MyCartState extends State<MyCartScreen>
           checkoutTotal = "0";
         }
 
-        if(model.cartItemViewModels != null) {
+        if(model.cartItemViewModels != null && model.cartItemViewModels.length>0) {
           cartTotalItems = model.cartItemViewModels.length.toString();
           isDataAvailable = true;
         } else {
@@ -696,7 +703,9 @@ class MyCartState extends State<MyCartScreen>
                   margin: const EdgeInsets.only(top: 10.0),
                   child: RaisedButton(
                     onPressed: () {
-                      Navigator.of(context).push(EnterExitRoute(enterPage: CategoriesScreen()));
+                      Navigator.of(context).push(EnterExitRoute(enterPage: CategoriesScreen())).then((value){
+                        callGetMyCartAPI();
+                      });
                     },
                     color: Colors.green,
                     padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 10.0, right: 10.0),
@@ -741,9 +750,11 @@ class MyCartState extends State<MyCartScreen>
           ),
         ),
       ),
-      actions: <Widget>[
+      actions:
+       <Widget>[
+         isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
         Visibility(
-          visible: model.cartItemViewModels != null ? true : false,
+          visible: model != null && model.cartItemViewModels!=null ? true : false,
           child: InkWell(
             onTap: (){
               confirmDelete();
@@ -755,7 +766,7 @@ class MyCartState extends State<MyCartScreen>
           ),
         ),
         Visibility(
-          visible: model.cartItemViewModels != null ? true : false,
+          visible: model != null && model.cartItemViewModels != null ? true : false,
           child: InkWell(
             onTap: (){
               Navigator.push(context, SlideLeftRoute(page: SelectContact()));
@@ -773,7 +784,7 @@ class MyCartState extends State<MyCartScreen>
   Widget checkoutBottomBar() {
     return BottomAppBar(
       child: Visibility(
-        visible: model.cartItemViewModels != null ? true : false,
+        visible: model != null && model.cartItemViewModels != null ? true : false,
         child: InkWell(
           onTap: () {
             SharedPreferences.getInstance().then((prefs) {
@@ -781,7 +792,7 @@ class MyCartState extends State<MyCartScreen>
               if(tokenMap['anonymous'].toString().toLowerCase() == "true") {
                 Navigator.push(context, EnterExitRoute(enterPage: LoginScreen()));
               } else {
-                if(model.cartItemViewModels != null && model.cartItemViewModels.isNotEmpty) {
+                if(model != null && model.cartItemViewModels != null && model.cartItemViewModels.isNotEmpty) {
                   Navigator.push(context, SlideLeftRoute(page: SetDeliveryDetails(model)));
                 } else {
                   Fluttertoast.showToast(msg: 'No items in your cart');
@@ -833,13 +844,15 @@ class MyCartState extends State<MyCartScreen>
   }
 
   void updateCartQuantity(String itemId, String quantity) {
-    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
+    setState(() {
+      isCountLoading=true;
+    });
     ApiCall().setContext(context).updateQuantity(itemId, quantity).then((apiResponseModel) {
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
+      setState(() {
+        isCountLoading=false;
+      });
       if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Item Updated');
         BindData(apiResponseModel);
       } else if(apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
@@ -850,12 +863,13 @@ class MyCartState extends State<MyCartScreen>
   }
 
   void deleteCartItem(String itemId) {
-    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
+    setState(() {
+      isCountLoading=true;
+    });
      ApiCall().setContext(context).deleteItem(itemId).then((apiResponseModel) {
-       if(progressDialog!=null && progressDialog.isShowing()){
-         progressDialog.dismiss();
-       }
+       setState(() {
+         isCountLoading=false;
+       });
        if(apiResponseModel.statusCode == 200) {
          BindData(apiResponseModel);
        } else if(apiResponseModel.statusCode == 401) {
@@ -867,12 +881,13 @@ class MyCartState extends State<MyCartScreen>
    }
 
   void callClearCartAPI() {
-    ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
+    setState(() {
+      isCountLoading=true;
+    });
     ApiCall().setContext(context).clearCart().then((apiResponseModel) {
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
+      setState(() {
+        isCountLoading=false;
+      });
       if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
         BindData(apiResponseModel);
       } else if(apiResponseModel.statusCode == 401){
@@ -931,12 +946,13 @@ class MyCartState extends State<MyCartScreen>
    }
 
    void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-     ProgressDialog progressDialog  = Utility.progressDialog(context, "") ;
-     progressDialog.show() ;
+     setState(() {
+       isCountLoading=true;
+     });
      ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
-       if(progressDialog!=null && progressDialog.isShowing()){
-         progressDialog.dismiss();
-       }
+       setState(() {
+         isCountLoading=false;
+       });
        if(apiResponseModel.statusCode == 200) {
          Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
          BindData(apiResponseModel);

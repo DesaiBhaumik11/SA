@@ -55,6 +55,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
   CategoryWiseProductListScreenState(this.categoryId, this.categoryName);
 
   String cartTotal = '0';
+  bool isCountLoading=false;
   Future getProductWithDefaultVarient;
   ProgressDialog progressDialog ;
 
@@ -91,7 +92,8 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
             child: Container(
               margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-              child: Stack(
+              child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+              Stack(
                 children: <Widget>[
                   Align(
                     child: Icon(Icons.shopping_cart),
@@ -569,11 +571,11 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
     );
   }
   void count(){
+    setState(() {
+      isCountLoading=false;
+    });
     ApiCall().setContext(context).count().then((apiResponseModel){
       String cartTotalStr="0";
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
       if(apiResponseModel.statusCode == 200) {
         CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
         if(cartCountModel!=null && cartCountModel.count!=null) {
@@ -588,10 +590,13 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
     });
   }
   void addToCart(productId, varientId, qty, offerId, amount){
-    progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
+    setState(() {
+      isCountLoading=true;
+    });
     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Item added in cart');
+      }else{
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
       count();

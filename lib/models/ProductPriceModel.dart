@@ -50,7 +50,7 @@ class ProductPriceModel
       BusinessLocationId: parsedData['BusinessLocationId'],
       Price: parsedData['Price']!=null ? parsedData['Price'] : 0,
       DiscountPercent: parsedData['DiscountPercent'],
-      OfferPrice: parsedData['OfferPrice'],
+      OfferPrice: parsedData['OfferPrice'] != null ? parsedData['OfferPrice'] : 0,
       UpdatedBy: parsedData['UpdatedBy'],
       CreatedBy: parsedData['CreatedBy'],
       CreatedOn: parsedData['CreatedOn'],

@@ -6,7 +6,7 @@ import 'package:vegetos_flutter/models/UnitsModel.dart';
 
 class GetCartResponseModel {
   String cartId;
-  List<CartItemViewModel> cartItemViewModels=List();
+  List<CartItemViewModel> cartItemViewModels;
   double totalAmount;
   double deliveryCharges;
   double discount;
@@ -24,7 +24,7 @@ class GetCartResponseModel {
   factory GetCartResponseModel.fromJson(Map<String, dynamic> json) {
     return GetCartResponseModel(
       cartId: json["CartId"],
-      cartItemViewModels: json["CartItemViewModels"] != null ? CartItemViewModel.parseList(json["CartItemViewModels"]) : null,
+      cartItemViewModels: json["CartItemViewModels"] != null ? CartItemViewModel.parseList(json["CartItemViewModels"]) : new List(),
       totalAmount: json["SubTotal"],
       deliveryCharges: json["ShippingCharge"],
       discount: json["Discount"],

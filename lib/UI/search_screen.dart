@@ -46,8 +46,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   bool search=false;
   String ImageURL='';
+  bool isCountLoading=false,isSearchLoading=false;
 
   bool isSearch = false;
+
+  int typedMillis=0;
+
 
   List<ProductWithDefaultVarientModel> searchList;
 
@@ -144,9 +148,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         });*/
 
                           if(e != null && e.isNotEmpty && e.length > 3) {
-                            Future.delayed((Duration(milliseconds: 500))).then((_) {
-                              callSearchProductAPI(e);
-                            });
+                            if(typedMillis + 300 < new DateTime.now().millisecondsSinceEpoch) {
+                              Future.delayed((Duration(milliseconds: 300)))
+                                  .then((_) {
+                                typedMillis =
+                                    new DateTime.now().millisecondsSinceEpoch;
+                                callSearchProductAPI(e);
+                              });
+                            }
                           }
                         },
                         decoration: InputDecoration(
@@ -154,9 +163,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             hintText: "Search...",
                             hintStyle: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 22,
+                                fontSize: 20,
                                 color: Colors.white)),
                       ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                      child: isSearchLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+                      Container(),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -164,7 +178,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                        child: Stack(
+                        child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+                        Stack(
                           children: <Widget>[
                             Align(
                               child: Image.asset(
@@ -239,6 +254,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
 
   ListView buildList() {
     return ListView.builder(
@@ -382,7 +398,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Theme.of(context).primaryColor,
                             //color: Const.gray10,
                             onPressed: () {
-                              MyCartUtils().callAddToCartAPI(productVariant.ProductId, productVariant.ProductVariantId,
+                              addToCart(productVariant.ProductId, productVariant.ProductVariantId,
                                   productVariant.IncrementalStep.toString(), "", productVariant.ProductPrice.OfferPrice.toString());
                             },
                             child: Padding(
@@ -423,6 +439,7 @@ class _SearchScreenState extends State<SearchScreen> {
       physics: BouncingScrollPhysics(),
     );
   }
+
 
   ListView searchHistory(BuildContext context) {
     return ListView.builder(
@@ -489,28 +506,32 @@ class _SearchScreenState extends State<SearchScreen> {
         });
   }
 
-  void callGetCartAPI() {
-    ApiCall().setContext(context).getCart().then((apiResponseModel) {
+  void addToCart(productId, varientId, qty, offerId, amount){
+    setState(() {
+      isCountLoading=true;
+    });
+    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
-        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          cartTotal = getCartResponseModel.cartItemViewModels.length.toString();
-        });
-      } else if(apiResponseModel.statusCode == 401) {
-
-      } else {
-
+        Fluttertoast.showToast(msg: 'Item added in cart');
+      }else{
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
+      count();
     });
   }
   void count(){
+    setState(() {
+      isCountLoading=false;
+    });
     ApiCall().setContext(context).count().then((apiResponseModel){
-      String cartTotalStr="0";
+      String cartTotalStr=cartTotal;
       if(apiResponseModel.statusCode == 200) {
         CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
         if(cartCountModel!=null && cartCountModel.count!=null) {
           cartTotalStr = cartCountModel.count.toString();
         }
+      }else{
+//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
       }
       setState(() {
         cartTotal = cartTotalStr;
@@ -518,21 +539,14 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-        callGetCartAPI();
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      }
-    });
-  }
-
   void callSearchProductAPI(String searchString) {
+    setState(() {
+      isSearchLoading=true;
+    });
     ApiCall().setContext(context).searchProduct(searchString).then((apiResponseModel) {
+      setState(() {
+        isSearchLoading=false;
+      });
       if(apiResponseModel.statusCode == 200) {
         List<ProductWithDefaultVarientModel> productWithDefaultVarientModelList = ProductWithDefaultVarientModel.parseList(apiResponseModel.Result);
         setState(() {

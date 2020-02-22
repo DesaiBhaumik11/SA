@@ -44,8 +44,13 @@ class ApiCall
   static final String VegetosExclusive = "/GetVegetosExclusive";
   static final String RecommendedForYou = "/GetRecommendedProducts";
   static final String GetAllShippingSchedule = "/GetAllShippingSchedule";
+  static final String GetShippingScheduleFor = "/GetShippingScheduleFor";
+  static final String GetPaymentModes = "/GetPaymentModes";
 
   static final String ProceedToPayment = "/ProceedTopayment";
+  static final String ProceedTopaymentUsingGateway = "/ProceedTopaymentUsingGateway";
+  static final String ProceedTopaymentUsingCOD = "/ProceedTopaymentUsingCOD";
+
   static final String ConfirmPayment = "/PaymentConfirm";
   static final String AddToCart = "/AddItem";
   static final String GetCart = "/GetCart";
@@ -236,6 +241,7 @@ class ApiCall
   }
 
   ApiResponseModel _internalCrash(String msg) {
+    print("crash:"+msg);
     ApiResponseModel apiResponseModel = ApiResponseModel();
     apiResponseModel.statusCode = -1;
     apiResponseModel.message = msg != null ? msg : '';
@@ -268,6 +274,20 @@ class ApiCall
     return _get(ApiCall.GetAllShippingSchedule);
   }
 
+  Future<ApiResponseModel> getShippingScheduleFor() async {
+    return _get(ApiCall.GetShippingScheduleFor);
+  }
+  Future<ApiResponseModel> getPaymentModes() async {
+    return _get(ApiCall.GetPaymentModes);
+  }
+
+  Future<ApiResponseModel> proceedTopaymentUsingGateway() async {
+    return _get(ApiCall.ProceedTopaymentUsingGateway);
+  }
+
+  Future<ApiResponseModel> proceedTopaymentUsingCOD() async {
+    return _get(ApiCall.ProceedTopaymentUsingCOD);
+  }
 
   Future<ApiResponseModel> proceedToPayment(String totalAmount) async {
     return _get(ApiCall.ProceedToPayment);

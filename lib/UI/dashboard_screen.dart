@@ -88,6 +88,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   bool isAnnonymous = true;
 
   String deliveryAddress = '';
+  bool isCountLoading=false;
   String cartTotal = '0';
   String ImageURL = '';
 
@@ -256,7 +257,8 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
           },
           child: Container(
             margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-            child: Stack(
+            child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+            Stack(
               children: <Widget>[
                 Align(
                   child: Icon(Icons.shopping_cart),
@@ -283,31 +285,34 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
       title: Stack(
         children: <Widget>[
           InkWell(child: Container(
-            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
             child: Column(
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text('Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
+                    new Flexible(
+                      child:
+                    Text('Set Delivery Location',maxLines: 1,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
 //                    Text(deliveryAddress.isNotEmpty ? 'Change Delivery Location' : 'Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
+          ),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Container(
-                      child: AutoSizeText(
+                    new Flexible(
+                      child: Text(
                         deliveryAddress.isNotEmpty ? deliveryAddress : 'Location not set!',
-                        style: TextStyle(fontSize: 18.0, fontFamily: 'GoogleSans'),
-                        minFontSize: 16.0,
-                        maxFontSize: 18.0,
+                        style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans'),
+//                        minFontSize: 16.0,
+//                        maxFontSize: 17.0,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+//                        overflow: TextOverflow.ellipsis,
                       ),
-                      width: MediaQuery.of(context).size.width * 0.6,
+//                      width: MediaQuery.of(context).size.width * 0.6,
                     ),
-                    deliveryAddress.isNotEmpty ? Icon(Icons.edit, color: Colors.white, size: 20.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,)
                   ],
-                )
+                ),
+
               ],
             ),
           ),onTap: (){
@@ -318,8 +323,20 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
             });
 
 
-  },),
+  },
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
+            child: Stack(
+            children: <Widget>[
 
+              Align(
+                child: deliveryAddress.isNotEmpty ? Icon(Icons.edit, color: Colors.white, size: 20.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,),
+                alignment: Alignment.bottomRight,
+              ),
+            ],
+          ),
+          ),
 
         ],
       ),
@@ -1363,10 +1380,10 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   }
   void count(){
     ApiCall().setContext(context).count().then((apiResponseModel){
+      setState(() {
+        isCountLoading=false;
+      });
       String cartTotalStr="0";
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
       if(apiResponseModel.statusCode == 200) {
         CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
         if(cartCountModel!=null && cartCountModel.count!=null) {
@@ -1381,10 +1398,15 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
     });
   }
   void addToCart(productId, varientId, qty, offerId, amount){
-    progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
+//    progressDialog  = Utility.progressDialog(context, "") ;
+//    progressDialog.show() ;
+    setState(() {
+      isCountLoading=true;
+    });
     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Item added in cart');
+      }else{
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
       count();

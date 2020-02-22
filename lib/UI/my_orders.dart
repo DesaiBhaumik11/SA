@@ -24,10 +24,17 @@ class _MyOrdersState extends State<MyOrders> {
 
   //MyOrdersModal myOrdersModal ;
 
+  Future future;
    var text = TextStyle(
      fontWeight: FontWeight.w500,
    );
 
+   @override
+  void initState() {
+    // TODO: implement initState
+     future=ApiCall().setContext(context).getOrders();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     /*myOrdersModal = Provider.of<MyOrdersModal>(context) ;
@@ -55,6 +62,7 @@ class _MyOrdersState extends State<MyOrders> {
         ),
       ),
       body: callGetOrdersAPI(),
+
     );
   }
 
@@ -108,7 +116,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                        '₹ ${model.subTotal}', style: text,
+                        '₹ ${model.totalAmount}', style: text,
                       )
                     ],
                   ),
@@ -141,7 +149,7 @@ class _MyOrdersState extends State<MyOrders> {
 
                       InkWell(
                         onTap: (){
-                          Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(result[index].id)));
+                          Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(result[index].id,false)));
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -178,7 +186,7 @@ class _MyOrdersState extends State<MyOrders> {
 
   Widget callGetOrdersAPI() {
     return FutureBuilder(
-      future: ApiCall().setContext(context).getOrders(),
+      future: future,
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
           ApiResponseModel apiResponseModel = snapshot.data;

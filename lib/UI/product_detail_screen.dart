@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
@@ -44,8 +45,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
    ProductDetailsModel ProductDetail=new ProductDetailsModel();
    UnitsModel Units=new UnitsModel();
    ProductVariantMedia productVariantMedia=new ProductVariantMedia();
-   MyCartModal cartModal ;
-   AppFirstModal appFirstModal ;
+//   MyCartModal cartModal ;
+//   AppFirstModal appFirstModal ;
 
   var pressed = false;
   bool descFlag = false;
@@ -61,6 +62,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   Future getProductById;
 
   String ImageURL = "";
+  bool isCountLoading=false;
 
    DashboardProductResponseModel model = DashboardProductResponseModel();
 
@@ -75,11 +77,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   @override
   void initState() {
     // TODO: implement initState
-    MyCartUtils.streamController.stream.listen((cartCount) {
-      setState(() {
-        cartTotal = cartCount;
-      });
-    });
+   count();
 
     SharedPreferences.getInstance().then((prefs) {
       ImageURL = prefs.getString("ImageURL");
@@ -92,8 +90,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   @override
   Widget build(BuildContext context) {
 
-    appFirstModal=Provider.of<AppFirstModal>(context);
-    cartModal=Provider.of<MyCartModal>(context);
+//    appFirstModal=Provider.of<AppFirstModal>(context);
+//    cartModal=Provider.of<MyCartModal>(context);
 
      //productModal=Provider.of<ProductDetailModal>(context);
 
@@ -119,13 +117,14 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             margin: EdgeInsets.fromLTRB(5.0, 0.0, 10.0, 0.0),
             child: Icon(Icons.search, color: Colors.white,),
           ),*/
-          GestureDetector(
+          InkWell(
             onTap: () {
               Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
             },
             child: Container(
               margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: Stack(
+              child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+              Stack(
                 children: <Widget>[
                   Align(
                     child: Icon(Icons.shopping_cart),
@@ -301,7 +300,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             ),onTap: (){
               //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
               //cartModal.addTocart(productModal.result);
-              MyCartUtils().callAddToCartAPI(productModal.ProductId, productModal.ProductVariant[0].Id,
+              addToCart(productModal.ProductId, productModal.ProductVariant[0].Id,
                   productModal.IncrementalStep.toString(), "", ProductPrice.OfferPrice.toString());
               },)
           )
@@ -820,6 +819,39 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
       }
     });
   }
+
+   void addToCart(productId, varientId, qty, offerId, amount){
+     setState(() {
+       isCountLoading=true;
+     });
+     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+       if(apiResponseModel.statusCode == 200) {
+         Fluttertoast.showToast(msg: 'Item added in cart');
+       }else{
+         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+       }
+       count();
+     });
+   }
+   void count(){
+     setState(() {
+       isCountLoading=false;
+     });
+     ApiCall().setContext(context).count().then((apiResponseModel){
+       String cartTotalStr=cartTotal;
+       if(apiResponseModel.statusCode == 200) {
+         CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
+         if(cartCountModel!=null && cartCountModel.count!=null) {
+           cartTotalStr = cartCountModel.count.toString();
+         }
+       }else{
+//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+       }
+       setState(() {
+         cartTotal = cartTotalStr;
+       });
+     });
+   }
 
 
 }

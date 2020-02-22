@@ -56,7 +56,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   bool defaultAddressFlag = false;
 
   List<DisplayShippingModel> displayShippingSlotList;
-  Future shippingSchedule = ApiCall().getAllShippingSchedule();
+  Future shippingSchedule = ApiCall().getShippingScheduleFor();
   //Future getMyDefaultAddress = ApiCall().getMyDefaultAddress();
 
   bool isDefaultAddressAvailable = false;

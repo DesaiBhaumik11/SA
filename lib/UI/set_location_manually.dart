@@ -294,9 +294,9 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
   void callSetLocationApi(String pincode, String address) {
     ApiCall().setContext(context).setLocation(pincode).then((apiResponseModel) async {
       if(apiResponseModel.statusCode == 200) {
-        SetLocationResponseModel setLocationResponseModel = SetLocationResponseModel.fromJson(apiResponseModel.Result);
+//        SetLocationResponseModel setLocationResponseModel = SetLocationResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('BusinessLocationId', setLocationResponseModel.LocationPincodeMapping.BusinessLocationId);
+        sharedPreferences.setString('BusinessLocationId', apiResponseModel.Result);
         sharedPreferences.setString('FullAddress', address);
         Navigator.of(context).pushAndRemoveUntil(
             EnterExitRoute(enterPage: DashboardScreen(), exitPage: SetLocationManually()),

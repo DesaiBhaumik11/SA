@@ -40,7 +40,7 @@ class ProductWithDefaultVarientModel
 
   ProductTaxModel ProductTax;
 
-  ProductPriceModel ProductPrice=new ProductPriceModel();
+  ProductPriceModel ProductPrice;
 
   Object ProductVariantMedia;
 
@@ -82,8 +82,8 @@ class ProductWithDefaultVarientModel
       IncrementalStep: parsedData['IncrementalStep'],
       Units: parsedData['Units'] != null ? UnitsModel.parseList(parsedData['Units']) : null,
       ProductDetails: parsedData['ProductDetails'] != null ? ProductDetailsModel.parseList(parsedData['ProductDetails']) : null,
-      ProductTax: parsedData['ProductTax'] != null ? ProductTaxModel.fromJson(parsedData['ProductTax']) : null,
-      ProductPrice: parsedData['ProductPrice'] != null ? ProductPriceModel.fromJson(parsedData['ProductPrice']) : null,
+      ProductTax: parsedData['ProductTax'] != null ? ProductTaxModel.fromJson(parsedData['ProductTax']) : new ProductTaxModel(),
+      ProductPrice: parsedData['ProductPrice'] != null ? ProductPriceModel.fromJson(parsedData['ProductPrice']) : new ProductPriceModel(),
       ProductVariantMedia: parsedData['ProductVariantMedia'],
     );
   }

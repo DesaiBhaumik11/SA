@@ -57,6 +57,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
   bool isFromOutside=false;
   int pageSize = 10;
   ProgressDialog progressDialog ;
+  bool isCountLoading=false;
 
   _AllProductScreenState(String name){
     this.name = name ;
@@ -118,7 +119,8 @@ class _AllProductScreenState extends State<AllProductScreen> {
             },
             child: Container(
               margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: Stack(
+              child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+              Stack(
                 children: <Widget>[
                   Align(
                     child: Icon(Icons.shopping_cart),
@@ -466,21 +468,24 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
   }
   void addToCart(productId, varientId, qty, offerId, amount){
-    progressDialog  = Utility.progressDialog(context, "") ;
-    progressDialog.show() ;
+    setState(() {
+      isCountLoading=true;
+    });
     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Item added in cart');
+      }else{
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
       }
       count();
     });
   }
   void count(){
+    setState(() {
+      isCountLoading=false;
+    });
     ApiCall().setContext(context).count().then((apiResponseModel){
       String cartTotalStr=cartTotal;
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
       if(apiResponseModel.statusCode == 200) {
         CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
         if(cartCountModel!=null && cartCountModel.count!=null) {
@@ -576,6 +581,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
 //      height: 275.0,
 
       child: PagewiseGridView.count(
+        pageSize: 10,
         crossAxisCount: 2,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
@@ -584,14 +590,17 @@ class _AllProductScreenState extends State<AllProductScreen> {
         itemBuilder: (context, entry, index) {
           return childView(context, entry);
         },
+        pageFuture: (int pageIndex){
+          return getFutureList(pageIndex);
+        },
         noItemsFoundBuilder: (context) {
           return Container(child: Center(child: Text('Data Not Found'),),);
         },
-        pageLoadController: PagewiseLoadController(
-            pageSize: 10,
-            pageFuture: (int pageIndex) {
-              return getFutureList();
-            }),
+//        pageLoadController: PagewiseLoadController(
+//            pageSize: 10,
+//            pageFuture: (int pageIndex) {
+//              return getFutureList();
+//            }),
         loadingBuilder: (context) {
           return Container(child: Center(child: CircularProgressIndicator(),), height: MediaQuery.of(context).size.height,);
         },
@@ -622,25 +631,25 @@ class _AllProductScreenState extends State<AllProductScreen> {
     );*/
   }
 
-  Future<List> getFutureList() async {
+  Future<List> getFutureList(int index) async {
 
-if(pageNUmber>1 || isFromOutside) {
+if(index>1 || isFromOutside) {
   isFromOutside=false;
   if (name == 'Best Selling Items') {
     getProduct =
-        ApiCall().bestSellingItems(pageNUmber.toString(), pageSize.toString());
+        ApiCall().bestSellingItems(index.toString(), pageSize.toString());
   } else if (name == "Vegeto's Exclusive") {
     getProduct =
-        ApiCall().vegetosExclusive(pageNUmber.toString(), pageSize.toString());
+        ApiCall().vegetosExclusive(index.toString(), pageSize.toString());
   } else {
     getProduct =
-        ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString());
+        ApiCall().recommendedForYou(index.toString(), pageSize.toString());
   }
 }
     ApiResponseModel apiResponseModel = await getProduct;
     if(apiResponseModel.statusCode == 200) {
       DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
-      pageNUmber++;
+//      pageNUmber++;
       return responseModel.Results;
     } else if(apiResponseModel.statusCode == 401) {
       Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
