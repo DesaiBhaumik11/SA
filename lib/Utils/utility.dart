@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
+import 'package:vegetos_flutter/UI/force_update.dart';
 import 'package:vegetos_flutter/Utils/Enumaration.dart';
 
 class Utility {
@@ -55,6 +60,24 @@ class Utility {
       return "Confirmed";
     }else{
       return getInitialStatus(currentStatus);
+    }
+  }
+
+  static void forceUpate(BuildContext context){
+    if(Platform.isAndroid) {
+      InAppUpdate.checkForUpdate().then((state) {
+        if (state.immediateUpdateAllowed && state.updateAvailable) {
+          InAppUpdate.performImmediateUpdate();
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context, EnterExitRoute(enterPage: ForceUpdate(true)), (
+              c) => false);
+        }
+      });
+    }else{
+      Navigator.pushAndRemoveUntil(
+          context, EnterExitRoute(enterPage: ForceUpdate(true)), (
+          c) => false);
     }
   }
 }

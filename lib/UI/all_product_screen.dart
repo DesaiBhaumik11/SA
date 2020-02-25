@@ -351,7 +351,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
             });
           },
           child: Container(
-            width: 180.0,
+//            width: 180.0,
 //            height: 280.0,
             child: Card(
               child: Column(
@@ -361,8 +361,8 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     children: <Widget>[
                       Center(
                         child: Container(
-                          width: 110.0,
-                          height: 110.0,
+//                          width: 110.0,
+//                          height: 110.0,
                           //alignment: Alignment.center,
                           child: Card(
                             elevation: 0.0,
@@ -389,6 +389,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                       ) : Container(),
                     ],
                   ),
+                  Expanded(child: Container(),flex: 1,),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                     child: Row(
@@ -401,7 +402,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                         ),
                       ],
                     ),
-                  ),Expanded(child: Container(),flex: 1,),
+                  ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
@@ -576,16 +577,25 @@ class _AllProductScreenState extends State<AllProductScreen> {
       aspectRatio = cardWidth / cardHeight;
     }
 
+    int count=2;
+    if(aspectRatio >= 0.9){
+      if(cardWidth>=800){
+        count=4;
+      }else{
+        count=3;
+      }
+    }
     return Container(
       height: MediaQuery.of(context).size.height - 76,
 //      height: 275.0,
 
+
       child: PagewiseGridView.count(
         pageSize: 10,
-        crossAxisCount: 2,
+        crossAxisCount: count,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
-        childAspectRatio: aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
+        childAspectRatio:  aspectRatio >= 0.9 && cardWidth>=800 ? 0.75 :aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
         padding: EdgeInsets.all(5.0),
         itemBuilder: (context, entry, index) {
           return childView(context, entry);

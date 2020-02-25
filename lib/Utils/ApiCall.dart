@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:http/http.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
@@ -186,6 +187,10 @@ class ApiCall
           });
 
         }
+      }
+    }else if (apiResponseModel.statusCode == 426){
+      if(context!=null) {
+        Utility.forceUpate(context);
       }
     }
     apiResponseModel.statusCode = response.statusCode;

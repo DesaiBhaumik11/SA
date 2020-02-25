@@ -189,15 +189,23 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
       aspectRatio = cardWidth / cardHeight;
     }
 
+    int count=2;
+    if(aspectRatio >= 0.9){
+      if(cardWidth>=800){
+        count=4;
+      }else{
+        count=3;
+      }
+    }
     return products != null && products.isNotEmpty ? Container(
       margin: EdgeInsets.only(left: 5.0, right: 5.0, top: 5.0),
       child: GridView.count(
-        crossAxisCount: 2,
+        crossAxisCount: count,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
         shrinkWrap: true,
         padding: EdgeInsets.all(5.0),
-        childAspectRatio: aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
+        childAspectRatio: aspectRatio >= 0.9 && cardWidth>=800 ? 0.75 :aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
         physics: BouncingScrollPhysics(),
         //padding: const EdgeInsets.all(4.0),
         children: List.generate(products.length,(index){
@@ -262,7 +270,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
             });
           },
           child: Container(
-            width: 180.0,
+//            width: 180.0,
 //            height: 280.0,
             child: Card(
               child: Column(
@@ -299,7 +307,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                             color: Colors.white),),
                       ) : Container(),
                     ],
-                  ),
+                  ),Expanded(child: Container(),flex: 1,),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                     child: Row(
@@ -312,7 +320,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                         ),
                       ],
                     ),
-                  ),Expanded(child: Container(),flex: 1,),
+                  ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(

@@ -383,7 +383,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context, EnterExitRoute(enterPage: SearchScreen()));
+                        Navigator.push(context, EnterExitRoute(enterPage: SearchScreen())).then((ret){count();});
                       },
                       child: Row(
                         children: <Widget>[
@@ -489,7 +489,9 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
 //              Navigator.pop(context);
 //              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
 //            }) ;
-            Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
+            Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId))).then((ret){
+              count();
+            });
           },
           child: Container(
             width: 180.0,
@@ -529,7 +531,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                             color: Colors.white),),
                       ) : Container(),
                     ],
-                  ),
+                  ),Expanded(child: Container(),flex: 1,),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                     child: Row(
@@ -542,7 +544,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                         ),
                       ],
                     ),
-                  ),Expanded(child: Container(),flex: 1,),
+                  ),
                   Container(
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                     child: Align(
@@ -759,7 +761,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               ),*/
               InkWell(
                 onTap: (){
-                  Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen()));
+                  Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen())).then((ret){count();});
                 },
                 child: Container(
                   height: 50.0,
@@ -783,7 +785,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               ),
               InkWell(
                 onTap: (){
-                  Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()));
+                  Navigator.push(context, EnterExitRoute(enterPage: MyAddresses())).then((ret){getMyDefaultAddressByPrefs();});
                 },
                 child: Container(
                   height: 50.0,
@@ -1099,7 +1101,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                                 fontWeight: FontWeight.w500,
                                 color: Colors.green)),onTap: (){
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen('Best Selling Items'))) ;
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen('Best Selling Items'))).then((ret){count();}) ;
 
                             },),
                           ),
@@ -1190,7 +1192,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                                 fontWeight: FontWeight.w500,
                                 color: Colors.green)),onTap: (){
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Vegeto's Exclusive"))) ;
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Vegeto's Exclusive"))).then((ret){count();}) ;
 
                             },),
                           ),
@@ -1264,7 +1266,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                                 fontWeight: FontWeight.w500,
                                 color: Colors.green)),onTap: (){
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))) ;
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))).then((ret){count();}) ;
 
                             },),
                           ),

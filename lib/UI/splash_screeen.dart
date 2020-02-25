@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
+import 'package:vegetos_flutter/UI/force_update.dart';
 import 'package:vegetos_flutter/UI/welcome_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
@@ -205,6 +207,8 @@ class SplashScreenState extends State<SplashScreen> {
           prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
           callGetDefaultsAPI(context);
         });
+      }else if (apiResponseModel.statusCode == 426){
+        Utility.forceUpate(context);
       } else {
         callGetDefaultsAPI(context);
       }
@@ -230,7 +234,10 @@ class SplashScreenState extends State<SplashScreen> {
             callAppFirstStartAPI(context);
           });
         });
-      }else{
+      }
+    else if (apiResponseModel.statusCode == 426){
+      Utility.forceUpate(context);
+    }else{
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
       }
     });
@@ -240,6 +247,7 @@ class SplashScreenState extends State<SplashScreen> {
     ApiCall().getDefaults().then((apiResponseModel){
       if(apiResponseModel.statusCode == 200) {
         GetDefaultsResponseModel getDefaultsResponseModel = GetDefaultsResponseModel.fromJson(apiResponseModel.Result);
+
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("ImageURL", getDefaultsResponseModel.ImageUrl);
           Future.delayed(Duration(seconds: 1)).then((_) {
@@ -248,6 +256,10 @@ class SplashScreenState extends State<SplashScreen> {
         });
       } else if(apiResponseModel.statusCode == 401) {
         callRefreshTokenAPI(context);
+      }else if (apiResponseModel.statusCode == 426){
+        Utility.forceUpate(context);
+      }else{
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
       }
     });
   }

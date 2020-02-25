@@ -536,7 +536,7 @@ class MyCartState extends State<MyCartScreen>
                              color: Colors.white),),
                        ) : Container(),
                      ],
-                   ),
+                   ),Expanded(child: Container(),flex: 1,),
                    Container(
                      margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                      child: Row(
@@ -549,7 +549,7 @@ class MyCartState extends State<MyCartScreen>
                          ),
                        ],
                      ),
-                   ),Expanded(child: Container(),flex: 1,),
+                   ),
                    Container(
                      margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                      child: Align(
