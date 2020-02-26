@@ -51,6 +51,7 @@ dependencies:
   in_app_update: ^1.1.6
   upgrader: ^0.10.1
   open_appstore: ^1.0.2
+  enum_to_string: ^1.0.9
 
 
 dev_dependencies:

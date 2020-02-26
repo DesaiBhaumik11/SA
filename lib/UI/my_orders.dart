@@ -7,11 +7,13 @@ import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/order_placed_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/Enumaration.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/GetOrderByIdResponseModel.dart';
 import 'package:vegetos_flutter/models/GetOrdersResponseModel.dart';
 import 'package:vegetos_flutter/models/my_orders_modal.dart';
 
@@ -66,13 +68,13 @@ class _MyOrdersState extends State<MyOrders> {
     );
   }
 
-  ListView buildList(List<GetOrdersResponseModel> result) {
+  ListView buildList(List<GetOrderByIdResponseModel> result) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        GetOrdersResponseModel model = result[index];
+        GetOrderByIdResponseModel model = result[index];
         return InkWell(
           onTap: (){
-
+            Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(result[index].id,false)));
           },
           child: Card(
             child: Padding(
@@ -86,7 +88,7 @@ class _MyOrdersState extends State<MyOrders> {
                         'Order ID',style: text,
                       ),
                       Text(
-                          '${model.offerId==null?'':model.offerId}', style: text,
+                          '${model.orderId==null? '':model.orderId}', style: text,
                       )
                     ],
                   ),
@@ -101,7 +103,7 @@ class _MyOrdersState extends State<MyOrders> {
                       ),
 
                       Text(
-                        '${model.displayTransactionData}', style: text,
+                        '${model.transactionDate != null ? DateFormat(EnumDateFormat.dateMonth).format(model.transactionDate) : null}', style: text,
                       )
                     ],
                   ),
@@ -135,7 +137,7 @@ class _MyOrdersState extends State<MyOrders> {
 
                       SizedBox(width: 10,),
 
-                      Text(displayOrderStatus(model.status),
+                      Text(Utility.displayOrderStatus(model.status,model.shippingOrder.shippingStatus),
                         style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500
@@ -191,7 +193,7 @@ class _MyOrdersState extends State<MyOrders> {
         if(snapshot.connectionState == ConnectionState.done) {
           ApiResponseModel apiResponseModel = snapshot.data;
           if(apiResponseModel.statusCode == 200) {
-            List<GetOrdersResponseModel> getOrdersResponseModelList = GetOrdersResponseModel.parseList(apiResponseModel.Result);
+            List<GetOrderByIdResponseModel> getOrdersResponseModelList = GetOrderByIdResponseModel.parseList(apiResponseModel.Result);
 
             return buildList(getOrdersResponseModelList);
           } else if(apiResponseModel.statusCode == 401){
@@ -208,28 +210,32 @@ class _MyOrdersState extends State<MyOrders> {
     );
   }
 
-  String displayOrderIcon(int status) {
-    switch(status)
-    {
-      case 0:
+  String displayOrderIcon(String status) {
+
+   if(status== EnumOrderStatus.getString(OrderStatus.Ordered) || status== EnumOrderStatus.getString(OrderStatus.Confirmed)){
         return "assets/order_delivered.png";
-      case 1:
-        return "assets/order_confirmed.png";
-      case 2:
-        return "assets/order_cancelled.png";
-      case 3:
-        return "assets/order_delivered.png";
-      case 4:
-        return "assets/order_confirmed.png";
-      case 5:
-        return "assets/order_cancelled.png";
-      case 6:
-        return "assets/order_cancelled.png";
-      case 7:
-        return "assets/order_confirmed.png";
-      case 8:
-        return "assets/order_placed.png";
-    }
+   }else if(status== EnumOrderStatus.getString(OrderStatus.Cancelled)){
+     return "assets/order_cancelled.png";
+   }else {
+     return "assets/order_placed.png";
+   }
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_confirmed.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_cancelled.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_delivered.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_confirmed.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_cancelled.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_cancelled.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_confirmed.png";
+//      case EnumOrderStatus.getString(OrderStatus.Ordered):
+//        return "assets/order_placed.png";
+//    }
   }
 
    String displayOrderStatus(int status) {

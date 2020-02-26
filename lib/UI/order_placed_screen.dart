@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/GetOrderByIdResponseModel.dart';
+import 'package:vegetos_flutter/models/StatusMangement.dart';
 import 'package:vegetos_flutter/models/temp.dart';
 
 class   OrderPlacedScreen extends StatefulWidget
@@ -39,6 +40,7 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
 {
 
   TabController controller;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -139,11 +141,11 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
 
   }
   
-  Widget TabBody(GetOrderByIdResponseModel model) {
+  Widget TabBody(GetOrderByIdResponseModel model,List<StatusManagement> statusManagements) {
     return Container(
       child: TabBarView(
         children: <Widget>[
-          Summary(model,controller),
+          Summary(model,controller,statusManagements),
           OrderItems(model),
         ],
         controller: controller,
@@ -162,7 +164,8 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
             GetOrderByIdResponseModel responseModel = GetOrderByIdResponseModel.fromJson(apiResponseModel.Result);
 //            GetOrderByIdResponseModelZ responseModelZ= GetOrderByIdResponseModelZ.fromJson(apiResponseModel.Result);
 //            responseModelZ.toString();
-            return TabBody(responseModel);
+            List<StatusManagement> statusManagements =StatusManagement.getStatusMangement(responseModel.status, responseModel.shippingOrder.shippingStatus, responseModel.paymentStatus);
+            return TabBody(responseModel,statusManagements);
 //            return Container(child: Center(child: Text("Not Working Now"),),);
           } else if(apiResponseModel.statusCode == 401) {
             return somethingWentWrong();
@@ -208,8 +211,9 @@ class Summary extends StatefulWidget {
 
   GetOrderByIdResponseModel model;
   TabController controller;
+  List<StatusManagement> statusManagements;
   
-  Summary(this.model,this.controller);
+  Summary(this.model,this.controller,this.statusManagements);
 
   @override
   _SummaryState createState() => _SummaryState();
@@ -316,15 +320,19 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
 
                    SizedBox(
                      height: 100,
-                     child: s.CustomStepper(
-                       steps: [
-                       s.Step(title: Text("Draft"),   isActive: true,state: s.StepState.start),
-                       s.Step(title: Text("Confirmed"),state: currentStep>=1?s.StepState.complete:s.StepState.indexed,isActive: currentStep>=1,),
-                       s.Step(title: Text("Dispatched",),state: currentStep>=2?s.StepState.complete:s.StepState.indexed,isActive: currentStep>=2),
-                       s.Step(title: Text("Delivered"),state: currentStep==3?s.StepState.complete:s.StepState.complete,isActive: currentStep==3)
-                     ],
+                     child: widget.statusManagements.length<=0 ? Container() : s.CustomStepper(
+                       steps:
+                       statusStep(widget.statusManagements),
+//                       [
+//                       s.Step(title: Text("Draft"),   isActive: true,state: s.StepState.start),
+//                       s.Step(title: Text("Confirmed"),state: currentStep>=1?s.StepState.complete:s.StepState.indexed,isActive: currentStep>=1,),
+//                       s.Step(title: Text("Dispatched",),state: currentStep>=2?s.StepState.complete:s.StepState.indexed,isActive: currentStep>=2),
+//                       s.Step(title: Text("Delivered"),state: currentStep==3?s.StepState.complete:s.StepState.complete,isActive: currentStep==3)
+
+
+//                     ],
                      type: s.StepperType.horizontal,
-                     currentStep: currentStep,
+                     currentStep: widget.statusManagements.length-1,
                      ),
                    ),
 
@@ -423,7 +431,7 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Payment option', style: text,),
-                        Text(EnumPaymentMode.getPaymentModeStr(widget.model.paymentMode), style: text,),
+                        Text(widget.model.paymentMode, style: text,),
                       ],
                     ),
 
@@ -516,4 +524,19 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
       ],
     );
   }
+
+ List<s.Step> statusStep(List<StatusManagement> list){
+   List<s.Step> steps=new List();
+   for(int i=0;i<list.length;i++){
+     StatusManagement statusManagement=list.elementAt(i);
+     steps.add(new s.Step(title: Text(statusManagement.status,maxLines: 2,textAlign: TextAlign.center,style: TextStyle(
+         fontSize: 13,
+         fontWeight: FontWeight.w500,
+         color: Color(0xff2d2d2d),
+     ),), state: statusManagement.state,isActive: statusManagement.isActive));
+   }
+   return steps;
+ }
 }
+
+

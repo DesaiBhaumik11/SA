@@ -12,7 +12,7 @@ class GetOrdersResponseModel
   List<dynamic> returnItems;
   List<dynamic> transactionLines;
   String buyerSupplierId;
-  int paymentStatus;
+  String paymentStatus;
   String paymentId;
   String id;
   dynamic transactionNumber;

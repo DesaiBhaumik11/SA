@@ -1,3 +1,4 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:vegetos_flutter/models/search_products.dart';
 
 class Enumaration{
@@ -42,34 +43,79 @@ class EnumNamePrefix extends Enumaration{
     }
 }
 
-final categoryNameValues = EnumValues({
-    "Cereals": CategoryName.CEREALS,
-    "Fruits": CategoryName.FRUITS,
-    "Pulses": CategoryName.PULSES,
-    "Vegetables ": CategoryName.VEGETABLES
-});
-
-final DeliveryStatusValues = EnumValues({
-    "0" : DeliveryStatus.Draft,
-    "1" : DeliveryStatus.Pending,
-    "2" : DeliveryStatus.Failed,
-    "3" : DeliveryStatus.Ordered,
-    "4" : DeliveryStatus.Confirmed,
-    "5" : DeliveryStatus.Rejected,
-    "6" : DeliveryStatus.Cancelled,
-    "7" : DeliveryStatus.InTransit,
-    "8" : DeliveryStatus.Rejected
-});
-enum DeliveryStatus {
+enum OrderStatus {
     Draft,
-    Pending,
     Failed,
     Ordered,
     Confirmed,
     Rejected,
+    CancellationRequested,
     Cancelled,
-    InTransit,
-    Received,
+    Completed
+}
+class EnumOrderStatus extends Enumaration{
+    static final String Draft = "Draft";
+    static final String Failed = "Failed";
+    static final String Ordered = "Ordered";
+    static final String Confirmed = "Confirmed";
+    static final String Rejected = "Rejected";
+    static final String CancellationRequested = "CancellationRequested";
+    static final String Cancelled = "Cancelled";
+    static final String Completed = "Completed";
+
+    static String getString(OrderStatus orderStatus) {
+        return EnumToString.parse(orderStatus);
+    }
+
+}
+enum ShippingStatus
+{
+    Pending,
+    OutForDelivery,
+    DeliveryAttemptFailed,
+    Delivered,
+    Refunded
+}
+class EnumShippingStatus extends Enumaration{
+    static final String Pending = "Pending";
+    static final String OutForDelivery = "OutForDelivery";
+    static final String DeliveryAttemptFailed = "DeliveryAttemptFailed";
+    static final String Delivered = "Delivered";
+    static final String Refunded = "Refunded";
+
+    static String getString(ShippingStatus shippingStatus) {
+        return EnumToString.parse(shippingStatus);
+    }
+}
+enum PaymentStatus
+{
+    Due,
+    Failed,
+    Partial,
+    Paid,
+}
+class EnumPaymentStatus extends Enumaration{
+    static final String Due = "Due";
+    static final String Failed = "Failed";
+    static final String Partial = "Partial";
+    static final String Paid = "Paid";
+    static String getString(PaymentStatus paymentStatus) {
+        return EnumToString.parse(paymentStatus);
+    }
+}
+enum ShippingMode
+{
+    HomeDelivery,
+    PickupFromStore
+}
+
+enum PaymentMode {
+    Cash,
+    Card,
+    Online,
+    Bank,
+    Wallet,
+    COD
 }
 
 class EnumPaymentMode extends Enumaration{
@@ -98,12 +144,5 @@ class EnumPaymentMode extends Enumaration{
 
     }
 }
-enum PaymentMode {
-    Cash,
-    Card,
-    Online,
-    Bank,
-    Wallet,
-    COD
-}
+
 

@@ -27,6 +27,9 @@ class GetShippingOrderModel
 
   String pin;
 
+  String shippingStatus;
+  String shippingMode;
+
   GetAllShippingSlotModel shippingSchedule;
 
   String createdBy;
@@ -46,6 +49,8 @@ class GetShippingOrderModel
     this.state,
     this.country,
     this.pin,
+    this.shippingStatus,
+    this.shippingMode,
     this.shippingSchedule,
     this.createdBy,
     this.createdOn,
@@ -65,6 +70,8 @@ class GetShippingOrderModel
       state: parsedData['State'],
       country: parsedData['Country'],
       pin: parsedData['Pin'],
+      shippingStatus: parsedData['ShippingStatus'],
+      shippingMode: parsedData['ShippingMode'],
       shippingSchedule: parsedData['ShippingSchedule'] != null ? GetAllShippingSlotModel.fromJson(parsedData['ShippingSchedule']) : new GetAllShippingSlotModel(),
       createdBy: parsedData['CreatedBy'],
       createdOn: parsedData['CreatedOn'],

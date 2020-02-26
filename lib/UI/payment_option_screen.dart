@@ -512,8 +512,8 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         RadioListTile(
           value: user,
           groupValue: paymentModeC,
-          title: Text(user.code==PaymentMode.Online.index ? "PayNow" : user.name),
-          subtitle: Text(user.code==PaymentMode.Online.index ? "Pay using payment Gateway" : user.code==PaymentMode.COD.index ? "Cash On Delivery" : ""),
+          title: Text(user.name==EnumPaymentMode.Online ? "PayNow" : user.name),
+          subtitle: Text(user.name==EnumPaymentMode.Online ? "Pay using payment Gateway" : user.name==EnumPaymentMode.COD ? "Cash On Delivery" : ""),
           onChanged: (currentUser) {
             print("Current User ${currentUser}");
             setSelectedUser(currentUser);
@@ -727,7 +727,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         List<PaymentModeC> paymodes=new List();
         if(modes!=null && modes.length>0){
           for(int i=0;i<modes.length;i++){
-            paymodes.add(new PaymentModeC(name : EnumPaymentMode.getPaymentModeStr(modes[i]),index: i, code: modes[i]));
+            paymodes.add(new PaymentModeC(name : EnumPaymentMode.getPaymentModeStr(modes[i]),index: i));
 //            paymentmodes.add(new PaymentModeC(name : EnumPaymentMode.getPaymentModeStr(modes[i]),index: i, code: modes[i]));
           }
         }
@@ -747,7 +747,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     }
     ProgressDialog progressDialog = Utility.progressDialog(context, "");
     progressDialog.show();
-    if(paymentModeC.code==PaymentMode.Online.index) {
+    if(paymentModeC.name==EnumPaymentMode.Online) {
       ApiCall().setContext(context).proceedTopaymentUsingGateway().then((
           apiResponseModel) {
         //implementRazorPay("");
@@ -771,7 +771,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
           Navigator.of(context).pop();
         }
       });
-    }else if(paymentModeC.code==PaymentMode.COD.index) {
+    }else if(paymentModeC.name==EnumPaymentMode.COD) {
       ApiCall().setContext(context).proceedTopaymentUsingCOD().then((
           apiResponseModel) {
         //implementRazorPay("");
@@ -925,6 +925,6 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
 }
 class PaymentModeC {
   String name;
-  int index,code;
-  PaymentModeC({this.name, this.index,this.code});
+  int index;
+  PaymentModeC({this.name, this.index});
 }

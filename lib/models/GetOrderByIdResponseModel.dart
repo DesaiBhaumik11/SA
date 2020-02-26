@@ -10,11 +10,11 @@ class GetOrderByIdResponseModel
 
   String invoiceNumber;
   double offerAmount;
-  int paymentStatus;
+  String paymentStatus;
   String paymentId;
   String id;
   DateTime transactionDate;
-  int status;
+  String status;
   double shippingCharges;
   double subTotal;
   double taxAmount;
@@ -22,7 +22,7 @@ class GetOrderByIdResponseModel
   double totalPaid;
   String orderId;
   GetShippingOrderModel shippingOrder;
-  int paymentMode;
+  String paymentMode;
   List<OrderItemsViewModel> orderItemsViewsModel;
   int itemCount;
   double discount;
@@ -31,7 +31,7 @@ class GetOrderByIdResponseModel
   GetOrderByIdResponseModel({
     this.invoiceNumber,
     this.offerAmount,
-    this.paymentStatus=0,
+    this.paymentStatus,
     this.paymentId="",
     this.id="",
     this.transactionDate,
@@ -53,11 +53,11 @@ class GetOrderByIdResponseModel
     return GetOrderByIdResponseModel(
       invoiceNumber:  json['InvoiceNumber'] != null ?  json['InvoiceNumber'] : "",
       offerAmount: json["OfferAmount"],
-      paymentStatus: json["PaymentStatus"],
+      paymentStatus: json["PaymentStatus"]!=null ? json["PaymentStatus"] : EnumPaymentStatus.Due,
       paymentId: json["PaymentId"],
       id: json["Id"],
       transactionDate: DateTime.parse(json["TransactionDate"]),
-      status: json["Status"],
+      status: json["Status"]!=null ? json["Status"]==EnumOrderStatus.Draft ? EnumOrderStatus.Ordered : json["Status"] : "",
       shippingCharges: json["ShippingCharges"],
       subTotal: json["SubTotal"],
       taxAmount: json["TaxAmount"],
@@ -65,11 +65,19 @@ class GetOrderByIdResponseModel
       totalPaid: json["TotalPaid"],
       orderId: json["OrderId"],
       shippingOrder: json['ShippingOrder'] != null ? GetShippingOrderModel.fromJson(json['ShippingOrder']) : null,
-      paymentMode: json['PaymentMode'] !=null ? json['PaymentMode'] : PaymentMode.Online.index,
+      paymentMode: json['PaymentMode'] !=null ? json['PaymentMode'] : EnumPaymentMode.Online,
       orderItemsViewsModel: json['OrderItemsViewModel'] != null ? OrderItemsViewModel.parseList(json['OrderItemsViewModel']) : null,
       itemCount: json['ItemCount'],
       discount: json['Discount']!=null ? json['Discount'] : 0.0,
     );
+  }
+
+  static List<GetOrderByIdResponseModel> parseList(listData) {
+    var list = listData as List;
+    List<GetOrderByIdResponseModel> jobList =
+    list.map((data) => GetOrderByIdResponseModel.fromJson(data)).toList();
+//    jobList.sort((a, b) => b.shippingOrder.createdOn.compareTo(a.shippingOrder.createdOn));
+    return jobList;
   }
 }
 

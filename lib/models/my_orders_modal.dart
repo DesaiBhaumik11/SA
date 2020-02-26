@@ -88,7 +88,7 @@ class Result {
   List<dynamic> returnItems;
   List<TransactionLine> transactionLines;
   String buyerSupplierId;
-  int paymentStatus;
+  String paymentStatus;
   String paymentId;
   String id;
   dynamic transactionNumber;
