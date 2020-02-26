@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class AboutVegetos extends StatefulWidget {
   @override
@@ -8,6 +12,55 @@ class AboutVegetos extends StatefulWidget {
 }
 
 class _AboutVegetosState extends State<AboutVegetos> {
+
+  String kHtmlPP = "";
+  String kHtmlTC = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loadPrivacyPolicy().then((va){
+      setState(() {
+        kHtmlPP = va;
+      });
+    });
+    loadTermsAndCondition().then((val) {
+      setState(() {
+        kHtmlTC = val;
+      });
+    });
+
+    super.initState();
+  }
+
+  Future<String> loadPPAsset() async {
+    // print(loadPPAsset);
+    return await rootBundle.loadString('assets/privacyPolicy.json');
+  }
+  Future<String> loadTCAsset() async {
+    //print(loadTCAsset);
+    return await rootBundle.loadString('assets/termsAndCondition.json');
+  }
+
+  Future<String> loadPrivacyPolicy() async {
+    String jsonString = await loadPPAsset();
+    final jsonResponse = json.decode(jsonString);
+    //print(jsonResponse["kHtmlPP"]);
+    return jsonResponse["kHtmlPP"];
+  }
+
+
+  Future<String> loadTermsAndCondition() async {
+    String jsonString = await loadTCAsset();
+    final jsonResponse = json.decode(jsonString);
+    //print(jsonResponse["kHtmlPP"]);
+    return jsonResponse["kHtmlTC"];
+  }
+
+  var heading = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 16,
+  );
 
   var title = TextStyle(
     fontWeight: FontWeight.w500,
@@ -66,47 +119,56 @@ class _AboutVegetosState extends State<AboutVegetos> {
 //            ),
 //
 //
-//            SizedBox(height: 15,),
-//
-//            Container(
-//              color: Colors.white,
-//              child: ExpansionTile(
-//                backgroundColor: Colors.white,
-//                title: Text(
-//                  'Privacy Policy', style: title,
-//                ),
-//                children: <Widget>[
-//
-//                  Padding(
-//                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
-//                    child: Text(Const.termsConditions, style: text,),
-//                  )
-//
-//                ],
-//              ),
-//            ),
-//
-//            SizedBox(height: 15,),
-//
-//            Container(
-//              color: Colors.white,
-//              child: ExpansionTile(
-//                backgroundColor: Colors.white,
-//                title: Text(
-//                  'Terms & Conditions', style: title,
-//                ),
-//                children: <Widget>[
-//
-//                  Padding(
-//                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
-//                    child: Text(Const.termsConditions, style: text,),
-//                  )
-//
-//                ],
-//              ),
-//            ),
-//
-//            SizedBox(height: 15,),
+            SizedBox(height: 15,),
+
+            Container(
+              color: Colors.white,
+              child: ExpansionTile(
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Privacy Policy', style: title,
+                ),
+                children: <Widget>[
+
+                  Padding(
+                    padding:EdgeInsets.fromLTRB(10, 0, 5, 15) ,
+                    child:  HtmlWidget(
+                      kHtmlPP,
+                      webView: false,
+                      textStyle: text,
+                      hyperlinkColor: Colors.black,
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+
+            SizedBox(height: 15,),
+
+            Container(
+              color: Colors.white,
+              child: ExpansionTile(
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Terms & Conditions', style: title,
+                ),
+                children: <Widget>[
+
+                  Padding(
+                    padding:EdgeInsets.fromLTRB(10, 0, 5, 15) ,
+                    child: HtmlWidget(
+                      kHtmlTC,
+                      webView: false,
+                      textStyle: text,
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+
+            SizedBox(height: 15,),
 
             Container(
               color: Colors.white,
@@ -118,7 +180,7 @@ class _AboutVegetosState extends State<AboutVegetos> {
                 children: <Widget>[
 
                   Padding(
-                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
+                    padding:EdgeInsets.fromLTRB(10, 0, 10, 15) ,
                     child: Text(Const.contactus, style: text,),
                   )
 
