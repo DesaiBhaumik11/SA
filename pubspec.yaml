@@ -76,6 +76,7 @@ flutter:
     - assets/splash_logo.png
     - assets/privacyPolicy.json
     - assets/termsAndCondition.json
+    - assets/about_vegetos.json
     - top_pattern.png
     - bottom_pattern.png
     - welcome_top_pattern.png

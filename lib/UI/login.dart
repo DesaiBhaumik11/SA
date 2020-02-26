@@ -36,6 +36,23 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(child: Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+          actions: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Icon(Icons.close,color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+      ),
       body: SafeArea(
         child: ListView(
           physics: BouncingScrollPhysics(),

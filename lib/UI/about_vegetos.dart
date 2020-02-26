@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:vegetos_flutter/Provider/DataProvider.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
@@ -15,47 +16,17 @@ class _AboutVegetosState extends State<AboutVegetos> {
 
   String kHtmlPP = "";
   String kHtmlTC = "";
+  String kHtmlAV = "";
 
   @override
   void initState() {
     // TODO: implement initState
-    loadPrivacyPolicy().then((va){
-      setState(() {
-        kHtmlPP = va;
-      });
-    });
-    loadTermsAndCondition().then((val) {
-      setState(() {
-        kHtmlTC = val;
-      });
-    });
-
+    DataProvider().loadPrivacyPolicy().then((va){setState(() {kHtmlPP = va;});});
+    DataProvider().loadTermsAndCondition().then((val) {setState(() {kHtmlTC = val;});});
+    DataProvider().loadAboutVegetos().then((val) {setState(() {kHtmlAV = val;});});
     super.initState();
   }
 
-  Future<String> loadPPAsset() async {
-    // print(loadPPAsset);
-    return await rootBundle.loadString('assets/privacyPolicy.json');
-  }
-  Future<String> loadTCAsset() async {
-    //print(loadTCAsset);
-    return await rootBundle.loadString('assets/termsAndCondition.json');
-  }
-
-  Future<String> loadPrivacyPolicy() async {
-    String jsonString = await loadPPAsset();
-    final jsonResponse = json.decode(jsonString);
-    //print(jsonResponse["kHtmlPP"]);
-    return jsonResponse["kHtmlPP"];
-  }
-
-
-  Future<String> loadTermsAndCondition() async {
-    String jsonString = await loadTCAsset();
-    final jsonResponse = json.decode(jsonString);
-    //print(jsonResponse["kHtmlPP"]);
-    return jsonResponse["kHtmlTC"];
-  }
 
   var heading = TextStyle(
     fontWeight: FontWeight.w500,
@@ -99,24 +70,28 @@ class _AboutVegetosState extends State<AboutVegetos> {
           physics: BouncingScrollPhysics(),
           children: <Widget>[
 
-//            Container(
-//              color: Colors.white,
-//              child: ExpansionTile(
-//                initiallyExpanded: true,
-//                backgroundColor: Colors.white,
-//                title: Text(
-//                  'About Vegetos', style: title,
-//                ),
-//                children: <Widget>[
-//
-//                  Padding(
-//                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
-//                    child: Text(Const.aboutVegetos1, style: text,),
-//                  )
-//
-//                ],
-//              ),
-//            ),
+            Container(
+              color: Colors.white,
+              child: ExpansionTile(
+                initiallyExpanded: true,
+                backgroundColor: Colors.white,
+                title: Text(
+                  'About Vegetos', style: title,
+                ),
+                children: <Widget>[
+
+                  Padding(
+                    padding:EdgeInsets.fromLTRB(15, 0, 15, 15) ,
+                    child: kHtmlAV.isEmpty ? Container() :HtmlWidget(
+                      kHtmlAV,
+                      webView: false,
+                      textStyle: text,
+                    ),
+                  )
+
+                ],
+              ),
+            ),
 //
 //
             SizedBox(height: 15,),

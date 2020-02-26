@@ -68,7 +68,7 @@ class ProductWithDefaultVarientModel
   factory ProductWithDefaultVarientModel.fromJson(Map<String, dynamic> parsedData) {
     return ProductWithDefaultVarientModel(
       ProductVariantId: parsedData['ProductVariantId'],
-      ProductId: parsedData['ProductId'],
+      ProductId: parsedData['Id'],
       PrimaryMediaId: parsedData['PrimaryMediaId'],
       IsDefault: parsedData['IsDefault'],
       CategoryId: parsedData['CategoryId'],

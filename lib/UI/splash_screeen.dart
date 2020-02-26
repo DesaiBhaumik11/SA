@@ -247,7 +247,6 @@ class SplashScreenState extends State<SplashScreen> {
     ApiCall().getDefaults().then((apiResponseModel){
       if(apiResponseModel.statusCode == 200) {
         GetDefaultsResponseModel getDefaultsResponseModel = GetDefaultsResponseModel.fromJson(apiResponseModel.Result);
-
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("ImageURL", getDefaultsResponseModel.ImageUrl);
           Future.delayed(Duration(seconds: 1)).then((_) {

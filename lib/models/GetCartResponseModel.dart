@@ -73,7 +73,7 @@ class CartItemViewModel {
   int IncrementalStep;
 
   List<ProductDetailsModel> ProductDetails;
-  List<String> ProductVariantMedia;
+  List<String> ProductMediaIds;
   List<UnitsModel> Units;
   ProductTaxModel ProductTax;
   ProductPriceModel ProductPrice;
@@ -102,7 +102,7 @@ class CartItemViewModel {
     this.MinimumOrderQuantity,
     this.IncrementalStep,
 
-    this.ProductVariantMedia,
+    this.ProductMediaIds,
     this.ProductDetails,
     this.Units,
     this.ProductTax,
@@ -120,7 +120,7 @@ class CartItemViewModel {
     categoryId: json["CategoryId"],
     productVariantId: json["ProductVariantId"],
     productVariantGroupId: json["ProductVariantGroupId"],
-    productMediaId: json["ProductVariantMedia"]!=null && json["ProductVariantMedia"].length>0 ? json["ProductVariantMedia"][0]:json["ProductMediaId"],
+    productMediaId: json["ProductMediaIds"]!=null && json["ProductMediaIds"].length>0 ? json["ProductMediaIds"][0]:null,
     offer: json["Offer"],
     id: json["Id"],
     brandId: json["BrandId"],

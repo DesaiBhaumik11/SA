@@ -35,55 +35,7 @@ class Utility {
     return pr;
   }
 
-  static String getInitialStatus(int currentStatus) {
-    String status = "";
-    switch (currentStatus) {
-      case 0:
-        status = "Draft";
-        break;
-      case 1:
-        status = "Pending";
-        break;
-      case 2:
-        status = "Failed";
-        break;
-      case 3:
-        status = "Ordered";
-        break;
-      case 4:
-        status = "Confirmed";
-        break;
-      case 5:
-        status = "Rejected";
-        break;
-      case 6:
-        status = "Cancelled";
-        break;
-      case 7:
-        status = "InTransit";
-        break;
-      case 8:
-        status = "Received";
-        break;
-    }
-    return status;
-  }
 
-  static String getFirstStatuslabel(int currentStatus) {
-    if (currentStatus >= 3) {
-      return "Ordered";
-    } else {
-      return getInitialStatus(currentStatus);
-    }
-  }
-
-  static String getSecondStatuslabel(int currentStatus) {
-    if (currentStatus >= 6 || currentStatus <= 4) {
-      return "Confirmed";
-    } else {
-      return getInitialStatus(currentStatus);
-    }
-  }
 
   static void forceUpate(BuildContext context) {
     if (Platform.isAndroid) {
@@ -103,7 +55,7 @@ class Utility {
   }
 
   static String displayOrderStatus(String status, String shippingStatus) {
-    if (status == EnumOrderStatus.getString(OrderStatus.Confirmed)) {
+    if (status == EnumOrderStatus.getString(OrderStatus.Confirmed) && shippingStatus != EnumShippingStatus.getString(ShippingStatus.Pending)) {
       return shippingStatus;
     }
     return status;

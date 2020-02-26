@@ -604,7 +604,7 @@ class MyCartState extends State<MyCartScreen>
                      onTap: (){
                        //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                        //myCartModal.addTocart(result);
-                       callAddToCartAPI(result.ProductId, result.ProductVariantId, result.IncrementalStep.toString(), "", result.ProductPrice.OfferPrice.toString());
+                       callAddToCartAPI(result.ProductId,  result.IncrementalStep.toString(), "", result.ProductPrice.OfferPrice.toString());
                      },)
                  ],
                ),
@@ -945,11 +945,11 @@ class MyCartState extends State<MyCartScreen>
      );
    }
 
-   void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
+   void callAddToCartAPI(String productId,  String qty, String offerId, String amount) {
      setState(() {
        isCountLoading=true;
      });
-     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+     ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
        setState(() {
          isCountLoading=false;
        });

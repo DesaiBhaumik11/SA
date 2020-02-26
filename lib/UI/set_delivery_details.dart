@@ -13,6 +13,7 @@ import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_addresses.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
+import 'package:vegetos_flutter/Utils/CommonWidget.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
@@ -298,11 +299,15 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        addressModel.name == null
-                            ? ""
-                            : addressModel.name,
+                        addressModel.namePrefix!=null && addressModel.namePrefix.isNotEmpty ?
+                        addressModel.namePrefix +" "+addressModel.name :
+                        addressModel.name,
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(),
                       ),
                       InkWell(
                         onTap: () {
@@ -311,21 +316,11 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                                 updateAddress();
                           });
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Const.orange,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            child: Text(
-                              'Change',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12),
-                            ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20, bottom: 15,right: 10),
+                          child: Image.asset(
+                            'edit-pencil.png',
+                            height: 17,
                           ),
                         ),
                       )
@@ -348,13 +343,25 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16),
                   ),
-                  Text(
-                    addressModel.city + " , "+addressModel.state + " , " + addressModel.pin,
-                    style: TextStyle(
-                        color: Color(0xff2d2d2d),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16),
+
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        addressModel.city + " , "+addressModel.state + " , " + addressModel.pin,
+                        style: TextStyle(
+                            color: Color(0xff2d2d2d),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(),
+                      ),
+                      addressModel.title!=null && addressModel.title.isNotEmpty ?
+                      CommonWidget().buildNickAddress(context, addressModel.title) : Container(),
+                    ],
                   ),
+
                 ],
               ),
             ),

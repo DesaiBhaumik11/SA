@@ -398,7 +398,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Theme.of(context).primaryColor,
                             //color: Const.gray10,
                             onPressed: () {
-                              addToCart(productVariant.ProductId, productVariant.ProductVariantId,
+                              addToCart(productVariant.ProductId,
                                   productVariant.IncrementalStep.toString(), "", productVariant.ProductPrice.OfferPrice.toString());
                             },
                             child: Padding(
@@ -506,11 +506,11 @@ class _SearchScreenState extends State<SearchScreen> {
         });
   }
 
-  void addToCart(productId, varientId, qty, offerId, amount){
+  void addToCart(productId,  qty, offerId, amount){
     setState(() {
       isCountLoading=true;
     });
-    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Item added in cart');
       }else{

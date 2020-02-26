@@ -300,7 +300,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
             ),onTap: (){
               //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
               //cartModal.addTocart(productModal.result);
-              addToCart(productModal.ProductId, productModal.ProductVariant[0].Id,
+              addToCart(productModal.ProductId,
                   productModal.IncrementalStep.toString(), "", ProductPrice.OfferPrice.toString());
               },)
           )
@@ -820,11 +820,11 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     });
   }
 
-   void addToCart(productId, varientId, qty, offerId, amount){
+   void addToCart(productId,  qty, offerId, amount){
      setState(() {
        isCountLoading=true;
      });
-     ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+     ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
        if(apiResponseModel.statusCode == 200) {
          Fluttertoast.showToast(msg: 'Item added in cart');
        }else{

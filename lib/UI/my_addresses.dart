@@ -8,6 +8,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/add_new_address.dart';
+import 'package:vegetos_flutter/Utils/CommonWidget.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
@@ -165,6 +166,8 @@ class _MyAddressesState extends State<MyAddresses> {
                   Row(
                     children: <Widget>[
                       Text(
+                        addressModal.result[index].namePrefix!=null && addressModal.result[index].namePrefix.isNotEmpty ?
+                            addressModal.result[index].namePrefix +" "+addressModal.result[index].name :
                         addressModal.result[index].name,
                         style: TextStyle(
                           fontSize: 17,
@@ -236,10 +239,21 @@ class _MyAddressesState extends State<MyAddresses> {
                     addressModal.result[index].addressLine2,
                     style: address,
                   ),
-                  Text(
-                    addressModal.result[index].city + " , "+addressModal.result[index].state + " , " + addressModal.result[index].pin,
-                    style: address,
-                  )
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        addressModal.result[index].city + " , "+addressModal.result[index].state + " , " + addressModal.result[index].pin,
+                        style: address,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(),
+                      ),
+                      addressModal.result[index].title!=null && addressModal.result[index].title.isNotEmpty ?
+                      CommonWidget().buildNickAddress(context, addressModal.result[index].title) : Container(),
+                    ],
+                  ),
+
                 ],
               ),
             ),

@@ -11,7 +11,7 @@ class OrderItemsViewModel
 
   double price;
 
-  String productVariantId;
+//  String productVariantId;
 
   String productId;
 
@@ -41,7 +41,7 @@ class OrderItemsViewModel
 
   OrderItemsViewModel({
     this.price,
-    this.productVariantId,
+//    this.productVariantId,
     this.productId,
     this.brandId,
     this.seoTags,
@@ -59,10 +59,10 @@ class OrderItemsViewModel
   });
 
   factory OrderItemsViewModel.fromJson(Map<String, dynamic> parsedData) {
-    var ProductMediaIds = parsedData['ProductVariantMedia'];
+    var ProductMediaIds = parsedData['ProductMediaIds'];
     return OrderItemsViewModel(
       price: parsedData['Price'],
-      productVariantId: parsedData['ProductVariantId'],
+//      productVariantId: parsedData['ProductVariantId'],
       productId: parsedData['ProductId'],
       brandId: parsedData['BrandId'],
       seoTags: parsedData['SeoTags'],

@@ -597,7 +597,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                  onTap: (){
                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                    //myCartModal.addTocart(result);
-                   addToCart(productVariant.ProductId, productVariant.ProductVariantId, productVariant.IncrementalStep.toString(),
+                   addToCart(productVariant.ProductId,  productVariant.IncrementalStep.toString(),
                        "", ProductPrice.OfferPrice.toString());
                  },)
                 ],
@@ -989,7 +989,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               ),
               InkWell(
                 onTap: (){
-//                  Navigator.push(context, EnterExitRoute(enterPage: AboutAppRelease()));
+                  Navigator.push(context, EnterExitRoute(enterPage: AboutAppRelease()));
                 },
                 child: Container(
                   height: 50.0,
@@ -1399,13 +1399,13 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
       });
     });
   }
-  void addToCart(productId, varientId, qty, offerId, amount){
+  void addToCart(productId,  qty, offerId, amount){
 //    progressDialog  = Utility.progressDialog(context, "") ;
 //    progressDialog.show() ;
     setState(() {
       isCountLoading=true;
     });
-    ApiCall().setContext(context).addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Item added in cart');
       }else{

@@ -6,8 +6,8 @@ import 'ApiCall.dart';
 
 class CartFunction
 {
-  static String callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
+  static String callAddToCartAPI(String productId, String qty, String offerId, String amount) {
+    ApiCall().addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
         return callGetCartAPI();

@@ -84,10 +84,10 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
                     SizedBox(
                       height: 7,
                     ),
-                    Text(
-                      'Promo Codes',
-                      style: title,
-                    ),
+//                    Text(
+//                      'Promo Codes',
+//                      style: title,
+//                    ),
                     Text(
                       Const.aboutAppRelease1,
                       style: text,
@@ -95,31 +95,31 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      'Payment Options',
-                      style: title,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      Const.aboutAppRelease2,
-                      style: text,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Payment Options',
-                      style: title,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      Const.aboutAppRelease3,
-                      style: text,
-                    ),
+//                    Text(
+//                      'Payment Options',
+//                      style: title,
+//                    ),
+//                    SizedBox(
+//                      height: 10,
+//                    ),
+//                    Text(
+//                      Const.aboutAppRelease2,
+//                      style: text,
+//                    ),
+//                    SizedBox(
+//                      height: 20,
+//                    ),
+//                    Text(
+//                      'Payment Options',
+//                      style: title,
+//                    ),
+//                    SizedBox(
+//                      height: 10,
+//                    ),
+//                    Text(
+//                      Const.aboutAppRelease3,
+//                      style: text,
+//                    ),
                   ],
                 ),
               ),

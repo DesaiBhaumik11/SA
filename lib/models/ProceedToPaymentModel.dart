@@ -3,7 +3,7 @@ class ProceedToPaymentModel
 {
   String ContactId;
 
-  int PaymentMethod;
+  String PaymentMethod;
 
   String GatewayOrderId;
 

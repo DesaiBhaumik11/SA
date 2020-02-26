@@ -727,7 +727,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         List<PaymentModeC> paymodes=new List();
         if(modes!=null && modes.length>0){
           for(int i=0;i<modes.length;i++){
-            paymodes.add(new PaymentModeC(name : EnumPaymentMode.getPaymentModeStr(modes[i]),index: i));
+            paymodes.add(new PaymentModeC(name : modes[i].toString(),index: i));
 //            paymentmodes.add(new PaymentModeC(name : EnumPaymentMode.getPaymentModeStr(modes[i]),index: i, code: modes[i]));
           }
         }

@@ -23,9 +23,9 @@ import 'DeviceTokenController.dart';
 class ApiCall
 {
 
-//  static final String baseURL = "http://artismicro.archisys.biz:5101";
+  static final String baseURL = "http://artismicro.archisys.biz:5101";
 //  static final String baseURL = "http://195.168.0.37:5001";
-  static final String baseURL = "http://195.168.0.79:5001";
+//  static final String baseURL = "http://195.168.0.79:5001";
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
   static final String SetLocation = "/SetLocation";
@@ -460,10 +460,10 @@ class ApiCall
     return _get(ApiCall.CartCount);
   }
 
-  Future<ApiResponseModel> addToCart(String productId, String varientId, String qty, String offerId, String amount) async {
+  Future<ApiResponseModel> addToCart(String productId,  String qty, String offerId, String amount) async {
     var apiRequestBody = json.encode({
       "ProductId": productId,
-      "ProductVariantId": varientId,
+//      "ProductVariantId": varientId,
       "Quantity": qty,
       "OfferId": offerId,
       "Amount": amount,
