@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+
+import 'my_addresses.dart';
+import 'my_cart_screen.dart';
+import 'my_orders.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -8,6 +14,36 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  String mobile = "",
+      email = "",name="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    SharedPreferences.getInstance().then((prefs) {
+      Map<String, dynamic> tokenMap = Const.parseJwt(prefs.getString('AUTH_TOKEN'));
+      setState(() {
+        if (tokenMap['name'] != null &&
+            tokenMap['name'].toString().toLowerCase() != "") {
+          name=tokenMap['name'].toString();
+        }
+      if (tokenMap['mobile'] != null &&
+          tokenMap['mobile'].toString().toLowerCase() != "") {
+        String isd = "";
+        if (tokenMap['countrycode'] != null &&
+            tokenMap['countrycode'].toString().toLowerCase() != "true") {
+          isd = tokenMap['countrycode'].toString();
+        }
+        mobile = isd + tokenMap['mobile'].toString();
+      }
+      if (tokenMap['email'] != null &&
+          tokenMap['email'].toString().toLowerCase() != "true") {
+        email = tokenMap['email'].toString();
+      }
+      });
+    });
+    super.initState();
+  }
 
   var text = TextStyle(
     fontSize: 15,
@@ -56,17 +92,17 @@ class _ProfileState extends State<Profile> {
 
                         Row(
                           children: <Widget>[
-                            Text('Partho Parekh', style: TextStyle(
+                            Text(name, style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 19,
                             ),),
-                            GestureDetector(
-                              onTap: (){},
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                child: Image.asset('edit-pencil.png', height: 15,),
-                              ),
-                            )
+//                            GestureDetector(
+//                              onTap: (){},
+//                              child: Padding(
+//                                padding: EdgeInsets.symmetric(horizontal: 15),
+//                                child: Image.asset('edit-pencil.png', height: 15,),
+//                              ),
+//                            )
                           ],
                         ),
 
@@ -74,18 +110,18 @@ class _ProfileState extends State<Profile> {
 
                         Row(
                           children: <Widget>[
-                            Text('Parth@test.in', style: text,),
-                            GestureDetector(
-                              onTap: (){},
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                child: Image.asset('edit-pencil.png', height: 12,),
-                              ),
-                            )
+                            Text(email, style: text,),
+//                            GestureDetector(
+//                              onTap: (){},
+//                              child: Padding(
+//                                padding: EdgeInsets.symmetric(horizontal: 15),
+//                                child: Image.asset('edit-pencil.png', height: 12,),
+//                              ),
+//                            )
                           ],
                         ),
 
-                        Text('9638697123', style: text,),
+                        Text(mobile, style: text,),
 
                       ],
                     ),
@@ -101,7 +137,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          //Navigator.pushNamed(context, Const.myOrders);
+                          Navigator.push(context, EnterExitRoute(enterPage: MyOrders()));
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -153,7 +189,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          //Navigator.pushNamed(context, Const.myCart);
+                          Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen()));
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -179,7 +215,7 @@ class _ProfileState extends State<Profile> {
 
                       InkWell(
                         onTap: (){
-                          //Navigator.pushNamed(context, Const.myAddresses);
+                          Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()));
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -204,72 +240,72 @@ class _ProfileState extends State<Profile> {
                         color: Colors.black26,
                       ),
 
-                      InkWell(
-                        onTap: (){
-                          //Navigator.pushNamed(context, Const.sharedCart);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                          child: Row(
-                            children: <Widget>[
-
-                              Image.asset('shared_cart.png', height: 23.0,),
-
-                              SizedBox(width: 15,),
-
-                              Text('Shared Cart', style: text,),
-
-                              Expanded(
-                                flex: 1,
-                                child: Container(),
-                              ),
-
-                              Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                    color: Const.orange,
-                                  borderRadius: BorderRadius.all(Radius.circular(100))
-                                ),
-                                child: Center(
-                                  child: Text('3', style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15
-                                  ),),
-                                ),
-                              )
-
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black26,
-                      ),
-
-                      InkWell(
-                        onTap: (){
-                          //Navigator.pushNamed(context, Const.wallet);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                          child: Row(
-                            children: <Widget>[
-
-                              Image.asset('wallet_menu.png', height: 23.0,),
-
-                              SizedBox(width: 15,),
-
-                              Text('Wallet', style: text,),
-
-                            ],
-                          ),
-                        ),
-                      ),
+//                      InkWell(
+//                        onTap: (){
+//                          //Navigator.pushNamed(context, Const.sharedCart);
+//                        },
+//                        child: Padding(
+//                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+//                          child: Row(
+//                            children: <Widget>[
+//
+//                              Image.asset('shared_cart.png', height: 23.0,),
+//
+//                              SizedBox(width: 15,),
+//
+//                              Text('Shared Cart', style: text,),
+//
+//                              Expanded(
+//                                flex: 1,
+//                                child: Container(),
+//                              ),
+//
+//                              Container(
+//                                height: 30,
+//                                width: 30,
+//                                decoration: BoxDecoration(
+//                                    color: Const.orange,
+//                                  borderRadius: BorderRadius.all(Radius.circular(100))
+//                                ),
+//                                child: Center(
+//                                  child: Text('3', style: TextStyle(
+//                                      color: Colors.white,
+//                                      fontWeight: FontWeight.w500,
+//                                      fontSize: 15
+//                                  ),),
+//                                ),
+//                              )
+//
+//                            ],
+//                          ),
+//                        ),
+//                      ),
+//
+//                      Container(
+//                        width: double.infinity,
+//                        height: 1,
+//                        color: Colors.black26,
+//                      ),
+//
+//                      InkWell(
+//                        onTap: (){
+//                          //Navigator.pushNamed(context, Const.wallet);
+//                        },
+//                        child: Padding(
+//                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+//                          child: Row(
+//                            children: <Widget>[
+//
+//                              Image.asset('wallet_menu.png', height: 23.0,),
+//
+//                              SizedBox(width: 15,),
+//
+//                              Text('Wallet', style: text,),
+//
+//                            ],
+//                          ),
+//                        ),
+//                      ),
 
                     ],
                   ),

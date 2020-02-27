@@ -63,17 +63,11 @@ class OrderItemsState extends State<OrderItems>
   {
     String unit = "";
 
-    ProductPriceModel ProductPrice = new ProductPriceModel();
     if(orderItemsViewsModel!=null) {
       if (orderItemsViewsModel.units != null &&
           orderItemsViewsModel.units.length > 0) {
         unit = orderItemsViewsModel.units[0].Name;
       }
-
-        if (orderItemsViewsModel.productPrice != null) {
-          ProductPrice = orderItemsViewsModel.productPrice;
-        }
-
     }
 
 
@@ -108,7 +102,7 @@ class OrderItemsState extends State<OrderItems>
                       Container(
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text(orderItemsViewsModel.minimumOrderQuantity.toString() + " "+ unit, style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                        child: Text(orderItemsViewsModel.minimumOrderQuantity!=0 ? orderItemsViewsModel.minimumOrderQuantity.toString() + " "+ unit : "", style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
                             color: Const.dashboardGray, fontWeight: FontWeight.w500),),
                       ),
                       Container(
@@ -118,16 +112,17 @@ class OrderItemsState extends State<OrderItems>
                               flex:1,
                               child: Row(
                                 children: <Widget>[
+                                  orderItemsViewsModel.price!=null && orderItemsViewsModel.quantity!=0 && orderItemsViewsModel.minimumOrderQuantity!=0 ?
                                   Container(
                                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text('₹ ${ProductPrice.Price.toString() +"x"+ (orderItemsViewsModel.quantity / orderItemsViewsModel.minimumOrderQuantity).round().toString() }',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      child: Text('₹ ${orderItemsViewsModel.offerAmount.toString() +"x"+ (orderItemsViewsModel.quantity / orderItemsViewsModel.minimumOrderQuantity).round().toString() }',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
                                       ),
                                     ),
-                                  ),
+                                  ): Container(),
                                 ],
                               ),
                             ),

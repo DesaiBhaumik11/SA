@@ -13,6 +13,7 @@ import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/location_service_unavailable.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/config.dart';
 import 'package:vegetos_flutter/models/SetLocationResponseModel.dart';
 
 import '../Utils/const.dart';
@@ -318,12 +319,9 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
 
   void addressSearch() async {
 
-    const kGoogleApiKeyAndroid = "AIzaSyDj54G_XSDIigixDKuzC5tunS7ShSdr-kY";
-    const kGoogleApiKeyIos = "AIzaSyDj54G_XSDIigixDKuzC5tunS7ShSdr-kY";
-
      PlacesAutocomplete.show(
         context: context,
-        apiKey: Platform.isIOS ? kGoogleApiKeyIos : kGoogleApiKeyAndroid,
+        apiKey: Platform.isIOS ? Config.kGoogleApiKeyIos : Config.kGoogleApiKeyAndroid,
         hint: "Search for area, location or pincode",
          //components: [Component(Component.country, "fr")],
         onError: (e) {

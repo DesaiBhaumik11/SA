@@ -13,13 +13,14 @@ import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
+import 'package:vegetos_flutter/Utils/config.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 
 typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
 
 abstract class NetworkUtils {
   //static String _baseUrl="http://artismicro.archisys.biz:5101/";
-  static String _baseUrl = ApiCall.baseURL + '/';
+  static String _baseUrl = Config.baseURL + '/';
   static String awtToken = "";
   static bool useLocalToken = false;
 

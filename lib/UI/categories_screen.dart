@@ -7,6 +7,7 @@ import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/CategoryWiseProductListScreen.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
+import 'package:vegetos_flutter/UI/search_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
@@ -75,13 +76,36 @@ class CategoriesScreenState extends State<CategoriesScreen> {
         actions: <Widget>[
           InkWell(
             child: Container(
+              margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+              child:
+              Stack(
+                children: <Widget>[
+                  Align(
+                    child: Icon(Icons.search),
+                    alignment: Alignment.center,
+                  ),
+
+                ],
+              ),
+            ),
+            onTap: () {
+              Navigator.push(context, EnterExitRoute(enterPage: SearchScreen())).then((returnn){
+                count();
+              });
+            },
+          ),
+          InkWell(
+            child: Container(
               margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
               child: Stack(
                 children: <Widget>[
                   Align(
                     child: Icon(Icons.shopping_cart),
                     alignment: Alignment.center,
                   ),
+                  cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
                   Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
                     child: Align(

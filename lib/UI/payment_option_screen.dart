@@ -15,6 +15,7 @@ import 'package:vegetos_flutter/UI/promo_screen.dart';
 import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/Enumaration.dart';
+import 'package:vegetos_flutter/Utils/config.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
@@ -832,7 +833,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
       transactionId = tranId;
       Razorpay razorpay = Razorpay();
       var options = {
-        'key': 'rzp_test_GIzJZIWq8j3pzL',
+        'key': Config.RazorPayKey,
 //        'amount': amount,
         'name': 'Vegetos',
         'description': 'Vegetos Checkout',

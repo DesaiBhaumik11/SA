@@ -11,6 +11,8 @@ class OrderItemsViewModel
 
   double price;
 
+  double offerAmount;
+
 //  String productVariantId;
 
   String productId;
@@ -41,6 +43,7 @@ class OrderItemsViewModel
 
   OrderItemsViewModel({
     this.price,
+    this.offerAmount,
 //    this.productVariantId,
     this.productId,
     this.brandId,
@@ -61,14 +64,15 @@ class OrderItemsViewModel
   factory OrderItemsViewModel.fromJson(Map<String, dynamic> parsedData) {
     var ProductMediaIds = parsedData['ProductMediaIds'];
     return OrderItemsViewModel(
-      price: parsedData['Price'],
+      price: parsedData['Price'] !=null ? parsedData['Price'] : 0,
+      offerAmount: parsedData['OfferAmount'] !=null ? parsedData['OfferAmount'] : 0,
 //      productVariantId: parsedData['ProductVariantId'],
       productId: parsedData['ProductId'],
       brandId: parsedData['BrandId'],
       seoTags: parsedData['SeoTags'],
       quantity: parsedData['Quantity'] !=null ? parsedData['Quantity'] : 0,
       minimumOrderQuantity: parsedData['MinimumOrderQuantity'] !=null ?parsedData['MinimumOrderQuantity'] : 0,
-      incrementalStep: parsedData['IncrementalStep'],
+      incrementalStep: parsedData['IncrementalStep']!=null ?parsedData['IncrementalStep'] : 0,
       units: parsedData['Units'] != null ? UnitsModel.parseList(parsedData['Units']) : null,
       productDetails: parsedData['ProductDetails'] != null ? ProductDetailsModel.parseList(parsedData['ProductDetails']) : null,
       productTax: parsedData['ProductTax'] != null ? ProductTaxModel.fromJson(parsedData['ProductTax']) : null,

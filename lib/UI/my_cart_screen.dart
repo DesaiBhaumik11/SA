@@ -306,22 +306,39 @@ class MyCartState extends State<MyCartScreen>
                                     margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text("${cartItem.ProductPrice.OfferPrice}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      child: Text("₹ ${cartItem.ProductPrice.OfferPrice}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
+                                    Expanded(
+                                      flex: 1,
+
+                                    child:Row(
+                                    children: <Widget>[
+                                  cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0 ? Container(
+                                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
-                                      child: Text(cartItem.ProductPrice.Price.toString() ,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
+                                      child: Text('₹' +cartItem.ProductPrice.Price.toString() ,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
                                           fontWeight: FontWeight.w500,
                                           color: Colors.grey, decoration: TextDecoration.lineThrough),
                                       ),
                                     ),
-                                  )
+                                  ) : Container(),
+                                  cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0 ? Container(
+                                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                    padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                        color: Colors.orange
+                                    ),
+                                    child: Text(cartItem.ProductPrice.DiscountPercent != null ? cartItem.ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                                        color: Colors.white),),
+                                  ) : Container(),
+                                      ],),
+                                    ),
                                 ],
                               ),
                             ),
@@ -525,16 +542,6 @@ class MyCartState extends State<MyCartScreen>
                            margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                          ),
                        ),
-                       result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
-                         margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
-                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                         decoration: BoxDecoration(
-                             borderRadius: BorderRadius.circular(5.0),
-                             color: Colors.orange
-                         ),
-                         child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                             color: Colors.white),),
-                       ) : Container(),
                      ],
                    ),Expanded(child: Container(),flex: 1,),
                    Container(
@@ -573,7 +580,7 @@ class MyCartState extends State<MyCartScreen>
                            ),
                          ),
                        ),
-                       Container(
+                       result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
                          margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                          child: Align(
                            alignment: Alignment.topLeft,
@@ -582,7 +589,17 @@ class MyCartState extends State<MyCartScreen>
                                color: Colors.grey, decoration: TextDecoration.lineThrough),
                            ),
                          ),
-                       ),
+                       ) : Container(),
+                       result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
+                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                         padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                         decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(5.0),
+                             color: Colors.orange
+                         ),
+                         child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                             color: Colors.white),),
+                       ) : Container(),
                      ],
                    ),
                    InkWell(child:
@@ -604,7 +621,7 @@ class MyCartState extends State<MyCartScreen>
                      onTap: (){
                        //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                        //myCartModal.addTocart(result);
-                       callAddToCartAPI(result.ProductId,  result.IncrementalStep.toString(), "", result.ProductPrice.OfferPrice.toString());
+                       callAddToCartAPI(result.ProductId,  result.IncrementalStep.toString(), "", result.ProductPrice.Price.toString(), result.ProductPrice.OfferPrice.toString());
                      },)
                  ],
                ),
@@ -765,18 +782,18 @@ class MyCartState extends State<MyCartScreen>
             ),
           ),
         ),
-        Visibility(
-          visible: model != null && model.cartItemViewModels != null ? true : false,
-          child: InkWell(
-            onTap: (){
-              Navigator.push(context, SlideLeftRoute(page: SelectContact()));
-            },
-            child: Container(
-              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: Icon(Icons.share, color: Colors.white,),
-            ),
-          ),
-        )
+//        Visibility(
+//          visible: model != null && model.cartItemViewModels != null ? true : false,
+//          child: InkWell(
+//            onTap: (){
+//              Navigator.push(context, SlideLeftRoute(page: SelectContact()));
+//            },
+//            child: Container(
+//              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+//              child: Icon(Icons.share, color: Colors.white,),
+//            ),
+//          ),
+//        )
       ],
     );
   }
@@ -945,16 +962,16 @@ class MyCartState extends State<MyCartScreen>
      );
    }
 
-   void callAddToCartAPI(String productId,  String qty, String offerId, String amount) {
+   void callAddToCartAPI(String productId,  String qty, String offerId, String amount , String offerAmount) {
      setState(() {
        isCountLoading=true;
      });
-     ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
+     ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount, offerAmount).then((apiResponseModel) {
        setState(() {
          isCountLoading=false;
        });
        if(apiResponseModel.statusCode == 200) {
-         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+         Fluttertoast.showToast(msg: apiResponseModel.message != null ? "Item added in cart" : '');
          BindData(apiResponseModel);
        } else if (apiResponseModel.statusCode == 401) {
          Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');

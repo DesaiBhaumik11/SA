@@ -85,10 +85,10 @@ class _MyOrdersState extends State<MyOrders> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Order ID',style: text,
+                        'InvoiceNumber:',style: text,
                       ),
                       Text(
-                          '${model.orderId==null? '':model.orderId}', style: text,
+                          '${model.invoiceNumber==null? '':model.invoiceNumber}', style: text,
                       )
                     ],
                   ),
@@ -212,12 +212,14 @@ class _MyOrdersState extends State<MyOrders> {
 
   String displayOrderIcon(String status) {
 
-   if(status== EnumOrderStatus.getString(OrderStatus.Ordered) || status== EnumOrderStatus.getString(OrderStatus.Confirmed)){
-        return "assets/order_delivered.png";
+   if(status== EnumOrderStatus.getString(OrderStatus.Ordered)) {
+     return "assets/order_placed.png";
+   }else if(status== EnumOrderStatus.getString(OrderStatus.Confirmed)){
+     return "assets/order_confirmed.png";
    }else if(status== EnumOrderStatus.getString(OrderStatus.Cancelled)){
      return "assets/order_cancelled.png";
    }else {
-     return "assets/order_placed.png";
+     return "assets/order_delivered.png";
    }
 //      case EnumOrderStatus.getString(OrderStatus.Ordered):
 //        return "assets/order_confirmed.png";

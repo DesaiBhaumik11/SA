@@ -13,8 +13,8 @@ class MyCartUtils
 
   static StreamController streamController = StreamController.broadcast();
 
-  void callAddToCartAPI(String productId,  String qty, String offerId, String amount) {
-    ApiCall().addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
+  void callAddToCartAPI(String productId,  String qty, String offerId, String amount, String offerAmount) {
+    ApiCall().addToCart(productId,  qty, offerId, amount,offerAmount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
         callCartCountAPI();

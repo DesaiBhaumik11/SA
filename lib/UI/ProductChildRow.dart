@@ -303,7 +303,7 @@ class ProductChildRow{
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                       //myCartModal.addTocart(productModal);
                       MyCartUtils().callAddToCartAPI(productVariant.ProductId,  productVariant.IncrementalStep.toString(),
-                          "", ProductPrice.OfferPrice.toString());
+                          "",ProductPrice.Price.toString(), ProductPrice.OfferPrice.toString());
                     },)
                 ],
               ),

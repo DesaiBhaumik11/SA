@@ -8,6 +8,7 @@ import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/set_location_manually.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/SetLocationResponseModel.dart';
 
 import '../Utils/const.dart';
@@ -60,6 +61,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                           child: RaisedButton(
                             color: Color(0xff009a00),
                             onPressed: (){
+//                              Utility.checkEnabledLocationService()==false ? Fluttertoast.showToast(msg: 'Location Service not Enabled') :
                               setState(() {
                                 !showProgress ?
                                 Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
@@ -204,6 +206,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
       )
     );
   }
+
 
 
   void callSetLocationApi(String pincode, String address) {

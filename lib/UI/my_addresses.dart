@@ -70,6 +70,11 @@ class _MyAddressesState extends State<MyAddresses> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
+
+//              Utility.checkEnabledLocationService().then((value){
+//                if(value==false){
+//                  return;
+//                }
               ProgressDialog progresDialog=Utility.progressDialog(context, "");
               progresDialog.show();
               Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
@@ -103,6 +108,7 @@ class _MyAddressesState extends State<MyAddresses> {
                 });
 //
             });
+//              });
               },
 
             child: Container(

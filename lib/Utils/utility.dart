@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/custom_stepper.dart';
@@ -61,5 +62,18 @@ class Utility {
     return status;
   }
 
+  static Future<bool> checkEnabledLocationService() async {
+    Location location = new Location();
+    bool _serviceEnabled;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return false;
+      }
+    }
+    return true;
+  }
 
 }

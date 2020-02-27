@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
+import 'package:vegetos_flutter/Utils/config.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:http/http.dart';
@@ -23,9 +24,9 @@ import 'DeviceTokenController.dart';
 class ApiCall
 {
 
-  static final String baseURL = "http://artismicro.archisys.biz:5101";
-//  static final String baseURL = "http://195.168.0.37:5001";
-//  static final String baseURL = "http://195.168.0.79:5001";
+
+
+
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
   static final String SetLocation = "/SetLocation";
@@ -64,6 +65,7 @@ class ApiCall
   static final String Checkout = "/CheckOut";
   static final String GetOrders = "/GetOrders";
   static final String GetOrderById = "/GetOrderById";
+  static final String OrderCancellationRequestById = "/OrderCancellationRequestById";
 
   static final String SearchProduct = "/SearchProduct";
 
@@ -86,7 +88,7 @@ class ApiCall
       String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
 
-      final response = await get(ApiCall.baseURL + URL , headers: header);
+      final response = await get(Config.baseURL + URL , headers: header);
       return getResponse(response,true);
     } catch (e) {
       return _internalCrash(e.toString());
@@ -100,7 +102,7 @@ class ApiCall
       String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken ,'Content-Type' : 'application/json'};
 
-      final response = await post(ApiCall.baseURL + URL, headers: header , body: apiRequestBody);
+      final response = await post(Config.baseURL + URL, headers: header , body: apiRequestBody);
       return getResponse(response,true);
     } catch (e) {
       return _internalCrash(e.toString());
@@ -113,9 +115,13 @@ class ApiCall
       String token = prefs.getString("AUTH_TOKEN");
       String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken ,'Content-Type' : 'application/json'};
-
-      final response = await put(ApiCall.baseURL + URL, headers: header , body: apiRequestBody);
-      return getResponse(response,true);
+      if(apiRequestBody!=null) {
+        final response = await put(Config.baseURL + URL, headers: header, body: apiRequestBody);
+        return getResponse(response, true);
+      }else{
+        final response = await put(Config.baseURL + URL, headers: header);
+        return getResponse(response, true);
+      }
     } catch (e) {
       return _internalCrash(e.toString());
     }
@@ -131,7 +137,7 @@ class ApiCall
       headerMap["Content-Type"] = "application/json";
       headerMap["Authorization"] = "Bearer "+token;
 
-      final response = await delete(ApiCall.baseURL + URL,
+      final response = await delete(Config.baseURL + URL,
           headers: headerMap);
       return getResponse(response,true);
     } catch (e) {
@@ -311,7 +317,7 @@ class ApiCall
       String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'Authorization': "Bearer " + token, 'device_token' : deviceToken};
 
-      final response = await get(ApiCall.baseURL + ApiCall.GetDefaults, headers: header);
+      final response = await get(Config.baseURL + ApiCall.GetDefaults, headers: header);
       print(response.request.url.toString());
       print(response.body);
       if(response.statusCode == 200) {
@@ -460,17 +466,21 @@ class ApiCall
     return _get(ApiCall.CartCount);
   }
 
-  Future<ApiResponseModel> addToCart(String productId,  String qty, String offerId, String amount) async {
+  Future<ApiResponseModel> addToCart(String productId,  String qty, String offerId, String amount,String offerAmount) async {
     var apiRequestBody = json.encode({
       "ProductId": productId,
 //      "ProductVariantId": varientId,
       "Quantity": qty,
       "OfferId": offerId,
       "Amount": amount,
+      "OfferAmount":offerAmount,
     });
     return _post(ApiCall.AddToCart,apiRequestBody);
   }
 
+  Future<ApiResponseModel> orderCancellationRequestById(String transactionId) async {
+    return _put(ApiCall.OrderCancellationRequestById + "?transactionId=" + transactionId,null);
+  }
 
   Future<ApiResponseModel> refreshToken() async {
     try {
@@ -479,7 +489,7 @@ class ApiCall
       Map<String, String> header = {'device_token' : deviceToken};
       String token =  prefs.getString("AUTH_TOKEN");
 
-      final response = await post(ApiCall.baseURL + ApiCall.RefreshToken + "?expiredTokenString=" + token, headers: header);
+      final response = await post(Config.baseURL + ApiCall.RefreshToken + "?expiredTokenString=" + token, headers: header);
       print(response.request.url);
       print(response.request.headers);
       if(response.statusCode == 200) {
@@ -503,7 +513,7 @@ class ApiCall
       String deviceToken = await DeviceTokenController().ValidateDeviceToken();
       Map<String, String> header = {'device_token' : deviceToken};
 
-      final response = await post(ApiCall.baseURL + ApiCall.AppFirstStart, headers: header);
+      final response = await post(Config.baseURL + ApiCall.AppFirstStart, headers: header);
       print(response.request.url);
       print(response.request.headers);
       print(response.body);

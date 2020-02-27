@@ -3,7 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/custom_stepper.dart' as s;
@@ -237,11 +239,18 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
     fontWeight: FontWeight.w400,
   );
 
+  bool isCanCancelOrder=false;
+
   var currentStep=1;
 
  @override
   void initState() {
     // TODO: implement initState
+   String status=widget.model.status;
+   String shippingStatus=widget.model.shippingOrder.shippingStatus;
+   if((status==EnumOrderStatus.Ordered || status==EnumOrderStatus.Confirmed) && shippingStatus==EnumShippingStatus.Pending){
+     isCanCancelOrder=true;
+   }
     super.initState();
 
   }
@@ -347,6 +356,7 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
                          "Items Details >>",
                          textAlign: TextAlign.end,style: TextStyle(
                          fontWeight: FontWeight.w500,
+                         color: Colors.green,
                          fontSize: 15,
                        ),
 
@@ -407,14 +417,6 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: <Widget>[
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Order ID', style: text,),
-                        Text(widget.model.orderId, style: text,),
-                      ],
-                    ),
 
                     SizedBox(height: 5,),
                     Row(
@@ -501,6 +503,7 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
                       ],
                     ),
 
+
                   ],
                 ),
               ),
@@ -519,6 +522,27 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
 
             SizedBox(height: 35,),
 
+
+            !isCanCancelOrder ? Container() :
+            GestureDetector(
+              onTap: () {
+                apiOrderCancellationRequestById(widget.model.id);
+              },
+              child: Container(
+                color: Const.primaryColor,
+                height: 50.0,
+                child: Center(
+                  child: Text(
+                    'Cancel Order',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ],
@@ -537,6 +561,24 @@ class _SummaryState extends State<Summary> with SingleTickerProviderStateMixin {
    }
    return steps;
  }
+  void apiOrderCancellationRequestById(String transactionId) {
+    ProgressDialog progressDialog = Utility.progressDialog(context, "");
+    progressDialog.show();
+    ApiCall().setContext(context).orderCancellationRequestById(transactionId).then((apiResponseModel) {
+      if(progressDialog!=null && progressDialog.isShowing()){
+        progressDialog.dismiss();
+      }
+      if(apiResponseModel.statusCode == 200) {
+        GetOrderByIdResponseModel responseModel = GetOrderByIdResponseModel.fromJson(apiResponseModel.Result);
+       Navigator.pop(context);
+       Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(responseModel.id,false)));
+      } else if(apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+      }
+    });
+  }
 }
 
 

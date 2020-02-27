@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
+import 'package:vegetos_flutter/UI/search_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
@@ -92,6 +93,27 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
             child: Container(
               margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+              child:
+              Stack(
+                children: <Widget>[
+                  Align(
+                    child: Icon(Icons.search),
+                    alignment: Alignment.center,
+                  ),
+
+                ],
+              ),
+            ),
+            onTap: () {
+              Navigator.push(context, EnterExitRoute(enterPage: SearchScreen())).then((returnn){
+                count();
+              });
+            },
+          ),
+          InkWell(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
               child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
               Stack(
                 children: <Widget>[
@@ -99,6 +121,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                     child: Icon(Icons.shopping_cart),
                     alignment: Alignment.center,
                   ),
+                  cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
                   Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
                     child: Align(
@@ -296,16 +319,6 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
                       ),
-                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0.0 ? Container(
-                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
-                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.orange
-                        ),
-                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                            color: Colors.white),),
-                      ) : Container(),
                     ],
                   ),Expanded(child: Container(),flex: 1,),
                   Container(
@@ -343,7 +356,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                           ),
                         ),
                       ),
-                      Container(
+                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
@@ -352,7 +365,17 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                               color: Colors.grey, decoration: TextDecoration.lineThrough),
                           ),
                         ),
-                      ),
+                      ) : Container(),
+                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.orange
+                        ),
+                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                            color: Colors.white),),
+                      ) : Container(),
                     ],
                   ),
                   InkWell(child:  Container(
@@ -374,7 +397,7 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                       //myCartModal.addTocart(productModal);
                       addToCart(productVariant.ProductId,  productVariant.IncrementalStep.toString(),
-                          "", ProductPrice.OfferPrice.toString());
+                          "", ProductPrice.Price.toString(),ProductPrice.OfferPrice.toString());
                     },)
                 ],
               ),
@@ -597,11 +620,11 @@ class CategoryWiseProductListScreenState extends State<CategoryWiseProductListSc
       });
     });
   }
-  void addToCart(productId,  qty, offerId, amount){
+  void addToCart(productId,  qty, offerId, amount , offerAmount){
     setState(() {
       isCountLoading=true;
     });
-    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
+    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount, offerAmount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Item added in cart');
       }else{

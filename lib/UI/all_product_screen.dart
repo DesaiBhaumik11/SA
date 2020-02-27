@@ -126,6 +126,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: Icon(Icons.shopping_cart),
                     alignment: Alignment.center,
                   ),
+                  cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
                   Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
                     child: Align(
@@ -377,16 +378,16 @@ class _AllProductScreenState extends State<AllProductScreen> {
                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
                       ),
-                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0.0 ? Container(
-                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
-                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.orange
-                        ),
-                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                            color: Colors.white),),
-                      ) : Container(),
+//                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0.0 ? Container(
+//                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
+//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+//                        decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.circular(5.0),
+//                            color: Colors.orange
+//                        ),
+//                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+//                            color: Colors.white),),
+//                      ) : Container(),
                     ],
                   ),
                   Expanded(child: Container(),flex: 1,),
@@ -425,7 +426,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                           ),
                         ),
                       ),
-                      Container(
+                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?Container(
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
@@ -434,7 +435,17 @@ class _AllProductScreenState extends State<AllProductScreen> {
                               color: Colors.grey, decoration: TextDecoration.lineThrough),
                           ),
                         ),
-                      ),
+                      ): Container(),
+                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.orange
+                        ),
+                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                            color: Colors.white),),
+                      ) : Container(),
                     ],
                   ),
                   InkWell(child:  Container(
@@ -456,7 +467,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                       //myCartModal.addTocart(productModal);
                       addToCart(productVariant.ProductId, productVariant.IncrementalStep.toString(),
-                          "", ProductPrice.OfferPrice.toString());
+                          "", ProductPrice.Price.toString() , ProductPrice.OfferPrice.toString());
                     },)
                 ],
               ),
@@ -468,11 +479,11 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
 
   }
-  void addToCart(productId,  qty, offerId, amount){
+  void addToCart(productId,  qty, offerId, amount,offerAmount){
     setState(() {
       isCountLoading=true;
     });
-    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
+    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount , offerAmount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Item added in cart');
       }else{
@@ -601,7 +612,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
           return childView(context, entry);
         },
         pageFuture: (int pageIndex){
-          return getFutureList(pageIndex);
+          return getFutureList(pageIndex+1);
         },
         noItemsFoundBuilder: (context) {
           return Container(child: Center(child: Text('Data Not Found'),),);
@@ -656,15 +667,20 @@ if(index>1 || isFromOutside) {
         ApiCall().recommendedForYou(index.toString(), pageSize.toString());
   }
 }
-    ApiResponseModel apiResponseModel = await getProduct;
-    if(apiResponseModel.statusCode == 200) {
-      DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+      ApiResponseModel apiResponseModel = await getProduct;
+      if (apiResponseModel.statusCode == 200) {
+        DashboardProductResponseModel responseModel = DashboardProductResponseModel
+            .fromJson(apiResponseModel.Result);
 //      pageNUmber++;
-      return responseModel.Results;
-    } else if(apiResponseModel.statusCode == 401) {
-      Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-    } else {
-      Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+        return responseModel.Results;
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null
+            ? apiResponseModel.message
+            : 'Something went wrong.!');
+      } else {
+        Fluttertoast.showToast(msg: apiResponseModel.message != null
+            ? apiResponseModel.message
+            : 'Something went wrong.!');
+      }
     }
-  }
 }

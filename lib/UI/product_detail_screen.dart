@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/models/GetProductByIdModel.dart';
 import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
 import 'package:vegetos_flutter/models/ProductPriceModel.dart';
 import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
+import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
@@ -40,11 +41,10 @@ class ProductDetailScreen extends StatefulWidget
 
 class ProductDetailScreenState extends State<ProductDetailScreen>
 {
-   GetProductByIdModel productModal;
+  ProductWithDefaultVarientModel productModal;
    ProductPriceModel ProductPrice=new ProductPriceModel();
    ProductDetailsModel ProductDetail=new ProductDetailsModel();
    UnitsModel Units=new UnitsModel();
-   ProductVariantMedia productVariantMedia=new ProductVariantMedia();
 //   MyCartModal cartModal ;
 //   AppFirstModal appFirstModal ;
 
@@ -130,6 +130,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                     child: Icon(Icons.shopping_cart),
                     alignment: Alignment.center,
                   ),
+                  cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
                   Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
                     child: Align(
@@ -157,8 +158,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   {
     List<Image> imageList = [
 //      Image.asset('assets/02-product.png', height: 50, width: 50.0,)
-      productVariantMedia.MediaId==null||productVariantMedia.MediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-      Image.network("${ImageURL}${productVariantMedia.MediaId}", height: 100.0, width: 100.0,),
+      productModal.PrimaryMediaId==null||productModal.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+      Image.network("${ImageURL}${productModal.PrimaryMediaId}", height: 100.0, width: 100.0,),
     //  Image.asset('${appFirstModal}', height: 100.0, width: 100.0,),
 //      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
 //      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
@@ -250,7 +251,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           Expanded(
             flex: 1,
             child: Container(
-              margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
               height: 50.0,
               child: ListView.builder(
                 itemCount: 1,
@@ -259,7 +260,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                   return Container(
                     width: 100.0,
                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
+                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 2.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5.0),
                       color: _selectedIndex != null && _selectedIndex == index
@@ -301,7 +302,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
               //cartModal.addTocart(productModal.result);
               addToCart(productModal.ProductId,
-                  productModal.IncrementalStep.toString(), "", ProductPrice.OfferPrice.toString());
+                  productModal.IncrementalStep.toString(), "", ProductPrice.Price.toString() , ProductPrice.OfferPrice.toString());
               },)
           )
         ],
@@ -429,7 +430,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('1 ${Units.Name}', maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
+                child: Text( productModal.MinimumOrderQuantity.toString() + " " + Units.Name, maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
                     style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
                         fontWeight: FontWeight.w500)),
               )
@@ -765,19 +766,16 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
         if(snapshot.connectionState == ConnectionState.done) {
           ApiResponseModel apiResponseModel = snapshot.data;
           if(apiResponseModel.statusCode == 200) {
-            productModal = GetProductByIdModel.fromJson(apiResponseModel.Result);
-            if(productModal.ProductVariant!=null && productModal.ProductVariant.length>0){
-              ProductPrice = productModal.ProductVariant[0].productPrice;
-              if(productModal.ProductVariant[0].ProductDetail!=null && productModal.ProductVariant[0].ProductDetail.length>0){
-                ProductDetail = productModal.ProductVariant[0].ProductDetail[0];
+            productModal = ProductWithDefaultVarientModel.fromJson(apiResponseModel.Result);
+
+              ProductPrice = productModal.ProductPrice;
+              if(productModal.ProductDetails!=null && productModal.ProductDetails.length>0){
+                ProductDetail = productModal.ProductDetails[0];
               }
               if(productModal.Units!=null && productModal.Units.length>0){
                 Units=productModal.Units[0];
               }
-              if(productModal.ProductVariant[0].productVariantMedia!=null && productModal.ProductVariant[0].productVariantMedia.length>0){
-                productVariantMedia = productModal.ProductVariant[0].productVariantMedia[0];
-              }
-            }
+
             return SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Container(
@@ -809,7 +807,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   void callGetProductDetailByIdAPI(String productId) {
     ApiCall().setContext(context).getProductDetailById(productId).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
-        GetProductByIdModel responseModel = GetProductByIdModel.fromJson(apiResponseModel.Result);
+        ProductWithDefaultVarientModel responseModel = ProductWithDefaultVarientModel.fromJson(apiResponseModel.Result);
         productModal = responseModel;
 
       } else if(apiResponseModel.statusCode == 401) {
@@ -820,11 +818,11 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     });
   }
 
-   void addToCart(productId,  qty, offerId, amount){
+   void addToCart(productId,  qty, offerId, amount,offerAmount){
      setState(() {
        isCountLoading=true;
      });
-     ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount).then((apiResponseModel) {
+     ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount , offerAmount).then((apiResponseModel) {
        if(apiResponseModel.statusCode == 200) {
          Fluttertoast.showToast(msg: 'Item added in cart');
        }else{
