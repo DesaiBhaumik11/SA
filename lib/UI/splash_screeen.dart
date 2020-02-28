@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -31,27 +30,25 @@ import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 
-class SplashScreen extends StatefulWidget
-{
+class SplashScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return SplashScreenState();
   }
-
 }
 
 class SplashScreenState extends State<SplashScreen> {
-
-  bool runOnce=true;
+  bool runOnce = true;
   String version = "";
-  bool runOnlyOnce=false;
+  bool runOnlyOnce = false;
+
   //AppFirstModal appFirstModal ;
 
   @override
   void setState(fn) {
     // TODO: implement setState
-    if(mounted) {
+    if (mounted) {
       super.setState(fn);
     }
   }
@@ -69,7 +66,7 @@ class SplashScreenState extends State<SplashScreen> {
 
     //appFirstModal = Provider.of<AppFirstModal>(context);
 
-   /*if(runOnce) {
+    /*if(runOnce) {
      runOnce=false;
      SharedPreferences.getInstance().then((prefs) {
        String uuid = prefs.getString("uuid") ?? Uuid().v4();
@@ -78,7 +75,7 @@ class SplashScreenState extends State<SplashScreen> {
 
 
 
-       *//*TokenController().getJwtToken(uuid).then((r) {
+       */ /*TokenController().getJwtToken(uuid).then((r) {
          print("AUTH_TOKEN Prefns ${prefs.getString("AUTH_TOKEN")}");
           if(prefs.getString("AUTH_TOKEN")==null){
             appFirstModal.appFirstRun(r,(){navigate(context);}) ;
@@ -87,11 +84,11 @@ class SplashScreenState extends State<SplashScreen> {
             appFirstModal.getDefaults();
             navigate(context);
           }
-       });*//*
+       });*/ /*
      });
    }*/
-    if(!runOnlyOnce) {
-      runOnlyOnce=true;
+    if (!runOnlyOnce) {
+      runOnlyOnce = true;
       checkUUID(context);
     }
 
@@ -100,40 +97,24 @@ class SplashScreenState extends State<SplashScreen> {
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: <Widget>[
-            Positioned(
-              child: Align(
-                alignment: FractionalOffset.topCenter,
-                child: Image.asset('assets/top_pattern.png'),
-              ),
-            ),
-            
-            Positioned(
-              child: Padding(
-                padding: const EdgeInsets.all(35.0),
-                child: Align(
-                  alignment: FractionalOffset.center,
-                  child: Image.asset('assets/splash_logo.png'),
-                ),
-              )
-            ),
-
-            Positioned(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Image.asset('assets/bottom_pattern.png'),
-              ),
-            ),
-
             Container(
-              margin: const EdgeInsets.only(bottom: 100.0),
+              height: double.infinity,
+              width: double.infinity,
+              child: new Image.asset(
+                'assets/OkAssets/01.Splashscreen.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 20.0),
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text('Version : ' + version,
+                child: Text(
+                  'Version : ' + version,
                   style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 14,
-                      color: Const.grey800
-                  ),
+                      color: Colors.white),
                 ),
               ),
             )
@@ -143,11 +124,10 @@ class SplashScreenState extends State<SplashScreen> {
     );
   }
 
-
   void checkUUID(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String uuid = prefs.getString("UUID");
-    if(uuid == null || uuid.isEmpty) {
+    if (uuid == null || uuid.isEmpty) {
       uuid = Uuid().v4();
       prefs.setString("UUID", uuid);
       DeviceTokenController().ValidateDeviceToken().then((token) {
@@ -156,7 +136,7 @@ class SplashScreenState extends State<SplashScreen> {
     } else {
       DeviceTokenController().ValidateDeviceToken().then((token) async {
         String authToken = await AuthTokenController().ValidateAuthToken();
-        if(authToken != null && authToken.isNotEmpty) {
+        if (authToken != null && authToken.isNotEmpty) {
           callGetDefaultsAPI(context);
         } else {
           callAppFirstStartAPI(context);
@@ -172,15 +152,19 @@ class SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  navigate(context)
-  {
-    SharedPreferences.getInstance().then((prefs){
+  navigate(context) {
+    SharedPreferences.getInstance().then((prefs) {
       String businessId = prefs.getString("BusinessLocationId");
       String address = prefs.getString("FullAddress");
-      if(businessId != null && businessId.isNotEmpty && address != null && address.isNotEmpty) {
-        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
+      if (businessId != null &&
+          businessId.isNotEmpty &&
+          address != null &&
+          address.isNotEmpty) {
+        Navigator.pushAndRemoveUntil(context,
+            EnterExitRoute(enterPage: DashboardScreen()), (c) => false);
       } else {
-        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: WelcomeScreenState()),(c)=>false);
+        Navigator.pushAndRemoveUntil(context,
+            EnterExitRoute(enterPage: WelcomeScreenState()), (c) => false);
       }
     });
   }
@@ -201,13 +185,14 @@ class SplashScreenState extends State<SplashScreen> {
 
   void callAppFirstStartAPI(BuildContext context) {
     ApiCall().appFirstStart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+      if (apiResponseModel.statusCode == 200) {
+        AppFirstStartResponseModel appFirstStartResponseModel =
+            AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
           callGetDefaultsAPI(context);
         });
-      }else if (apiResponseModel.statusCode == 426){
+      } else if (apiResponseModel.statusCode == 426) {
         Utility.forceUpate(context);
       } else {
         callGetDefaultsAPI(context);
@@ -215,50 +200,56 @@ class SplashScreenState extends State<SplashScreen> {
     });
   }
 
-
   void callRefreshTokenAPI(BuildContext context) {
     ApiCall().refreshToken().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
+      if (apiResponseModel.statusCode == 200) {
+        AppFirstStartResponseModel appFirstStartResponseModel =
+            AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
         });
         callGetDefaultsAPI(context);
-      } else if(apiResponseModel.statusCode == 401){
+      } else if (apiResponseModel.statusCode == 401) {
         //Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
         SharedPreferences.getInstance().then((prefs) {
           String uuid = Uuid().v4();
-          prefs.setString("JWT_TOKEN","");
+          prefs.setString("JWT_TOKEN", "");
           prefs.setString("UUID", uuid);
           DeviceTokenController().ValidateDeviceToken().then((token) {
             callAppFirstStartAPI(context);
           });
         });
-      }
-    else if (apiResponseModel.statusCode == 426){
-      Utility.forceUpate(context);
-    }else{
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+      } else if (apiResponseModel.statusCode == 426) {
+        Utility.forceUpate(context);
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong');
       }
     });
   }
 
   void callGetDefaultsAPI(BuildContext context) {
-    ApiCall().getDefaults().then((apiResponseModel){
-      if(apiResponseModel.statusCode == 200) {
-        GetDefaultsResponseModel getDefaultsResponseModel = GetDefaultsResponseModel.fromJson(apiResponseModel.Result);
+    ApiCall().getDefaults().then((apiResponseModel) {
+      if (apiResponseModel.statusCode == 200) {
+        GetDefaultsResponseModel getDefaultsResponseModel =
+            GetDefaultsResponseModel.fromJson(apiResponseModel.Result);
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("ImageURL", getDefaultsResponseModel.ImageUrl);
           Future.delayed(Duration(seconds: 1)).then((_) {
             navigate(context);
           });
         });
-      } else if(apiResponseModel.statusCode == 401) {
+      } else if (apiResponseModel.statusCode == 401) {
         callRefreshTokenAPI(context);
-      }else if (apiResponseModel.statusCode == 426){
+      } else if (apiResponseModel.statusCode == 426) {
         Utility.forceUpate(context);
-      }else{
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong');
       }
     });
   }

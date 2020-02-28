@@ -100,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Container(
               width: double.infinity,
               height: 61,
-              color: Const.appBar,
+              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.only(top: 0),
                 child: Row(
@@ -113,7 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Padding(
                         padding: EdgeInsets.all(15),
                         child: Image.asset(
-                          'back.png',
+                          'assets/OkAssets/LeftSideArrow.png',
                           height: 25,
                         ),
                       ),
@@ -121,7 +121,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Expanded(
                       child: TextFormField(
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Const.textBlack,
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
@@ -164,12 +164,12 @@ class _SearchScreenState extends State<SearchScreen> {
                             hintStyle: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 20,
-                                color: Colors.white)),
+                                color: Const.textBlack)),
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                      child: isSearchLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+                      child: isSearchLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor: Const.iconOrange,strokeWidth: 2,),)) :
                       Container(),
                     ),
                     GestureDetector(
@@ -178,12 +178,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                        child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+                        child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor: Const.iconOrange,strokeWidth: 2,),)) :
                         Stack(
                           children: <Widget>[
                             Align(
                               child: Image.asset(
-                                'cart.png',
+                                'assets/OkAssets/Mycart.png',
                                 height: 23,
                               ),
                               alignment: Alignment.center,
@@ -194,7 +194,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: Align(
                                 alignment: Alignment.topRight,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.orange,
+                                  backgroundColor: Const.widgetGreen,
                                   radius: 8.0,
                                   child: Text(cartTotal,
                                       style: TextStyle(
@@ -220,7 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: Visibility(
                     visible: searchList != null ? true : false,
                     child: Text(searchList != null ? searchList.length.toString() + ' Result Found' : "0 Result found",
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Const.textBlack),
                     ),
                   ),
                 ),
@@ -309,10 +309,14 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Card(
               child: Container(
                 padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                decoration: BoxDecoration(
+                    border: new Border.all(
+                        color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                    color: Colors.white),
                 child: Row(
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                      margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                       child: Stack(
                         children: <Widget>[
                           Container(
@@ -345,7 +349,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: 10,
+                      width: 5,
                     ),
                     Container(
                       child: Column(
@@ -355,13 +359,12 @@ class _SearchScreenState extends State<SearchScreen> {
                             child: Text(
                               name,
                               style: TextStyle(
-                                  fontSize: 15.0,
+                                  fontSize: 16.0,
                                   fontFamily: 'GoogleSans',
-                                  color: Colors.black,
+                                  color: Const.textBlack,
                                   fontWeight: FontWeight.w500),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
-
                             ),
                             width: MediaQuery.of(context).size.width * 0.55,
                           ),
@@ -392,7 +395,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fontSize: 20.0,
                                 fontFamily: 'GoogleSans',
                                 fontWeight: FontWeight.w700,
-                                color: Colors.black),
+                                color: Const.textBlack),
                           ),
                             ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
                               margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
@@ -419,7 +422,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 5,
                           ),
                           RaisedButton(
-                            color: Theme.of(context).primaryColor,
+                            color: Const.widgetGreen,
                             //color: Const.gray10,
                             onPressed: () {
                               addToCart(productVariant.ProductId,
@@ -438,7 +441,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     'ADD',
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 13),
                                   ),
                                 ],
@@ -472,6 +475,10 @@ class _SearchScreenState extends State<SearchScreen> {
           onTap: () {},
           child: Card(
             child: Container(
+              decoration: BoxDecoration(
+                  border: new Border.all(
+                      color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                  color: Colors.white),
               padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
               child: Row(
                 children: <Widget>[

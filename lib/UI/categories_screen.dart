@@ -59,8 +59,8 @@ class CategoriesScreenState extends State<CategoriesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        title: Text('All Categories'),
+        backgroundColor: Colors.white,
+        title: Text('All Categories',style: TextStyle(color: Const.textBlack),),
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -68,7 +68,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
@@ -82,7 +82,10 @@ class CategoriesScreenState extends State<CategoriesScreen> {
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.search),
+                    child: Icon(
+                      Icons.search,
+                      color: Const.iconOrange,
+                    ),
                     alignment: Alignment.center,
                   ),
 
@@ -102,7 +105,10 @@ class CategoriesScreenState extends State<CategoriesScreen> {
               child: Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.shopping_cart),
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Const.iconOrange,
+                    ),
                     alignment: Alignment.center,
                   ),
                   cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
@@ -113,7 +119,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                       child: CircleAvatar(
                         backgroundColor: Colors.orange,
                         radius: 8.0,
-                        child: Text("${cartTotal}",
+                        child: Text("$cartTotal",
                             style: TextStyle(
                                 fontSize: 10.0,
                                 fontFamily: 'GoogleSans',
@@ -140,8 +146,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                 margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                 child: InkWell(
                   onTap: () {
-                    if (categoriesModel.result[index].subCategories.length >
-                        0) {
+                    if (categoriesModel.result[index].subCategories.length > 0) {
                       categoriesModel.setSubVisibility(index);
                     }
                   },

@@ -213,22 +213,332 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 searchBar(context),
+                browsByProduct(),
                 //adViewWidget(),
                 /*bestSelling.loaded?horizontalList(context , "Best Selling Items",bestSelling.result):Center(child: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: CircularProgressIndicator(),
                 ),),*/
-                bestSellingContainer(),
+                //bestSellingContainer(),
                 //vegitosExclusive.loaded?horizontalList(context,"Vegeto's Exclusive",vegitosExclusive.result):Container(),
                 //recommendedProducts.loaded?horizontalList(context,"Recommended for you",recommendedProducts.result):Container(),
-                vegetosExclusiveContainer(),
-                recommendedContainer(),
+                //vegetosExclusiveContainer(),
+                //recommendedContainer(),
 
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  browsByProduct() {
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+                      child: Text("Browse By Product",
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontFamily: 'GoogleSans',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black)),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                      child: ButtonTheme(
+                        height: 28,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(5.0),
+                          ),
+                          color: Const.widgetGreen,
+                          child: Text("view all",
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontFamily: 'GoogleSans',
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllProductScreen(
+                                        'Browse By Product')));
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                browseByProductAPI(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget browseByProductAPI() {
+    return FutureBuilder(
+      future: bestSellingFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapshot.data;
+          if (apiResponseModel.statusCode == 200) {
+            DashboardProductResponseModel responseModel =
+            DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+            return productGridList(responseModel.Results);
+          } else if (apiResponseModel.statusCode == 401) {
+            return somethingWentWrong(1);
+          } else {
+            return somethingWentWrong(1);
+          }
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+            height: 475.0,
+          );
+        } else {
+          return somethingWentWrong(1);
+        }
+      },
+    );
+  }
+
+  Widget productGridList(List<ProductWithDefaultVarientModel> products) {
+
+
+    double cardWidth = MediaQuery.of(context).size.width;
+    double cardHeight = MediaQuery.of(context).size.height;
+    double aspectRatio = 0.01;
+
+    if(cardHeight < 550) {
+      cardHeight = cardHeight + 20;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 550 && cardHeight < 600){
+      cardHeight = cardHeight - 20;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 600 && cardHeight < 650) {
+      cardHeight = cardHeight - 120;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 650 && cardHeight < 700) {
+      cardHeight = cardHeight - 120;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 700 && cardHeight < 740) {
+      cardHeight = cardHeight - 190;
+      aspectRatio = cardWidth / cardHeight;
+    } else {
+      cardHeight = cardHeight - 20;
+      aspectRatio = cardWidth / cardHeight;
+    }
+
+    return Container(
+      height: 550.0,
+      //   margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: products.length,
+
+        //  childAspectRatio: aspectRatio >= 0.73 ? 0.70 : 0.55, //0.66
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 15.0,
+          mainAxisSpacing: 15.0,
+          childAspectRatio: aspectRatio >= 0.73 ? 1.2 : 1.6,
+        ),
+        //padding: EdgeInsets.all(5.0),
+        itemBuilder: (context, index) {
+          return gridChildView(context, products[index]);
+        },
+      ),
+    );
+  }
+
+  Widget gridChildView(BuildContext context, ProductWithDefaultVarientModel productVariant) {
+
+    String name = "";
+    String unit = "";
+    for(int i = 0; i < productVariant.ProductDetails.length; i++) {
+      if(productVariant.ProductDetails[i].Language == "En-US") {
+        name = productVariant.ProductDetails[i].Name;
+        break;
+      }
+    }
+
+    for(int i = 0; i < productVariant.Units.length; i++) {
+      if(productVariant.Units[i].Language == "En-US") {
+        unit = productVariant.Units[i].Name;
+        break;
+      }
+    }
+
+    ProductPriceModel ProductPrice=new ProductPriceModel();
+    ProductDetailsModel ProductDetail=new ProductDetailsModel();
+    UnitsModel Units=new UnitsModel();
+    ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+
+    if(productVariant!=null){
+
+      if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+        ProductDetail = productVariant.ProductDetails[0];
+      }
+      if(productVariant.Units!=null && productVariant.Units.length>0){
+        Units=productVariant.Units[0];
+      }
+      if(productVariant.ProductPrice!=null){
+        ProductPrice = productVariant.ProductPrice;
+      }
+    }
+
+    return Stack(
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                EnterExitRoute(
+                    enterPage: ProductDetailScreen(productVariant.ProductId)));
+          },
+          child: Container(
+            width: 255.0,
+            decoration: BoxDecoration(
+                border: new Border.all(
+                    color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                color: Colors.white),
+            child: Column(
+              children: <Widget>[
+                Stack(
+                  //alignment: Alignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: Container(
+                        width: 110.0,
+                        height: 110.0,
+                        //alignment: Alignment.center,
+                        child: Card(
+                          elevation: 0.0,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)
+                          ),
+                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                          Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                            child: Image.asset("02-product.png",height: 100,width: 100,),
+                        ),
+                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                      ),
+                    ),
+//                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+//                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
+//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+//                        decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.circular(5.0),
+//                            color: Colors.orange
+//                        ),
+//                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+//                            color: Colors.white),),
+//                      ) : Container(),
+                  ],
+                ),Expanded(child: Container(),flex: 1,),
+                Container(
+                  margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(name ,
+                            overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black)),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(productVariant.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey, decoration: TextDecoration.lineThrough),
+                        ),
+                      ),
+                    ):Container(),
+                    ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.orange
+                      ),
+                      child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                          color: Colors.white),),
+                    ) : Container(),
+                  ],
+                ),
+                InkWell(child:  Container(
+                  margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      //color: Const.gray10
+                      color: Const.primaryColor
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      color: Colors.white, fontWeight: FontWeight.w500,)),
+                  ),
+
+                ),
+                  onTap: (){
+                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+                    //myCartModal.addTocart(result);
+                    addToCart(productVariant.ProductId,  productVariant.IncrementalStep.toString(),
+                        "",ProductPrice.Price.toString(), ProductPrice.OfferPrice.toString());
+                  },)
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -244,10 +554,20 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   Widget appBar(BuildContext context)
   {
     return SliverAppBar(
-      automaticallyImplyLeading: true,
+      automaticallyImplyLeading: false,
       floating: true,
       pinned: true,
-      backgroundColor: Const.appBar,
+      backgroundColor: Colors.white,
+      leading: IconButton(
+        icon: Image.asset(
+          "assets/OkAssets/hamburgerbutto.png",
+          scale: 1.4,
+        ),
+        iconSize: 18,
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+      ),
       actions: <Widget>[
         GestureDetector(
           onTap: () {
@@ -264,7 +584,10 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
             Stack(
               children: <Widget>[
                 Align(
-                  child: Icon(Icons.shopping_cart),
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: Const.iconOrange,
+                  ),
                   alignment: Alignment.center,
                 ),
                 cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
@@ -273,7 +596,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                   child: Align(
                     alignment: Alignment.topRight,
                     child: CircleAvatar(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: Const.widgetGreen,
                       radius: 8.0,
                       child: Text(cartTotal!=null?cartTotal :"",
                           style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
@@ -296,7 +619,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                   children: <Widget>[
                     new Flexible(
                       child:
-                    Text('Set Delivery Location',maxLines: 1,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
+                    Text('Set Delivery Location',maxLines: 1,style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', color: Const.widgetGreen),textAlign: TextAlign.left,)
 //                    Text(deliveryAddress.isNotEmpty ? 'Change Delivery Location' : 'Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
           ),
                   ],
@@ -306,7 +629,8 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                     new Flexible(
                       child: Text(
                         deliveryAddress.isNotEmpty ? deliveryAddress : 'Location not set!',
-                        style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans'),
+                        style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',color: Const.textBlack
+                        ),
 //                        minFontSize: 16.0,
 //                        maxFontSize: 17.0,
                         maxLines: 1,
@@ -335,7 +659,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
             children: <Widget>[
 
               Align(
-                child: deliveryAddress.isNotEmpty ? Icon(Icons.edit, color: Colors.white, size: 20.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,),
+                child: deliveryAddress.isNotEmpty ? Icon(Icons.search, color: Const.iconOrange, size: 25.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,),
                 alignment: Alignment.bottomRight,
               ),
             ],
@@ -351,7 +675,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   {
     return Container(
       height: 50.0,
-      color: Const.appBar,
+      color: Const.widgetGreen,
       child: Align(
         alignment: Alignment.center,
         child: Column(
@@ -374,7 +698,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                     child: Container(
                       padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                       child: Text('Categories',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                          color: Const.dashboardGray, fontWeight: FontWeight.w500)),
+                          color: Const.textBlack, fontWeight: FontWeight.w500)),
                     ),
                   ),
                 ),
@@ -393,12 +717,12 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                            child: Icon(Icons.search, color: Const.dashboardGray,),
+                            child: Icon(Icons.search, color: Const.iconOrange,),
                           ),
                           Container(
                             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                             child: Text('Search Product',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                                fontWeight: FontWeight.w500, color: Const.dashboardGray)),
+                                fontWeight: FontWeight.w500, color: Const.textBlack)),
                           )
                         ],
                       ),
@@ -1076,9 +1400,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 ),
             ],
           ),
-        )
-      ,
-
+        ),
     );
   }
 

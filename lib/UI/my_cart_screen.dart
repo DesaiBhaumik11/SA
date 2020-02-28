@@ -738,7 +738,7 @@ class MyCartState extends State<MyCartScreen>
 
   Widget cartAppBar() {
     return AppBar(
-      backgroundColor: Const.appBar,
+      backgroundColor: Colors.white,
       automaticallyImplyLeading: true,
       leading: InkWell(
         onTap: (){
@@ -746,7 +746,7 @@ class MyCartState extends State<MyCartScreen>
         },
         child: Padding(
           padding: EdgeInsets.all(15),
-          child: Image.asset('back.png', height: 25,),
+          child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
         ),
       ),
       title: Container(
@@ -757,11 +757,11 @@ class MyCartState extends State<MyCartScreen>
             children: <Widget>[
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('My Cart', style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                child: Text('My Cart', style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500, color: Const.textBlack),),
               ),
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('${cartTotalItems} Items', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                child: Text('$cartTotalItems Items', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500, color: Const.textBlack),),
               ),
             ],
           ),
@@ -769,7 +769,7 @@ class MyCartState extends State<MyCartScreen>
       ),
       actions:
        <Widget>[
-         isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
+         isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor: Const.iconOrange,strokeWidth: 2,),)) :
         Visibility(
           visible: model != null && model.cartItemViewModels!=null ? true : false,
           child: InkWell(
@@ -778,7 +778,7 @@ class MyCartState extends State<MyCartScreen>
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: Icon(Icons.delete, color: Colors.white,),
+              child: Icon(Icons.delete, color: Const.iconOrange),
             ),
           ),
         ),
@@ -847,7 +847,7 @@ class MyCartState extends State<MyCartScreen>
                   alignment: Alignment.centerLeft,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("₹${checkoutTotal}", style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                    child: Text("₹$checkoutTotal", style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
                         color: Colors.white, fontWeight: FontWeight.w500),textAlign: TextAlign.left,),
                   ),
                 ),

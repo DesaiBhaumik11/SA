@@ -73,6 +73,8 @@ flutter_icons:
 flutter:
 
   assets:
+    - assets/OkAssets/
+    - assets/OkAssets/DrawerIcon/
     - assets/splash_logo.png
     - assets/privacyPolicy.json
     - assets/termsAndCondition.json

@@ -107,6 +107,19 @@ class Const
   static const greyLight = Color(0xffCED1D8);
   static const cancel = Color(0xffD00033);
 
+  static const iconOrange = Color(0xffda6013);
+  static const textBlack = Color(0xff000000);
+  static const widgetGreen = Color(0xff019024);
+  static const colorGrey = Color(0xff797979);
+  static const menuIconGrey = Color(0xff898989);
+  static const allBOxStroke = Color(0xff898989);
+  static const cancelButton = Color(0xffc6c6c6);
+
+  static const calenderBlue = Color(0xff9f295e);
+  static const calenderPurple = Color(0xff2c87f6);
+  static const calenderRed = Color(0xffe80000);
+
+
 
   static Map<int, Color> color =
   {
