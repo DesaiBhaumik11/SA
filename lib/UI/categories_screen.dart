@@ -117,7 +117,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                     child: Align(
                       alignment: Alignment.topRight,
                       child: CircleAvatar(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: Const.widgetGreen,
                         radius: 8.0,
                         child: Text("$cartTotal",
                             style: TextStyle(
@@ -144,91 +144,92 @@ class CategoriesScreenState extends State<CategoriesScreen> {
               physics: BouncingScrollPhysics(),
               itemBuilder: (c, index) => Container(
                 margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                decoration: BoxDecoration(
+                    border: new Border.all(
+                        color: Const.allBOxStroke, width: 0.5, style: BorderStyle.solid),
+                    color: Colors.white),
                 child: InkWell(
                   onTap: () {
                     if (categoriesModel.result[index].subCategories.length > 0) {
                       categoriesModel.setSubVisibility(index);
                     }
                   },
-                  child: Card(
-                    color: Colors.white,
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              margin:
-                                  EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                              child: Card(
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                elevation: 0.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0)
-                                ),
-                                child: categoriesModel.result[index].mediaId !=
-                                        null
-                                    ? Image.network(
-                                        ImageURL +
-                                            categoriesModel
-                                                .result[index].mediaId +
-                                            "&h=100&w=100",
-                                        height: 90,
-                                        width: 100,
-                                      )
-                                    : Image.asset(
-                                        '02-product.png',
-                                        height: 100.0,
-                                        width: 100.0,
-                                      ),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            margin:
+                                EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                            child: Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0)
                               ),
+                              child: categoriesModel.result[index].mediaId !=
+                                      null
+                                  ? Image.network(
+                                      ImageURL +
+                                          categoriesModel
+                                              .result[index].mediaId +
+                                          "&h=100&w=100",
+                                      height: 90,
+                                      width: 100,
+                                    )
+                                  : Image.asset(
+                                      '02-product.png',
+                                      height: 100.0,
+                                      width: 100.0,
+                                    ),
+                            ),
 
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                      categoriesModel.result[index].name !=
+                                              null
+                                          ? categoriesModel.result[index].name
+                                          : '',
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontFamily: 'GoogleSans',
+                                          fontWeight: FontWeight.w500)),
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      0.0, 5.0, 10.0, 10.0),
+                                  child: Text(
+                                      categoriesModel.result[index]
+                                                  .Description !=
+                                              null
+                                          ? categoriesModel
+                                              .result[index].Description
+                                          : '',
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontFamily: 'GoogleSans',
+                                          color: Const.dashboardGray)),
+                                )
+                              ],
                             ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    child: Text(
-                                        categoriesModel.result[index].name !=
-                                                null
-                                            ? categoriesModel.result[index].name
-                                            : '',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontFamily: 'GoogleSans',
-                                            fontWeight: FontWeight.w500)),
-                                    alignment: Alignment.centerLeft,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(
-                                        0.0, 5.0, 10.0, 10.0),
-                                    child: Text(
-                                        categoriesModel.result[index]
-                                                    .Description !=
-                                                null
-                                            ? categoriesModel
-                                                .result[index].Description
-                                            : '',
-                                        style: TextStyle(
-                                            fontSize: 15.0,
-                                            fontFamily: 'GoogleSans',
-                                            color: Const.dashboardGray)),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Visibility(
-                          child: categoriesSubChild(
-                              categoriesModel.result[index].subCategories,
-                              context),
-                          visible: categoriesModel.result[index].showSubs,
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      Visibility(
+                        child: categoriesSubChild(
+                            categoriesModel.result[index].subCategories,
+                            context),
+                        visible: categoriesModel.result[index].showSubs,
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -267,7 +268,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
             Navigator.of(context).push(EnterExitRoute(
                 enterPage: CategoryWiseProductListScreen(
                     subCategoriesList[index].id, subCategoriesList[index].name),
-                exitPage: CategoriesScreen())).then((returnn){
+                exitPage: CategoriesScreen())).then((returnN){
                   count();
             });
           },
@@ -284,7 +285,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                           width: 70,
                         )
                       : Image.network(
-                          "${ImageURL}${subCategoriesList[index].mediaId}",
+                          "$ImageURL${subCategoriesList[index].mediaId}",
                           height: 70.0,
                           width: 70.0,
                         ),

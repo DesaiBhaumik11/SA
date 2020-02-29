@@ -47,7 +47,7 @@ class _MyOrdersState extends State<MyOrders> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -55,12 +55,13 @@ class _MyOrdersState extends State<MyOrders> {
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'My Orders'
+            'My Orders',
+                style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: callGetOrdersAPI(),

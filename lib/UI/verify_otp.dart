@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,7 @@ import 'package:vegetos_flutter/Utils/pin_view.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 
+// ignore: must_be_immutable
 class VerifyOTP extends StatefulWidget {
    String phone ;
   VerifyOTP(String mobile) {
@@ -31,6 +33,13 @@ class VerifyOTP extends StatefulWidget {
 class _VerifyOTPState extends State<VerifyOTP> {
   String phone  , code ;
   AppFirstModal appFirstModal ;
+
+  TextEditingController otpController = TextEditingController();
+  String thisText = "";
+  int pinLength = 6;
+
+  bool hasError = false;
+  String errorMessage;
 
   _VerifyOTPState(String phone) {
     this.phone=phone ;
@@ -62,8 +71,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
           ),
         ],
       ),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
+      body: Column(
         children: <Widget>[
 
           SizedBox(height: 70),
@@ -106,19 +114,58 @@ class _VerifyOTPState extends State<VerifyOTP> {
           SizedBox(height: 10),
 
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: PinView (
-                count: 6, // count of the fields, excluding dashes
-                autoFocusFirstField: false,
-                submit: (e){
-                  code= e ;
-                  print("PinView Submit ${e}") ;
-                } // gets triggered when all the fields are filled
+          Container(
+            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05, right: MediaQuery.of(context).size.width * 0.05),
+            alignment: Alignment.center,
+            child:PinCodeTextField(
+              autofocus: false,
+              isCupertino: false,
+              pinBoxOuterPadding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+              controller: otpController,
+              hideCharacter: true,
+              highlight: true,
+              highlightColor: Const.iconOrange,
+              defaultBorderColor: Const.allBOxStroke,
+              hasTextBorderColor: Const.widgetGreen,
+              maxLength: pinLength,
+              hasError: hasError,
+              maskCharacter: "#",
+
+              onDone: (text){
+                code = text;
+                print("DONE $text");
+              },
+//                pinCodeTextFieldLayoutType: PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
+              wrapAlignment: WrapAlignment.start,
+              pinBoxDecoration: ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+              pinTextStyle: TextStyle(fontSize: 30.0),
+              pinBoxWidth: 45,
+              pinBoxHeight: 45,
+              pinTextAnimatedSwitcherTransition: ProvidedPinBoxTextAnimation.scalingTransition,
+              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
             ),
+          ),
+          Visibility(
+            child: Text(
+              "Wrong PIN!",
+              style: TextStyle(color: Colors.red),
+            ),
+            visible: hasError,
           ),
 
 
+//
+//          Padding(
+//            padding: const EdgeInsets.symmetric(horizontal: 15),
+//            child: PinView (
+//                count: 6, // count of the fields, excluding dashes
+//                autoFocusFirstField: false,
+//                submit: (e){
+//                  code= e ;
+//                  print("PinView Submit ${e}") ;
+//                } // gets triggered when all the fields are filled
+//            ),
+//          ),
 
 
           SizedBox(height: 25),
@@ -131,6 +178,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     child: RaisedButton(
                       color: Theme.of(context).primaryColor,
                       onPressed: (){
+                        code = otpController.text;
                         validate() ;
 
                         // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));

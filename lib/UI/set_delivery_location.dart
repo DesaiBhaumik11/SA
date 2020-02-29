@@ -197,7 +197,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
           Visibility(
             visible: showProgress,
             child: Column(
-                children:<Widget>[Expanded(child: Container()), FlatButton(
+                children:<Widget>[Expanded(child: Container()), Container(
                   child: CircularProgressIndicator(backgroundColor: Const.primaryColorGreen,),
                 )]
             ),

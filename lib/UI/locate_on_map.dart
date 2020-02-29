@@ -61,7 +61,7 @@ class _LocateMapState extends State<LocateMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: () {
@@ -70,12 +70,12 @@ class _LocateMapState extends State<LocateMap> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
-        title: Text('Locate on map'),
+        title: Text('Locate on map', style: TextStyle(color: Const.textBlack),),
       ),
       body: Stack(
         children: <Widget>[

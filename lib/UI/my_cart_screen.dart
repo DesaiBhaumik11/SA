@@ -416,42 +416,51 @@ class MyCartState extends State<MyCartScreen>
 
    Widget recommendedContainer() {
      return Container(
+       color: Const.gray10,
        child: Stack(
          children: <Widget>[
            Container(
              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
              child: Card(
+               color: Const.gray10,
                elevation: 0.0,
                child: Column(
                  children: <Widget>[
                    Row(
+                     mainAxisSize: MainAxisSize.max,
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: <Widget>[
                        Container(
-                         margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
+                         margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                          child: Text("Recommended for you",
                              style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
                                  fontWeight: FontWeight.w700,
                                  color: Colors.black)),
                        ),
 
-                       Expanded(
-                         child: Container(
-                           margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                           child: Align(
-                             alignment: Alignment.centerRight,
-                             child: InkWell(child: Text('view all',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                                 fontWeight: FontWeight.w500,
-                                 color: Colors.green)),onTap: (){
-
+                       Container(
+                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                         child: ButtonTheme(
+                           height: 28,
+                           child: FlatButton(
+                             shape: RoundedRectangleBorder(
+                               borderRadius: new BorderRadius.circular(5.0),
+                             ),
+                             color: Const.widgetGreen,
+                             child: Text("view all",
+                                 style: TextStyle(
+                                     fontSize: 15.0,
+                                     fontFamily: 'GoogleSans',
+                                     fontWeight: FontWeight.w500,
+                                     color: Colors.white)),
+                             onPressed: () {
                                Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductScreen("Recommended for you"))).then((value){
                                  callGetMyCartAPI();
                                }) ;
-
-                             },),
+                             },
                            ),
                          ),
                        ),
-
 
                      ],
                    ),
@@ -516,115 +525,118 @@ class MyCartState extends State<MyCartScreen>
 
            },
            child: Container(
+             margin: EdgeInsets.only(right: 15),
              width: 180.0,
              height: 280.0,
-             child: Card(
-               child: Column(
-                 children: <Widget>[
-                   Stack(
-                     //alignment: Alignment.center,
-                     children: <Widget>[
-                       Center(
-                         child: Container(
-                           width: 110.0,
-                           height: 110.0,
-                           //alignment: Alignment.center,
-                           child: Card(
-                             elevation: 0.0,
-                             clipBehavior: Clip.antiAliasWithSaveLayer,
-                             shape: RoundedRectangleBorder(
-                                 borderRadius: BorderRadius.circular(5.0)
-                             ),
-                             child: result.PrimaryMediaId==null||result.PrimaryMediaId.toString().isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                             Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+             decoration: BoxDecoration(
+                 border: new Border.all(
+                     color: Const.allBOxStroke, width: 0.5, style: BorderStyle.solid),
+                 color: Colors.white),
+             child: Column(
+               children: <Widget>[
+                 Stack(
+                   //alignment: Alignment.center,
+                   children: <Widget>[
+                     Center(
+                       child: Container(
+                         width: 110.0,
+                         height: 110.0,
+                         //alignment: Alignment.center,
+                         child: Card(
+                           elevation: 0.0,
+                           clipBehavior: Clip.antiAliasWithSaveLayer,
+                           shape: RoundedRectangleBorder(
+                               borderRadius: BorderRadius.circular(5.0)
+                           ),
+                           child: result.PrimaryMediaId==null||result.PrimaryMediaId.toString().isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                           Image.network(ImageURL + result.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
 //                             child: Image.asset("02-product.png",height: 100,width: 100,),
-                           ),
-                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                          ),
-                       ),
-                     ],
-                   ),Expanded(child: Container(),flex: 1,),
-                   Container(
-                     margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                     child: Row(
-                       children: <Widget>[
-                         Flexible(
-                           child: Text(name,
-                               overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                               fontWeight: FontWeight.w700,
-                               color: Colors.black)),
-                         ),
-                       ],
-                     ),
-                   ),
-                   Container(
-                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                     child: Align(
-                       alignment: Alignment.topLeft,
-                       child: Text(result.MinimumOrderQuantity.toString() + " " + unit,
-                         style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
-                           fontWeight: FontWeight.w500,
-                           color: Colors.grey),
+                         margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                        ),
                      ),
-                   ),
-                   Row(
+                   ],
+                 ),Expanded(child: Container(),flex: 1,),
+                 Container(
+                   margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                   child: Row(
                      children: <Widget>[
-                       Container(
-                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                         child: Align(
-                           alignment: Alignment.topLeft,
-                           child: Text('₹ ${result.ProductPrice.OfferPrice != null ? result.ProductPrice.OfferPrice : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                               fontWeight: FontWeight.w700,
-                               color: Colors.black),
-                           ),
-                         ),
+                       Flexible(
+                         child: Text(name,
+                             overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                             fontWeight: FontWeight.w700,
+                             color: Colors.black)),
                        ),
-                       result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
-                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                         child: Align(
-                           alignment: Alignment.topLeft,
-                           child: Text(result.ProductPrice.Price != null ? '₹' + result.ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                               fontWeight: FontWeight.w500,
-                               color: Colors.grey, decoration: TextDecoration.lineThrough),
-                           ),
-                         ),
-                       ) : Container(),
-                       result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
-                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                         padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                         decoration: BoxDecoration(
-                             borderRadius: BorderRadius.circular(5.0),
-                             color: Colors.orange
-                         ),
-                         child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                             color: Colors.white),),
-                       ) : Container(),
                      ],
                    ),
-                   InkWell(child:
-                   Container(
-                     margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                     padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                     decoration: BoxDecoration(
-                         borderRadius: BorderRadius.circular(5.0),
-                         //color: Const.gray10
-                         color: Const.primaryColor
+                 ),
+                 Container(
+                   margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                   child: Align(
+                     alignment: Alignment.topLeft,
+                     child: Text(result.MinimumOrderQuantity.toString() + " " + unit,
+                       style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                         fontWeight: FontWeight.w500,
+                         color: Colors.grey),
                      ),
-                     child: Align(
-                       alignment: Alignment.center,
-                       child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                         color: Colors.white, fontWeight: FontWeight.w500,)),
-                     ),
-
                    ),
-                     onTap: (){
-                       //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                       //myCartModal.addTocart(result);
-                       callAddToCartAPI(result.ProductId,  result.IncrementalStep.toString(), "", result.ProductPrice.Price.toString(), result.ProductPrice.OfferPrice.toString());
-                     },)
-                 ],
-               ),
+                 ),
+                 Row(
+                   children: <Widget>[
+                     Container(
+                       margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                       child: Align(
+                         alignment: Alignment.topLeft,
+                         child: Text('₹ ${result.ProductPrice.OfferPrice != null ? result.ProductPrice.OfferPrice : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                             fontWeight: FontWeight.w700,
+                             color: Colors.black),
+                         ),
+                       ),
+                     ),
+                     result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
+                       margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                       child: Align(
+                         alignment: Alignment.topLeft,
+                         child: Text(result.ProductPrice.Price != null ? '₹' + result.ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                             fontWeight: FontWeight.w500,
+                             color: Colors.grey, decoration: TextDecoration.lineThrough),
+                         ),
+                       ),
+                     ) : Container(),
+                     result.ProductPrice.DiscountPercent != null && result.ProductPrice.DiscountPercent != 0 ? Container(
+                       margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                       padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(5.0),
+                           color: Colors.orange
+                       ),
+                       child: Text(result.ProductPrice.DiscountPercent != null ? result.ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                           color: Colors.white),),
+                     ) : Container(),
+                   ],
+                 ),
+                 InkWell(child:
+                 Container(
+                   margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                   padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                   decoration: BoxDecoration(
+                       borderRadius: BorderRadius.circular(5.0),
+                       //color: Const.gray10
+                       color: Const.primaryColor
+                   ),
+                   child: Align(
+                     alignment: Alignment.center,
+                     child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                       color: Colors.white, fontWeight: FontWeight.w500,)),
+                   ),
+
+                 ),
+                   onTap: (){
+                     //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+                     //myCartModal.addTocart(result);
+                     callAddToCartAPI(result.ProductId,  result.IncrementalStep.toString(), "", result.ProductPrice.Price.toString(), result.ProductPrice.OfferPrice.toString());
+                   },)
+               ],
              ),
            ),
          )

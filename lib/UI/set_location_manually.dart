@@ -194,7 +194,7 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
                         height: 15,
                       ),
 
-                      RaisedButton(
+                      Container(
                         color: Color(0xff009a00),
                         //onPressed: widget.s,
                         child: Padding(

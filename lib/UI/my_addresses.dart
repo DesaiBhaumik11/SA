@@ -48,7 +48,7 @@ class _MyAddressesState extends State<MyAddresses> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: () {
@@ -57,17 +57,18 @@ class _MyAddressesState extends State<MyAddresses> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
-        title: Text('My Addresses'),
+        title: Text('My Addresses',style: TextStyle(color: Const.textBlack),),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Divider(height: 2, color: Const.allBOxStroke,),
           GestureDetector(
             onTap: () {
 
@@ -119,7 +120,7 @@ class _MyAddressesState extends State<MyAddresses> {
                 child: Row(
                   children: <Widget>[
                     Image.asset(
-                      'current-location.png',
+                      'assets/OkAssets/UseCurrantLocation.png',
                       height: 20,
                     ),
                     SizedBox(
@@ -130,7 +131,7 @@ class _MyAddressesState extends State<MyAddresses> {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: Theme.of(context).primaryColor,
+                        color: Const.iconOrange,
                       ),
                     )
                   ],

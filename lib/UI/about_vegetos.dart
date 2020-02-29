@@ -48,7 +48,7 @@ class _AboutVegetosState extends State<AboutVegetos> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -56,12 +56,13 @@ class _AboutVegetosState extends State<AboutVegetos> {
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'About Vegetos'
+            'About Ok',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: Padding(
@@ -76,7 +77,7 @@ class _AboutVegetosState extends State<AboutVegetos> {
                 initiallyExpanded: true,
                 backgroundColor: Colors.white,
                 title: Text(
-                  'About Vegetos', style: title,
+                  'About Ok', style: title,
                 ),
                 children: <Widget>[
 

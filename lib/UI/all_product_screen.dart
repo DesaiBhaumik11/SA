@@ -106,7 +106,21 @@ class _AllProductScreenState extends State<AllProductScreen> {
     return Scaffold(
       backgroundColor: Const.gray10,
       appBar: AppBar(
-        title: Text('${name}'),
+        automaticallyImplyLeading: false,
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Image.asset(
+              'assets/OkAssets/LeftSideArrow.png',
+              height: 25,
+            ),
+          ),
+        ),
+        title: Text('$name', style: TextStyle(color: Const.textBlack),),
+        backgroundColor: Colors.white,
         actions: <Widget>[
           InkWell(
             onTap: () {
@@ -123,7 +137,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.shopping_cart),
+                    child: Icon(Icons.shopping_cart, color: Const.iconOrange,),
                     alignment: Alignment.center,
                   ),
                   cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
@@ -132,7 +146,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: Align(
                       alignment: Alignment.topRight,
                       child: CircleAvatar(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: Const.widgetGreen,
                         radius: 8.0,
                         child: Text(cartTotal,
                             style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
@@ -352,32 +366,36 @@ class _AllProductScreenState extends State<AllProductScreen> {
             });
           },
           child: Container(
+            margin: EdgeInsets.only(right: 5,left: 5, bottom: 10),
+            decoration: BoxDecoration(
+                border: new Border.all(
+                    color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                color: Colors.white),
 //            width: 180.0,
 //            height: 280.0,
-            child: Card(
-              child: Column(
-                children: <Widget>[
-                  Stack(
-                    //alignment: Alignment.center,
-                    children: <Widget>[
-                      Center(
-                        child: Container(
+            child: Column(
+              children: <Widget>[
+                Stack(
+                  //alignment: Alignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: Container(
 //                          width: 110.0,
 //                          height: 110.0,
-                          //alignment: Alignment.center,
-                          child: Card(
-                            elevation: 0.0,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)
-                            ),
-                            child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                            Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
-//                            child: Image.asset("02-product.png",height: 100,width: 100,),
+                        //alignment: Alignment.center,
+                        child: Card(
+                          elevation: 0.0,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)
                           ),
-                          margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                          Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+//                            child: Image.asset("02-product.png",height: 100,width: 100,),
                         ),
+                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
+                    ),
 //                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0.0 ? Container(
 //                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
 //                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
@@ -388,89 +406,88 @@ class _AllProductScreenState extends State<AllProductScreen> {
 //                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
 //                            color: Colors.white),),
 //                      ) : Container(),
-                    ],
-                  ),
-                  Expanded(child: Container(),flex: 1,),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                    child: Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: Text(name ,
-                              overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(productVariant.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                  Row(
+                  ],
+                ),
+                Expanded(child: Container(),flex: 1,),
+                Container(
+                  margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                  child: Row(
                     children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black),
-                          ),
-                        ),
+                      Flexible(
+                        child: Text(name ,
+                            overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black)),
                       ),
-                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey, decoration: TextDecoration.lineThrough),
-                          ),
-                        ),
-                      ): Container(),
-                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.orange
-                        ),
-                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                            color: Colors.white),),
-                      ) : Container(),
                     ],
                   ),
-                  InkWell(child:  Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        //color: Const.gray10
-                        color: Const.primaryColor
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(productVariant.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
                     ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                        color: Colors.white, fontWeight: FontWeight.w500,)),
-                    ),
-
                   ),
-                    onTap: (){
-                      //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                      //myCartModal.addTocart(productModal);
-                      addToCart(productVariant.ProductId, productVariant.IncrementalStep.toString(),
-                          "", ProductPrice.Price.toString() , ProductPrice.OfferPrice.toString());
-                    },)
-                ],
-              ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey, decoration: TextDecoration.lineThrough),
+                        ),
+                      ),
+                    ): Container(),
+                    ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.orange
+                      ),
+                      child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                          color: Colors.white),),
+                    ) : Container(),
+                  ],
+                ),
+                InkWell(child:  Container(
+                  margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      //color: Const.gray10
+                      color: Const.primaryColor
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                      color: Colors.white, fontWeight: FontWeight.w500,)),
+                  ),
+
+                ),
+                  onTap: (){
+                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
+                    //myCartModal.addTocart(productModal);
+                    addToCart(productVariant.ProductId, productVariant.IncrementalStep.toString(),
+                        "", ProductPrice.Price.toString() , ProductPrice.OfferPrice.toString());
+                  },)
+              ],
             ),
           ),
         )

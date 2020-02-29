@@ -51,8 +51,6 @@ import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/best_selling_product.dart';
 import 'package:vegetos_flutter/models/default_address.dart';
-import 'package:vegetos_flutter/models/default_address.dart';
-import 'package:vegetos_flutter/models/default_address.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
@@ -291,7 +289,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   }
 
   Widget browseByProductAPI() {
-    return FutureBuilder(
+    return FutureBuilder (
       future: bestSellingFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
@@ -987,8 +985,8 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 ),
               ),
               Container(
-                height: 5.0,
-                color: Const.navMenuDevider,
+                height: 3.0,
+                color: Const.allBOxStroke,
               ),
               /*Container(
                 height: 50.0,
@@ -1036,12 +1034,12 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/home.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/Dashboard.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Text('Home',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                          child: Text('Dashboard',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Const.textBlack)),
                         )
                       ],
                     ),
@@ -1061,12 +1059,12 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/myorders.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/MyOrder.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
                           child: Text('My Orders',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                              color: Const.textBlack)),
                         )
                       ],
                     ),
@@ -1109,12 +1107,12 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/mycart.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/MyCart.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
                           child: Text('My Cart',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                              color: Const.textBlack)),
                         )
                       ],
                     ),
@@ -1133,12 +1131,12 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/my_addressess.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/MyAddress.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
                           child: Text('My Addresses',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                              color: Const.textBlack)),
                         )
                       ],
                     ),
@@ -1232,8 +1230,8 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                 ),
               ),*/
               Container(
-                height: 5.0,
-                color: Const.navMenuDevider,
+                height: 3.0,
+                color: Const.allBOxStroke,
               ),
               /*Container(
                 height: 50.0,
@@ -1313,12 +1311,12 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/about-vegetos.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/Aboutus.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Text('About Vegetos',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                          child: Text('About Us',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+                              color: Const.textBlack)),
                         )
                       ],
                     ),
@@ -1378,26 +1376,26 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                   ),
                 ),
               ) : Container(),
-              Container(
-                  alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Text('App Version: ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
-                        ),
-                        Container(
-                          child: Text(version,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
-                              color: Colors.black)),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+//              Container(
+//                  alignment: Alignment.bottomCenter,
+//                  margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+//                  child: Align(
+//                    alignment: Alignment.center,
+//                    child: Row(
+//                      children: <Widget>[
+//                        Container(
+//                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+//                          child: Text('App Version: ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+//                              color: Colors.black)),
+//                        ),
+//                        Container(
+//                          child: Text(version,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500,
+//                              color: Colors.black)),
+//                        )
+//                      ],
+//                    ),
+//                  ),
+//                ),
             ],
           ),
         ),
