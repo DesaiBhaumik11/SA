@@ -40,7 +40,7 @@ class _ExpiredItemsState extends State<ExpiredItems> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -48,11 +48,12 @@ class _ExpiredItemsState extends State<ExpiredItems> {
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
         title: Text(
-            'Expired items received'
+          'Expired items received',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: Column(
@@ -85,98 +86,101 @@ class _ExpiredItemsState extends State<ExpiredItems> {
                 select = !select;
               });
             },
-            child: Card(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10.0),
-                child: Row(
-                  children: <Widget>[
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5, color: Const.allBOxStroke, style: BorderStyle.solid),
+                color: Colors.white
+              ),
+              padding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10.0),
+              margin: EdgeInsets.fromLTRB(0.0, 5, 0.0, 5.0),
+              child: Row(
+                children: <Widget>[
 
-                    Checkbox(
-                      activeColor: Const.orange,
-                      value: select,
-                      onChanged: (bool value){
-                        setState(() {
-                          select = value;
-                        });
-                      },
+                  Checkbox(
+                    activeColor: Const.orange,
+                    value: select,
+                    onChanged: (bool value){
+                      setState(() {
+                        select = value;
+                      });
+                    },
+                  ),
+
+                  SizedBox(),
+
+                  Container(
+                    margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                        ),
+                      ],
                     ),
-
-                    SizedBox(),
-
-                    Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                      child: Stack(
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: Column(
                         children: <Widget>[
                           Container(
-                            child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                            alignment: Alignment.centerLeft,
+                            margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                            child: Text('Cherry Tomatoes', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                                color: Colors.black, fontWeight: FontWeight.w500),),
                           ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                            child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                                color: Const.dashboardGray, fontWeight: FontWeight.w500),),
+                          ),
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex:1,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text('₹45 x 1 ',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 0,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                        child: Text('₹45',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,)),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                              child: Text('Cherry Tomatoes', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
-                                  color: Colors.black, fontWeight: FontWeight.w500),),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                              child: Text('1 KG', style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                                  color: Const.dashboardGray, fontWeight: FontWeight.w500),),
-                            ),
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex:1,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
-                                          child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text('₹45 x 1 ',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 0,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                          child: Text('₹45',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black,)),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
         );
       },
       itemCount: 4,
-      padding: EdgeInsets.fromLTRB(15, 15, 15, 20),
+      padding: EdgeInsets.fromLTRB(10, 15, 10, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
     );

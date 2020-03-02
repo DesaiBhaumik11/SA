@@ -19,7 +19,7 @@ class _LocationServiceUnavailableState extends State<LocationServiceUnavailable>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            Image.asset('no-result.png', height: 200,),
+            Image.asset('assets/OkAssets/Unservicebleareaerror.png', height: 200,),
 
             SizedBox(
               height: 10,

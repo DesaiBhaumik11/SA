@@ -206,7 +206,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
         body: SingleChildScrollView(
           //physics: BouncingScrollPhysics(),
           child: Container(
-            color: Const.gray10,
+            color: Colors.white70,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -673,7 +673,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
   {
     return Container(
       height: 50.0,
-      color: Const.widgetGreen,
+      color: Const.iconOrange,
       child: Align(
         alignment: Alignment.center,
         child: Column(

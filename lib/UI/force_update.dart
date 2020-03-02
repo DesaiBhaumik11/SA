@@ -71,7 +71,8 @@ class ForceUpdateState extends State<ForceUpdate> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text('Force Update'),
+        backgroundColor: Colors.white,
+        title: Text('Force Update', style: TextStyle(color: Const.textBlack),),
         actions: <Widget>[
           InkWell(
             onTap: () {
@@ -84,7 +85,7 @@ class ForceUpdateState extends State<ForceUpdate> {
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.close),
+                    child: Icon(Icons.close, color: Const.iconOrange,),
                     alignment: Alignment.center,
                   ),
                 ],

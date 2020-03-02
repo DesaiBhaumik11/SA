@@ -100,17 +100,21 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
-        title: Text("Product Detail"),
+        title: Text(
+          "Product Detail",
+          style: TextStyle(color: Const.textBlack),
+        ),
         //title: Text('Washington Apple'),
         actions: <Widget>[
           /*Container(
@@ -127,7 +131,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.shopping_cart),
+                    child: Icon(Icons.shopping_cart, color: Const.iconOrange,),
                     alignment: Alignment.center,
                   ),
                   cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :

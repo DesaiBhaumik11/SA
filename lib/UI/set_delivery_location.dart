@@ -36,7 +36,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   SizedBox(height: 52,),
-                  Image.asset('delivery-location.png'),
+                  Image.asset('assets/OkAssets/SetLocation.png'),
 
                   SizedBox(
                     height: 15,
@@ -124,7 +124,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
 
-                  Image.asset('no-result.png', height: 200,),
+                  Image.asset('assets/OkAssets/Unservicebleareaerror.png', height: 200,),
 
                   SizedBox(
                     height: 10,
@@ -170,7 +170,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                   ),
 
                   RaisedButton(
-                    color: Const.primaryColorGreen,
+                    color: Const.widgetGreen,
                     onPressed: () {
                       Navigator.of(context).push(EnterExitRoute(enterPage: SetLocationManually(), exitPage: SetDeliveryLocation()));
                       setState(() {
@@ -198,7 +198,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
             visible: showProgress,
             child: Column(
                 children:<Widget>[Expanded(child: Container()), Container(
-                  child: CircularProgressIndicator(backgroundColor: Const.primaryColorGreen,),
+                  child: CircularProgressIndicator(backgroundColor: Const.iconOrange,),
                 )]
             ),
           )

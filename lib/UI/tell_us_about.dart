@@ -15,19 +15,20 @@ class _TellUsAboutState extends State<TellUsAbout> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
         title: Text(
-            'Tell us about'
+          'Tell us about',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: ListView(
@@ -149,7 +150,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                         fontSize: 16,
                       ),),
 
-                      Text('Vegetos will get back to you soon', style: TextStyle(
+                      Text('Ok will get back to you soon', style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
                       ),),

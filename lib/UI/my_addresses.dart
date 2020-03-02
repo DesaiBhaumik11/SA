@@ -131,7 +131,7 @@ class _MyAddressesState extends State<MyAddresses> {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: Const.iconOrange,
+                        color: Const.widgetGreen,
                       ),
                     )
                   ],

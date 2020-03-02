@@ -82,8 +82,8 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
           ),
         ),*/
         appBar: AppBar(
-          backgroundColor: Const.appBar,
-          elevation: 0,
+          backgroundColor: Colors.white,
+          elevation: 1,
           leading: InkWell(
             onTap: (){
               if(widget.IsFromPayment) {
@@ -96,29 +96,32 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
             },
             child: Padding(
               padding: EdgeInsets.all(15),
-              child: Image.asset('back.png', height: 25,),
+              child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
             ),
           ),
           title: Text(
-              'Order Placed'
+            'Order Placed',
+            style: TextStyle(color: Const.textBlack),
           ),
           bottom: TabBar(
             //unselectedLabelColor: Colors.black,
-            //indicatorColor: Colors.transparent,
+            indicatorColor: Const.widgetGreen,
 
             tabs: [
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Text('Summary', style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 16
+                  fontSize: 16,
+                  color: Const.textBlack
                 ),),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Text('Items', style: TextStyle(
                 fontWeight: FontWeight.w500,
-                    fontSize: 16
+                  fontSize: 16,
+                  color: Const.textBlack
                 ),),
               )
             ],

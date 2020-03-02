@@ -20,7 +20,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -28,11 +28,12 @@ class _ChooseAddressState extends State<ChooseAddress> {
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
         title: Text(
-            'Choose Address'
+          'Choose Address',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: Column(
@@ -50,7 +51,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
                 child: Row(
                   children: <Widget>[
 
-                    Image.asset('current-location.png', height: 20,),
+                    Image.asset('assets/OkAssets/UseCurrantLocation.png', height: 20,),
 
                     SizedBox(
                       width: 10,
@@ -125,7 +126,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
                         onTap: (){},
                         child: Padding(
                           padding: EdgeInsets.only(left: 20,),
-                          child: Image.asset('edit-pencil.png', height: 15,),
+                          child: Image.asset('assets/OkAssets/Edit.png', height: 25,),
                         ),
                       )
 

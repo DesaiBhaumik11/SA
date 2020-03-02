@@ -89,8 +89,8 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -98,12 +98,12 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
-        title: Text('Set Delivery Details'),
+        title: Text('Set Delivery Details',style: TextStyle(color: Const.textBlack),),
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),

@@ -16,20 +16,21 @@ class _PromoCodeState extends State<PromoCode> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'Promo Code'
+          'Promo Code',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: Column(
@@ -75,7 +76,7 @@ class _PromoCodeState extends State<PromoCode> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Const.orange,
+                          color: Const.widgetGreen,
                           borderRadius: BorderRadius.all(Radius.circular(5))
                       ),
 
@@ -150,7 +151,7 @@ class _PromoCodeState extends State<PromoCode> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Const.orange,
+                              color: Const.widgetGreen,
                               borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
 

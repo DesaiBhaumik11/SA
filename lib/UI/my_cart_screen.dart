@@ -652,6 +652,7 @@ class MyCartState extends State<MyCartScreen>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
           title: new Text("My Cart"),
           content: new Text("Are you sure you want clear your cart items?"),
           actions: <Widget>[

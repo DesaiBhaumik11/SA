@@ -54,8 +54,8 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -63,12 +63,12 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
-        title: Text('Cherry Tomatoes'),
+        title: Text('Cherry Tomatoes',style: TextStyle(color: Const.textBlack),),
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -570,7 +570,7 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                                 return FunkyOverlay();
                               });
                         },
-                        color: Const.cancel,
+                        color: Const.calenderRed,
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 12),
                           child: Text(

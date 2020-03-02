@@ -81,7 +81,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: () {
@@ -90,12 +90,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
-        title: Text(widget.edit?"Edit Address":'Add New Address'),
+        title: Text(widget.edit?"Edit Address":'Add New Address', style: TextStyle(color: Const.textBlack),),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

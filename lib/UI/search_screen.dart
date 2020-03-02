@@ -172,6 +172,19 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: isSearchLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor: Const.iconOrange,strokeWidth: 2,),)) :
                       Container(),
                     ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Image.asset(
+                          'assets/OkAssets/Cencelicone.png',
+                          height: 25,
+                          width: 25,
+                        ),
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
@@ -212,41 +225,48 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 10.0),
-                  child: Visibility(
-                    visible: searchList != null ? true : false,
-                    child: Text(searchList != null ? searchList.length.toString() + ' Result Found' : "0 Result found",
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Const.textBlack),
+            Divider(height: 1,color: Const.allBOxStroke,),
+            Container(
+              height: 40,
+              color: Colors.white,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10,),
+                    child: Visibility(
+                      visible: searchList != null ? true : false,
+                      child: Text(searchList != null ? searchList.length.toString() + ' Result Found' : "0 Result found",
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Const.textBlack),
+                      ),
                     ),
                   ),
-                ),
-                /*FlatButton(
-                onPressed: () {
-                  _settingModalBottomSheet(context);
-                },
-                child: Row(
-                  children: <Widget>[
-                    Image.asset(
-                      'filter.png',
-                      height: 15,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Filter',
-                      style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    )
-                  ],
-                ),
-              )*/
-              ],
+                  /*FlatButton(
+                  onPressed: () {
+                    _settingModalBottomSheet(context);
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset(
+                        'filter.png',
+                        height: 15,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Filter',
+                        style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      )
+                    ],
+                  ),
+                )*/
+                ],
+              ),
             ),
+            Divider(height: 1,color: Const.allBOxStroke,),
             Expanded(
               child: isSearch ? searchList != null && searchList.isNotEmpty ? buildList() : Whoops() : Container(),
             ),

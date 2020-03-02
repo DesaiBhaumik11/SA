@@ -28,7 +28,6 @@ import 'package:vegetos_flutter/models/my_cart.dart';
 import 'my_cart_screen.dart';
 
 class PaymentOptionScreen extends StatefulWidget {
-
   String shippingSlotId = "";
 
   PaymentOptionScreen(this.shippingSlotId);
@@ -72,11 +71,10 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   // Group Value for Radio Button.
   int id = 1;
 
-
   @override
   void setState(fn) {
     // TODO: implement setState
-    if(mounted) {
+    if (mounted) {
       super.setState(fn);
     }
   }
@@ -96,7 +94,8 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
+        elevation: 1,
         automaticallyImplyLeading: true,
         leading: InkWell(
           onTap: () {
@@ -105,43 +104,52 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
         title: Text(
           'Payment Options',
-          style:
-              TextStyle(fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),
+          style: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontWeight: FontWeight.w500,
+              color: Const.textBlack),
         ),
       ),
       body: Container(
         color: Const.gray10,
         child: Column(
           children: <Widget>[
-            cartResponseModel != null ? priceTotalBox() : InkWell(
-      child: Container(
-      padding: EdgeInsets.all(10),
-        height: 250,
-        child: Card(
-          child: Center(
-              child: Center(child: CircularProgressIndicator(),)
-          ),
-        )),
-    ),
-    paymentmodes != null ? paymentMode() : InkWell(
-    child: Container(
-    padding: EdgeInsets.all(10),
-    height: 150,
-    child: Card(
-    child: Center(
-    child: Center(child: CircularProgressIndicator(),)
-    ),
-    )),
-            //promoContainer(),
-            //walletContainer(),
-    )],
+            cartResponseModel != null
+                ? priceTotalBox()
+                : InkWell(
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        height: 250,
+                        child: Card(
+                          child: Center(
+                              child: Center(
+                            child: CircularProgressIndicator(),
+                          )),
+                        )),
+                  ),
+            paymentmodes != null
+                ? paymentMode()
+                : InkWell(
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        height: 150,
+                        child: Card(
+                          child: Center(
+                              child: Center(
+                            child: CircularProgressIndicator(),
+                          )),
+                        )),
+                    //promoContainer(),
+                    //walletContainer(),
+                  )
+          ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -169,10 +177,10 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   }
 
   Widget callGetMyCartAPI() {
-
     ApiCall().setContext(context).getCart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
+      if (apiResponseModel.statusCode == 200) {
+        GetCartResponseModel getCartResponseModel =
+            GetCartResponseModel.fromJson(apiResponseModel.Result);
         setState(() {
           cartResponseModel = getCartResponseModel;
           /*if(model.discount != null) {
@@ -198,11 +206,13 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
           });*/
         });
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
       }
     });
   }
-
 
   Widget priceTotalBox() {
     return Container(
@@ -436,16 +446,14 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     );
   }
 
-
   Widget paymentMode() {
     return Container(
         margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
         child: Card(
-        child: Container(
-        padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-      child: Column(
-      children:
-      createRadioListUsers(),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+            child: Column(
+              children: createRadioListUsers(),
 //      <Widget>[
 //        Container(
 //          alignment: Alignment.topLeft,
@@ -483,10 +491,11 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
 //        ), new Text('Cash', style: text,),
 //            ]),
 //      ],
+            ),
           ),
-    ),
-    ));
+        ));
   }
+
   setSelectedUser(PaymentModeC user) {
     setState(() {
       paymentModeC = user;
@@ -496,25 +505,28 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   List<Widget> createRadioListUsers() {
     List<Widget> widgets = [];
     widgets.add(
-        Container(
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Payment Mode:',
-            style: TextStyle(
-                fontSize: 15.0,
-                fontFamily: 'GoogleSans',
-                fontWeight: FontWeight.w500,
-                color: Const.primaryColorGreen),
-          ),
+      Container(
+        alignment: Alignment.topLeft,
+        child: Text(
+          'Payment Mode:',
+          style: TextStyle(
+              fontSize: 15.0,
+              fontFamily: 'GoogleSans',
+              fontWeight: FontWeight.w500,
+              color: Const.primaryColorGreen),
         ),
+      ),
     );
     for (PaymentModeC user in paymentmodes) {
       widgets.add(
         RadioListTile(
           value: user,
           groupValue: paymentModeC,
-          title: Text(user.name==EnumPaymentMode.Online ? "PayNow" : user.name),
-          subtitle: Text(user.name==EnumPaymentMode.Online ? "Pay using payment Gateway" : user.name==EnumPaymentMode.COD ? "Cash On Delivery" : ""),
+          title:
+              Text(user.name == EnumPaymentMode.Online ? "PayNow" : user.name),
+          subtitle: Text(user.name == EnumPaymentMode.Online
+              ? "Pay using payment Gateway"
+              : user.name == EnumPaymentMode.COD ? "Cash On Delivery" : ""),
           onChanged: (currentUser) {
             print("Current User ${currentUser}");
             setSelectedUser(currentUser);
@@ -526,6 +538,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     }
     return widgets;
   }
+
   Widget promoContainer() {
     var promo = Container(
       color: Colors.white,
@@ -721,19 +734,19 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     );
   }
 
-  void callGetPaymentMode(){
-    ApiCall().getPaymentModes().then((apiResponseModel){
+  void callGetPaymentMode() {
+    ApiCall().getPaymentModes().then((apiResponseModel) {
       if (apiResponseModel.statusCode == 200) {
-        List<dynamic> modes=apiResponseModel.Result;
-        List<PaymentModeC> paymodes=new List();
-        if(modes!=null && modes.length>0){
-          for(int i=0;i<modes.length;i++){
-            paymodes.add(new PaymentModeC(name : modes[i].toString(),index: i));
+        List<dynamic> modes = apiResponseModel.Result;
+        List<PaymentModeC> paymodes = new List();
+        if (modes != null && modes.length > 0) {
+          for (int i = 0; i < modes.length; i++) {
+            paymodes.add(new PaymentModeC(name: modes[i].toString(), index: i));
 //            paymentmodes.add(new PaymentModeC(name : EnumPaymentMode.getPaymentModeStr(modes[i]),index: i, code: modes[i]));
           }
         }
         setState(() {
-          paymentmodes=paymodes;
+          paymentmodes = paymodes;
         });
       }
 //      paymentmodes.add(new PaymentModeC(name : "Online",index: 0, code: 2));
@@ -742,67 +755,87 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   }
 
   void callProceedToCheckoutAPI(String totalAmount) {
-    if(paymentModeC==null){
+    if (paymentModeC == null) {
       Fluttertoast.showToast(msg: 'Please select PaymentMode');
       return;
     }
     ProgressDialog progressDialog = Utility.progressDialog(context, "");
     progressDialog.show();
-    if(paymentModeC.name==EnumPaymentMode.Online) {
-      ApiCall().setContext(context).proceedTopaymentUsingGateway().then((
-          apiResponseModel) {
+    if (paymentModeC.name == EnumPaymentMode.Online) {
+      ApiCall()
+          .setContext(context)
+          .proceedTopaymentUsingGateway()
+          .then((apiResponseModel) {
         //implementRazorPay("");
         if (progressDialog != null && progressDialog.isShowing()) {
           progressDialog.dismiss();
         }
         if (apiResponseModel.statusCode == 200) {
-          ProceedToPaymentModel proceedToPaymentModel = ProceedToPaymentModel
-              .fromJson(apiResponseModel.Result);
+          ProceedToPaymentModel proceedToPaymentModel =
+              ProceedToPaymentModel.fromJson(apiResponseModel.Result);
           implementRazorPay(proceedToPaymentModel.GatewayOrderId, totalAmount,
               proceedToPaymentModel.TransactionId);
         } else if (apiResponseModel.statusCode == 401) {
-          Fluttertoast.showToast(msg: apiResponseModel.message != null
-              ? apiResponseModel.message
-              : 'Something went wrong.!');
+          Fluttertoast.showToast(
+              msg: apiResponseModel.message != null
+                  ? apiResponseModel.message
+                  : 'Something went wrong.!');
           Navigator.of(context).pop();
         } else {
-          Fluttertoast.showToast(msg: apiResponseModel.message != null
-              ? apiResponseModel.message
-              : 'Something went wrong.!');
+          Fluttertoast.showToast(
+              msg: apiResponseModel.message != null
+                  ? apiResponseModel.message
+                  : 'Something went wrong.!');
           Navigator.of(context).pop();
         }
       });
-    }else if(paymentModeC.name==EnumPaymentMode.COD) {
-      ApiCall().setContext(context).proceedTopaymentUsingCOD().then((
-          apiResponseModel) {
+    } else if (paymentModeC.name == EnumPaymentMode.COD) {
+      ApiCall()
+          .setContext(context)
+          .proceedTopaymentUsingCOD()
+          .then((apiResponseModel) {
         //implementRazorPay("");
-        if(progressDialog!=null && progressDialog.isShowing()) {
+        if (progressDialog != null && progressDialog.isShowing()) {
           progressDialog.dismiss();
         }
         if (apiResponseModel.statusCode == 200) {
-          ProceedToPaymentModel proceedToPaymentModel = ProceedToPaymentModel
-              .fromJson(apiResponseModel.Result);
+          ProceedToPaymentModel proceedToPaymentModel =
+              ProceedToPaymentModel.fromJson(apiResponseModel.Result);
 //          implementRazorPay(proceedToPaymentModel.GatewayOrderId, totalAmount,
 //              proceedToPaymentModel.TransactionId);
 //          callPaymentConfirmAPI(proceedToPaymentModel.GatewayOrderId, totalAmount, proceedToPaymentModel.TransactionId);
           ApiCall().clearCart().then((apiResponseModel) {
-            if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
-              Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: OrderPlacedScreen(proceedToPaymentModel.TransactionId,true)),(c)=>false);
-            } else if(apiResponseModel.statusCode == 401){
-              Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+            if (apiResponseModel.statusCode == 200 ||
+                apiResponseModel.statusCode == 204) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  EnterExitRoute(
+                      enterPage: OrderPlacedScreen(
+                          proceedToPaymentModel.TransactionId, true)),
+                  (c) => false);
+            } else if (apiResponseModel.statusCode == 401) {
+              Fluttertoast.showToast(
+                  msg: apiResponseModel.message != null
+                      ? apiResponseModel.message
+                      : 'Something went wrong.!');
             } else {
-              Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+              Fluttertoast.showToast(
+                  msg: apiResponseModel.message != null
+                      ? apiResponseModel.message
+                      : 'Something went wrong.!');
             }
           });
         } else if (apiResponseModel.statusCode == 401) {
-          Fluttertoast.showToast(msg: apiResponseModel.message != null
-              ? apiResponseModel.message
-              : 'Something went wrong.!');
+          Fluttertoast.showToast(
+              msg: apiResponseModel.message != null
+                  ? apiResponseModel.message
+                  : 'Something went wrong.!');
           Navigator.of(context).pop();
         } else {
-          Fluttertoast.showToast(msg: apiResponseModel.message != null
-              ? apiResponseModel.message
-              : 'Something went wrong.!');
+          Fluttertoast.showToast(
+              msg: apiResponseModel.message != null
+                  ? apiResponseModel.message
+                  : 'Something went wrong.!');
           Navigator.of(context).pop();
         }
       });
@@ -810,24 +843,24 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   }
 
   void implementRazorPay(String orderId, String amount, String tranId) {
-
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> tokenMap = Const.parseJwt(
-          prefs.getString('AUTH_TOKEN'));
-      String mobile="",email="";
+      Map<String, dynamic> tokenMap =
+          Const.parseJwt(prefs.getString('AUTH_TOKEN'));
+      String mobile = "", email = "";
 
-      if (tokenMap['mobile'] !=null && tokenMap['mobile'].toString().toLowerCase() != "") {
-        String isd="";
-        if (tokenMap['countrycode'] !=null && tokenMap['countrycode'].toString().toLowerCase() != "true") {
-          isd=tokenMap['countrycode'].toString();
+      if (tokenMap['mobile'] != null &&
+          tokenMap['mobile'].toString().toLowerCase() != "") {
+        String isd = "";
+        if (tokenMap['countrycode'] != null &&
+            tokenMap['countrycode'].toString().toLowerCase() != "true") {
+          isd = tokenMap['countrycode'].toString();
         }
-        mobile=isd + tokenMap['mobile'].toString();
+        mobile = isd + tokenMap['mobile'].toString();
       }
-      if (tokenMap['email'] !=null && tokenMap['email'].toString().toLowerCase() != "true") {
-        email=tokenMap['email'].toString();
+      if (tokenMap['email'] != null &&
+          tokenMap['email'].toString().toLowerCase() != "true") {
+        email = tokenMap['email'].toString();
       }
-
-
 
       totalAmount = amount;
       transactionId = tranId;
@@ -838,10 +871,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         'name': 'Vegetos',
         'description': 'Vegetos Checkout',
         'order_id': orderId,
-        'prefill': {
-          'contact': mobile,
-          'email': email
-        }
+        'prefill': {'contact': mobile, 'email': email}
       };
 
       razorpay.open(options);
@@ -850,9 +880,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
       razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
       razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     });
-    }
-
-
+  }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
@@ -863,7 +891,8 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
   void _handlePaymentError(PaymentFailureResponse response) {
     // Do something when payment fails
     print(response.message);
-    Fluttertoast.showToast(msg: response.message != null ? response.message : "Payment failed!");
+    Fluttertoast.showToast(
+        msg: response.message != null ? response.message : "Payment failed!");
     Navigator.of(context).pop();
   }
 
@@ -873,42 +902,62 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     Navigator.of(context).pop();
   }
 
-
-  void callPaymentConfirmAPI(String paymentId, String totalAmount, String transactionId) {
+  void callPaymentConfirmAPI(
+      String paymentId, String totalAmount, String transactionId) {
     ProgressDialog progressDialog = Utility.progressDialog(context, "");
     progressDialog.show();
-    ApiCall().setContext(context).confirmPayment(paymentId, transactionId).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
+    ApiCall()
+        .setContext(context)
+        .confirmPayment(paymentId, transactionId)
+        .then((apiResponseModel) {
+      if (apiResponseModel.statusCode == 200) {
         //callClearCartAPI(progressDialog);
-        if(progressDialog!=null && progressDialog.isShowing()) {
+        if (progressDialog != null && progressDialog.isShowing()) {
           progressDialog.dismiss();
         }
         ApiCall().clearCart().then((apiResponseModel) {
-          if(apiResponseModel.statusCode == 200 || apiResponseModel.statusCode == 204) {
-            Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: OrderPlacedScreen(transactionId,true)),(c)=>false);
-          } else if(apiResponseModel.statusCode == 401){
-            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+          if (apiResponseModel.statusCode == 200 ||
+              apiResponseModel.statusCode == 204) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                EnterExitRoute(
+                    enterPage: OrderPlacedScreen(transactionId, true)),
+                (c) => false);
+          } else if (apiResponseModel.statusCode == 401) {
+            Fluttertoast.showToast(
+                msg: apiResponseModel.message != null
+                    ? apiResponseModel.message
+                    : 'Something went wrong.!');
           } else {
-            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+            Fluttertoast.showToast(
+                msg: apiResponseModel.message != null
+                    ? apiResponseModel.message
+                    : 'Something went wrong.!');
           }
         });
-      } else if(apiResponseModel.statusCode == 401) {
-        if(progressDialog!=null && progressDialog.isShowing()) {
+      } else if (apiResponseModel.statusCode == 401) {
+        if (progressDialog != null && progressDialog.isShowing()) {
           progressDialog.dismiss();
         }
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong');
         Navigator.of(context).pop();
       } else {
-        if(progressDialog!=null && progressDialog.isShowing()) {
+        if (progressDialog != null && progressDialog.isShowing()) {
           progressDialog.dismiss();
         }
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong');
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong');
         Navigator.of(context).pop();
       }
     });
   }
 
-  /*void callClearCartAPI(ProgressDialog progressDialog) {
+/*void callClearCartAPI(ProgressDialog progressDialog) {
     ApiCall().clearCart().then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
         progressDialog.dismiss();
@@ -921,11 +970,11 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
     });
   }*/
 
-
-
 }
+
 class PaymentModeC {
   String name;
   int index;
+
   PaymentModeC({this.name, this.index});
 }

@@ -13,7 +13,7 @@ class _AddBalanceState extends State<AddBalance> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -21,12 +21,13 @@ class _AddBalanceState extends State<AddBalance> {
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'Add Balance'
+          'Add Balance',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: Padding(

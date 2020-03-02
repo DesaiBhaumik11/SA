@@ -14,32 +14,32 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String mobile = "", email = "", name = "";
 
-  String mobile = "",
-      email = "",name="";
   @override
   void initState() {
     // TODO: implement initState
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> tokenMap = Const.parseJwt(prefs.getString('AUTH_TOKEN'));
+      Map<String, dynamic> tokenMap =
+          Const.parseJwt(prefs.getString('AUTH_TOKEN'));
       setState(() {
         if (tokenMap['name'] != null &&
             tokenMap['name'].toString().toLowerCase() != "") {
-          name=tokenMap['name'].toString();
+          name = tokenMap['name'].toString();
         }
-      if (tokenMap['mobile'] != null &&
-          tokenMap['mobile'].toString().toLowerCase() != "") {
-        String isd = "";
-        if (tokenMap['countrycode'] != null &&
-            tokenMap['countrycode'].toString().toLowerCase() != "true") {
-          isd = tokenMap['countrycode'].toString();
+        if (tokenMap['mobile'] != null &&
+            tokenMap['mobile'].toString().toLowerCase() != "") {
+          String isd = "";
+          if (tokenMap['countrycode'] != null &&
+              tokenMap['countrycode'].toString().toLowerCase() != "true") {
+            isd = tokenMap['countrycode'].toString();
+          }
+          mobile = isd + tokenMap['mobile'].toString();
         }
-        mobile = isd + tokenMap['mobile'].toString();
-      }
-      if (tokenMap['email'] != null &&
-          tokenMap['email'].toString().toLowerCase() != "true") {
-        email = tokenMap['email'].toString();
-      }
+        if (tokenMap['email'] != null &&
+            tokenMap['email'].toString().toLowerCase() != "true") {
+          email = tokenMap['email'].toString();
+        }
       });
     });
     super.initState();
@@ -55,20 +55,23 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset(
+              'assets/OkAssets/LeftSideArrow.png',
+              height: 25,
+            ),
           ),
         ),
-
         title: Text(
-            'Profile'
+          'Profile',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: ListView(
@@ -77,25 +80,28 @@ class _ProfileState extends State<Profile> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Column(
-
               children: <Widget>[
-
                 Container(
                   width: double.infinity,
-                  color: Colors.white,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.5, color: Const.allBOxStroke),
+                    color: Colors.white,
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-
                         Row(
                           children: <Widget>[
-                            Text(name, style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 19,
-                            ),),
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 19,
+                              ),
+                            ),
 //                            GestureDetector(
 //                              onTap: (){},
 //                              child: Padding(
@@ -105,12 +111,17 @@ class _ProfileState extends State<Profile> {
 //                            )
                           ],
                         ),
-
-                        SizedBox(height: 10,),
-
-                        Row(
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Wrap(
                           children: <Widget>[
-                            Text(email, style: text,),
+                            Text(
+                              email,
+                              style: text,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
 //                            GestureDetector(
 //                              onTap: (){},
 //                              child: Padding(
@@ -120,36 +131,45 @@ class _ProfileState extends State<Profile> {
 //                            )
                           ],
                         ),
-
-                        Text(mobile, style: text,),
-
+                        Text(
+                          mobile,
+                          style: text,
+                        ),
                       ],
                     ),
                   ),
                 ),
-
-                SizedBox(height: 15,),
-
+                SizedBox(
+                  height: 15,
+                ),
                 Container(
-                  color: Colors.white,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.5, color: Const.allBOxStroke),
+                    color: Colors.white,
+                  ),
                   child: Column(
                     children: <Widget>[
-
                       InkWell(
-                        onTap: (){
-                          Navigator.push(context, EnterExitRoute(enterPage: MyOrders()));
+                        onTap: () {
+                          Navigator.push(
+                              context, EnterExitRoute(enterPage: MyOrders()));
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
                           child: Row(
                             children: <Widget>[
-
-                              Image.asset('assets/myorders.png', height: 23.0,),
-
-                              SizedBox(width: 15,),
-
-                              Text('My Orders', style: text,),
-
+                              Image.asset(
+                                'assets/myorders.png',
+                                height: 23.0,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'My Orders',
+                                style: text,
+                              ),
                             ],
                           ),
                         ),
@@ -188,20 +208,26 @@ class _ProfileState extends State<Profile> {
                       ),
 
                       InkWell(
-                        onTap: (){
-                          Navigator.push(context, EnterExitRoute(enterPage: MyCartScreen()));
+                        onTap: () {
+                          Navigator.push(context,
+                              EnterExitRoute(enterPage: MyCartScreen()));
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
                           child: Row(
                             children: <Widget>[
-
-                              Image.asset('mycart.png', height: 23.0,),
-
-                              SizedBox(width: 15,),
-
-                              Text('My Cart', style: text,),
-
+                              Image.asset(
+                                'mycart.png',
+                                height: 23.0,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'My Cart',
+                                style: text,
+                              ),
                             ],
                           ),
                         ),
@@ -214,25 +240,30 @@ class _ProfileState extends State<Profile> {
                       ),
 
                       InkWell(
-                        onTap: (){
-                          Navigator.push(context, EnterExitRoute(enterPage: MyAddresses()));
+                        onTap: () {
+                          Navigator.push(context,
+                              EnterExitRoute(enterPage: MyAddresses()));
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
                           child: Row(
                             children: <Widget>[
-
-                              Image.asset('my_addressess.png', height: 23.0,),
-
-                              SizedBox(width: 15,),
-
-                              Text('My Address', style: text,),
-
+                              Image.asset(
+                                'my_addressess.png',
+                                height: 23.0,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'My Address',
+                                style: text,
+                              ),
                             ],
                           ),
                         ),
                       ),
-
 
                       Container(
                         width: double.infinity,
@@ -306,11 +337,9 @@ class _ProfileState extends State<Profile> {
 //                          ),
 //                        ),
 //                      ),
-
                     ],
                   ),
                 ),
-
               ],
             ),
           ),

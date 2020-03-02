@@ -16,20 +16,21 @@ class _WalletState extends State<Wallet> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'Wallet'
+          'Wallet',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: Padding(

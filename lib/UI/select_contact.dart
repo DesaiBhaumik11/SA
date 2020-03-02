@@ -28,20 +28,21 @@ class _SelectContactState extends State<SelectContact> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'Select Contact'
+          'Select Contact',
+          style: TextStyle(color: Const.textBlack),
         ),
         actions: <Widget>[
 
@@ -56,7 +57,7 @@ class _SelectContactState extends State<SelectContact> {
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text('Share', style: TextStyle(
-                  color: Colors.white,
+                  color: Const.textBlack,
                   fontWeight: FontWeight.w500,
                   fontSize: 16
               ),),

@@ -15,20 +15,21 @@ class _SharedCartState extends State<SharedCart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
 
         title: Text(
-            'Shared Cart'
+            'Shared Cart',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: buildList(context),
@@ -90,7 +91,7 @@ class _SharedCartState extends State<SharedCart> {
                       ),
 
 
-                      Icon(Icons.keyboard_arrow_right)
+                      Icon(Icons.keyboard_arrow_right, color: Const.iconOrange,)
 
 
                     ],

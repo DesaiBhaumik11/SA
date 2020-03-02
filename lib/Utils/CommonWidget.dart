@@ -12,7 +12,7 @@ class CommonWidget{
           child: GestureDetector(
             child: Container(
               decoration: BoxDecoration(
-                  color: Const.orange,
+                  color: Const.widgetGreen,
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Center(
                 child: Padding(

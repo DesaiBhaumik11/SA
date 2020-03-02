@@ -16,7 +16,7 @@ class _CustomerSupport1State extends State<CustomerSupport1> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
           onTap: (){
@@ -24,11 +24,12 @@ class _CustomerSupport1State extends State<CustomerSupport1> {
           },
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Image.asset('back.png', height: 25,),
+            child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
         title: Text(
-            'Customer Support'
+          'Customer Support',
+          style: TextStyle(color: Const.textBlack),
         ),
       ),
       body: buildList(context),
@@ -60,7 +61,7 @@ class _CustomerSupport1State extends State<CustomerSupport1> {
                       ),
                       ),
 
-                      Icon(Icons.keyboard_arrow_right)
+                      Icon(Icons.keyboard_arrow_right,color: Const.iconOrange,)
 
                     ],
                   ),

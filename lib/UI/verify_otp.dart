@@ -53,6 +53,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -120,7 +121,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
             child:PinCodeTextField(
               autofocus: false,
               isCupertino: false,
-              pinBoxOuterPadding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+              pinBoxOuterPadding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
               controller: otpController,
               hideCharacter: true,
               highlight: true,
