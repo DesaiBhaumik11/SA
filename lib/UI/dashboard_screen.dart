@@ -193,6 +193,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
 
 
     return Scaffold(
+      backgroundColor: Color(0xffeeeeee),
       drawer: Drawer(
         child: drawer(context),
       ),
@@ -559,7 +560,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
       leading: IconButton(
         icon: Image.asset(
           "assets/OkAssets/hamburgerbutto.png",
-          scale: 1.4,
+          scale: 4,
         ),
         iconSize: 18,
         onPressed: () {
@@ -582,10 +583,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
             Stack(
               children: <Widget>[
                 Align(
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Const.iconOrange,
-                  ),
+                  child: Image.asset("assets/OkAssets/Mycart.png",height: 28, width: 28,),
                   alignment: Alignment.center,
                 ),
                 cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
@@ -657,7 +655,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
             children: <Widget>[
 
               Align(
-                child: deliveryAddress.isNotEmpty ? Icon(Icons.search, color: Const.iconOrange, size: 25.0,) : Icon(Icons.error, color: Colors.red, size: 20.0,),
+                child: deliveryAddress.isNotEmpty ? Image.asset("assets/OkAssets/Search.png", height: 22, width: 23,) : Icon(Icons.error, color: Colors.red, size: 20.0,),
                 alignment: Alignment.bottomRight,
               ),
             ],
@@ -715,7 +713,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                            child: Icon(Icons.search, color: Const.iconOrange,),
+                            child: Image.asset("assets/OkAssets/Search.png", height: 20, width: 25,),
                           ),
                           Container(
                             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
@@ -972,7 +970,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/mobile.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('mobile.png', height: 20.0, width: 20.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),

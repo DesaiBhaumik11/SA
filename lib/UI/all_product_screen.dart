@@ -137,7 +137,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.shopping_cart, color: Const.iconOrange,),
+                    child: Image.asset("assets/OkAssets/Mycart.png",height: 28, width: 28,),
                     alignment: Alignment.center,
                   ),
                   cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :

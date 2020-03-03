@@ -267,12 +267,266 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             Divider(height: 1,color: Const.allBOxStroke,),
+            SizedBox(height: 10,),
             Expanded(
-              child: isSearch ? searchList != null && searchList.isNotEmpty ? buildList() : Whoops() : Container(),
+              child: isSearch ? searchList != null && searchList.isNotEmpty ? buildGridList() : Whoops() : Container(),
             ),
           ],
         ),
       ),
+    );
+  }
+
+
+  GridView buildGridList() {
+    double cardWidth = MediaQuery.of(context).size.width;
+    double cardHeight = MediaQuery.of(context).size.height - 76;
+    double aspectRatio = 0.01;
+
+    if(cardHeight < 550) {
+      cardHeight = cardHeight + 20;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 550 && cardHeight < 600){
+      cardHeight = cardHeight - 20;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 600 && cardHeight < 650) {
+      cardHeight = cardHeight - 120;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 650 && cardHeight < 700) {
+      cardHeight = cardHeight - 120;
+      aspectRatio = cardWidth / cardHeight;
+    } else if(cardHeight > 700 && cardHeight < 740) {
+      cardHeight = cardHeight - 190;
+      aspectRatio = cardWidth / cardHeight;
+    } else {
+      cardHeight = cardHeight - 200;
+      aspectRatio = cardWidth / cardHeight;
+    }
+
+    int counts=2;
+    if(aspectRatio >= 0.9){
+      if(cardWidth>=800){
+        counts=4;
+      }else{
+        counts=3;
+      }
+    }
+    print(aspectRatio);
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: counts,
+        childAspectRatio: aspectRatio >= 0.9 && cardHeight>=800 ? 0.75 :aspectRatio >= 0.73 ? 0.72 : 0.61 ,
+      //  childAspectRatio: aspectRatio - 0.075,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemBuilder: (context, index) {
+        ProductWithDefaultVarientModel productVariant = searchList[index];
+        String name = "";
+        String unit = "";
+        String desc = "";
+        for(int i = 0; i < productVariant.ProductDetails.length; i++) {
+          if(productVariant.ProductDetails[i].Language == "En-US") {
+            name = productVariant.ProductDetails[i].Name;
+            desc = productVariant.ProductDetails[i].Description;
+            break;
+          }
+        }
+
+        for(int i = 0; i < productVariant.Units.length; i++) {
+          if(productVariant.Units[i].Language == "En-US") {
+            unit = productVariant.Units[i].Name;
+            break;
+          }
+        }
+
+        ProductPriceModel ProductPrice=new ProductPriceModel();
+        ProductDetailsModel ProductDetail=new ProductDetailsModel();
+        UnitsModel Units=new UnitsModel();
+        ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+
+        if(productVariant!=null){
+
+          if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+            ProductDetail = productVariant.ProductDetails[0];
+          }
+          if(productVariant.Units!=null && productVariant.Units.length>0){
+            Units=productVariant.Units[0];
+          }
+          if(productVariant.ProductPrice!=null){
+            ProductPrice = productVariant.ProductPrice;
+          }
+        }
+
+        if(ProductDetail != null) {
+          return GestureDetector(
+            onTap: () {
+
+//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
+              Navigator.of(context).push(SlideRightRoute(page: ProductDetailScreen(productVariant.ProductId))).then((prefs) {
+                count();
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+              decoration: BoxDecoration(
+//                  border: new Border.all(
+//                      color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                  color: Colors.white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              border: new Border.all(
+                                  color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                              color: Colors.white),
+                          width: double.maxFinite,
+                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                          Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),),
+//                          ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?
+//                          Container(
+//                            padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+//                            decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(5.0),
+//                                color: Colors.orange),
+//                            child: Text(
+//                                ProductPrice.DiscountPercent != null ?
+//                                ProductPrice.DiscountPercent.toString() : null,
+//                              style: TextStyle(
+//                                  fontSize: 10.0,
+//                                  fontFamily: 'GoogleSans',
+//                                  color: Colors.white),
+//                            ),
+//                          ) : Container(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            name,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                fontFamily: 'GoogleSans',
+                                color: Const.textBlack,
+                                fontWeight: FontWeight.w500),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.55,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.55,
+                          child: Text(
+                            desc,
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                fontFamily: 'GoogleSans',
+                                color: Color(0xff6c6c6c),
+                                fontWeight: FontWeight.w500),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              '₹ ' + ProductPrice.OfferPrice.toString(),
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: 'GoogleSans',
+                                  fontWeight: FontWeight.w700,
+                                  color: Const.textBlack),
+                            ),
+                            ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey, decoration: TextDecoration.lineThrough),
+                                ),
+                              ),
+                            ) : Container(),
+                            ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
+                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                              padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: Colors.orange
+                              ),
+                              child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                                  color: Colors.white),),
+                            ) : Container(),
+                          ],),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 0,
+                          child: RaisedButton(
+                            color: Const.widgetGreen,
+                            //color: Const.gray10,
+                            onPressed: () {
+                              addToCart(productVariant.ProductId,
+                                  productVariant.IncrementalStep.toString(), "",productVariant.ProductPrice.Price.toString(), productVariant.ProductPrice.OfferPrice.toString());
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  Text(
+                                    'ADD',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
+      itemCount: searchList.length,
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
     );
   }
 

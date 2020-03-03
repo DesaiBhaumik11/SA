@@ -109,7 +109,7 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<DefaultAddressModel>.value(value: add)
 
     ],child: MaterialApp(
-        title: 'Vegetos',
+        title: 'Ok Greens',
         theme: ThemeData(
           primarySwatch: Const.primaryColor,
           fontFamily: 'GoogleSans',
@@ -159,6 +159,6 @@ class MyApp extends StatelessWidget {
           Const.cartView: (BuildContext context) => CartView(),
           Const.registerScreen: (BuildContext context) => RegisterScreen(),
         },*/
-        home: SplashScreen()));
+        home: RegisterScreen()));
   }
 }

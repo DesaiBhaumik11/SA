@@ -31,8 +31,8 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
     return Scaffold(
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
-        backgroundColor: Const.appBar,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 1,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -40,12 +40,12 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
           child: Padding(
             padding: EdgeInsets.all(15),
             child: Image.asset(
-              'back.png',
+              'assets/OkAssets/LeftSideArrow.png',
               height: 25,
             ),
           ),
         ),
-        title: Text('About App Release'),
+        title: Text('About App Release',style: TextStyle(color: Const.textBlack),),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

@@ -111,80 +111,79 @@ class MyCartState extends State<MyCartScreen>
       visible: true,
       child: Container(
         margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-        child: Card(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Text('M.R.P', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                      ),
-                      Expanded(
-                        flex: 0,
-                        child: Text("₹${model.totalAmount.toString()}", style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                      ),
-                    ],
-                  ),
+        child: Container(
+          decoration: BoxDecoration(border: Border.all(width: 0.5, color: Const.allBOxStroke)),
+          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Text('M.R.P', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                    ),
+                    Expanded(
+                      flex: 0,
+                      child: Text("₹${model.totalAmount.toString()}", style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                    ),
+                  ],
                 ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Text('Product Discount', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                      ),
-                      Expanded(
-                        flex: 0,
-                        child: Text('-₹ '+ model.discount.toString(), style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                      ),
-                    ],
-                  ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Text('Product Discount', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                    ),
+                    Expanded(
+                      flex: 0,
+                      child: Text('-₹ '+ model.discount.toString(), style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                    ),
+                  ],
                 ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: <Widget>[
-                            Text('Delivery Charge ', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                            Icon(Icons.help_outline, color: Const.primaryColor, size: 20.0,),
-                          ],
-                        ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: <Widget>[
+                          Text('Delivery Charge ', style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                          Icon(Icons.help_outline, color: Const.primaryColor, size: 20.0,),
+                        ],
                       ),
-                      Expanded(
-                        flex: 0,
-                        child: Text('₹ ' + model.deliveryCharges.toString(), style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                            fontWeight: FontWeight.w500, color: Const.primaryColor),),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      flex: 0,
+                      child: Text('₹ ' + model.deliveryCharges.toString(), style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w500, color: Const.primaryColor),),
+                    ),
+                  ],
                 ),
-                Container(color: Const.gray10, height: 1.0, margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Text('Sub Total', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                      ),
-                      Expanded(
-                        flex: 0,
-                        child: Text("₹${model.SubTotal.toString()}", style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
-                      ),
-                    ],
-                  ),
+              ),
+              Container(color: Const.gray10, height: 1.0, margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),),
+              Container(
+                padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Text('Sub Total', style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                    ),
+                    Expanded(
+                      flex: 0,
+                      child: Text("₹${model.SubTotal.toString()}", style: TextStyle(fontSize: 16.0, fontFamily: 'GoogleSans', fontWeight: FontWeight.w500),),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -237,41 +236,41 @@ class MyCartState extends State<MyCartScreen>
     }
 
     return Container(
-      child: Card(
-        child: Container(
-          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      //child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
-                      /*child: Image.network(cartItem.productMediaId==null?'assets/02-product.png':
-                      '${DashboardScreenState.appFirstModal.ImageUrl} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),*/
-                      child: cartItem.productMediaId != null && cartItem.productMediaId.isNotEmpty ?
-                      Image.network(ImageURL + cartItem.productMediaId, height: 100.0, width: 100.0,) :
-                      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
-                      /*child: Image.asset(cartItem.productMediaId==null?'assets/02-product.png':
-                      '${ImageURL} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),*/
+      child: Container(
+        decoration: BoxDecoration(border: Border.all(width: 0.5, color: Const.allBOxStroke)),
+        padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+        child: Row(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    //child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                    /*child: Image.network(cartItem.productMediaId==null?'assets/02-product.png':
+                    '${DashboardScreenState.appFirstModal.ImageUrl} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),*/
+                    child: cartItem.productMediaId != null && cartItem.productMediaId.isNotEmpty ?
+                    Image.network(ImageURL + cartItem.productMediaId, height: 100.0, width: 100.0,) :
+                    Image.asset('02-product.png', height: 100.0, width: 100.0,),
+                    /*child: Image.asset(cartItem.productMediaId==null?'assets/02-product.png':
+                    '${ImageURL} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),*/
+                  ),
+                  /*Container(
+                    padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.orange
                     ),
-                    /*Container(
-                      padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.orange
-                      ),
-                      child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                          color: Colors.white),),
-                    ),*/
-                  ],
-                ),
+                    child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
+                        color: Colors.white),),
+                  ),*/
+                ],
               ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
+            ),
+            Expanded(
+              child: Container(
+                child: Column(
+                  children: <Widget>[
 
 //                      InkWell(onTap: (){
 //                        removetoCart(cartItem.id) ;
@@ -283,123 +282,122 @@ class MyCartState extends State<MyCartScreen>
 //
 //                      ),) ,
 
-                     Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text(name , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
-                            color: Colors.black, fontWeight: FontWeight.w500),),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text(cartItem.MinimumOrderQuantity.toString() + " " + unit, style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                            color: Const.dashboardGray, fontWeight: FontWeight.w500),),
-                      ),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex:1,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text("₹ ${cartItem.ProductPrice.OfferPrice}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                      ),
+                   Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                      child: Text(name , style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                          color: Colors.black, fontWeight: FontWeight.w500),),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                      child: Text(cartItem.MinimumOrderQuantity.toString() + " " + unit, style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                          color: Const.dashboardGray, fontWeight: FontWeight.w500),),
+                    ),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex:1,
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text("₹ ${cartItem.ProductPrice.OfferPrice}",style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black),
                                     ),
                                   ),
-                                    Expanded(
-                                      flex: 1,
+                                ),
+                                  Expanded(
+                                    flex: 1,
 
-                                    child:Row(
-                                    children: <Widget>[
-                                  cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0 ? Container(
-                                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text('₹' +cartItem.ProductPrice.Price.toString() ,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey, decoration: TextDecoration.lineThrough),
-                                      ),
-                                    ),
-                                  ) : Container(),
-                                  cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0 ? Container(
-                                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                                    padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5.0),
-                                        color: Colors.orange
-                                    ),
-                                    child: Text(cartItem.ProductPrice.DiscountPercent != null ? cartItem.ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
-                                        color: Colors.white),),
-                                  ) : Container(),
-                                      ],),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 0,
-                              child:
-                              Row(
-                                children: <Widget>[
-
-                                  InkWell(onTap: (){
-
-                                    if(cartItem.quantity > cartItem.MinimumOrderQuantity) {
-                                      updateCartQuantity(cartItem.itemId, (cartItem.quantity - cartItem.IncrementalStep).toString());
-                                    } else {
-                                      deleteCartItem(cartItem.itemId);
-                                    }
-
-                                  },child:    Container(
-                                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Image.asset('assets/minus.png', height: 20.0, width: 20.0,),
-                                  ),),
-
-
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Text((cartItem.quantity / cartItem.MinimumOrderQuantity).round().toString() ,style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                  child:Row(
+                                  children: <Widget>[
+                                cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0 ? Container(
+                                  margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text('₹' +cartItem.ProductPrice.Price.toString() ,style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.black,)),
+                                        color: Colors.grey, decoration: TextDecoration.lineThrough),
+                                    ),
                                   ),
+                                ) : Container(),
+                                cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0 ? Container(
+                                  margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                  padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      color: Colors.orange
+                                  ),
+                                  child: Text(cartItem.ProductPrice.DiscountPercent != null ? cartItem.ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
+                                      color: Colors.white),),
+                                ) : Container(),
+                                    ],),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child:
+                            Row(
+                              children: <Widget>[
+
+                                InkWell(onTap: (){
+
+                                  if(cartItem.quantity > cartItem.MinimumOrderQuantity) {
+                                    updateCartQuantity(cartItem.itemId, (cartItem.quantity - cartItem.IncrementalStep).toString());
+                                  } else {
+                                    deleteCartItem(cartItem.itemId);
+                                  }
+
+                                },child:    Container(
+                                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                  child: Image.asset('assets/OkAssets/minus.png', height: 20.0, width: 20.0,),
+                                ),),
 
 
-                                  InkWell(onTap: (){
-                                    /*cartItem.quantity ++ ;
-                                    myCartModal.totalCost = myCartModal.totalCost+ cartItem.price ;
-
-                                    updateQuantity(cartItem.itemId , cartItem.quantity) ;
-
-                                    setState(() {
-
-                                    });*/
-
-                                    updateCartQuantity(cartItem.itemId, (cartItem.quantity + cartItem.IncrementalStep).toString());
-
-                                  },child:   Container(
-                                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Image.asset('assets/plus.png', height: 20.0, width: 20.0,),
-                                  ),),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                  child: Text((cartItem.quantity / cartItem.MinimumOrderQuantity).round().toString() ,style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,)),
+                                ),
 
 
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                                InkWell(onTap: (){
+                                  /*cartItem.quantity ++ ;
+                                  myCartModal.totalCost = myCartModal.totalCost+ cartItem.price ;
+
+                                  updateQuantity(cartItem.itemId , cartItem.quantity) ;
+
+                                  setState(() {
+
+                                  });*/
+
+                                  updateCartQuantity(cartItem.itemId, (cartItem.quantity + cartItem.IncrementalStep).toString());
+
+                                },child:   Container(
+                                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                  child: Image.asset('assets/OkAssets/plus.png', height: 20.0, width: 20.0,),
+                                ),),
+
+
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -416,13 +414,13 @@ class MyCartState extends State<MyCartScreen>
 
    Widget recommendedContainer() {
      return Container(
-       color: Const.gray10,
+       color: Colors.white70,
        child: Stack(
          children: <Widget>[
            Container(
              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
              child: Card(
-               color: Const.gray10,
+               color: Colors.white70,
                elevation: 0.0,
                child: Column(
                  children: <Widget>[
@@ -791,7 +789,7 @@ class MyCartState extends State<MyCartScreen>
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: Icon(Icons.delete, color: Const.iconOrange),
+              child: Image.asset("assets/OkAssets/Delete.png", height: 25, width: 25,),
             ),
           ),
         ),

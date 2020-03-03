@@ -82,10 +82,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(
-                      Icons.search,
-                      color: Const.iconOrange,
-                    ),
+                    child: Image.asset("assets/OkAssets/Search.png", height: 22, width: 22,),
                     alignment: Alignment.center,
                   ),
 
@@ -105,10 +102,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
               child: Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(
-                      Icons.shopping_cart,
-                      color: Const.iconOrange,
-                    ),
+                    child: Image.asset("assets/OkAssets/Mycart.png",height: 28, width: 28,),
                     alignment: Alignment.center,
                   ),
                   cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :

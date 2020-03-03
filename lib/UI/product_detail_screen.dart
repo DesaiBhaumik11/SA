@@ -99,6 +99,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
 
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
@@ -131,7 +132,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               Stack(
                 children: <Widget>[
                   Align(
-                    child: Icon(Icons.shopping_cart, color: Const.iconOrange,),
+                    child: Image.asset("assets/OkAssets/Mycart.png", height: 25, width: 25,),
                     alignment: Alignment.center,
                   ),
                   cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
@@ -140,7 +141,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                     child: Align(
                       alignment: Alignment.topRight,
                       child: CircleAvatar(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: Const.widgetGreen,
                         radius: 8.0,
                         child: Text(cartTotal ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                       ),
@@ -207,7 +208,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           Row(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                margin: EdgeInsets.fromLTRB(10.0, 5.0, 2.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : "0"} ',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
@@ -217,7 +218,16 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
+                //  padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("/ " + productModal.MinimumOrderQuantity.toString() + " " + Units.Name, maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
+                            fontWeight: FontWeight.w500)),
+                  )
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(ProductPrice.Price != null ? '₹ ' + ProductPrice.Price.toString() : '₹0' ,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
@@ -226,6 +236,15 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                   ),
                 ),
               ),
+//              Container(
+//                //  padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+//                  child: Align(
+//                    alignment: Alignment.centerLeft,
+//                    child: Text("/ " + productModal.MinimumOrderQuantity.toString() + " " + Units.Name, maxLines: unitFlag ? 20 : 2, textAlign: TextAlign.left,
+//                        style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
+//                            fontWeight: FontWeight.w500)),
+//                  )
+//              ),
               /*Container(
                 margin: EdgeInsets.fromLTRB(0.0, 5.0, 10.0, 10.0),
                 padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
@@ -263,7 +282,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                 itemBuilder: (context, index) {
                   return Container(
                     width: 100.0,
-                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 2.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5.0),
@@ -275,6 +294,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       title: Row(
                         children: <Widget>[
                           Container(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
                             child: Text(productModal.MinimumOrderQuantity.toString() + " " + Units.Name, style: TextStyle(color: Colors.black, fontSize: 12.0, fontFamily: 'GoogleSans',
                                 fontWeight: FontWeight.w500)),
                           )
@@ -324,9 +344,10 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
       color: Colors.white,
       child: Column(
         children: <Widget>[
+          Divider(height: 2,color: Const.allBOxStroke,),
           Container(
             alignment: Alignment.centerLeft,
-            color: Const.gray10,
+            color: Colors.white70,
             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
             height: 40.0,
             child: Column(
@@ -336,8 +357,9 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
               ],
             ),
           ),
+          Divider(height: 2,color: Const.allBOxStroke,),
           description(),
-          unit(),
+          //unit(),
           //disclaimer(),
           //shelfLife(),
           //termsAndCondition(),
@@ -388,7 +410,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
 
           Container(
-            color: Colors.grey,
+            color: Const.allBOxStroke,
             height: 1.0,
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
           )
@@ -673,7 +695,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
                       Container(
                         child: Align(
                           alignment: Alignment.center,
-                          child: Image.asset('assets/product01.png', height: 100.0, width: 100.0,),
+                          child: Image.asset('product01.png', height: 100.0, width: 100.0,),
                         ),
                         margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
