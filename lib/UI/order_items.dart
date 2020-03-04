@@ -72,82 +72,85 @@ class OrderItemsState extends State<OrderItems>
 
 
     var child = Container(
-      child: Card(
-        child: Container(
-          padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                child: Stack(
+      color: Colors.white,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 0.5,color: Const.allBOxStroke),
+          color: Colors.white
+        ),
+        padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
+        child: Row(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    //child: Image.network('assets/01-product.png', height: 100.0, width: 100.0,),
+                    child: orderItemsViewsModel.productVariantMedia==null||orderItemsViewsModel.productVariantMedia.length<=0 ?Image.asset("02-product.png",height: 100,width: 100,):
+                    Image.network(ImageURL + orderItemsViewsModel.productVariantMedia[0] + '&h=150&w=150', height: 110.0, width: 110.0,),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                child: Column(
                   children: <Widget>[
                     Container(
-                      //child: Image.network('assets/01-product.png', height: 100.0, width: 100.0,),
-                      child: orderItemsViewsModel.productVariantMedia==null||orderItemsViewsModel.productVariantMedia.length<=0 ?Image.asset("02-product.png",height: 100,width: 100,):
-                      Image.network(ImageURL + orderItemsViewsModel.productVariantMedia[0] + '&h=150&w=150', height: 110.0, width: 110.0,),
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                      child: Text('${orderItemsViewsModel.productDetails!=null && orderItemsViewsModel.productDetails.length>0 ? orderItemsViewsModel.productDetails[0].Name : ""}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
+                          color: Colors.black, fontWeight: FontWeight.w500),),
                     ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                      child: Text(orderItemsViewsModel.minimumOrderQuantity!=0 ? orderItemsViewsModel.minimumOrderQuantity.toString() + " "+ unit : "", style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
+                          color: Const.dashboardGray, fontWeight: FontWeight.w500),),
+                    ),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex:1,
+                            child: Row(
+                              children: <Widget>[
+                                orderItemsViewsModel.price!=null && orderItemsViewsModel.quantity!=0 && orderItemsViewsModel.minimumOrderQuantity!=0 ?
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text('₹ ${orderItemsViewsModel.offerAmount.toString() +"x"+ (orderItemsViewsModel.quantity / orderItemsViewsModel.minimumOrderQuantity).round().toString() }',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black),
+                                    ),
+                                  ),
+                                ): Container(),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                  child: Text('₹ ${orderItemsViewsModel.totalLineAmount!=null ? orderItemsViewsModel.totalLineAmount : ""}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,)),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text('${orderItemsViewsModel.productDetails!=null && orderItemsViewsModel.productDetails.length>0 ? orderItemsViewsModel.productDetails[0].Name : ""}', style: TextStyle(fontSize: 17.0, fontFamily: 'GoogleSans',
-                            color: Colors.black, fontWeight: FontWeight.w500),),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        child: Text(orderItemsViewsModel.minimumOrderQuantity!=0 ? orderItemsViewsModel.minimumOrderQuantity.toString() + " "+ unit : "", style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                            color: Const.dashboardGray, fontWeight: FontWeight.w500),),
-                      ),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex:1,
-                              child: Row(
-                                children: <Widget>[
-                                  orderItemsViewsModel.price!=null && orderItemsViewsModel.quantity!=0 && orderItemsViewsModel.minimumOrderQuantity!=0 ?
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
-                                    child: Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text('₹ ${orderItemsViewsModel.offerAmount.toString() +"x"+ (orderItemsViewsModel.quantity / orderItemsViewsModel.minimumOrderQuantity).round().toString() }',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                      ),
-                                    ),
-                                  ): Container(),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 0,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Text('₹ ${orderItemsViewsModel.totalLineAmount!=null ? orderItemsViewsModel.totalLineAmount : ""}',style: TextStyle(fontSize: 20.0, fontFamily: 'GoogleSans',
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,)),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

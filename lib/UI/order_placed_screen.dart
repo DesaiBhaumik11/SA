@@ -138,6 +138,7 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
               Navigator.pop(context);
             }
           },
+
           child: callGetOrderById(widget.orderId),
         ),
       ),

@@ -286,7 +286,7 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                               flex: 1,
                             ),
                             Image.asset(
-                              'order-delivered.png',
+                              'assets/VegetosAssets/order-delivered.png',
                               height: 22,
                             ),
                             SizedBox(

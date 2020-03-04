@@ -180,8 +180,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         padding: EdgeInsets.all(15),
                         child: Image.asset(
                           'assets/OkAssets/Cencelicone.png',
-                          height: 25,
-                          width: 25,
+                          height: 20,
+                          width: 20,
                         ),
                       ),
                     ),
@@ -197,7 +197,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             Align(
                               child: Image.asset(
                                 'assets/OkAssets/Mycart.png',
-                                height: 23,
+                                height: 25,
+                                width: 25,
                               ),
                               alignment: Alignment.center,
                             ),

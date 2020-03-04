@@ -214,13 +214,13 @@ class _MyOrdersState extends State<MyOrders> {
   String displayOrderIcon(String status) {
 
    if(status== EnumOrderStatus.getString(OrderStatus.Ordered)) {
-     return "assets/order_placed.png";
+     return "assets/VegetosAssets/order-placed.png";
    }else if(status== EnumOrderStatus.getString(OrderStatus.Confirmed)){
-     return "assets/order_confirmed.png";
+     return "assets/VegetosAssets/order_confirmed.png";
    }else if(status== EnumOrderStatus.getString(OrderStatus.Cancelled)){
-     return "assets/order_cancelled.png";
+     return "assets/VegetosAssets/order_cancelled.png";
    }else {
-     return "assets/order_delivered.png";
+     return "assets/VegetosAssets/order_delivered.png";
    }
 //      case EnumOrderStatus.getString(OrderStatus.Ordered):
 //        return "assets/order_confirmed.png";
@@ -278,7 +278,7 @@ class WhoopsOrder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            Image.asset('whoops.png', height: 180,),
+            Image.asset('assets/VegetosAssets/whoops.png', height: 180,),
 
             SizedBox(
               height: 10,

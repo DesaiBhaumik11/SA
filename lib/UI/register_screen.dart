@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
@@ -33,6 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
+
 //      appBar: AppBar(
 //        backgroundColor: Colors.white,
 //        elevation: 0,
@@ -68,6 +70,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top:0.0,right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: (){
+                            Navigator.pop(context);
+                          },
+                          child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22),
+                        ),
+                      ],
+                    ),
+                  ),
                   okProfile(),
                   Column(
                     mainAxisSize: MainAxisSize.min,
@@ -75,26 +91,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       formForSignUp(),
                       GestureDetector(
                         onTap: () {
-                          if(_formKey.currentState.validate()) {
-                            var route = new MaterialPageRoute(
-                                builder: (BuildContext context) => null
-//                    new SecondPage(
-//                      value: User(
-//                        username: regName.text ,
-//                        email: regEmail.text ,
-//                        phoneNumber: regPhoneNumber.text ,
-//                        password: regPassword.text ,
-//                        conformPassword: regConformPassword.text ,
-//                      ) ,
-//                    ) ,
-                            );
-                            Navigator.of(context).push(route);
+
+                          name= regName.text;
+                          email = regEmail.text;
+                          mobile = regPhoneNumber.text;
+
+                          if(mobile==""||mobile.length < 10){
+                            Utility.toastMessage("Enter phone number");
                           } else {
-                            // validation error
-                            setState(() {
-                              _autoValidate = true;
-                            });
+                            register();
                           }
+                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
                         },
                         child: Container(
                           margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -421,10 +428,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Name"),
+                Text("Name",style: TextStyle(fontWeight: FontWeight.w500),),
                 Container(
                   height: 40,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
                     border: Border.all(color: Colors.grey,width: 1, style: BorderStyle.solid),
                     color: Colors.white,
                   ),
@@ -435,13 +444,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     controller: regName,
+//                    onChanged: (e) {
+//                      name = e;
+//                    },
                   ),
                 ),
                 SizedBox(height: 10),
-                Text("Phone Number"),
+                Text("Phone Number",style: TextStyle(fontWeight: FontWeight.w500),),
                 Container(
                   height: 40,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
                     border: Border.all(color: Colors.grey,width: 1, style: BorderStyle.solid),
                     color: Colors.white,
                   ),
@@ -452,13 +466,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.newline,
                     controller: regPhoneNumber,
+//                    onChanged: (e) {
+//                      mobile = e;
+//                    },
                   ),
                 ),
                 SizedBox(height: 10),
-                Text("Email"),
+                Text("Email",style: TextStyle(fontWeight: FontWeight.w500),),
                 Container(
                   height: 40,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
                     border: Border.all(color: Colors.grey,width: 1, style: BorderStyle.solid),
                     color: Colors.white,
                   ),
@@ -469,6 +488,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.go,
                     controller: regEmail,
+//                    onChanged: (e) {
+//                      email = e;
+//                    },
                   ),
                 ),
                 SizedBox(height: 10),
@@ -530,7 +552,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        SizedBox(height: 50,),
+      //  SizedBox(height: 50,),
         Text("Sign up",
           style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -538,58 +560,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
               color: Colors.green[800]
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 20),
-          height: 100,
-          width: 100,
-          //  color: Colors.blue,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blueGrey[900],
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQf9UDq4tsvB8SQ7Kz6FugTDxwh22MLbVJlACifly-96NfPRrGR"
-                        )
-                    )
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  height: 30,
-                  width: 30,
-                  child: InkWell(
-                    onTap: () {
-
-                    },
-                    child: Card(
-                      elevation: 2,
-                      color: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
+//        Container(
+//          margin: EdgeInsets.only(top: 20),
+//          height: 100,
+//          width: 100,
+//          //  color: Colors.blue,
+//          child: Stack(
+//            children: <Widget>[
+//              Container(
+//                height: 100,
+//                width: 100,
+//                decoration: BoxDecoration(
+//                    shape: BoxShape.circle,
+//                    color: Colors.blueGrey[900],
+//                    image: DecorationImage(
+//                        image: NetworkImage(
+//                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQf9UDq4tsvB8SQ7Kz6FugTDxwh22MLbVJlACifly-96NfPRrGR"
+//                        )
+//                    )
+//                ),
+//              ),
+//              Align(
+//                alignment: Alignment.bottomRight,
+//                child: Container(
+//                  height: 30,
+//                  width: 30,
+//                  child: InkWell(
+//                    onTap: () {
+//
+//                    },
+//                    child: Card(
+//                      elevation: 2,
+//                      color: Colors.green,
+//                      shape: RoundedRectangleBorder(
+//                        borderRadius: BorderRadius.circular(30.0),
+//                      ),
+//                      child: Icon(
+//                        Icons.add,
+//                        color: Colors.white,
+//                        size: 20,
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//              )
+//            ],
+//          ),
+//        )
       ],
     );
   }
 
   void register() {
+
+    print(email);
+    print(mobile);
+    print(name);
 
     ProgressDialog dialog = Utility.progressDialog(context,"");
     dialog.show() ;

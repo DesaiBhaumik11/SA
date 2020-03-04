@@ -66,7 +66,7 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'Date: 5 Jun 2019',
+                          'Date: 15 Mar 2020',
                           style: text,
                         ),
                         Text(

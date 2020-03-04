@@ -30,6 +30,8 @@ import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 
+import 'set_delivery_location.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -163,8 +165,11 @@ class SplashScreenState extends State<SplashScreen> {
         Navigator.pushAndRemoveUntil(context,
             EnterExitRoute(enterPage: DashboardScreen()), (c) => false);
       } else {
+        SharedPreferences.getInstance().then((prefs){
+          prefs.setString("phone", "Guest User");
+        }) ;
         Navigator.pushAndRemoveUntil(context,
-            EnterExitRoute(enterPage: WelcomeScreenState()), (c) => false);
+            EnterExitRoute(enterPage: SetDeliveryLocation()), (c) => false);
       }
     });
   }

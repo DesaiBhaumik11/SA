@@ -560,9 +560,9 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
       leading: IconButton(
         icon: Image.asset(
           "assets/OkAssets/hamburgerbutto.png",
-          scale: 4,
+          scale: 4.5,
         ),
-        iconSize: 18,
+        iconSize: 15,
         onPressed: () {
           Scaffold.of(context).openDrawer();
         },
@@ -970,7 +970,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('mobile.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/mobile.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
@@ -1362,7 +1362,7 @@ class DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObs
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                          child: Image.asset('assets/logout.png', height: 20.0, width: 20.0,),
+                          child: Image.asset('assets/OkAssets/DrawerIcon/Logout.png', height: 25.0, width: 25.0,),
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
@@ -1828,7 +1828,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
 
-                        Image.asset('cancel-subscription.png', height: 150,),
+                        Image.asset('assets/VegetosAssets/cancel-subscription.png', height: 150,),
 
                         SizedBox(
                           height: 10,

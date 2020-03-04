@@ -116,7 +116,7 @@ class _LocateMapState extends State<LocateMap> {
                         },
                       ),
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.close),
+                        icon: Image.asset("assets/OkAssets/Cencelicone.png", height: 20,width: 20,),
                         onPressed: (){
                           if(textEditingController!=null){
                             setState(() {
@@ -147,7 +147,7 @@ class _LocateMapState extends State<LocateMap> {
                       Row(
                         children: <Widget>[
                           Image.asset(
-                            'locate-on-map.png',
+                            'assets/OkAssets/locate-on-map.png',
                             height: 20,
                           ),
                           SizedBox(
@@ -235,7 +235,7 @@ class _LocateMapState extends State<LocateMap> {
   }
 
   void onMapTap(LatLng argument) {
-    _createMarkerImageFromAsset("assets/locate-on-map.png").then((b) {
+    _createMarkerImageFromAsset("assets/OkAssets/locate-on-map.png").then((b) {
       setState(() {
         markers.add(
           Marker(

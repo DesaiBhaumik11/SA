@@ -159,6 +159,6 @@ class MyApp extends StatelessWidget {
           Const.cartView: (BuildContext context) => CartView(),
           Const.registerScreen: (BuildContext context) => RegisterScreen(),
         },*/
-        home: RegisterScreen()));
+        home: SplashScreen()));
   }
 }

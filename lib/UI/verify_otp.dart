@@ -63,10 +63,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
             },
             child: Padding(
               padding: EdgeInsets.all(20),
-              child: Icon(
-                Icons.close,
-                color: Colors.red,
-              ),
+              child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22,)
             ),
           ),
         ],

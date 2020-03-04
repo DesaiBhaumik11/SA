@@ -64,7 +64,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/Logo.png"
+  image_path: "assets/OkAssets/OkLogo.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -82,6 +82,7 @@ flutter:
     - assets/privacyPolicy.json
     - assets/termsAndCondition.json
     - assets/about_vegetos.json
+    - assets/OkAssets/FarmBackground.png
 
 
 

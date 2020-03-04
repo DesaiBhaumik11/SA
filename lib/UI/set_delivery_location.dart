@@ -27,6 +27,17 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: Container(
+        height: 100,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          // color: Colors.grey,
+            image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage("assets/OkAssets/okBase.png")
+            )
+        ),
+      ),
       body: Stack(
         children: <Widget>[
           Center(
@@ -43,7 +54,9 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                   ),
 
                   Text(
-                    'Set your delivery location', style: TextStyle(
+                    '',
+                    //'Set your delivery location',
+                    style: TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.w500
                   ),
@@ -102,7 +115,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                           Navigator.push(context, EnterExitRoute(enterPage: SetLocationManually()));
                         },
                         child: Text(
-                          'Set location Manually',
+                          'Set Manually',
                           style: TextStyle(
                               color: Color(0xff393939),
                               fontSize: 17,
