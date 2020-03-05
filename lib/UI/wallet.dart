@@ -44,7 +44,7 @@ class _WalletState extends State<Wallet> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
                 image: DecorationImage(
-                  image: AssetImage('wallet-bg.png'),
+                  image: AssetImage('assets/VegetosAssets/wallet-bg.png'),
                   fit: BoxFit.cover
                 )
               ),
@@ -142,7 +142,7 @@ class _WalletState extends State<Wallet> {
                   padding: const EdgeInsets.only(left: 10, top: 15, right: 10),
                   child: Row(
                     children: <Widget>[
-                      Image.asset('purchase-wallet.png', height: 40,),
+                      Image.asset('assets/VegetosAssets/purchase-wallet.png', height: 40,),
                       SizedBox(width: 10,),
 
                       Column(
@@ -221,7 +221,7 @@ class _WalletState extends State<Wallet> {
           ),
         );
       },
-      itemCount: 4,
+      itemCount: 14,
       padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),

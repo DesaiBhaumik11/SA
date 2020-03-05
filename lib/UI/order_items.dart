@@ -226,7 +226,7 @@ class OrderItemsState extends State<OrderItems>
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                      child: Image.asset('assets/VegetosAssets/01-product.png', height: 100.0, width: 100.0,),
                     ),
                     Container(
                       padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
@@ -292,7 +292,7 @@ class OrderItemsState extends State<OrderItems>
                                 children: <Widget>[
                                   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Image.asset('assets/plus.png', height: 20.0, width: 20.0,),
+                                    child: Image.asset('assets/VegetosAssets/plus.png', height: 20.0, width: 20.0,),
                                   ),
                                   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
@@ -302,7 +302,7 @@ class OrderItemsState extends State<OrderItems>
                                   ),
                                   Container(
                                     margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Image.asset('assets/minus.png', height: 20.0, width: 20.0,),
+                                    child: Image.asset('assets/VegetosAssets/minus.png', height: 20.0, width: 20.0,),
                                   ),
                                 ],
                               ),

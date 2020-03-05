@@ -48,7 +48,11 @@ class _OfferzoneState extends State<Offerzone> {
             onTap: (){
               Navigator.push(context, SlideLeftRoute(page: ItemsOfferzone()));
             },
-            child: Card(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5,color: Const.allBOxStroke),
+                color: Colors.white,
+              ),
               child: Column(
                 children: <Widget>[
 
@@ -59,7 +63,7 @@ class _OfferzoneState extends State<Offerzone> {
                       color: Colors.grey,
                       image: DecorationImage(
                         image: AssetImage(
-                          'offerzone_01.png',
+                          'assets/VegetosAssets/offerzone_01.png',
 
                         ),
                         fit: BoxFit.cover
@@ -99,13 +103,14 @@ class _OfferzoneState extends State<Offerzone> {
                         DottedBorder(
                           color: Const.orange,
                           strokeWidth: 1,
-                            borderType: BorderType.RRect,
+                            strokeCap: StrokeCap.butt,
+                            borderType: BorderType.Rect,
                             radius: Radius.circular(5),
                           child: Container(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                               child: Text(
-                                'VEGETOSFIRST50',
+                                'OKGREENSFIRST50',
                                 style: TextStyle(
                                   color: Const.orange,
                                   fontSize: 15,

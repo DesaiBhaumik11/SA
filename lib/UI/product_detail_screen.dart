@@ -163,7 +163,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   {
     List<Image> imageList = [
 //      Image.asset('assets/02-product.png', height: 50, width: 50.0,)
-      productModal.PrimaryMediaId==null||productModal.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+      productModal.PrimaryMediaId==null||productModal.PrimaryMediaId.isEmpty?Image.asset("assets/VegetosAssets/02-product.png",height: 100,width: 100,):
       Image.network("${ImageURL}${productModal.PrimaryMediaId}", height: 100.0, width: 100.0,),
     //  Image.asset('${appFirstModal}', height: 100.0, width: 100.0,),
 //      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),

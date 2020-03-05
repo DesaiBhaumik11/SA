@@ -319,7 +319,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                         child: Padding(
                           padding: EdgeInsets.only(left: 20, bottom: 15,right: 10),
                           child: Image.asset(
-                            'edit-pencil.png',
+                            'assets/OkAssets/Edit.png',
                             height: 17,
                           ),
                         ),

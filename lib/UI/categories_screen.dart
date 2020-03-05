@@ -174,7 +174,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                                       width: 100,
                                     )
                                   : Image.asset(
-                                      '02-product.png',
+                                      'assets/VegetosAssets/02-product.png',
                                       height: 100.0,
                                       width: 100.0,
                                     ),
@@ -274,7 +274,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                   child: subCategoriesList[index].mediaId == null ||
                           subCategoriesList[index].mediaId.isEmpty
                       ? Image.asset(
-                          "02-product.png",
+                          "assets/VegetosAssets/02-product.png",
                           height: 70,
                           width: 70,
                         )

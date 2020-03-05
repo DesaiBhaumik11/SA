@@ -131,7 +131,7 @@ class OrderPlacedScreenState extends State<OrderPlacedScreen> with SingleTickerP
         body: WillPopScope(
           onWillPop: () {
             if(widget.IsFromPayment) {
-              Navigator.pushAndRemoveUntil(
+                 Navigator.pushAndRemoveUntil(
                   context, EnterExitRoute(enterPage: DashboardScreen()), (
                   c) => false);
             }else{

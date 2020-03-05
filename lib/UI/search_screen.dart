@@ -38,31 +38,32 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   var wid = 1;
   Timer timer;
-  myCart.MyCartModal myCartModal ;
-  String CAT_ID="";
-  category.CategoriesModel categoriesModel ;
+  myCart.MyCartModal myCartModal;
+
+  String CAT_ID = "";
+  category.CategoriesModel categoriesModel;
 
   String cartTotal = '0';
 
-  bool search=false;
-  String ImageURL='';
-  bool isCountLoading=false,isSearchLoading=false;
+  bool search = false;
+  String ImageURL = '';
+  bool isCountLoading = false, isSearchLoading = false;
 
   bool isSearch = false;
 
-  int typedMillis=0;
+  int typedMillis = 0;
 
+  TextEditingController searchController = TextEditingController();
 
   List<ProductWithDefaultVarientModel> searchList;
 
   @override
   void setState(fn) {
     // TODO: implement setState
-    if(mounted) {
+    if (mounted) {
       super.setState(fn);
     }
   }
-
 
   @override
   void initState() {
@@ -77,20 +78,17 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() {
         ImageURL = prefs.getString("ImageURL");
       });
-
     });
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    myCartModal = Provider.of<myCart.MyCartModal>(context);
+    categoriesModel = Provider.of<category.CategoriesModel>(context);
 
-    myCartModal= Provider.of<myCart.MyCartModal>(context) ;
-    categoriesModel =Provider.of<category.CategoriesModel>(context);
-
-    final sModal.SearchModel searchModel=Provider.of<sModal.SearchModel>(context);
+    final sModal.SearchModel searchModel =
+        Provider.of<sModal.SearchModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       body: Container(
@@ -99,7 +97,7 @@ class _SearchScreenState extends State<SearchScreen> {
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: 61,
+              height: 60,
               color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.only(top: 0),
@@ -125,7 +123,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
                         ),
-                        onChanged: (e){
+                        controller: searchController,
+                        onChanged: (e) {
                           /*search=true;
                         if(timer!=null){
                           timer.cancel();
@@ -147,8 +146,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         });*/
 
-                          if(e != null && e.isNotEmpty && e.length > 3) {
-                            if(typedMillis + 300 < new DateTime.now().millisecondsSinceEpoch) {
+                          if (e != null && e.isNotEmpty && e.length > 3) {
+                            if (typedMillis + 300 <
+                                new DateTime.now().millisecondsSinceEpoch) {
                               Future.delayed((Duration(milliseconds: 300)))
                                   .then((_) {
                                 typedMillis =
@@ -169,12 +169,20 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                      child: isSearchLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor: Const.iconOrange,strokeWidth: 2,),)) :
-                      Container(),
+                      child: isSearchLoading
+                          ? new Align(
+                              alignment: Alignment.center,
+                              child: new Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Const.iconOrange,
+                                  strokeWidth: 2,
+                                ),
+                              ))
+                          : Container(),
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.pop(context);
+                        searchController.text = '';
                       },
                       child: Padding(
                         padding: EdgeInsets.all(15),
@@ -187,46 +195,64 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
+                        Navigator.push(
+                            context, SlideRightRoute(page: MyCartScreen()));
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                        child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor: Const.iconOrange,strokeWidth: 2,),)) :
-                        Stack(
-                          children: <Widget>[
-                            Align(
-                              child: Image.asset(
-                                'assets/OkAssets/Mycart.png',
-                                height: 25,
-                                width: 25,
+                        child: isCountLoading
+                            ? new Align(
+                                alignment: Alignment.center,
+                                child: new Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Const.iconOrange,
+                                    strokeWidth: 2,
+                                  ),
+                                ))
+                            : Stack(
+                                children: <Widget>[
+                                  Align(
+                                    child: Image.asset(
+                                      'assets/OkAssets/Mycart.png',
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    alignment: Alignment.center,
+                                  ),
+                                  cartTotal == "0"
+                                      ? Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              15.0, 10.0, 5.0, 0.0),
+                                        )
+                                      : Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              15.0, 15.0, 5.0, 0.0),
+                                          child: Align(
+                                            alignment: Alignment.topRight,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Const.widgetGreen,
+                                              radius: 8.0,
+                                              child: Text(cartTotal,
+                                                  style: TextStyle(
+                                                      fontSize: 10.0,
+                                                      fontFamily: 'GoogleSans',
+                                                      color: Colors.white)),
+                                            ),
+                                          ),
+                                        )
+                                ],
                               ),
-                              alignment: Alignment.center,
-                            ),
-                            cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
-                            Container(
-                              margin: EdgeInsets.fromLTRB(15.0, 15.0, 5.0, 0.0),
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: CircleAvatar(
-                                  backgroundColor: Const.widgetGreen,
-                                  radius: 8.0,
-                                  child: Text(cartTotal,
-                                      style: TextStyle(
-                                          fontSize: 10.0,
-                                          fontFamily: 'GoogleSans',
-                                          color: Colors.white)),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
                       ),
                     )
                   ],
                 ),
               ),
             ),
-            Divider(height: 1,color: Const.allBOxStroke,),
+            Divider(
+              height: 1,
+              color: Const.allBOxStroke,
+            ),
             Container(
               height: 40,
               color: Colors.white,
@@ -235,11 +261,19 @@ class _SearchScreenState extends State<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 10,),
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                    ),
                     child: Visibility(
                       visible: searchList != null ? true : false,
-                      child: Text(searchList != null ? searchList.length.toString() + ' Result Found' : "0 Result found",
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Const.textBlack),
+                      child: Text(
+                        searchList != null
+                            ? searchList.length.toString() + ' Result Found'
+                            : "0 Result found",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Const.textBlack),
                       ),
                     ),
                   ),
@@ -267,10 +301,19 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            Divider(height: 1,color: Const.allBOxStroke,),
-            SizedBox(height: 10,),
+            Divider(
+              height: 1,
+              color: Const.allBOxStroke,
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Expanded(
-              child: isSearch ? searchList != null && searchList.isNotEmpty ? buildGridList() : Whoops() : Container(),
+              child: isSearch
+                  ? searchList != null && searchList.isNotEmpty
+                      ? buildGridList()
+                      : Whoops()
+                  : Container(),
             ),
           ],
         ),
@@ -278,25 +321,24 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   GridView buildGridList() {
     double cardWidth = MediaQuery.of(context).size.width;
     double cardHeight = MediaQuery.of(context).size.height - 76;
     double aspectRatio = 0.01;
 
-    if(cardHeight < 550) {
+    if (cardHeight < 550) {
       cardHeight = cardHeight + 20;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 550 && cardHeight < 600){
+    } else if (cardHeight > 550 && cardHeight < 600) {
       cardHeight = cardHeight - 20;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 600 && cardHeight < 650) {
+    } else if (cardHeight > 600 && cardHeight < 650) {
       cardHeight = cardHeight - 120;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 650 && cardHeight < 700) {
+    } else if (cardHeight > 650 && cardHeight < 700) {
       cardHeight = cardHeight - 120;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 700 && cardHeight < 740) {
+    } else if (cardHeight > 700 && cardHeight < 740) {
       cardHeight = cardHeight - 190;
       aspectRatio = cardWidth / cardHeight;
     } else {
@@ -304,20 +346,22 @@ class _SearchScreenState extends State<SearchScreen> {
       aspectRatio = cardWidth / cardHeight;
     }
 
-    int counts=2;
-    if(aspectRatio >= 0.9){
-      if(cardWidth>=800){
-        counts=4;
-      }else{
-        counts=3;
+    int counts = 2;
+    if (aspectRatio >= 0.9) {
+      if (cardWidth >= 800) {
+        counts = 4;
+      } else {
+        counts = 3;
       }
     }
     print(aspectRatio);
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: counts,
-        childAspectRatio: aspectRatio >= 0.9 && cardHeight>=800 ? 0.75 :aspectRatio >= 0.73 ? 0.72 : 0.61 ,
-      //  childAspectRatio: aspectRatio - 0.075,
+        childAspectRatio: aspectRatio >= 0.9 && cardHeight >= 800
+            ? 0.75
+            : aspectRatio >= 0.73 ? 0.72 : 0.61,
+        //  childAspectRatio: aspectRatio - 0.075,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
@@ -326,45 +370,47 @@ class _SearchScreenState extends State<SearchScreen> {
         String name = "";
         String unit = "";
         String desc = "";
-        for(int i = 0; i < productVariant.ProductDetails.length; i++) {
-          if(productVariant.ProductDetails[i].Language == "En-US") {
+        for (int i = 0; i < productVariant.ProductDetails.length; i++) {
+          if (productVariant.ProductDetails[i].Language == "En-US") {
             name = productVariant.ProductDetails[i].Name;
             desc = productVariant.ProductDetails[i].Description;
             break;
           }
         }
 
-        for(int i = 0; i < productVariant.Units.length; i++) {
-          if(productVariant.Units[i].Language == "En-US") {
+        for (int i = 0; i < productVariant.Units.length; i++) {
+          if (productVariant.Units[i].Language == "En-US") {
             unit = productVariant.Units[i].Name;
             break;
           }
         }
 
-        ProductPriceModel ProductPrice=new ProductPriceModel();
-        ProductDetailsModel ProductDetail=new ProductDetailsModel();
-        UnitsModel Units=new UnitsModel();
-        ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+        ProductPriceModel ProductPrice = new ProductPriceModel();
+        ProductDetailsModel ProductDetail = new ProductDetailsModel();
+        UnitsModel Units = new UnitsModel();
+        ProductVariantMedia productVariantMedia = new ProductVariantMedia();
 
-        if(productVariant!=null){
-
-          if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+        if (productVariant != null) {
+          if (productVariant.ProductDetails != null &&
+              productVariant.ProductDetails.length > 0) {
             ProductDetail = productVariant.ProductDetails[0];
           }
-          if(productVariant.Units!=null && productVariant.Units.length>0){
-            Units=productVariant.Units[0];
+          if (productVariant.Units != null && productVariant.Units.length > 0) {
+            Units = productVariant.Units[0];
           }
-          if(productVariant.ProductPrice!=null){
+          if (productVariant.ProductPrice != null) {
             ProductPrice = productVariant.ProductPrice;
           }
         }
 
-        if(ProductDetail != null) {
+        if (ProductDetail != null) {
           return GestureDetector(
             onTap: () {
-
 //              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
-              Navigator.of(context).push(SlideRightRoute(page: ProductDetailScreen(productVariant.ProductId))).then((prefs) {
+              Navigator.of(context)
+                  .push(SlideRightRoute(
+                      page: ProductDetailScreen(productVariant.ProductId)))
+                  .then((prefs) {
                 count();
               });
             },
@@ -384,11 +430,46 @@ class _SearchScreenState extends State<SearchScreen> {
                         Container(
                           decoration: BoxDecoration(
                               border: new Border.all(
-                                  color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                                  color: Colors.grey[500],
+                                  width: 0.5,
+                                  style: BorderStyle.solid),
                               color: Colors.white),
                           width: double.maxFinite,
-                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                          Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),),
+                          child: productVariant.PrimaryMediaId == null ||
+                                  productVariant.PrimaryMediaId.isEmpty
+                              ? Image.asset(
+                                  "02-product.png",
+                                  height: 100,
+                                  width: 100,
+                                )
+                              : Image.network(
+                                  ImageURL +
+                                      productVariant.PrimaryMediaId +
+                                      '&h=150&w=150',
+                                  height: 110.0,
+                                  width: 110.0,
+                                ),
+                        ),
+                        ProductPrice.DiscountPercent != null &&
+                                ProductPrice.DiscountPercent != 0
+                            ? Container(
+                                margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                                padding:
+                                    EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    color: Colors.orange),
+                                child: Text(
+                                  ProductPrice.DiscountPercent != null
+                                      ? ProductPrice.DiscountString + ' %'
+                                      : '0 %',
+                                  style: TextStyle(
+                                      fontSize: 10.0,
+                                      fontFamily: 'GoogleSans',
+                                      color: Colors.white),
+                                ),
+                              )
+                            : Container(),
 //                          ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?
 //                          Container(
 //                            padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
@@ -458,27 +539,31 @@ class _SearchScreenState extends State<SearchScreen> {
                                   fontWeight: FontWeight.w700,
                                   color: Const.textBlack),
                             ),
-                            ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey, decoration: TextDecoration.lineThrough),
-                                ),
-                              ),
-                            ) : Container(),
-                            ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                              padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.orange
-                              ),
-                              child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                                  color: Colors.white),),
-                            ) : Container(),
-                          ],),
+                            ProductPrice.DiscountPercent != null &&
+                                    ProductPrice.DiscountPercent != 0
+                                ? Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        ProductPrice.Price != null
+                                            ? '₹' +
+                                                ProductPrice.Price.toString()
+                                            : 0,
+                                        style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontFamily: 'GoogleSans',
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                            decoration:
+                                                TextDecoration.lineThrough),
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
                         SizedBox(
                           width: 5,
                         ),
@@ -488,8 +573,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Const.widgetGreen,
                             //color: Const.gray10,
                             onPressed: () {
-                              addToCart(productVariant.ProductId,
-                                  productVariant.IncrementalStep.toString(), "",productVariant.ProductPrice.Price.toString(), productVariant.ProductPrice.OfferPrice.toString());
+                              addToCart(
+                                  productVariant.ProductId,
+                                  productVariant.IncrementalStep.toString(),
+                                  "",
+                                  productVariant.ProductPrice.Price.toString(),
+                                  productVariant.ProductPrice.OfferPrice
+                                      .toString());
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 5),
@@ -531,7 +621,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   ListView buildList() {
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -539,45 +628,47 @@ class _SearchScreenState extends State<SearchScreen> {
         String name = "";
         String unit = "";
         String desc = "";
-        for(int i = 0; i < productVariant.ProductDetails.length; i++) {
-          if(productVariant.ProductDetails[i].Language == "En-US") {
+        for (int i = 0; i < productVariant.ProductDetails.length; i++) {
+          if (productVariant.ProductDetails[i].Language == "En-US") {
             name = productVariant.ProductDetails[i].Name;
             desc = productVariant.ProductDetails[i].Description;
             break;
           }
         }
 
-        for(int i = 0; i < productVariant.Units.length; i++) {
-          if(productVariant.Units[i].Language == "En-US") {
+        for (int i = 0; i < productVariant.Units.length; i++) {
+          if (productVariant.Units[i].Language == "En-US") {
             unit = productVariant.Units[i].Name;
             break;
           }
         }
 
-        ProductPriceModel ProductPrice=new ProductPriceModel();
-        ProductDetailsModel ProductDetail=new ProductDetailsModel();
-        UnitsModel Units=new UnitsModel();
-        ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+        ProductPriceModel ProductPrice = new ProductPriceModel();
+        ProductDetailsModel ProductDetail = new ProductDetailsModel();
+        UnitsModel Units = new UnitsModel();
+        ProductVariantMedia productVariantMedia = new ProductVariantMedia();
 
-        if(productVariant!=null){
-
-          if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+        if (productVariant != null) {
+          if (productVariant.ProductDetails != null &&
+              productVariant.ProductDetails.length > 0) {
             ProductDetail = productVariant.ProductDetails[0];
           }
-          if(productVariant.Units!=null && productVariant.Units.length>0){
-            Units=productVariant.Units[0];
+          if (productVariant.Units != null && productVariant.Units.length > 0) {
+            Units = productVariant.Units[0];
           }
-          if(productVariant.ProductPrice!=null){
+          if (productVariant.ProductPrice != null) {
             ProductPrice = productVariant.ProductPrice;
           }
         }
 
-        if(ProductDetail != null) {
+        if (ProductDetail != null) {
           return GestureDetector(
             onTap: () {
-
 //              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
-              Navigator.of(context).push(SlideRightRoute(page: ProductDetailScreen(productVariant.ProductId))).then((prefs) {
+              Navigator.of(context)
+                  .push(SlideRightRoute(
+                      page: ProductDetailScreen(productVariant.ProductId)))
+                  .then((prefs) {
                 count();
               });
             },
@@ -586,7 +677,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                 decoration: BoxDecoration(
                     border: new Border.all(
-                        color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                        color: Colors.grey[500],
+                        width: 0.5,
+                        style: BorderStyle.solid),
                     color: Colors.white),
                 child: Row(
                   children: <Widget>[
@@ -599,12 +692,24 @@ class _SearchScreenState extends State<SearchScreen> {
                               elevation: 0.0,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0)
-                              ),
-                              child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
-                              Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: productVariant.PrimaryMediaId == null ||
+                                      productVariant.PrimaryMediaId.isEmpty
+                                  ? Image.asset(
+                                      "02-product.png",
+                                      height: 100,
+                                      width: 100,
+                                    )
+                                  : Image.network(
+                                      ImageURL +
+                                          productVariant.PrimaryMediaId +
+                                          '&h=150&w=150',
+                                      height: 110.0,
+                                      width: 110.0,
+                                    ),
 //                            child: Image.asset("02-product.png",height: 100,width: 100,),
-                            ),),
+                            ),
+                          ),
 //                          ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?
 //                          Container(
 //                            padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
@@ -662,37 +767,63 @@ class _SearchScreenState extends State<SearchScreen> {
                           SizedBox(
                             width: 5,
                           ),
-                      Row(
-                          children: <Widget>[
-                          Text(
-                            '₹ ' + ProductPrice.OfferPrice.toString(),
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                fontFamily: 'GoogleSans',
-                                fontWeight: FontWeight.w700,
-                                color: Const.textBlack),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                '₹ ' + ProductPrice.OfferPrice.toString(),
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily: 'GoogleSans',
+                                    fontWeight: FontWeight.w700,
+                                    color: Const.textBlack),
+                              ),
+                              ProductPrice.DiscountPercent != null &&
+                                      ProductPrice.DiscountPercent != 0
+                                  ? Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 5.0, 0.0, 0.0),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          ProductPrice.Price != null
+                                              ? '₹' +
+                                                  ProductPrice.Price.toString()
+                                              : 0,
+                                          style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontFamily: 'GoogleSans',
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey,
+                                              decoration:
+                                                  TextDecoration.lineThrough),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              ProductPrice.DiscountPercent != null &&
+                                      ProductPrice.DiscountPercent != 0
+                                  ? Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 5.0, 0.0, 0.0),
+                                      padding: EdgeInsets.fromLTRB(
+                                          3.0, 2.0, 3.0, 2.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          color: Colors.orange),
+                                      child: Text(
+                                        ProductPrice.DiscountPercent != null
+                                            ? ProductPrice.DiscountString + ' %'
+                                            : '0 %',
+                                        style: TextStyle(
+                                            fontSize: 10.0,
+                                            fontFamily: 'GoogleSans',
+                                            color: Colors.white),
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
                           ),
-                            ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 12.0, fontFamily: 'GoogleSans',
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey, decoration: TextDecoration.lineThrough),
-                                ),
-                              ),
-                            ) : Container(),
-                            ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                              padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.orange
-                              ),
-                              child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                                  color: Colors.white),),
-                            ) : Container(),
-                          ],),
                           SizedBox(
                             width: 5,
                           ),
@@ -700,8 +831,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Const.widgetGreen,
                             //color: Const.gray10,
                             onPressed: () {
-                              addToCart(productVariant.ProductId,
-                                  productVariant.IncrementalStep.toString(), "",productVariant.ProductPrice.Price.toString(), productVariant.ProductPrice.OfferPrice.toString());
+                              addToCart(
+                                  productVariant.ProductId,
+                                  productVariant.IncrementalStep.toString(),
+                                  "",
+                                  productVariant.ProductPrice.Price.toString(),
+                                  productVariant.ProductPrice.OfferPrice
+                                      .toString());
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 5),
@@ -742,7 +878,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   ListView searchHistory(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -752,7 +887,9 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Container(
               decoration: BoxDecoration(
                   border: new Border.all(
-                      color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+                      color: Colors.grey[500],
+                      width: 0.5,
+                      style: BorderStyle.solid),
                   color: Colors.white),
               padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
               child: Row(
@@ -812,31 +949,39 @@ class _SearchScreenState extends State<SearchScreen> {
         });
   }
 
-  void addToCart(productId,  qty, offerId, amount , offerAmount){
+  void addToCart(productId, qty, offerId, amount, offerAmount) {
     setState(() {
-      isCountLoading=true;
+      isCountLoading = true;
     });
-    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount,offerAmount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
+    ApiCall()
+        .setContext(context)
+        .addToCart(productId, qty, offerId, amount, offerAmount)
+        .then((apiResponseModel) {
+      if (apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Item added in cart');
-      }else{
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : '');
       }
       count();
     });
   }
-  void count(){
+
+  void count() {
     setState(() {
-      isCountLoading=false;
+      isCountLoading = false;
     });
-    ApiCall().setContext(context).count().then((apiResponseModel){
-      String cartTotalStr=cartTotal;
-      if(apiResponseModel.statusCode == 200) {
-        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
-        if(cartCountModel!=null && cartCountModel.count!=null) {
+    ApiCall().setContext(context).count().then((apiResponseModel) {
+      String cartTotalStr = cartTotal;
+      if (apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel =
+            CartCountModel.fromJson(apiResponseModel.Result);
+        if (cartCountModel != null && cartCountModel.count != null) {
           cartTotalStr = cartCountModel.count.toString();
         }
-      }else{
+      } else {
 //        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
       }
       setState(() {
@@ -847,31 +992,38 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void callSearchProductAPI(String searchString) {
     setState(() {
-      isSearchLoading=true;
+      isSearchLoading = true;
     });
-    ApiCall().setContext(context).searchProduct(searchString).then((apiResponseModel) {
+    ApiCall()
+        .setContext(context)
+        .searchProduct(searchString)
+        .then((apiResponseModel) {
       setState(() {
-        isSearchLoading=false;
+        isSearchLoading = false;
       });
-      if(apiResponseModel.statusCode == 200) {
-        List<ProductWithDefaultVarientModel> productWithDefaultVarientModelList = ProductWithDefaultVarientModel.parseList(apiResponseModel.Result);
+      if (apiResponseModel.statusCode == 200) {
+        List<ProductWithDefaultVarientModel>
+            productWithDefaultVarientModelList =
+            ProductWithDefaultVarientModel.parseList(apiResponseModel.Result);
         setState(() {
           searchList = productWithDefaultVarientModelList;
           FocusScope.of(context).requestFocus(FocusNode());
           isSearch = true;
         });
       } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : '');
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : '');
       }
     });
   }
-
-
 }
-
-
 
 class Whoops extends StatelessWidget {
   @override
@@ -889,7 +1041,7 @@ class Whoops extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.asset(
-                'no-result.png',
+                'assets/VegetosAssets/no-result.png',
                 height: 200,
               ),
               SizedBox(
@@ -928,7 +1080,8 @@ class Whoops extends StatelessWidget {
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.push(context, EnterExitRoute(enterPage: CategoriesScreen()));
+                  Navigator.push(
+                      context, EnterExitRoute(enterPage: CategoriesScreen()));
                 },
                 color: Theme.of(context).primaryColor,
                 child: Padding(
@@ -978,18 +1131,15 @@ class _SheetWidState extends State<SheetWid> {
   List<String> _discount = [];
 
   List<String> _price = [];
-  category.CategoriesModel categoriesModel ;
+  category.CategoriesModel categoriesModel;
+
   @override
   Widget build(BuildContext context) {
+    categoriesModel = Provider.of<category.CategoriesModel>(context);
 
-    categoriesModel =Provider.of<category.CategoriesModel>(context);
-
-
-
-    for (var i = 0; i < categoriesModel.result.length ; i++) {
-      _category_items.add ("${categoriesModel.result[i].name}") ;
+    for (var i = 0; i < categoriesModel.result.length; i++) {
+      _category_items.add("${categoriesModel.result[i].name}");
     }
-
 
     return Container(
       color: Colors.white,
@@ -1311,20 +1461,15 @@ class _SheetWidState extends State<SheetWid> {
                                   labelStyle: radioTitle,
                                   onChange: (bool isChecked, String label,
                                           int index) =>
-
                                       print(
                                           "isChecked: $isChecked   label: $label  index: $index"),
-
                                   onSelected: (List selected) => setState(() {
                                     if (selected.length > 1) {
                                       selected.removeAt(0);
                                     } else {}
 
                                     _category = selected;
-                                    print("_category    ${_category}") ;
-
-
-
+                                    print("_category    ${_category}");
                                   }),
                                 ),
                               ],

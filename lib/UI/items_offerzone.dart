@@ -34,7 +34,7 @@ class _ItemsOfferzoneState extends State<ItemsOfferzone> {
             onTap: (){},
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 2, 15, 2),
-              child: Image.asset('filter.png', height: 23, width: 23, color: Const.iconOrange,),
+              child: Image.asset('assets/VegetosAssets/filter.png', height: 23, width: 23, color: Const.iconOrange,),
             ),
           )
         ],
@@ -62,7 +62,7 @@ class _ItemsOfferzoneState extends State<ItemsOfferzone> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        child: Image.asset('Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
+                        child: Image.asset('assets/VegetosAssets/Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),

@@ -47,7 +47,7 @@ class _AboutVegetosState extends State<AboutVegetos> {
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
@@ -59,7 +59,7 @@ class _AboutVegetosState extends State<AboutVegetos> {
         ),
 
         title: Text(
-            'About Ok',
+            'About Us',
           style: TextStyle(color: Const.textBlack),
         ),
       ),

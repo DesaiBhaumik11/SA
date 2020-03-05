@@ -389,7 +389,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)
                           ),
-                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,):
+                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("assets/VegetosAssets/02-product.png",height: 100,width: 100,):
                           Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
 //                            child: Image.asset("02-product.png",height: 100,width: 100,),
                         ),

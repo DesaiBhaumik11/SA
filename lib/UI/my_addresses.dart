@@ -49,13 +49,13 @@ class _MyAddressesState extends State<MyAddresses> {
       backgroundColor: Color(0xffEDEDEE),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 1,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.only(top: 15, bottom: 15,),
             child: Image.asset(
               'assets/OkAssets/LeftSideArrow.png',
               height: 25,
@@ -116,7 +116,7 @@ class _MyAddressesState extends State<MyAddresses> {
               width: double.infinity,
               color: Colors.white,
               child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(left: 20,top: 10, bottom: 10),
                 child: Row(
                   children: <Widget>[
                     Image.asset(
@@ -140,7 +140,7 @@ class _MyAddressesState extends State<MyAddresses> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 20, left: 15, bottom: 5),
+            padding: const EdgeInsets.only(top: 20, left: 20, bottom: 5),
             child: Text(
               'Saved Addresses',
               style: TextStyle(
@@ -186,7 +186,7 @@ class _MyAddressesState extends State<MyAddresses> {
                       ),
                       addressModal.result[index].isDefault?
                       Image.asset(
-                        'tick-orange.png',
+                        'assets/OkAssets/Tick.png',
                         height: 18,
                       ):Container(),
 
@@ -228,7 +228,7 @@ class _MyAddressesState extends State<MyAddresses> {
                         child: Padding(
                           padding: EdgeInsets.only(left: 20, bottom: 15),
                           child: Image.asset(
-                            'edit-pencil.png',
+                            'assets/OkAssets/Edit.png',
                             height: 15,
                           ),
                         ),
@@ -330,7 +330,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Image.asset(
-                          'cancel-subscription.png',
+                          'assets/VegetosAssets/cancel-subscription.png',
                           height: 150,
                         ),
                         SizedBox(

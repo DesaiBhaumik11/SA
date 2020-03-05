@@ -53,7 +53,7 @@ class _CartViewState extends State<CartView> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        child: Image.asset('Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
+                        child: Image.asset('assets/VegetosAssets/Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),

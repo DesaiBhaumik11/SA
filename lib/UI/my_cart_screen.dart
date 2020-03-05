@@ -326,7 +326,7 @@ class MyCartState extends State<MyCartScreen> {
                                 width: 100.0,
                               )
                             : Image.asset(
-                                '02-product.png',
+                                'assets/VegetosAssets/02-product.png',
                                 height: 100.0,
                                 width: 100.0,
                               ),
@@ -708,7 +708,7 @@ class MyCartState extends State<MyCartScreen> {
                           child: result.PrimaryMediaId == null ||
                                   result.PrimaryMediaId.toString().isEmpty
                               ? Image.asset(
-                                  "02-product.png",
+                                  "assets/VegetosAssets/02-product.png",
                                   height: 100,
                                   width: 100,
                                 )
@@ -944,7 +944,7 @@ class MyCartState extends State<MyCartScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image.asset(
-                  'assets/profile.png',
+                  'assets/VegetosAssets/profile.png',
                   height: 200,
                   width: 200,
                 ),

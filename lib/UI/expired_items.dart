@@ -113,7 +113,7 @@ class _ExpiredItemsState extends State<ExpiredItems> {
                     child: Stack(
                       children: <Widget>[
                         Container(
-                          child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
+                          child: Image.asset('assets/VegetosAssets/01-product.png', height: 100.0, width: 100.0,),
                         ),
                       ],
                     ),

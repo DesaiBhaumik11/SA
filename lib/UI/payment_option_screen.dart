@@ -547,7 +547,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         children: <Widget>[
           Container(
             child: Image.asset(
-              'assets/promocode.png',
+              'assets/VegetosAssets/promocode.png',
               height: 25.0,
               width: 25.0,
             ),
@@ -588,7 +588,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
           children: <Widget>[
             Container(
               child: Image.asset(
-                'assets/promocode.png',
+                'assets/VegetosAssets/promocode.png',
                 height: 25.0,
                 width: 25.0,
               ),
@@ -678,7 +678,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
           children: <Widget>[
             Container(
               child: Image.asset(
-                'assets/wallet.png',
+                'assets/VegetosAssets/Wallet.png',
                 height: 25.0,
                 width: 25.0,
               ),

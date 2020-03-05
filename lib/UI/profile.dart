@@ -160,7 +160,7 @@ class _ProfileState extends State<Profile> {
                           child: Row(
                             children: <Widget>[
                               Image.asset(
-                                'assets/myorders.png',
+                                'assets/OkAssets/MyOrderIn.png',
                                 height: 23.0,
                               ),
                               SizedBox(
@@ -218,7 +218,7 @@ class _ProfileState extends State<Profile> {
                           child: Row(
                             children: <Widget>[
                               Image.asset(
-                                'mycart.png',
+                                'assets/OkAssets/Mycart.png',
                                 height: 23.0,
                               ),
                               SizedBox(
@@ -250,7 +250,7 @@ class _ProfileState extends State<Profile> {
                           child: Row(
                             children: <Widget>[
                               Image.asset(
-                                'my_addressess.png',
+                                'assets/OkAssets/MyAddress1.png',
                                 height: 23.0,
                               ),
                               SizedBox(

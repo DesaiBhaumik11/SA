@@ -82,7 +82,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
       backgroundColor: Color(0xffffffff),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 1,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -393,10 +393,10 @@ class _AddNewAddressState extends State<AddNewAddress> {
       if (apiResponseModel.statusCode == 200) {
         Result result_=
         Result(
-              id:          widget.edit?widget.result.id:  Uuid().v4(),
-            namePrefix: EnumNamePrefix.getNamePrefix(_radioValue1),
+            id:            widget.edit?widget.result.id:  Uuid().v4(),
+            namePrefix:    EnumNamePrefix.getNamePrefix(_radioValue1),
             name:          fName,
-             contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
+            contactId:     widget.edit?widget.result.contactId:  Uuid().v4(),
             addressLine1:  addressLine1,
             addressLine2:  addressLine2,
             city:          city,
@@ -434,18 +434,18 @@ class _AddNewAddressState extends State<AddNewAddress> {
           Address add = address;
           Result result =
           Result(
-            //    id:          widget.edit?widget.result.id:  Uuid().v4(),
-              name: fName,
-              // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
-              addressLine1: addressLine1,
-              addressLine2: addressLine2,
-              city: add.subAdminArea,
-              country: add.countryName,
-              state: add.adminArea,
-              pin: add.postalCode,
-              latitude: add.coordinates.latitude,
-              longitude: add.coordinates.longitude,
-              isDefault: true
+            //    id:        widget.edit?widget.result.id:  Uuid().v4(),
+              name:          fName,
+              // contactId:  widget.edit?widget.result.contactId:  Uuid().v4(),
+              addressLine1:  addressLine1,
+              addressLine2:  addressLine2,
+              city:          add.subAdminArea,
+              country:       add.countryName,
+              state:         add.adminArea,
+              pin:           add.postalCode,
+              latitude:      add.coordinates.latitude,
+              longitude:     add.coordinates.longitude,
+              isDefault:     true
           );
         });
       });
@@ -744,8 +744,8 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   addressChanged(){
     Navigator.pop(context) ;
-
   }
+
 }
 
 class FunkyOverlay extends StatefulWidget {
@@ -796,7 +796,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Image.asset(
-                            'locality-not-found.png',
+                            'assets/VegetosAssets/locality-not-found.png',
                             height: 150,
                           ),
                           SizedBox(

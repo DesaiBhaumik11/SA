@@ -50,6 +50,7 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(

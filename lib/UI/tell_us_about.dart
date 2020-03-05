@@ -13,16 +13,18 @@ class _TellUsAboutState extends State<TellUsAbout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffEDEDEE),
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        centerTitle: false,
         elevation: 1,
         leading: InkWell(
           onTap: (){
             Navigator.pop(context);
           },
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.only(left: 15, top: 15, bottom: 15, right: 15),
             child: Image.asset('assets/OkAssets/LeftSideArrow.png', height: 25,),
           ),
         ),
@@ -31,63 +33,63 @@ class _TellUsAboutState extends State<TellUsAbout> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Column(
-            children: <Widget>[
-
-              Padding(
-                padding: EdgeInsets.all(15),
-                child: TextFormField(
-                  maxLines: 15,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87
-                  ),
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: InputBorder.none,
-                    hintText: 'Write your issue here...',
-                    hintStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87
-                    )
-                  ),
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5, color: Const.allBOxStroke)
+              ),
+              child: TextFormField(
+                maxLines: 15,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87
+                ),
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: InputBorder.none,
+                  hintText: 'Write your issue here...',
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87
+                  )
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: RaisedButton(
-                        color: Theme.of(context).primaryColor,
-                        onPressed: (){
-                          showDialog(
-                              context: context,
-                              builder: (s) {
-                                return FunkyOverlay();
-                              });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text('Submit', style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-
-            ],
+            ),
           ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: (){
+                      showDialog(
+                          context: context,
+                          builder: (s) {
+                            return FunkyOverlay();
+                          });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text('Submit', style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+
         ],
       ),
     );

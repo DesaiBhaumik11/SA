@@ -43,7 +43,7 @@ class _AddBalanceState extends State<AddBalance> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   image: DecorationImage(
-                      image: AssetImage('wallet-bg.png'),
+                      image: AssetImage('assets/VegetosAssets/wallet-bg.png'),
                       fit: BoxFit.cover
                   )
               ),

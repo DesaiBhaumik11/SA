@@ -59,7 +59,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                       child: Stack(
                         children: <Widget>[
                           Container(
-                            child: Image.asset('Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
+                            child: Image.asset('assets/VegetosAssets/Cherry-Tomatoes.png', height: 100.0, width: 100.0,),
                           ),
                         ],
                       ),
@@ -132,7 +132,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                   child: Row(
                     children: <Widget>[
 
-                      Image.asset('order-confirmed.png', height: 22,),
+                      Image.asset('assets/VegetosAssets/order-confirmed.png', height: 22,),
 
                       SizedBox(
                         width: 10,

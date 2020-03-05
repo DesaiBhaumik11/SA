@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 
@@ -115,7 +115,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
 
                       SizedBox(width: 4,),
 
-                      Image.asset('tick-orange.png', height: 18,),
+                      Image.asset('assets/OkAssets/Tick.png', height: 18,),
 
                       Expanded(
                         flex: 1,
@@ -126,7 +126,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
                         onTap: (){},
                         child: Padding(
                           padding: EdgeInsets.only(left: 20,),
-                          child: Image.asset('assets/OkAssets/Edit.png', height: 25,),
+                          child: Image.asset('assets/OkAssets/Edit.png', height: 22,),
                         ),
                       )
 

@@ -28,6 +28,8 @@ import 'package:vegetos_flutter/models/search_products.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
+import 'UI/CategoryWiseProductListScreen.dart';
+import 'UI/all_product_screen.dart';
 import 'UI/order_placed_screen.dart';
 import 'UI/about_app_release.dart';
 import 'UI/about_vegetos.dart';
@@ -75,7 +77,7 @@ class MyApp extends StatelessWidget {
 
   final searchModel=SearchModel();
 
-  final mycartModal=MyCartModal();
+  final myCartModal=MyCartModal();
 
   final brandModel=BrandModel();
   final appFirstModal=AppFirstModal();
@@ -97,7 +99,7 @@ class MyApp extends StatelessWidget {
 
       ChangeNotifierProvider<ShippingSlotModal>.value(value: shippingSlotModal),
       ChangeNotifierProvider<AppFirstModal>.value(value: appFirstModal),
-      ChangeNotifierProvider<MyCartModal>.value(value: mycartModal),
+      ChangeNotifierProvider<MyCartModal>.value(value: myCartModal),
       ChangeNotifierProvider<AddressModal>.value(value: addressModal),
       ChangeNotifierProvider<ProductDetailModal>.value(value: productModal),
       ChangeNotifierProvider<CategoriesModel>.value(value: categories),
@@ -115,50 +117,6 @@ class MyApp extends StatelessWidget {
           fontFamily: 'GoogleSans',
         ),
         debugShowCheckedModeBanner: false,
-        /*initialRoute: Const.initialRoute,
-        routes: <String, WidgetBuilder>{
-          Const.welcome: (BuildContext context) => WelcomeScreenState(),
-          Const.dashboard: (BuildContext context) => DashboardScreen(),
-          Const.categories: (BuildContext context) => CategoriesScreen(),
-          Const.productDetail: (BuildContext context) => ProductDetailScreen(),
-          Const.myCart: (BuildContext context) => MyCartScreen(),
-          Const.paymentOption: (BuildContext context) => PaymentOptionScreen(""),Const.setDeliveryLocation: (BuildContext context) =>
-              SetDeliveryLocation(),
-          Const.setLocationManually: (BuildContext context) =>SetLocationManually(),
-          Const.locationServiceUnavailable: (BuildContext context) =>
-              LocationServiceUnavailable(() {}),
-          Const.searchScreen: (BuildContext context) => SearchScreen(),
-          Const.setDeliveryDetails: (BuildContext context) =>
-              SetDeliveryDetails(null),
-          Const.orderPlacedScreen: (BuildContext context) =>
-              OrderPlacedScreen(),
-          Const.chooseAddress: (BuildContext context) => ChooseAddress(),
-          Const.promoCode: (BuildContext context) => PromoCode(),
-          Const.customerSupport1: (BuildContext context) => CustomerSupport1(),
-          Const.customerSupport2: (BuildContext context) => CustomerSupport2(),
-          Const.expiredItems: (BuildContext context) => ExpiredItems(),
-          Const.tellUsAbout: (BuildContext context) => TellUsAbout(),
-          Const.loginScreen: (BuildContext context) => LoginScreen(),
-          Const.verifyOTP: (BuildContext context) => VerifyOTP(""),
-          Const.updateProfile: (BuildContext context) => UpdateProfile(),
-          Const.myOrders: (BuildContext context) => MyOrders(),
-          Const.myAddresses: (BuildContext context) => MyAddresses(),
-          Const.addNewAddress: (BuildContext context) => AddNewAddress(),
-          Const.locateMap: (BuildContext context) => LocateMap(),
-          Const.offerzone: (BuildContext context) => Offerzone(),
-          Const.itemsOfferzone: (BuildContext context) => ItemsOfferzone(),
-          Const.wallet: (BuildContext context) => Wallet(),
-          Const.addBalance: (BuildContext context) => AddBalance(),
-          Const.aboutVegetos: (BuildContext context) => AboutVegetos(),
-          Const.aboutAppRelease: (BuildContext context) => AboutAppRelease(),
-          Const.profile: (BuildContext context) => Profile(),
-          Const.mySubscriptions: (BuildContext context) => MySubscriptions(),
-          Const.itemsSubscribed: (BuildContext context) => ItemsSubscribed(),
-          Const.selectContact: (BuildContext context) => SelectContact(),
-          Const.sharedCart: (BuildContext context) => SharedCart(),
-          Const.cartView: (BuildContext context) => CartView(),
-          Const.registerScreen: (BuildContext context) => RegisterScreen(),
-        },*/
         home: SplashScreen()));
   }
 }

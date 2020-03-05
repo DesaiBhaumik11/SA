@@ -33,8 +33,9 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.asset(
-                    'customer-support.png',
+                    'assets/VegetosAssets/customer-support.png',
                     height: 25,
+                    width: 25,
                   ),
                   SizedBox(
                     width: 10,
@@ -99,7 +100,7 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
                                 children: <Widget>[
                                   Container(
                                     child: Image.asset(
-                                      'Cherry-Tomatoes.png',
+                                      'assets/VegetosAssets/Cherry-Tomatoes.png',
                                       height: 100.0,
                                       width: 100.0,
                                     ),

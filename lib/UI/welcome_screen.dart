@@ -298,6 +298,4 @@ class WelcomeScreen extends State<WelcomeScreenState>
     );
   }
 
-
-
 }

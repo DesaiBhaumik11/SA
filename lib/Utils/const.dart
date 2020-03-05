@@ -8,48 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 //Pages Srings
 
-class Const
-{
-  /*static String initialRoute = "/";
-  static String welcome = "/WelcomeScreen";
-  static String dashboard = "/DashboardScreen";
-  static String categories = "/CategoriesScreen";
-  static String productDetail = "/ProductDetailScreen";
-  static String myCart = "/MyCartScreen";
-  static String paymentOption = "/PaymentOptionScreen";
-  static String setDeliveryLocation = "/SetDeliveryLocation";
-  static String setLocationManually = "/SetLocationManually";
-  static String locationServiceUnavailable = "/LocationServiceUnavailable";
-  static String searchScreen = "/SearchScreen";
-  static String setDeliveryDetails = "/SetDeliveryDetails";
-  static String orderPlacedScreen = "/OrderPlacedScreen";
-  static String chooseAddress = "/ChooseAddress";
-  static String promoCode = "/PromoCode";
-  static String customerSupport1 = "/CustomerSupport1";
-  static String customerSupport2 = "/CustomerSupport2";
-  static String expiredItems = "/ExpiredItems";
-  static String tellUsAbout = "/TellUsAbout";
-  static String loginScreen = "/LoginScreen";
-  static String verifyOTP = "/VerifyOTP";
-  static String updateProfile = "/UpdateProfile";
-  static String myOrders = "/MyOrders";
-  static String myAddresses = "/MyAddresses";
-  static String addNewAddress = "/AddNewAddress";
-  static String locateMap = "/LocateMap";
-  static String offerzone = "/Offerzone";
-  static String itemsOfferzone = "/ItemsOfferzone";
-  static String wallet = "/Wallet";
-  static String addBalance = "/AddBalance";
-  static String aboutVegetos = "/AboutVegetos";
-  static String aboutAppRelease = "/AboutAppRelease";
-  static String profile = "/Profile";
-  static String mySubscriptions = "/MySubscriptions";
-  static String itemsSubscribed = "/ItemsSubscribed";
-  static String selectContact = "/SelectContact";
-  static String sharedCart = "/SharedCart";
-  static String cartView = "/CartView";
-  static String registerScreen = "/RegisterScreen";*/
-
+class Const {
 
   // Paragraph Strings
 
