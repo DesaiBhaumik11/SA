@@ -74,34 +74,36 @@ class _ProfileState extends State<Profile> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Const.allBOxStroke),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 19,
+      body: Container(
+        color: Colors.white70,
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 0.5, color: Colors.grey[500]),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 19,
+                                ),
                               ),
-                            ),
 //                            GestureDetector(
 //                              onTap: (){},
 //                              child: Padding(
@@ -109,19 +111,19 @@ class _ProfileState extends State<Profile> {
 //                                child: Image.asset('edit-pencil.png', height: 15,),
 //                              ),
 //                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Wrap(
-                          children: <Widget>[
-                            Text(
-                              email,
-                              style: text,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Wrap(
+                            children: <Widget>[
+                              Text(
+                                email,
+                                style: text,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
 //                            GestureDetector(
 //                              onTap: (){},
 //                              child: Padding(
@@ -129,147 +131,147 @@ class _ProfileState extends State<Profile> {
 //                                child: Image.asset('edit-pencil.png', height: 12,),
 //                              ),
 //                            )
-                          ],
-                        ),
-                        Text(
-                          mobile,
-                          style: text,
-                        ),
-                      ],
+                            ],
+                          ),
+                          Text(
+                            mobile,
+                            style: text,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 0.5, color: Const.allBOxStroke),
-                    color: Colors.white,
+                  SizedBox(
+                    height: 15,
                   ),
-                  child: Column(
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context, EnterExitRoute(enterPage: MyOrders()));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          child: Row(
-                            children: <Widget>[
-                              Image.asset(
-                                'assets/OkAssets/MyOrderIn.png',
-                                height: 23.0,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                'My Orders',
-                                style: text,
-                              ),
-                            ],
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 0.5, color: Colors.grey[500]),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context, EnterExitRoute(enterPage: MyOrders()));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/OkAssets/MyOrderIn.png',
+                                  height: 23.0,
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'My Orders',
+                                  style: text,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black26,
-                      ),
+                        Container(
+                          width: double.infinity,
+                          height: 0,
+                          color: Colors.black26,
+                        ),
 
-                      /*InkWell(
-                        onTap: (){
-                          Navigator.pushNamed(context, Const.mySubscriptions);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                          child: Row(
-                            children: <Widget>[
+                        /*InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, Const.mySubscriptions);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            child: Row(
+                              children: <Widget>[
 
-                              Image.asset('my_subscription.png', height: 23.0,),
+                                Image.asset('my_subscription.png', height: 23.0,),
 
-                              SizedBox(width: 15,),
+                                SizedBox(width: 15,),
 
-                              Text('My Subscriptions', style: text,),
+                                Text('My Subscriptions', style: text,),
 
-                            ],
+                              ],
+                            ),
+                          ),
+                        ),*/
+
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.black26,
+                        ),
+
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                EnterExitRoute(enterPage: MyCartScreen()));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/OkAssets/Mycart.png',
+                                  height: 23.0,
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'My Cart',
+                                  style: text,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),*/
 
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black26,
-                      ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.black26,
+                        ),
 
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              EnterExitRoute(enterPage: MyCartScreen()));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          child: Row(
-                            children: <Widget>[
-                              Image.asset(
-                                'assets/OkAssets/Mycart.png',
-                                height: 23.0,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                'My Cart',
-                                style: text,
-                              ),
-                            ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                EnterExitRoute(enterPage: MyAddresses()));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(
+                                  'assets/OkAssets/MyAddress1.png',
+                                  height: 23.0,
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'My Address',
+                                  style: text,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black26,
-                      ),
-
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              EnterExitRoute(enterPage: MyAddresses()));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          child: Row(
-                            children: <Widget>[
-                              Image.asset(
-                                'assets/OkAssets/MyAddress1.png',
-                                height: 23.0,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                'My Address',
-                                style: text,
-                              ),
-                            ],
-                          ),
+                        Container(
+                          width: double.infinity,
+                          height: 0,
+                          color: Colors.black26,
                         ),
-                      ),
-
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black26,
-                      ),
 
 //                      InkWell(
 //                        onTap: (){
@@ -337,13 +339,14 @@ class _ProfileState extends State<Profile> {
 //                          ),
 //                        ),
 //                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -64,95 +64,98 @@ class _MyAddressesState extends State<MyAddresses> {
         ),
         title: Text('My Addresses',style: TextStyle(color: Const.textBlack),),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(height: 2, color: Const.allBOxStroke,),
-          GestureDetector(
-            onTap: () {
+      body: Container(
+        color: Colors.white70,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Divider(height: 2, color: Const.allBOxStroke,),
+            GestureDetector(
+              onTap: () {
 
 //              Utility.checkEnabledLocationService().then((value){
 //                if(value==false){
 //                  return;
 //                }
-              ProgressDialog progresDialog=Utility.progressDialog(context, "");
-              progresDialog.show();
-              Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
-                final coordinates = new Coordinates(position.latitude, position.longitude);
-                var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-                var first = addresses.first;
-                print("${first.featureName} : ${first.addressLine}");
-                if(progresDialog!=null && progresDialog.isShowing()){
-                  progresDialog.dismiss();
-                }
-                Navigator.push(context, SlideLeftRoute(
-                page: LocateMap(latLng:widget!=null? LatLng(position.latitude,position.longitude):null,
-                  addressLine2: "",))).then((address){
-                Address add = address;
-                Result result=
-                Result(
-                //    id:          widget.edit?widget.result.id:  Uuid().v4(),
-                name:          "",
-                // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
-                addressLine1:  add.addressLine,
-                addressLine2:  add.subLocality,
-                city:          add.locality,
-                country:       add.countryName,
-                state:         add.adminArea,
-                pin:           add.postalCode,
-                latitude:      add.coordinates.latitude,
-                longitude:     add.coordinates.longitude,
-                isDefault:     true
-                );
-                Navigator.push(context, SlideLeftRoute(page: AddNewAddress(result: result,edit: false)));
-                });
+                ProgressDialog progresDialog=Utility.progressDialog(context, "");
+                progresDialog.show();
+                Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
+                  final coordinates = new Coordinates(position.latitude, position.longitude);
+                  var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+                  var first = addresses.first;
+                  print("${first.featureName} : ${first.addressLine}");
+                  if(progresDialog!=null && progresDialog.isShowing()){
+                    progresDialog.dismiss();
+                  }
+                  Navigator.push(context, SlideLeftRoute(
+                  page: LocateMap(latLng:widget!=null? LatLng(position.latitude,position.longitude):null,
+                    addressLine2: "",))).then((address){
+                  Address add = address;
+                  Result result=
+                  Result(
+                  //    id:          widget.edit?widget.result.id:  Uuid().v4(),
+                  name:          "",
+                  // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
+                  addressLine1:  add.addressLine,
+                  addressLine2:  add.subLocality,
+                  city:          add.locality,
+                  country:       add.countryName,
+                  state:         add.adminArea,
+                  pin:           add.postalCode,
+                  latitude:      add.coordinates.latitude,
+                  longitude:     add.coordinates.longitude,
+                  isDefault:     true
+                  );
+                  Navigator.push(context, SlideLeftRoute(page: AddNewAddress(result: result,edit: false)));
+                  });
 //
-            });
+              });
 //              });
-              },
+                },
 
-            child: Container(
-              width: double.infinity,
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20,top: 10, bottom: 10),
-                child: Row(
-                  children: <Widget>[
-                    Image.asset(
-                      'assets/OkAssets/UseCurrantLocation.png',
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Add new address',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: Const.widgetGreen,
+              child: Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20,top: 10, bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/OkAssets/UseCurrantLocation.png',
+                        height: 20,
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Add new address',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: Const.widgetGreen,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20, left: 20, bottom: 5),
-            child: Text(
-              'Saved Addresses',
-              style: TextStyle(
-                  color: Color(0xff2d2d2d),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, bottom: 5),
+              child: Text(
+                'Saved Addresses',
+                style: TextStyle(
+                    color: Color(0xff2d2d2d),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          Expanded(
-            child: buildList(context),
-          )
-        ],
+            Expanded(
+              child: buildList(context),
+            )
+          ],
+        ),
       ),
     );
   }

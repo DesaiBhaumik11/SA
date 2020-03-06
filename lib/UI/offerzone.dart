@@ -35,7 +35,10 @@ class _OfferzoneState extends State<Offerzone> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: buildList(context),
+      body: Container(
+        color: Colors.white70,
+        child: buildList(context),
+      ),
     );
   }
 

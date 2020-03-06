@@ -31,12 +31,11 @@ import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
 
 import 'my_cart_screen.dart';
 
-
 class AllProductScreen extends StatefulWidget {
-  String name = "" ;
+  String name = "";
 
-  AllProductScreen(String name){
-    this.name = name ;
+  AllProductScreen(String name) {
+    this.name = name;
   }
 
   @override
@@ -44,67 +43,69 @@ class AllProductScreen extends StatefulWidget {
 }
 
 class _AllProductScreenState extends State<AllProductScreen> {
-  MyCartModal myCartModal ;
-  static AppFirstModal appFirstModal ;
+  MyCartModal myCartModal;
 
-  String name ;
+  static AppFirstModal appFirstModal;
+
+  String name;
 
   Future getProduct;
   String cartTotal = '0';
   String ImageURL = '';
 
   int pageNUmber = 1;
-  bool isFromOutside=false;
+  bool isFromOutside = false;
   int pageSize = 10;
-  ProgressDialog progressDialog ;
-  bool isCountLoading=false;
+  ProgressDialog progressDialog;
 
-  _AllProductScreenState(String name){
-    this.name = name ;
+  bool isCountLoading = false;
+
+  _AllProductScreenState(String name) {
+    this.name = name;
   }
 
   @override
   void setState(fn) {
     // TODO: implement setState
-    if(mounted) {
+    if (mounted) {
       super.setState(fn);
     }
   }
+
   @override
   void initState() {
     // TODO: implement initState
-    if(name == 'Best Selling Items') {
-      getProduct = ApiCall().bestSellingItems(pageNUmber.toString(), pageSize.toString());
-    } else if(name == "Vegeto's Exclusive") {
-      getProduct = ApiCall().vegetosExclusive(pageNUmber.toString(), pageSize.toString());
+    if (name == 'Best Selling Items') {
+      getProduct = ApiCall()
+          .bestSellingItems(pageNUmber.toString(), pageSize.toString());
+    } else if (name == "Vegeto's Exclusive") {
+      getProduct = ApiCall()
+          .vegetosExclusive(pageNUmber.toString(), pageSize.toString());
     } else {
-      getProduct = ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString());
+      getProduct = ApiCall()
+          .recommendedForYou(pageNUmber.toString(), pageSize.toString());
     }
 
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         ImageURL = prefs.getString("ImageURL");
       });
-
     });
     count();
 
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-
     //appFirstModal=Provider.of<AppFirstModal>(context);
-     //myCartModal=Provider.of<MyCartModal>(context);
+    //myCartModal=Provider.of<MyCartModal>(context);
     //final bestSelling=Provider.of<BestSellingProductModel>(context);
     //final vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
     //final recommendedProducts=Provider.of<RecommendedProductsModel>(context);
 
     return Scaffold(
-      backgroundColor: Const.gray10,
+      backgroundColor: Color(0xffeeeeee),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: InkWell(
@@ -119,59 +120,82 @@ class _AllProductScreenState extends State<AllProductScreen> {
             ),
           ),
         ),
-        title: Text('$name', style: TextStyle(color: Const.textBlack),),
+        title: Text(
+          '$name',
+          style: TextStyle(color: Const.textBlack),
+        ),
         backgroundColor: Colors.white,
         actions: <Widget>[
           InkWell(
             onTap: () {
               //myCartModal.loaded =false ;
-              Navigator.push(context, SlideRightRoute(page: MyCartScreen())).then((returnn){
-                pageNUmber=1;
-                isFromOutside=true;
+              Navigator.push(context, SlideRightRoute(page: MyCartScreen()))
+                  .then((returnn) {
+                pageNUmber = 1;
+                isFromOutside = true;
                 count();
               });
             },
             child: Container(
               margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-              child: isCountLoading ? new Align(alignment:Alignment.center,child:new Center(child: CircularProgressIndicator(backgroundColor:  Colors.white,strokeWidth: 2,),)) :
-              Stack(
-                children: <Widget>[
-                  Align(
-                    child: Image.asset("assets/OkAssets/Mycart.png",height: 28, width: 28,),
-                    alignment: Alignment.center,
-                  ),
-                  cartTotal =="0" ? Container(margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),) :
-                  Container(
-                    margin: EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: CircleAvatar(
-                        backgroundColor: Const.widgetGreen,
-                        radius: 8.0,
-                        child: Text(cartTotal,
-                            style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
-                        //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
-                      ),
+              child: isCountLoading
+                  ? new Align(
+                      alignment: Alignment.center,
+                      child: new Center(
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      ))
+                  : Stack(
+                      children: <Widget>[
+                        Align(
+                          child: Image.asset(
+                            "assets/OkAssets/Mycart.png",
+                            height: 28,
+                            width: 28,
+                          ),
+                          alignment: Alignment.center,
+                        ),
+                        cartTotal == "0"
+                            ? Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
+                              )
+                            : Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(15.0, 10.0, 5.0, 0.0),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: CircleAvatar(
+                                    backgroundColor: Const.widgetGreen,
+                                    radius: 8.0,
+                                    child: Text(cartTotal,
+                                        style: TextStyle(
+                                            fontSize: 10.0,
+                                            fontFamily: 'GoogleSans',
+                                            color: Colors.white)),
+                                    //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
+                                  ),
+                                ),
+                              )
+                      ],
                     ),
-                  )
-                ],
-              ),
             ),
           )
         ],
-    )
-      ,body: SingleChildScrollView(
+      ),
+      body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-
             productList(),
-
           ],
         ),
-      ),);
+      ),
+    );
   }
 
   @override
@@ -179,37 +203,37 @@ class _AllProductScreenState extends State<AllProductScreen> {
     super.dispose();
   }
 
-  Widget childView(BuildContext context, ProductWithDefaultVarientModel productVariant) {
-
+  Widget childView(
+      BuildContext context, ProductWithDefaultVarientModel productVariant) {
     String name = "";
     String unit = "";
-    for(int i = 0; i < productVariant.ProductDetails.length; i++) {
-      if(productVariant.ProductDetails[i].Language == "En-US") {
+    for (int i = 0; i < productVariant.ProductDetails.length; i++) {
+      if (productVariant.ProductDetails[i].Language == "En-US") {
         name = productVariant.ProductDetails[i].Name;
         break;
       }
     }
 
-    for(int i = 0; i < productVariant.Units.length; i++) {
-      if(productVariant.Units[i].Language == "En-US") {
+    for (int i = 0; i < productVariant.Units.length; i++) {
+      if (productVariant.Units[i].Language == "En-US") {
         unit = productVariant.Units[i].Name;
         break;
       }
     }
-    ProductPriceModel ProductPrice=new ProductPriceModel();
-    ProductDetailsModel ProductDetail=new ProductDetailsModel();
-    UnitsModel Units=new UnitsModel();
-    ProductVariantMedia productVariantMedia=new ProductVariantMedia();
+    ProductPriceModel ProductPrice = new ProductPriceModel();
+    ProductDetailsModel ProductDetail = new ProductDetailsModel();
+    UnitsModel Units = new UnitsModel();
+    ProductVariantMedia productVariantMedia = new ProductVariantMedia();
 
-    if(productVariant!=null){
-
-      if(productVariant.ProductDetails!=null && productVariant.ProductDetails.length>0){
+    if (productVariant != null) {
+      if (productVariant.ProductDetails != null &&
+          productVariant.ProductDetails.length > 0) {
         ProductDetail = productVariant.ProductDetails[0];
       }
-      if(productVariant.Units!=null && productVariant.Units.length>0){
-        Units=productVariant.Units[0];
+      if (productVariant.Units != null && productVariant.Units.length > 0) {
+        Units = productVariant.Units[0];
       }
-      if(productVariant.ProductPrice!=null){
+      if (productVariant.ProductPrice != null) {
         ProductPrice = productVariant.ProductPrice;
       }
     }
@@ -359,63 +383,94 @@ class _AllProductScreenState extends State<AllProductScreen> {
 //              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
 //            }) ;
 //            Navigator.pop(context);
-            Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId))).then((returnn){
-              pageNUmber=1;
-              isFromOutside=true;
+            Navigator.push(
+                    context,
+                    EnterExitRoute(
+                        enterPage:
+                            ProductDetailScreen(productVariant.ProductId)))
+                .then((returnn) {
+              pageNUmber = 1;
+              isFromOutside = true;
               count();
             });
           },
           child: Container(
-            margin: EdgeInsets.only(right: 5,left: 5, bottom: 10),
+            padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
             decoration: BoxDecoration(
-                border: new Border.all(
-                    color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
+//                border: new Border.all(
+//                    color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
                 color: Colors.white),
-//            width: 180.0,
-//            height: 280.0,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Stack(
-                  //alignment: Alignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-//                          width: 110.0,
-//                          height: 110.0,
-                        //alignment: Alignment.center,
-                        child: Card(
-                          elevation: 0.0,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                          ),
-                          child: productVariant.PrimaryMediaId==null||productVariant.PrimaryMediaId.isEmpty?Image.asset("assets/VegetosAssets/02-product.png",height: 100,width: 100,):
-                          Image.network(ImageURL + productVariant.PrimaryMediaId + '&h=150&w=150', height: 110.0, width: 110.0,),
-//                            child: Image.asset("02-product.png",height: 100,width: 100,),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                  child: Stack(
+                    //alignment: Alignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                              border: new Border.all(
+                                  color: Colors.grey[500],
+                                  width: 0.5,
+                                  style: BorderStyle.solid),
+                              color: Colors.white),
+                          child: productVariant.PrimaryMediaId == null ||
+                                  productVariant.PrimaryMediaId.isEmpty
+                              ? Image.asset(
+                                  "assets/VegetosAssets/02-product.png",
+                                  height: 100,
+                                  width: 100,
+                                )
+                              : Image.network(
+                                  ImageURL +
+                                      productVariant.PrimaryMediaId +
+                                      '&h=150&w=150',
+                                  height: 110.0,
+                                  width: 110.0,
+                                ),
+                         // margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
-                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
-                    ),
-//                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0.0 ? Container(
-//                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
-//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-//                        decoration: BoxDecoration(
-//                            borderRadius: BorderRadius.circular(5.0),
-//                            color: Colors.orange
-//                        ),
-//                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-//                            color: Colors.white),),
-//                      ) : Container(),
-                  ],
+                      ProductPrice.DiscountPercent != null &&
+                              ProductPrice.DiscountPercent != 0.0
+                          ? Container(
+                              margin: EdgeInsets.fromLTRB(5.0, 15.0, 0.0, 0.0),
+                              padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2.0),
+                                  color: Colors.orange),
+                              child: Text(
+                                ProductPrice.DiscountPercent != null
+                                    ? ProductPrice.DiscountString + ' %'
+                                    : '0 %',
+                                style: TextStyle(
+                                    fontSize: 10.0,
+                                    fontFamily: 'GoogleSans',
+                                    color: Colors.white),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
                 ),
-                Expanded(child: Container(),flex: 1,),
+                Expanded(
+                  child: Container(),
+                  flex: 1,
+                ),
                 Container(
                   margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                   child: Row(
                     children: <Widget>[
                       Flexible(
-                        child: Text(name ,
-                            overflow: TextOverflow.ellipsis, maxLines: 2 ,style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                        child: Text(name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontFamily: 'GoogleSans',
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black)),
                       ),
@@ -426,9 +481,15 @@ class _AllProductScreenState extends State<AllProductScreen> {
                   margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(productVariant.MinimumOrderQuantity.toString() + " " + unit,style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
+                    child: Text(
+                      productVariant.MinimumOrderQuantity.toString() +
+                          " " +
+                          unit,
+                      style: TextStyle(
+                          fontSize: 11.0,
+                          fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
                     ),
                   ),
                 ),
@@ -438,89 +499,126 @@ class _AllProductScreenState extends State<AllProductScreen> {
                       margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: Text('₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black),
+                        child: Text(
+                          '₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              fontFamily: 'GoogleSans',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
                         ),
                       ),
                     ),
-                    ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(ProductPrice.Price != null ? '₹' + ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey, decoration: TextDecoration.lineThrough),
-                        ),
-                      ),
-                    ): Container(),
-                    ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                      padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.orange
-                      ),
-                      child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountString + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                          color: Colors.white),),
-                    ) : Container(),
+                    ProductPrice.DiscountPercent != null &&
+                            ProductPrice.DiscountPercent != 0
+                        ? Container(
+                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                ProductPrice.Price != null
+                                    ? '₹' + ProductPrice.Price.toString()
+                                    : 0,
+                                style: TextStyle(
+                                    fontSize: 10.0,
+                                    fontFamily: 'GoogleSans',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                            ),
+                          )
+                        : Container(),
+//                    ProductPrice.DiscountPercent != null &&
+//                            ProductPrice.DiscountPercent != 0
+//                        ? Container(
+//                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+//                            decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(5.0),
+//                                color: Colors.orange),
+//                            child: Text(
+//                              ProductPrice.DiscountPercent != null
+//                                  ? ProductPrice.DiscountString + ' %'
+//                                  : '0 %',
+//                              style: TextStyle(
+//                                  fontSize: 10.0,
+//                                  fontFamily: 'GoogleSans',
+//                                  color: Colors.white),
+//                            ),
+//                          )
+//                        : Container(),
                   ],
                 ),
-                InkWell(child:  Container(
-                  margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      //color: Const.gray10
-                      color: Const.primaryColor
+                InkWell(
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2.0),
+                        //color: Const.gray10
+                        color: Const.primaryColor),
+                    child: Text('+ ADD',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontFamily: 'GoogleSans',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        )),
                   ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-                      color: Colors.white, fontWeight: FontWeight.w500,)),
-                  ),
-
-                ),
-                  onTap: (){
+                  onTap: () {
                     //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
                     //myCartModal.addTocart(productModal);
-                    addToCart(productVariant.ProductId, productVariant.IncrementalStep.toString(),
-                        "", ProductPrice.Price.toString() , ProductPrice.OfferPrice.toString());
-                  },)
+                    addToCart(
+                        productVariant.ProductId,
+                        productVariant.IncrementalStep.toString(),
+                        "",
+                        ProductPrice.Price.toString(),
+                        ProductPrice.OfferPrice.toString());
+                  },
+                )
               ],
             ),
           ),
         )
       ],
     );
-
-
   }
-  void addToCart(productId,  qty, offerId, amount,offerAmount){
+
+  void addToCart(productId, qty, offerId, amount, offerAmount) {
     setState(() {
-      isCountLoading=true;
+      isCountLoading = true;
     });
-    ApiCall().setContext(context).addToCart(productId,  qty, offerId, amount , offerAmount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
+    ApiCall()
+        .setContext(context)
+        .addToCart(productId, qty, offerId, amount, offerAmount)
+        .then((apiResponseModel) {
+      if (apiResponseModel.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Item added in cart');
-      }else{
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : '');
       }
       count();
     });
   }
-  void count(){
+
+  void count() {
     setState(() {
-      isCountLoading=false;
+      isCountLoading = false;
     });
-    ApiCall().setContext(context).count().then((apiResponseModel){
-      String cartTotalStr=cartTotal;
-      if(apiResponseModel.statusCode == 200) {
-        CartCountModel cartCountModel = CartCountModel.fromJson(apiResponseModel.Result);
-        if(cartCountModel!=null && cartCountModel.count!=null) {
+    ApiCall().setContext(context).count().then((apiResponseModel) {
+      String cartTotalStr = cartTotal;
+      if (apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel =
+            CartCountModel.fromJson(apiResponseModel.Result);
+        if (cartCountModel != null && cartCountModel.count != null) {
           cartTotalStr = cartCountModel.count.toString();
         }
-      }else{
+      } else {
 //        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
       }
       setState(() {
@@ -529,18 +627,23 @@ class _AllProductScreenState extends State<AllProductScreen> {
     });
   }
 
-
   Widget somethingWentWrong() {
     return Container(
       height: 275.0,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(Icons.error, color: Colors.red, size: 25.0,),
+          Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 25.0,
+          ),
           Container(
             margin: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
             child: Text("Items not loaded",
-                style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
+                style: TextStyle(
+                    fontSize: 15.0,
+                    fontFamily: 'GoogleSans',
                     fontWeight: FontWeight.w700,
                     color: Colors.black)),
           ),
@@ -580,24 +683,23 @@ class _AllProductScreenState extends State<AllProductScreen> {
   }*/
 
   Widget productList() {
-
     double cardWidth = MediaQuery.of(context).size.width;
     double cardHeight = MediaQuery.of(context).size.height - 76;
     double aspectRatio = 0.01;
 
-    if(cardHeight < 550) {
+    if (cardHeight < 550) {
       cardHeight = cardHeight + 20;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 550 && cardHeight < 600){
+    } else if (cardHeight > 550 && cardHeight < 600) {
       cardHeight = cardHeight - 20;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 600 && cardHeight < 650) {
+    } else if (cardHeight > 600 && cardHeight < 650) {
       cardHeight = cardHeight - 120;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 650 && cardHeight < 700) {
+    } else if (cardHeight > 650 && cardHeight < 700) {
       cardHeight = cardHeight - 120;
       aspectRatio = cardWidth / cardHeight;
-    } else if(cardHeight > 700 && cardHeight < 740) {
+    } else if (cardHeight > 700 && cardHeight < 740) {
       cardHeight = cardHeight - 190;
       aspectRatio = cardWidth / cardHeight;
     } else {
@@ -605,34 +707,41 @@ class _AllProductScreenState extends State<AllProductScreen> {
       aspectRatio = cardWidth / cardHeight;
     }
 
-    int count=2;
-    if(aspectRatio >= 0.9){
-      if(cardWidth>=800){
-        count=4;
-      }else{
-        count=3;
+    int count = 2;
+    if (aspectRatio >= 0.9) {
+      if (cardWidth >= 800) {
+        count = 4;
+      } else {
+        count = 3;
       }
     }
     return Container(
+      color: Colors.white70,
       height: MediaQuery.of(context).size.height - 76,
 //      height: 275.0,
-
 
       child: PagewiseGridView.count(
         pageSize: 10,
         crossAxisCount: count,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
-        childAspectRatio:  aspectRatio >= 0.9 && cardWidth>=800 ? 0.75 :aspectRatio >= 0.73 ? 0.66 : 0.60 , //0.66
+        childAspectRatio: aspectRatio >= 0.9 && cardWidth >= 800
+            ? 0.75
+            : aspectRatio >= 0.73 ? 0.66 : 0.60,
+        //0.66
         padding: EdgeInsets.all(5.0),
         itemBuilder: (context, entry, index) {
           return childView(context, entry);
         },
-        pageFuture: (int pageIndex){
-          return getFutureList(pageIndex+1);
+        pageFuture: (int pageIndex) {
+          return getFutureList(pageIndex + 1);
         },
         noItemsFoundBuilder: (context) {
-          return Container(child: Center(child: Text('Data Not Found'),),);
+          return Container(
+            child: Center(
+              child: Text('Data Not Found'),
+            ),
+          );
         },
 //        pageLoadController: PagewiseLoadController(
 //            pageSize: 10,
@@ -640,7 +749,12 @@ class _AllProductScreenState extends State<AllProductScreen> {
 //              return getFutureList();
 //            }),
         loadingBuilder: (context) {
-          return Container(child: Center(child: CircularProgressIndicator(),), height: MediaQuery.of(context).size.height,);
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+            height: MediaQuery.of(context).size.height,
+          );
         },
       ),
     );
@@ -670,34 +784,35 @@ class _AllProductScreenState extends State<AllProductScreen> {
   }
 
   Future<List> getFutureList(int index) async {
-
-if(index>1 || isFromOutside) {
-  isFromOutside=false;
-  if (name == 'Best Selling Items') {
-    getProduct =
-        ApiCall().bestSellingItems(index.toString(), pageSize.toString());
-  } else if (name == "Vegeto's Exclusive") {
-    getProduct =
-        ApiCall().vegetosExclusive(index.toString(), pageSize.toString());
-  } else {
-    getProduct =
-        ApiCall().recommendedForYou(index.toString(), pageSize.toString());
-  }
-}
-      ApiResponseModel apiResponseModel = await getProduct;
-      if (apiResponseModel.statusCode == 200) {
-        DashboardProductResponseModel responseModel = DashboardProductResponseModel
-            .fromJson(apiResponseModel.Result);
-//      pageNUmber++;
-        return responseModel.Results;
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null
-            ? apiResponseModel.message
-            : 'Something went wrong.!');
+    if (index > 1 || isFromOutside) {
+      isFromOutside = false;
+      if (name == 'Best Selling Items') {
+        getProduct =
+            ApiCall().bestSellingItems(index.toString(), pageSize.toString());
+      } else if (name == "Vegeto's Exclusive") {
+        getProduct =
+            ApiCall().vegetosExclusive(index.toString(), pageSize.toString());
       } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null
-            ? apiResponseModel.message
-            : 'Something went wrong.!');
+        getProduct =
+            ApiCall().recommendedForYou(index.toString(), pageSize.toString());
       }
     }
+    ApiResponseModel apiResponseModel = await getProduct;
+    if (apiResponseModel.statusCode == 200) {
+      DashboardProductResponseModel responseModel =
+          DashboardProductResponseModel.fromJson(apiResponseModel.Result);
+//      pageNUmber++;
+      return responseModel.Results;
+    } else if (apiResponseModel.statusCode == 401) {
+      Fluttertoast.showToast(
+          msg: apiResponseModel.message != null
+              ? apiResponseModel.message
+              : 'Something went wrong.!');
+    } else {
+      Fluttertoast.showToast(
+          msg: apiResponseModel.message != null
+              ? apiResponseModel.message
+              : 'Something went wrong.!');
+    }
+  }
 }

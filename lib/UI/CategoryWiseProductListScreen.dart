@@ -79,6 +79,7 @@ class CategoryWiseProductListScreenState
     //myCartModal=Provider.of<MyCartModal>(context);
     appFirstModal = Provider.of<AppFirstModal>(context);
     return Scaffold(
+      backgroundColor: Color(0xffeeeeee),
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -171,7 +172,7 @@ class CategoryWiseProductListScreenState
         ),
       ),
       body: Container(
-        color: Const.gray10,
+        color: Colors.white70,
         child: callGetProductWithDefaultVarientAPI(categoryId),
       ),
     );
@@ -319,49 +320,67 @@ class CategoryWiseProductListScreenState
             });
           },
           child: Container(
+            padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-                border: new Border.all(
-                    color: Const.allBOxStroke,
-                    width: 0.50,
-                    style: BorderStyle.solid),
+//                border: new Border.all(
+//                    color: Const.allBOxStroke,
+//                    width: 0.50,
+//                    style: BorderStyle.solid),
                 color: Colors.white),
-//            width: 180.0,
-//            height: 280.0,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Stack(
-                  //alignment: Alignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        width: 110.0,
+                Container(
+                  decoration: BoxDecoration(
+                      border: new Border.all(
+                          color: Colors.grey[500],
+                          width: 0.50,
+                          style: BorderStyle.solid),
+                      color: Colors.white),
+                  margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                  child: Stack(
+                    //alignment: Alignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: double.maxFinite,
                         height: 110.0,
                         //alignment: Alignment.center,
-                        child: Card(
-                          elevation: 0.0,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                          child: productVariant.PrimaryMediaId == null ||
-                                  productVariant.PrimaryMediaId.isEmpty
-                              ? Image.asset(
-                                  "assets/VegetosAssets/02-product.png",
-                                  height: 100,
-                                  width: 100,
-                                )
-                              : Image.network(
-                                  ImageURL +
-                                      productVariant.PrimaryMediaId +
-                                      '&h=150&w=150',
-                                  height: 110.0,
-                                  width: 110.0,
-                                ),
-//                            child: Image.asset("02-product.png",height: 100,width: 100,),
-                        ),
-                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+                        child: productVariant.PrimaryMediaId == null ||
+                                productVariant.PrimaryMediaId.isEmpty
+                            ? Image.asset(
+                                "assets/VegetosAssets/02-product.png",
+                                height: 100,
+                                width: 100,
+                              )
+                            : Image.network(
+                                ImageURL +
+                                    productVariant.PrimaryMediaId +
+                                    '&h=150&w=150',
+                                height: 110.0,
+                                width: 110.0,
+                              ),
                       ),
-                    ),
-                  ],
+                      ProductPrice.DiscountPercent != null &&
+                          ProductPrice.DiscountPercent != 0
+                          ? Container(
+                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2.0),
+                            color: Colors.orange),
+                        child: Text(
+                          ProductPrice.DiscountPercent != null
+                              ? ProductPrice.DiscountString + ' %'
+                              : '0 %',
+                          style: TextStyle(
+                              fontSize: 10.0,
+                              fontFamily: 'GoogleSans',
+                              color: Colors.white),
+                        ),
+                      )
+                          : Container(),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Container(),
@@ -436,45 +455,43 @@ class CategoryWiseProductListScreenState
                             ),
                           )
                         : Container(),
-                    ProductPrice.DiscountPercent != null &&
-                            ProductPrice.DiscountPercent != 0
-                        ? Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                color: Colors.orange),
-                            child: Text(
-                              ProductPrice.DiscountPercent != null
-                                  ? ProductPrice.DiscountString + ' %'
-                                  : '0 %',
-                              style: TextStyle(
-                                  fontSize: 10.0,
-                                  fontFamily: 'GoogleSans',
-                                  color: Colors.white),
-                            ),
-                          )
-                        : Container(),
+//                    ProductPrice.DiscountPercent != null &&
+//                            ProductPrice.DiscountPercent != 0
+//                        ? Container(
+//                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+//                            decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(5.0),
+//                                color: Colors.orange),
+//                            child: Text(
+//                              ProductPrice.DiscountPercent != null
+//                                  ? ProductPrice.DiscountString + ' %'
+//                                  : '0 %',
+//                              style: TextStyle(
+//                                  fontSize: 10.0,
+//                                  fontFamily: 'GoogleSans',
+//                                  color: Colors.white),
+//                            ),
+//                          )
+//                        : Container(),
                   ],
                 ),
                 InkWell(
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
+                        borderRadius: BorderRadius.circular(2.0),
                         //color: Const.gray10
                         color: Const.primaryColor),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('+ ADD',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontFamily: 'GoogleSans',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          )),
-                    ),
+                    child: Text('+ ADD',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontFamily: 'GoogleSans',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        )),
                   ),
                   onTap: () {
                     //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');

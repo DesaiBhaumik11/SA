@@ -33,85 +33,88 @@ class _PromoCodeState extends State<PromoCode> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+      body: Container(
+        color: Colors.white70,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
 
-          Container(
-            width: double.infinity,
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: <Widget>[
 
-                  Expanded(
-                    child: TextFormField(
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff2d2d2d)
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(top: 4, bottom: 4),
-                        hintText: 'Enter Promo Code',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(
-                          color: Colors.black54,
+                    Expanded(
+                      child: TextFormField(
+                        style: TextStyle(
+                          fontSize: 17,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16
-                        )
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(
-                    width: 10,
-                  ),
-
-                  InkWell(
-                    onTap: (){
-                      Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen("")));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Const.widgetGreen,
-                          borderRadius: BorderRadius.all(Radius.circular(5))
-                      ),
-
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: Text('Apply', style: TextStyle(
-                            color: Colors.white,
+                          color: Color(0xff2d2d2d)
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 4, bottom: 4),
+                          hintText: 'Enter Promo Code',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
+                            color: Colors.black54,
                             fontWeight: FontWeight.w500,
-                            fontSize: 12
-                        ),),
+                            fontSize: 16
+                          )
+                        ),
                       ),
                     ),
-                  )
 
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(context, SlideLeftRoute(page: PaymentOptionScreen("")));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Const.widgetGreen,
+                            borderRadius: BorderRadius.all(Radius.circular(5))
+                        ),
+
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: Text('Apply', style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12
+                          ),),
+                        ),
+                      ),
+                    )
+
+                  ],
+                ),
               ),
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 20, left: 15, bottom: 5),
-            child: Text(
-              'Available Promos', style: TextStyle(
-                color: Color(0xff2d2d2d),
-                fontSize: 13,
-                fontWeight: FontWeight.w500
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 15, bottom: 5),
+              child: Text(
+                'Available Promos', style: TextStyle(
+                  color: Color(0xff2d2d2d),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500
+              ),
+              ),
             ),
-            ),
-          ),
 
-          Expanded(
-            child: buildList(context),
-          )
+            Expanded(
+              child: buildList(context),
+            )
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -152,7 +155,7 @@ class _PromoCodeState extends State<PromoCode> {
                         child: Container(
                           decoration: BoxDecoration(
                               color: Const.widgetGreen,
-                              borderRadius: BorderRadius.all(Radius.circular(5))
+                              borderRadius: BorderRadius.all(Radius.circular(2))
                           ),
 
                           child: Padding(

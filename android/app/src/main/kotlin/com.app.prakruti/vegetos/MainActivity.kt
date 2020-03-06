@@ -1,4 +1,4 @@
-package com.app.prakruti.vegetos
+package com.okgreens
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity

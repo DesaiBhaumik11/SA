@@ -39,7 +39,10 @@ class _ItemsOfferzoneState extends State<ItemsOfferzone> {
           )
         ],
       ),
-      body: buildList(context),
+      body: Container(
+        color: Colors.white70,
+        child: buildList(context),
+      ),
     );
   }
 
@@ -50,7 +53,7 @@ class _ItemsOfferzoneState extends State<ItemsOfferzone> {
           onTap: (){},
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(width: 0.5,color: Const.allBOxStroke),
+              border: Border.all(width: 0.5,color: Colors.grey[500]),
               color: Colors.white
             ),
             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
@@ -67,7 +70,7 @@ class _ItemsOfferzoneState extends State<ItemsOfferzone> {
                       Container(
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(2.0),
                             color: Colors.orange
                         ),
                         child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',

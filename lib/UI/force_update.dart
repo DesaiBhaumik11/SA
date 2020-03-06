@@ -106,7 +106,7 @@ class ForceUpdateState extends State<ForceUpdate> {
         child: GestureDetector(
           onTap: () {
             OpenAppstore.launch(
-                androidAppId: "com.app.prakruti.vegetos", iOSAppId: "1496095904");
+                androidAppId: "com.okgreens", iOSAppId: "1496095904");
           },
           child: Container(
             color: Const.primaryColor,

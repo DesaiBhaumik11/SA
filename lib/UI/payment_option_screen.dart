@@ -118,7 +118,7 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
         ),
       ),
       body: Container(
-        color: Const.gray10,
+        color: Colors.white70,
         child: Column(
           children: <Widget>[
             cartResponseModel != null

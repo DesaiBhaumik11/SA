@@ -33,96 +33,99 @@ class _WalletState extends State<Wallet> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-        child: Column(
-          children: <Widget>[
+      body: Container(
+        color: Colors.white70,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+          child: Column(
+            children: <Widget>[
 
-            Container(
-              width: double.infinity,
-              height: 110,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                image: DecorationImage(
-                  image: AssetImage('assets/VegetosAssets/wallet-bg.png'),
-                  fit: BoxFit.cover
-                )
+              Container(
+                width: double.infinity,
+                height: 110,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  image: DecorationImage(
+                    image: AssetImage('assets/VegetosAssets/wallet-bg.png'),
+                    fit: BoxFit.cover
+                  )
+                ),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+
+                      Text('₹ 100', style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 25,
+                        color: Colors.white
+                      ),),
+
+                      Text('available balance', style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500
+                      ),)
+
+                    ],
+                  ),
+                ),
               ),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+
+              SizedBox(height: 12,),
+
+
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: RaisedButton(
+                      onPressed: (){
+                        Navigator.push(context, SlideLeftRoute(page: AddBalance()));
+                      },
+                      color: Theme.of(context).primaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                           Image.asset('assets/VegetosAssets/add-balance-wallet.png', height: 20,),
+
+                           SizedBox(width: 10,),
+
+                           Text('Add balance', style: TextStyle(
+                             color: Colors.white,
+                             fontWeight: FontWeight.w500,
+                             fontSize: 16
+                           ),)
+                          ],
+                        ),
+                      )
+                    ),
+                  )
+                ],
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-
-                    Text('₹ 100', style: TextStyle(
+                    Text(
+                      'Recent Transtions', style: TextStyle(
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      fontSize: 25,
-                      color: Colors.white
-                    ),),
-
-                    Text('available balance', style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500
-                    ),)
-
+                    ),
+                    ),
                   ],
                 ),
               ),
-            ),
-
-            SizedBox(height: 12,),
 
 
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: RaisedButton(
-                    onPressed: (){
-                      Navigator.push(context, SlideLeftRoute(page: AddBalance()));
-                    },
-                    color: Theme.of(context).primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                         Image.asset('add-balance-wallet.png', height: 20,),
+              Expanded(child: buildList(context),)
 
-                         SizedBox(width: 10,),
-
-                         Text('Add balance', style: TextStyle(
-                           color: Colors.white,
-                           fontWeight: FontWeight.w500,
-                           fontSize: 16
-                         ),)
-                        ],
-                      ),
-                    )
-                  ),
-                )
-              ],
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(top: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Recent Transtions', style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  ),
-                ],
-              ),
-            ),
-
-
-            Expanded(child: buildList(context),)
-
-          ],
+            ],
+          ),
         ),
       ),
     );

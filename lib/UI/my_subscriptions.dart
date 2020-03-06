@@ -33,7 +33,10 @@ class _MySubscriptionsState extends State<MySubscriptions> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: buildList(context),
+      body: Container(
+        color: Colors.white70,
+        child: buildList(context)
+      ),
     );
   }
 
@@ -45,7 +48,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
           onTap: (){},
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(width: 0.5, color: Const.allBOxStroke),
+              border: Border.all(width: 0.5, color: Colors.grey[500]),
               color: Colors.white
             ),
             padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
@@ -157,7 +160,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                         child: Container(
                           decoration: BoxDecoration(
                               color: Const.widgetGreen,
-                              borderRadius: BorderRadius.all(Radius.circular(5))
+                              borderRadius: BorderRadius.all(Radius.circular(2))
                           ),
 
                           child: Padding(

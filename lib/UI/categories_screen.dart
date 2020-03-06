@@ -140,7 +140,7 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                 margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                 decoration: BoxDecoration(
                     border: new Border.all(
-                        color: Const.allBOxStroke, width: 0.5, style: BorderStyle.solid),
+                        color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
                     color: Colors.white),
                 child: InkWell(
                   onTap: () {

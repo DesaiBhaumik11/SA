@@ -58,7 +58,7 @@ class _CartViewState extends State<CartView> {
                       Container(
                         padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(2.0),
                             color: Colors.orange
                         ),
                         child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',

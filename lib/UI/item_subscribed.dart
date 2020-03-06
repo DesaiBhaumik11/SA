@@ -71,528 +71,531 @@ class _ItemsSubscribedState extends State<ItemsSubscribed> {
         ),
         title: Text('Cherry Tomatoes',style: TextStyle(color: Const.textBlack),),
       ),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Item',
-                  style: text,
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Card(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                              child: Stack(
-                                children: <Widget>[
-                                  Container(
-                                    child: Image.asset(
-                                      'assets/VegetosAssets/Cherry-Tomatoes.png',
-                                      height: 100.0,
-                                      width: 100.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                child: Column(
+      body: Container(
+        color: Colors.white70,
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Item',
+                    style: text,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Card(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(3.0, 3.0, 3.0, 3.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                                child: Stack(
                                   children: <Widget>[
                                     Container(
-                                      alignment: Alignment.centerLeft,
-                                      margin: EdgeInsets.fromLTRB(
-                                          10.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        'Cherry Tomatoes',
-                                        style: TextStyle(
-                                            fontSize: 17.0,
-                                            fontFamily: 'GoogleSans',
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
+                                      child: Image.asset(
+                                        'assets/VegetosAssets/Cherry-Tomatoes.png',
+                                        height: 100.0,
+                                        width: 100.0,
                                       ),
                                     ),
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      margin: EdgeInsets.fromLTRB(
-                                          10.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        '500 gm',
-                                        style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontFamily: 'GoogleSans',
-                                            color: Const.dashboardGray,
-                                            fontWeight: FontWeight.w500),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        margin: EdgeInsets.fromLTRB(
+                                            10.0, 0.0, 0.0, 0.0),
+                                        child: Text(
+                                          'Cherry Tomatoes',
+                                          style: TextStyle(
+                                              fontSize: 17.0,
+                                              fontFamily: 'GoogleSans',
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
-                                    ),
-                                    Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                            flex: 1,
-                                            child: Row(
-                                              children: <Widget>[
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      10.0, 5.0, 5.0, 10.0),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.topLeft,
-                                                    child: Text(
-                                                      '₹45 x 2 ',
-                                                      style: TextStyle(
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        margin: EdgeInsets.fromLTRB(
+                                            10.0, 0.0, 0.0, 0.0),
+                                        child: Text(
+                                          '500 gm',
+                                          style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontFamily: 'GoogleSans',
+                                              color: Const.dashboardGray,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 1,
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        10.0, 5.0, 5.0, 10.0),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.topLeft,
+                                                      child: Text(
+                                                        '₹45 x 2 ',
+                                                        style: TextStyle(
+                                                            fontSize: 20.0,
+                                                            fontFamily:
+                                                                'GoogleSans',
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: Colors.black),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 0,
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        5.0, 0.0, 5.0, 0.0),
+                                                    child: Text('₹90',
+                                                        style: TextStyle(
                                                           fontSize: 20.0,
                                                           fontFamily:
                                                               'GoogleSans',
                                                           fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Colors.black),
-                                                    ),
+                                                              FontWeight.w500,
+                                                          color: Colors.black,
+                                                        )),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 0,
-                                            child: Row(
-                                              children: <Widget>[
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      5.0, 0.0, 5.0, 0.0),
-                                                  child: Text('₹90',
-                                                      style: TextStyle(
-                                                        fontSize: 20.0,
-                                                        fontFamily:
-                                                            'GoogleSans',
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors.black,
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Subscription Details',
+                    style: text,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Order Frequency',
+                                  style: greyText,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Every 15 Days',
+                                  style: text,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Quantity',
+                                  style: greyText,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '2',
+                                  style: text,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Subscription History',
+                    style: text,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                '01 June',
+                                style: text,
+                              ),
+                              Expanded(
+                                child: Container(),
+                                flex: 1,
+                              ),
+                              Image.asset(
+                                'assets/VegetosAssets/order-delivered.png',
+                                height: 22,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                'Upcoming Order',
+                                style: text,
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.black26,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                '16 June',
+                                style: text,
+                              ),
+                              Expanded(
+                                child: Container(),
+                                flex: 1,
+                              ),
+                              Image.asset(
+                                'order-confirmed.png',
+                                height: 22,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                'Order Scheduled',
+                                style: text,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Delivery Slot',
+                    style: text,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Upcoming Order',
+                                  style: greyText,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Sat 1 Jun 2019',
+                                  style: text,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Timeslot',
+                                  style: greyText,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '11AM - 3PM',
+                                      style: text,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _settingModalBottomSheet(context);
+                                      },
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 0, 20, 2),
+                                        child: Image.asset(
+                                          'edit-pencil.png',
+                                          height: 15,
+                                        ),
                                       ),
                                     )
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Subscription Details',
-                  style: text,
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Order Frequency',
-                                style: greyText,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'Every 15 Days',
-                                style: text,
-                              ),
-                            ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Delivery Address',
+                    style: text,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Quantity',
-                                style: greyText,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                '2',
-                                style: text,
-                              ),
-                            ],
+                          Text(
+                            'Partho Parekh',
+                            style: address,
                           ),
-                        ),
-                      ],
+                          Text(
+                            'Shayona Tailak 3, New SG Road, Gota',
+                            style: address,
+                          ),
+                          Text(
+                            'Ahmedabad, Gujrat 38248',
+                            style: address,
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Subscription History',
-                  style: text,
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Payment Details',
+                    style: text,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Column(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Payment option',
+                                      style: text,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'Discount/Promo',
+                                      style: text,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text(
+                                      'Credit Card',
+                                      style: text,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      '- \u20b9308',
+                                      style: text,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Sub Total',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                ),
+                              ),
+                              Text(
+                                '\u20b9308',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    Const.subDisc,
+                    style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              '01 June',
-                              style: text,
+                      Expanded(
+                        child: RaisedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (s) {
+                                  return FunkyOverlay();
+                                });
+                          },
+                          color: Const.calenderRed,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Text(
+                              'Cancel Subscription',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 17),
                             ),
-                            Expanded(
-                              child: Container(),
-                              flex: 1,
-                            ),
-                            Image.asset(
-                              'assets/VegetosAssets/order-delivered.png',
-                              height: 22,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'Upcoming Order',
-                              style: text,
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 1,
-                        color: Colors.black26,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              '16 June',
-                              style: text,
-                            ),
-                            Expanded(
-                              child: Container(),
-                              flex: 1,
-                            ),
-                            Image.asset(
-                              'order-confirmed.png',
-                              height: 22,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'Order Scheduled',
-                              style: text,
-                            )
-                          ],
-                        ),
-                      ),
+                      )
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Delivery Slot',
-                  style: text,
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  SizedBox(
+                    height: 30,
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Upcoming Order',
-                                style: greyText,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'Sat 1 Jun 2019',
-                                style: text,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Timeslot',
-                                style: greyText,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    '11AM - 3PM',
-                                    style: text,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _settingModalBottomSheet(context);
-                                    },
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 0, 20, 2),
-                                      child: Image.asset(
-                                        'edit-pencil.png',
-                                        height: 15,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Delivery Address',
-                  style: text,
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Home',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Text(
-                          'Partho Parekh',
-                          style: address,
-                        ),
-                        Text(
-                          'Shayona Tailak 3, New SG Road, Gota',
-                          style: address,
-                        ),
-                        Text(
-                          'Ahmedabad, Gujrat 38248',
-                          style: address,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Payment Details',
-                  style: text,
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Payment option',
-                                    style: text,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    'Discount/Promo',
-                                    style: text,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    'Credit Card',
-                                    style: text,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    '- \u20b9308',
-                                    style: text,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Sub Total',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                              ),
-                            ),
-                            Text(
-                              '\u20b9308',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  Const.subDisc,
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: RaisedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (s) {
-                                return FunkyOverlay();
-                              });
-                        },
-                        color: Const.calenderRed,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Text(
-                            'Cancel Subscription',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                                fontSize: 17),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

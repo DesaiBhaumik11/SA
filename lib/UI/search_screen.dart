@@ -92,6 +92,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       body: Container(
+        color: Colors.white70,
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Column(
           children: <Widget>[
@@ -438,7 +439,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: productVariant.PrimaryMediaId == null ||
                                   productVariant.PrimaryMediaId.isEmpty
                               ? Image.asset(
-                                  "02-product.png",
+                                  "assets/VegetosAssets/02-product.png",
                                   height: 100,
                                   width: 100,
                                 )
@@ -457,7 +458,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 padding:
                                     EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderRadius: BorderRadius.circular(2.0),
                                     color: Colors.orange),
                                 child: Text(
                                   ProductPrice.DiscountPercent != null
@@ -488,8 +489,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 5,
+                  Expanded(
+                    child: Container(),
+                    flex: 1,
                   ),
                   Container(
                     child: Column(
@@ -498,27 +500,29 @@ class _SearchScreenState extends State<SearchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
+                          margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                           child: Text(
                             name,
                             style: TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 15.0,
                                 fontFamily: 'GoogleSans',
                                 color: Const.textBlack,
                                 fontWeight: FontWeight.w500),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
-                          width: MediaQuery.of(context).size.width * 0.55,
+                        //  width: MediaQuery.of(context).size.width * 0.55,
                         ),
                         SizedBox(
                           width: 5,
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.55,
+                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                          // width: MediaQuery.of(context).size.width * 0.55,
                           child: Text(
                             desc,
                             style: TextStyle(
-                                fontSize: 12.0,
+                                fontSize: 11.0,
                                 fontFamily: 'GoogleSans',
                                 color: Color(0xff6c6c6c),
                                 fontWeight: FontWeight.w500),
@@ -531,13 +535,16 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         Row(
                           children: <Widget>[
-                            Text(
-                              '₹ ' + ProductPrice.OfferPrice.toString(),
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: 'GoogleSans',
-                                  fontWeight: FontWeight.w700,
-                                  color: Const.textBlack),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                '₹ ' + ProductPrice.OfferPrice.toString(),
+                                style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontFamily: 'GoogleSans',
+                                    fontWeight: FontWeight.w700,
+                                    color: Const.textBlack),
+                              ),
                             ),
                             ProductPrice.DiscountPercent != null &&
                                     ProductPrice.DiscountPercent != 0
@@ -552,7 +559,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 ProductPrice.Price.toString()
                                             : 0,
                                         style: TextStyle(
-                                            fontSize: 12.0,
+                                            fontSize: 10.0,
                                             fontFamily: 'GoogleSans',
                                             fontWeight: FontWeight.w500,
                                             color: Colors.grey,
@@ -564,15 +571,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                 : Container(),
                           ],
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
                         Expanded(
                           flex: 0,
-                          child: RaisedButton(
-                            color: Const.widgetGreen,
-                            //color: Const.gray10,
-                            onPressed: () {
+                          child: InkWell(
+                            onTap: () {
                               addToCart(
                                   productVariant.ProductId,
                                   productVariant.IncrementalStep.toString(),
@@ -581,25 +583,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                   productVariant.ProductPrice.OfferPrice
                                       .toString());
                             },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.add,
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 0.0),
+                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2.0),
+                                  //color: Const.gray10
+                                  color: Const.primaryColor),
+                              child: Text('+ ADD',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontFamily: 'GoogleSans',
                                     color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  Text(
-                                    'ADD',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13),
-                                  ),
-                                ],
-                              ),
+                                    fontWeight: FontWeight.w500,
+                                  )),
                             ),
                           ),
                         )
@@ -1161,7 +1159,7 @@ class _SheetWidState extends State<SheetWid> {
                     },
                     child: Row(
                       children: <Widget>[
-                        Image.asset('selected-refine.png',
+                        Image.asset('assets/VegetosAssets/selected-refine.png',
                             height: 18,
                             color: buttons ? Colors.black : Colors.grey),
                         SizedBox(
@@ -1190,7 +1188,7 @@ class _SheetWidState extends State<SheetWid> {
                     child: Row(
                       children: <Widget>[
                         Image.asset(
-                          'filter.png',
+                          'assets/VegetosAssets/filter.png',
                           height: 18,
                           color: buttons ? Colors.grey : Colors.black,
                         ),

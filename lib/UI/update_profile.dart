@@ -57,7 +57,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
             SizedBox(height: 70),
 
 
-            Image.asset('profile.png', height: 170, ),
+            Image.asset('assets/VegetosAssets/profile.png', height: 170, ),
 
             SizedBox(height: 20),
 

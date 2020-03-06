@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:132864545566:android:e738904661feb51c2def0f",
         "android_client_info": {
-          "package_name": "com.app.prakruti.vegetos"
+          "package_name": "com.okgreens"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "132864545566-2b7o74mmr2i7q60g2pbkvqic5opvm1os.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.app.prakruti.vegetos",
+            "package_name": "com.okgreens",
             "certificate_hash": "2fe73074615ac6301b5a1cda8633e62a53209337"
           }
         },

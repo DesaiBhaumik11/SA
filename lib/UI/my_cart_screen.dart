@@ -86,9 +86,11 @@ class MyCartState extends State<MyCartScreen> {
 //    }
 
     return Scaffold(
+      backgroundColor: Color(0xffeeeeee),
       appBar: cartAppBar(),
       body: SingleChildScrollView(
         child: Container(
+          color: Colors.white70,
           child: Column(
             children: <Widget>[
               model != null &&
@@ -117,6 +119,7 @@ class MyCartState extends State<MyCartScreen> {
       visible: true,
       child: Container(
         margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+        color: Colors.white,
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(width: 0.5, color: Const.allBOxStroke)),
@@ -215,7 +218,7 @@ class MyCartState extends State<MyCartScreen> {
                 ),
               ),
               Container(
-                color: Const.gray10,
+                color: Const.allBOxStroke,
                 height: 1.0,
                 margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
               ),
@@ -302,6 +305,7 @@ class MyCartState extends State<MyCartScreen> {
     }
 
     return Container(
+      color: Colors.white,
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(width: 0.5, color: Const.allBOxStroke)),
@@ -561,62 +565,57 @@ class MyCartState extends State<MyCartScreen> {
 
   Widget recommendedContainer() {
     return Container(
-      color: Colors.white70,
       child: Stack(
         children: <Widget>[
           Container(
             margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-            child: Card(
-              color: Colors.white70,
-              elevation: 0.0,
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                        child: Text("Recommended for you",
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontFamily: 'GoogleSans',
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black)),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
-                        child: ButtonTheme(
-                          height: 28,
-                          child: FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(5.0),
-                            ),
-                            color: Const.widgetGreen,
-                            child: Text("view all",
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontFamily: 'GoogleSans',
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white)),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AllProductScreen(
-                                          "Recommended for you"))).then(
-                                  (value) {
-                                callGetMyCartAPI();
-                              });
-                            },
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                      child: Text("Recommended for you",
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontFamily: 'GoogleSans',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black)),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                      child: ButtonTheme(
+                        height: 28,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(5.0),
                           ),
+                          color: Const.widgetGreen,
+                          child: Text("view all",
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontFamily: 'GoogleSans',
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllProductScreen(
+                                        "Recommended for you"))).then(
+                                (value) {
+                              callGetMyCartAPI();
+                            });
+                          },
                         ),
                       ),
-                    ],
-                  ),
-                  callRecommendedForYouAPI(),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                callRecommendedForYouAPI(),
+              ],
             ),
           )
         ],
@@ -682,29 +681,33 @@ class MyCartState extends State<MyCartScreen> {
           },
           child: Container(
             margin: EdgeInsets.only(right: 15),
+            padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 10.0),
             width: 180.0,
             height: 280.0,
             decoration: BoxDecoration(
-                border: new Border.all(
-                    color: Const.allBOxStroke,
-                    width: 0.5,
-                    style: BorderStyle.solid),
+//                border: new Border.all(
+//                    color: Const.allBOxStroke,
+//                    width: 0.5,
+//                    style: BorderStyle.solid),
                 color: Colors.white),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Stack(
-                  //alignment: Alignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Container(
-                        width: 110.0,
-                        height: 110.0,
-                        //alignment: Alignment.center,
-                        child: Card(
-                          elevation: 0.0,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
+                Container(
+                  decoration: BoxDecoration(
+                      border: new Border.all(
+                          color: Const.allBOxStroke,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                      color: Colors.white),
+                  child: Stack(
+                    //alignment: Alignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                          width: 110.0,
+                          height: 110.0,
+                          //alignment: Alignment.center,
                           child: result.PrimaryMediaId == null ||
                                   result.PrimaryMediaId.toString().isEmpty
                               ? Image.asset(
@@ -719,19 +722,37 @@ class MyCartState extends State<MyCartScreen> {
                                   height: 110.0,
                                   width: 110.0,
                                 ),
-//                             child: Image.asset("02-product.png",height: 100,width: 100,),
+                          margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
-                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                       ),
-                    ),
-                  ],
+                      result.ProductPrice.DiscountPercent != null &&
+                          result.ProductPrice.DiscountPercent != 0
+                          ? Container(
+                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.orange),
+                        child: Text(
+                          result.ProductPrice.DiscountPercent != null
+                              ? result.ProductPrice.DiscountString + ' %'
+                              : '0 %',
+                          style: TextStyle(
+                              fontSize: 10.0,
+                              fontFamily: 'GoogleSans',
+                              color: Colors.white),
+                        ),
+                      )
+                          : Container(),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Container(),
                   flex: 1,
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                  margin: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 5.0),
                   child: Row(
                     children: <Widget>[
                       Flexible(
@@ -764,7 +785,7 @@ class MyCartState extends State<MyCartScreen> {
                 Row(
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                      margin: EdgeInsets.fromLTRB(5.0, 4.0, 0.0, 0.0),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -780,7 +801,7 @@ class MyCartState extends State<MyCartScreen> {
                     result.ProductPrice.DiscountPercent != null &&
                             result.ProductPrice.DiscountPercent != 0
                         ? Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(5.0, 4.0, 0.0, 0.0),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Text(
@@ -797,45 +818,43 @@ class MyCartState extends State<MyCartScreen> {
                             ),
                           )
                         : Container(),
-                    result.ProductPrice.DiscountPercent != null &&
-                            result.ProductPrice.DiscountPercent != 0
-                        ? Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                color: Colors.orange),
-                            child: Text(
-                              result.ProductPrice.DiscountPercent != null
-                                  ? result.ProductPrice.DiscountString + ' %'
-                                  : '0 %',
-                              style: TextStyle(
-                                  fontSize: 10.0,
-                                  fontFamily: 'GoogleSans',
-                                  color: Colors.white),
-                            ),
-                          )
-                        : Container(),
+//                    result.ProductPrice.DiscountPercent != null &&
+//                            result.ProductPrice.DiscountPercent != 0
+//                        ? Container(
+//                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+//                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+//                            decoration: BoxDecoration(
+//                                borderRadius: BorderRadius.circular(5.0),
+//                                color: Colors.orange),
+//                            child: Text(
+//                              result.ProductPrice.DiscountPercent != null
+//                                  ? result.ProductPrice.DiscountString + ' %'
+//                                  : '0 %',
+//                              style: TextStyle(
+//                                  fontSize: 10.0,
+//                                  fontFamily: 'GoogleSans',
+//                                  color: Colors.white),
+//                            ),
+//                          )
+//                        : Container(),
                   ],
                 ),
                 InkWell(
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 0.0),
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
+                        borderRadius: BorderRadius.circular(2.0),
                         //color: Const.gray10
                         color: Const.primaryColor),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text('+ ADD',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontFamily: 'GoogleSans',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          )),
-                    ),
+                    child: Text('+ ADD',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontFamily: 'GoogleSans',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        )),
                   ),
                   onTap: () {
                     //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');

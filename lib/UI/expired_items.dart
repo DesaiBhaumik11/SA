@@ -21,21 +21,24 @@ class _ExpiredItemsState extends State<ExpiredItems> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: Color(0xffEDEDEE),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: RaisedButton(
-          color: Theme.of(context).primaryColor,
-          onPressed: (){
-            Navigator.push(context, SlideLeftRoute(page: TellUsAbout()));
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Text('Proceed', style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),),
+      backgroundColor: Color(0xffeeeeee),
+      bottomNavigationBar: Container(
+        color: Colors.white70,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: RaisedButton(
+            color: Theme.of(context).primaryColor,
+            onPressed: (){
+              Navigator.push(context, SlideLeftRoute(page: TellUsAbout()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text('Proceed', style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),),
+            ),
           ),
         ),
       ),
@@ -56,23 +59,26 @@ class _ExpiredItemsState extends State<ExpiredItems> {
           style: TextStyle(color: Const.textBlack),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
+      body: Container(
+        color: Colors.white70,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
 
-          Padding(
-            padding: EdgeInsets.only(top: 17, left: 15, bottom: 5),
-            child: Text(
-              'Please select the expired items', style: title,
+            Padding(
+              padding: EdgeInsets.only(top: 17, left: 15, bottom: 5),
+              child: Text(
+                'Please select the expired items', style: title,
+              ),
             ),
-          ),
 
-          Expanded(
-            child: buildList(context),
-          )
+            Expanded(
+              child: buildList(context),
+            )
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -88,7 +94,7 @@ class _ExpiredItemsState extends State<ExpiredItems> {
             },
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(width: 0.5, color: Const.allBOxStroke, style: BorderStyle.solid),
+                border: Border.all(width: 0.5, color: Colors.grey[500], style: BorderStyle.solid),
                 color: Colors.white
               ),
               padding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10.0),
