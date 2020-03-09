@@ -256,6 +256,7 @@ class ApiCall
     apiResponseModel.message = msg != null ? msg : '';
     print(msg);
     return apiResponseModel;
+
   }
 
   Future<ApiResponseModel> GetProductWithDefaultVarientAPI(String categoryId) async {
