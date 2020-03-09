@@ -76,11 +76,6 @@ class DashboardScreenState extends State<DashboardScreen>
 
   static AddressModal addressModal;
 
-  //static DefaultAddressModel defaultAddressModal ;
-
-  //BestSellingProductModel bestSelling ;
-  //VegetosExclusiveModel vegitosExclusive ;
-  //RecommendedProductsModel recommendedProducts ;
   bool allCals = true;
 
   String phoneNumber;
@@ -584,6 +579,66 @@ class DashboardScreenState extends State<DashboardScreen>
                         ProductPrice.Price.toString(),
                         ProductPrice.OfferPrice.toString());
                   },
+                ),
+                Visibility(
+                  visible: false,
+                  child: Expanded(
+                    flex: 0,
+                    child: Row(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            addToCart(
+                                productVariant.ProductId,
+                                (productVariant.IncrementalStep - 2).toString(),
+                                "",
+                                ProductPrice.Price.toString(),
+                                ProductPrice.OfferPrice.toString());
+                          },
+                          child: Container(
+                            margin:
+                            EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                            child: Image.asset(
+                              'assets/OkAssets/minus.png',
+                              height: 20.0,
+                              width: 20.0,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin:
+                          EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                          child: Text(
+                              "",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              )),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            addToCart(
+                                productVariant.ProductId,
+                                productVariant.IncrementalStep.toString(),
+                                "",
+                                ProductPrice.Price.toString(),
+                                ProductPrice.OfferPrice.toString());
+                          },
+                          child: Container(
+                            margin:
+                            EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                            child: Image.asset(
+                              'assets/OkAssets/plus.png',
+                              height: 20.0,
+                              width: 20.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),

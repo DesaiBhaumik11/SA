@@ -10,11 +10,9 @@ import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/login.dart';
-import 'package:vegetos_flutter/UI/update_profile.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
 import 'package:vegetos_flutter/Utils/newtwork_util.dart';
-import 'package:vegetos_flutter/Utils/pin_view.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 
@@ -62,8 +60,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
               Navigator.pop(context);
             },
             child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22,)
+                padding: EdgeInsets.all(20),
+                child: Image.asset(
+                  "assets/OkAssets/Cencelicone.png", height: 22, width: 22,)
             ),
           ),
         ],
@@ -72,7 +71,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         height: double.maxFinite,
         width: double.maxFinite,
         decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
+            shape: BoxShape.rectangle,
             image: DecorationImage(
                 fit: BoxFit.fill,
                 image: AssetImage("assets/OkAssets/VerifyOtp.png"))),
@@ -118,24 +117,26 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 children: <Widget>[
                   Expanded(
                       child: RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      code = otpController.text;
-                      validate();
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
+                        onPressed: () {
+                          code = otpController.text;
+                          validate();
 
-                      // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        'Verify',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
-                    ),
-                  ))
+                          // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Verify',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18),
+                          ),
+                        ),
+                      ))
                 ],
               ),
             ),
@@ -161,7 +162,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     'Resend OTP.',
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).primaryColor,
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
                         fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -170,173 +173,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
           ],
         ),
       ),
-//      body: Column(
-//        children: <Widget>[
-//
-//          SizedBox(height: 70),
-//          Image.asset('verify.png', height: 170, ),
-//
-//          SizedBox(height: 20),
-//
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              Text('Verify OTP', style: TextStyle(
-//                  fontWeight: FontWeight.w500,
-//                  fontSize: 19
-//              ),),
-//            ],
-//          ),
-//
-//          SizedBox(height: 7),
-//
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              Text('Enter the six digit OTP sent on', style: TextStyle(
-//                  fontWeight: FontWeight.w500,
-//                  fontSize: 15
-//              ),),
-//            ],
-//          ),
-//
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              Text('your mobile number to continue', style: TextStyle(
-//                  fontWeight: FontWeight.w500,
-//                  fontSize: 15
-//              ),),
-//            ],
-//          ),
-//
-//          SizedBox(height: 10),
-//
-//
-//          Container(
-//            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05, right: MediaQuery.of(context).size.width * 0.05),
-//            alignment: Alignment.center,
-//            child:PinCodeTextField(
-//              autofocus: false,
-//              isCupertino: false,
-//              pinBoxOuterPadding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
-//              controller: otpController,
-//              hideCharacter: true,
-//              highlight: true,
-//              highlightColor: Const.iconOrange,
-//              defaultBorderColor: Const.allBOxStroke,
-//              hasTextBorderColor: Const.widgetGreen,
-//              maxLength: pinLength,
-//              hasError: hasError,
-//              maskCharacter: "#",
-//
-//              onDone: (text){
-//                code = text;
-//                print("DONE $text");
-//              },
-////                pinCodeTextFieldLayoutType: PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
-//              wrapAlignment: WrapAlignment.start,
-//              pinBoxDecoration: ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-//              pinTextStyle: TextStyle(fontSize: 30.0),
-//              pinBoxWidth: 45,
-//              pinBoxHeight: 45,
-//              pinTextAnimatedSwitcherTransition: ProvidedPinBoxTextAnimation.scalingTransition,
-//              pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
-//            ),
-//          ),
-//          Visibility(
-//            child: Text(
-//              "Wrong PIN!",
-//              style: TextStyle(color: Colors.red),
-//            ),
-//            visible: hasError,
-//          ),
-//
-//
-////
-////          Padding(
-////            padding: const EdgeInsets.symmetric(horizontal: 15),
-////            child: PinView (
-////                count: 6, // count of the fields, excluding dashes
-////                autoFocusFirstField: false,
-////                submit: (e){
-////                  code= e ;
-////                  print("PinView Submit ${e}") ;
-////                } // gets triggered when all the fields are filled
-////            ),
-////          ),
-//
-//
-//          SizedBox(height: 25),
-//
-//          Padding(
-//            padding: const EdgeInsets.symmetric(horizontal: 15),
-//            child: Row(
-//              children: <Widget>[
-//                Expanded(
-//                    child: RaisedButton(
-//                      color: Theme.of(context).primaryColor,
-//                      onPressed: (){
-//                        code = otpController.text;
-//                        validate() ;
-//
-//                        // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
-//                      },
-//                      child: Padding(
-//                        padding: const EdgeInsets.symmetric(vertical: 10),
-//                        child: Text(
-//                          'Verify', style: TextStyle(
-//                            color: Colors.white,
-//                            fontWeight: FontWeight.w500,
-//                            fontSize: 18
-//                        ),
-//                        ),
-//                      ),
-//                    )
-//                )
-//              ],
-//            ),
-//          ),
-//
-//          SizedBox
-//            (height: 10,),
-//
-//
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//
-//              Text('Haven\'t received the OTP yet?', style: TextStyle(
-//                  fontSize: 14,
-//                  color: Colors.grey,
-//                  fontWeight: FontWeight.w500
-//              ),),
-//
-//              InkWell(
-//                onTap: (){
-//
-//
-//
-//                  Navigator.of(context).push(SlideRightRoute(page: LoginScreen()));
-//                },
-//                child: Padding(
-//                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-//                  child: Text(
-//                    'Resend OTP.', style: TextStyle(
-//                      fontSize: 15,
-//                      color: Theme.of(context).primaryColor,
-//                      fontWeight: FontWeight.w500
-//                  ),
-//                  ),
-//                ),
-//              ),
-//
-//            ],
-//          )
-//
-//
-//        ],
-//      ),
     );
   }
 
@@ -349,7 +185,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
           autofocus: false,
           isCupertino: false,
           pinBoxOuterPadding:
-              EdgeInsets.all(MediaQuery.of(context).size.width * 0.011),
+          EdgeInsets.all(MediaQuery
+              .of(context)
+              .size
+              .width * 0.011),
           controller: otpController,
           hideCharacter: true,
           highlight: true,
@@ -371,7 +210,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
           pinBoxWidth: 45,
           pinBoxHeight: 45,
           pinTextAnimatedSwitcherTransition:
-              ProvidedPinBoxTextAnimation.scalingTransition,
+          ProvidedPinBoxTextAnimation.scalingTransition,
           pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
         ),
       ),
@@ -382,9 +221,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
     ProgressDialog dialog = Utility.progressDialog(context, "");
     dialog.show();
     NetworkUtils.postRequest(
-            endpoint: Constant.Validate,
-            body: json.encode(
-                {"Code": "" + code, "IsdCode": "+91", "Mobile": "" + phone}))
+        endpoint: Constant.Validate,
+        body: json.encode(
+            {"Code": "" + code, "IsdCode": "+91", "Mobile": "" + phone}))
         .then((res) {
       dialog.dismiss();
       print("validate response $res");
@@ -407,24 +246,4 @@ class _VerifyOTPState extends State<VerifyOTP> {
       print("validate catchError $e");
     });
   }
-
-//  void validate() {
-//    ProgressDialog dialog = Utility.progressDialog(context,"");
-//    dialog.show() ;
-//    ApiCall().validate(code, phone).then((apiResponseModel){
-//      if(apiResponseModel.statusCode == 200) {
-//        appFirstStartResponseModel =  AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
-//        SharedPreferences.getInstance().then((prefs){
-//          prefs.setString("phone", "$phone");
-//          prefs.setBool("login",true) ;
-////          prefs.setString("AUTH_TOKEN",appFirstModal.token) ;
-//        });
-//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
-//      } else if(apiResponseModel.statusCode == 401) {
-//        Utility.toastMessage("${apiResponseModel.message}") ;
-//      } else {
-//        Utility.toastMessage("${apiResponseModel.message}") ;
-//      }
-//    });
-//  }
 }

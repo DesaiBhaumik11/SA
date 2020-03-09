@@ -2,34 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/all_product_screen.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
-import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
-import 'package:vegetos_flutter/UI/select_contact.dart';
 import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
-import 'package:vegetos_flutter/Utils/const_endpoint.dart';
-import 'package:vegetos_flutter/Utils/newtwork_util.dart';
-import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
-import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 
-import 'package:vegetos_flutter/models/product_common.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
-import 'package:vegetos_flutter/models/recommended_products.dart';
 
 class MyCartScreen extends StatefulWidget {
   @override
@@ -319,9 +310,6 @@ class MyCartState extends State<MyCartScreen> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        //child: Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
-                        /*child: Image.network(cartItem.productMediaId==null?'assets/02-product.png':
-                        '${DashboardScreenState.appFirstModal.ImageUrl} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),*/
                         child: cartItem.productMediaId != null &&
                                 cartItem.productMediaId.isNotEmpty
                             ? Image.network(
@@ -334,18 +322,8 @@ class MyCartState extends State<MyCartScreen> {
                                 height: 100.0,
                                 width: 100.0,
                               ),
-                        /*child: Image.asset(cartItem.productMediaId==null?'assets/02-product.png':
-                        '${ImageURL} ${cartItem.productMediaId} ', height: 100.0, width: 100.0,),*/
+
                       ),
-                      /*Container(
-                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.orange
-                        ),
-                        child: Text('12% OFF',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                            color: Colors.white),),
-                      ),*/
                     ],
                   ),
                 ),
@@ -374,15 +352,6 @@ class MyCartState extends State<MyCartScreen> {
               child: Container(
                 child: Column(
                   children: <Widget>[
-//                      InkWell(onTap: (){
-//                        removetoCart(cartItem.id) ;
-//                      },child:   Container(
-//                        alignment: Alignment.topRight,
-//                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-//                        child: Text('Remove' , style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
-//                            color: Colors.black, fontWeight: FontWeight.w500),),
-//
-//                      ),) ,
 
                     Container(
                       alignment: Alignment.centerLeft,
@@ -513,15 +482,6 @@ class MyCartState extends State<MyCartScreen> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    /*cartItem.quantity ++ ;
-                                  myCartModal.totalCost = myCartModal.totalCost+ cartItem.price ;
-
-                                  updateQuantity(cartItem.itemId , cartItem.quantity) ;
-
-                                  setState(() {
-
-                                  });*/
-
                                     updateCartQuantity(
                                         cartItem.itemId,
                                         (cartItem.quantity +

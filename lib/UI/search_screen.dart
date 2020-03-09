@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
-import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
-import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
 import 'package:vegetos_flutter/models/ProductPriceModel.dart';
 import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
@@ -25,10 +22,7 @@ import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/categories_model.dart' as category;
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
-import 'package:vegetos_flutter/models/product_common.dart';
-import 'package:vegetos_flutter/models/product_detail.dart';
 import 'package:vegetos_flutter/models/search_products.dart' as sModal;
-import 'package:vegetos_flutter/models/search_products.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
