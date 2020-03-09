@@ -74,7 +74,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
             image: DecorationImage(
-                fit: BoxFit.values[2],
+                fit: BoxFit.fill,
                 image: AssetImage("assets/OkAssets/VerifyOtp.png"))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

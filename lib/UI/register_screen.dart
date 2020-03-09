@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -35,377 +36,121 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
 
-//      appBar: AppBar(
-//        backgroundColor: Colors.white,
-//        elevation: 0,
-//        actions: <Widget>[
-//          InkWell(
-//            onTap: () {
-//              Navigator.pop(context);
-//            },
-//
-//            child: Padding(
-//              padding: EdgeInsets.all(20),
-//              child: Icon(Icons.close,color: Colors.red,
-//              ),
-//            ),
-//          ),
-//        ],
-//      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("assets/OkAssets/cloud.png")
-                  )
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top:0.0,right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: (){
-                            Navigator.pop(context);
-                          },
-                          child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22),
-                        ),
-                      ],
-                    ),
-                  ),
-                  okProfile(),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      formForSignUp(),
-                      GestureDetector(
-                        onTap: () {
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        actions: <Widget>[
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
 
-                          name= regName.text;
-                          email = regEmail.text;
-                          mobile = regPhoneNumber.text;
-
-                          if(mobile==""||mobile.length < 10){
-                            Utility.toastMessage("Enter phone number");
-                          } else {
-                            register();
-                          }
-                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          height: 40,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  offset: Offset(5, 5),
-                                  blurRadius: 10,
-                                )
-                              ],
-                              color: Colors.green[700]
-                          ),
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Have An Account?",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-
-                            },
-                            child: Text(
-                              " Sign In",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.green
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ],
+            child: Padding(
+              padding: const EdgeInsets.only(top:0.0,right: 30),
+              child: InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22),
               ),
             ),
           ),
-          Container(
-            height: 100,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              // color: Colors.grey,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                    image: AssetImage("assets/OkAssets/okBase.png")
-                )
-            ),
-          )
         ],
       ),
-//      body: SafeArea(
-//        child: ListView(
-//          physics: BouncingScrollPhysics(),
-//          children: <Widget>[
-//
-//            SizedBox(height: 50),
-//
-//
-//            Image.asset('login.png', height: 140, ),
-//
-//            SizedBox(height: 20),
-//
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.center,
-//              children: <Widget>[
-//                Text('Register with OTP', style: TextStyle(
-//                    fontWeight: FontWeight.w500,
-//                    fontSize: 19
-//                ),),
-//              ],
-//            ),
-//
-//            SizedBox(height: 7),
-//
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.center,
-//              children: <Widget>[
-//                Text('We will send you a One Time Password', style: TextStyle(
-//                    fontWeight: FontWeight.w500,
-//                    fontSize: 15
-//                ),),
-//              ],
-//            ),
-//
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.center,
-//              children: <Widget>[
-//                Text('on your registered mobile number', style: TextStyle(
-//                    fontWeight: FontWeight.w500,
-//                    fontSize: 15
-//                ),),
-//              ],
-//            ),
-//
-////            SizedBox(height: 30),
-//
-////            Padding(
-////              padding: const EdgeInsets.only(left: 15),
-////              child: Text(
-////                  'Enter your Reffer Code', style: TextStyle(
-////                  fontWeight: FontWeight.w500,
-////                  color: Colors.black54,
-////                  fontSize: 15
-////              )
-////              ),
-////            ),
-////
-////            Padding(
-////              padding: const EdgeInsets.symmetric(horizontal: 15),
-////              child: TextFormField(
-////                maxLength: 100,
-////                onChanged: (e){
-////                  reffer_code = e ;
-////                },
-////                keyboardType: TextInputType.text,
-////                decoration: InputDecoration(
-////                    counterText: '',
-////                    contentPadding: EdgeInsets.symmetric(vertical: 10)
-////                ),
-////                style: TextStyle(
-////                  fontSize: 18,
-////                  fontWeight: FontWeight.w500,
-////                ),
-////              ),
-////            ),
-//
-//            SizedBox(height: 30),
-//
-//            Padding(
-//              padding: const EdgeInsets.only(left: 15),
-//              child: Text(
-//                  'Enter your Name', style: TextStyle(
-//                  fontWeight: FontWeight.w500,
-//                  color: Colors.black54,
-//                  fontSize: 15
-//              )
-//              ),
-//            ),
-//
-//            Padding(
-//              padding: const EdgeInsets.symmetric(horizontal: 15),
-//              child: TextFormField(
-//                maxLength: 100,
-//                onChanged: (e){
-//                  name = e ;
-//                },
-//                keyboardType: TextInputType.text,
-//                decoration: InputDecoration(
-//                    counterText: '',
-//                    contentPadding: EdgeInsets.symmetric(vertical: 10)
-//                ),
-//                style: TextStyle(
-//                  fontSize: 18,
-//                  fontWeight: FontWeight.w500,
-//                ),
-//              ),
-//            ),
-//
-//
-//            SizedBox(height: 30),
-//
-//            Padding(
-//              padding: const EdgeInsets.only(left: 15),
-//              child: Text(
-//                  'Enter your mobile number', style: TextStyle(
-//                  fontWeight: FontWeight.w500,
-//                  color: Colors.black54,
-//                  fontSize: 15
-//              )
-//              ),
-//            ),
-//
-//            Padding(
-//              padding: const EdgeInsets.symmetric(horizontal: 15),
-//              child: TextFormField(
-//                maxLength: 10,
-//                onChanged: (e){
-//                  mobile = e ;
-//                },
-//                keyboardType: TextInputType.number,
-//                decoration: InputDecoration(
-//                    counterText: '',
-//                    contentPadding: EdgeInsets.symmetric(vertical: 10)
-//                ),
-//                style: TextStyle(
-//                  fontSize: 18,
-//                  fontWeight: FontWeight.w500,
-//                ),
-//              ),
-//            ),
-//
-//
-//            SizedBox(height: 30),
-//
-//            Padding(
-//              padding: const EdgeInsets.only(left: 15),
-//              child: Text(
-//                  'Enter your email', style: TextStyle(
-//                  fontWeight: FontWeight.w500,
-//                  color: Colors.black54,
-//                  fontSize: 15
-//              )
-//              ),
-//            ),
-//
-//            Padding(
-//              padding: const EdgeInsets.symmetric(horizontal: 15),
-//              child: TextFormField(
-//                maxLength: 100,
-//                onChanged: (e){
-//                  email = e ;
-//                },
-//                keyboardType: TextInputType.emailAddress,
-//                decoration: InputDecoration(
-//                    counterText: '',
-//                    contentPadding: EdgeInsets.symmetric(vertical: 10)
-//                ),
-//                style: TextStyle(
-//                  fontSize: 18,
-//                  fontWeight: FontWeight.w500,
-//                ),
-//              ),
-//            ),
-//
-//
-//
-//            SizedBox(height: 30),
-//
-//
-//            Padding(
-//              padding: const EdgeInsets.symmetric(horizontal: 15),
-//              child: Row(
-//                children: <Widget>[
-//                  Expanded(
-//                      child: RaisedButton(
-//                        color: Theme.of(context).primaryColor,
-//                        onPressed: (){
-//                          if(mobile==""||mobile.length < 10){
-//                            Utility.toastMessage("Enter phone number")  ;
-//                          }else{
-//
-//                            register();
-//                          }
-//                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
-//                        },
-//                        child: Padding(
-//                          padding: const EdgeInsets.symmetric(vertical: 10),
-//                          child: Text(
-//                            'Register', style: TextStyle(
-//                              color: Colors.white,
-//                              fontWeight: FontWeight.w500,
-//                              fontSize: 18
-//                          ),
-//                          ),
-//                        ),
-//                      )
-//                  )
-//                ],
-//              ),
-//            ),
-//
-//            SizedBox(height: 30),
-//
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.end,
-//              children: <Widget>[
-//                InkWell(child: Text('Login ', style: TextStyle(
-//                    fontWeight: FontWeight.w500,
-//                    fontSize: 16
-//                ),),onTap: (){
-//
-//                  Navigator.pop(context) ;
-//                  //Navigator.pushNamed(context, Const.loginScreen);
-//                },) ,
-//
-//                SizedBox(width:20),
-//              ],
-//            ),
-//
-//          ],
-//        ),
-//      ),
+      body: Container(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage("assets/OkAssets/backgraound.PNG")
+            )
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            okProfile(),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                formForSignUp(),
+                GestureDetector(
+                  onTap: () {
+
+                    name= regName.text;
+                    email = regEmail.text;
+                    mobile = regPhoneNumber.text;
+
+                    if(mobile==""||mobile.length < 10){
+                      Utility.toastMessage("Enter phone number");
+                    } else {
+                      register();
+                    }
+                    // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(5, 5),
+                            blurRadius: 10,
+                          )
+                        ],
+                        color: Colors.green[700]
+                    ),
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Have An Account?",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+
+                      },
+                      child: Text(
+                        " Sign In",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+//            Expanded(
+//              flex: 0,
+//              child: Container(height: 70,),
+//            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -565,47 +310,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
 //          height: 100,
 //          width: 100,
 //          //  color: Colors.blue,
-//          child: Stack(
-//            children: <Widget>[
-//              Container(
-//                height: 100,
-//                width: 100,
-//                decoration: BoxDecoration(
-//                    shape: BoxShape.circle,
-//                    color: Colors.blueGrey[900],
-//                    image: DecorationImage(
-//                        image: NetworkImage(
-//                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQf9UDq4tsvB8SQ7Kz6FugTDxwh22MLbVJlACifly-96NfPRrGR"
-//                        )
-//                    )
-//                ),
-//              ),
-//              Align(
-//                alignment: Alignment.bottomRight,
-//                child: Container(
-//                  height: 30,
-//                  width: 30,
-//                  child: InkWell(
-//                    onTap: () {
-//
-//                    },
-//                    child: Card(
-//                      elevation: 2,
-//                      color: Colors.green,
-//                      shape: RoundedRectangleBorder(
-//                        borderRadius: BorderRadius.circular(30.0),
-//                      ),
-//                      child: Icon(
-//                        Icons.add,
-//                        color: Colors.white,
-//                        size: 20,
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//              )
-//            ],
-//          ),
+////          child: Stack(
+////            children: <Widget>[
+////              Container(
+////                height: 100,
+////                width: 100,
+////                decoration: BoxDecoration(
+////                    shape: BoxShape.circle,
+////                    color: Colors.blueGrey[900],
+////                    image: DecorationImage(
+////                        image: NetworkImage(
+////                            "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQf9UDq4tsvB8SQ7Kz6FugTDxwh22MLbVJlACifly-96NfPRrGR"
+////                        )
+////                    )
+////                ),
+////              ),
+////              Align(
+////                alignment: Alignment.bottomRight,
+////                child: Container(
+////                  height: 30,
+////                  width: 30,
+////                  child: InkWell(
+////                    onTap: () {
+////
+////                    },
+////                    child: Card(
+////                      elevation: 2,
+////                      color: Colors.green,
+////                      shape: RoundedRectangleBorder(
+////                        borderRadius: BorderRadius.circular(30.0),
+////                      ),
+////                      child: Icon(
+////                        Icons.add,
+////                        color: Colors.white,
+////                        size: 20,
+////                      ),
+////                    ),
+////                  ),
+////                ),
+////              )
+////            ],
+////          ),
 //        )
       ],
     );

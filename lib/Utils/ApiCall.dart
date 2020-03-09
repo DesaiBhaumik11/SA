@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
+import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/Utils/config.dart';
@@ -23,9 +24,6 @@ import 'DeviceTokenController.dart';
 
 class ApiCall
 {
-
-
-
 
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
@@ -183,7 +181,7 @@ class ApiCall
                   AppFirstStartResponseModel appFirstStartResponseModel = AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
                   SharedPreferences.getInstance().then((prefs) {
                     prefs.setString("AUTH_TOKEN", appFirstStartResponseModel.token);
-                    Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
+                    Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: DashboardScreen()),(c)=>false);
                   });
                 } else {
                   Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: SplashScreen()),(c)=>false);

@@ -44,14 +44,14 @@ class Const {
 
   static String aboutAppRelease1 = 'Ok Greens is brand name owned & managed by Ok Fruits & vegetables Packing Industries.\nWe are providing service of door step delivery of Fruits & Vegetables, grocery & staples, etc..';
   static String aboutAppRelease2 = 'Introducing payment options like UPI, Payment, PhonePe etc. starting from 1 june 2019 12:00 AM';
-  static String aboutAppRelease3 = 'Get instant refunds through Vegetos Cash. Use it for your next purchase or transfer it back to the orignal payment source.';
+  static String aboutAppRelease3 = 'Get instant refunds through Ok Greens Cash. Use it for your next purchase or transfer it back to the orignal payment source.';
 
-  static String logout1 = 'Are you sure you wants to logged out\nof your Vegetos account?';
+  static String logout1 = 'Are you sure you wants to logged out\nof your Ok Greens account?';
 
   static String subDisc = 'Disclaimer: Please check the product at the time of delivery.';
   static String unsubscribedDialog = 'Are you sure you want to\nUnsubscribe this item?';
 
-  static String userNotVeg = 'It seems that the some of your select\ncontacts doesn\'t have VEGETOS,\nwill share download link via sms.';
+  static String userNotVeg = 'It seems that the some of your select\ncontacts doesn\'t have Ok Greens,\nwill share download link via sms.';
 
   static String startedCart = 'has shared a cart with you';
 

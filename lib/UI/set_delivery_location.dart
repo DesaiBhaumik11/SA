@@ -27,195 +27,193 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: Container(
-        height: 100,
-        width: double.infinity,
+      body: Container(
         decoration: BoxDecoration(
           // color: Colors.grey,
             image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage("assets/OkAssets/okBase.png")
+                fit: BoxFit.fill,
+                image: AssetImage("assets/OkAssets/FarmBackground.png",)
             )
         ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Center(
-            child: Visibility(
-              visible: !falseResult,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SizedBox(height: 52,),
-                  Image.asset('assets/OkAssets/SetLocation.png'),
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: Visibility(
+                visible: !falseResult,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(height: 52,),
+                    Image.asset('assets/OkAssets/SetLocation.png'),
 
-                  SizedBox(
-                    height: 15,
-                  ),
+                    SizedBox(
+                      height: 15,
+                    ),
 
-                  Text(
-                    '',
-                    //'Set your delivery location',
-                    style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w500
-                  ),
-                  ),
+                    Text(
+                      '',
+                      //'Set your delivery location',
+                      style: TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w500
+                    ),
+                    ),
 
-                  SizedBox(
-                    height: 15,
-                  ),
+                    SizedBox(
+                      height: 15,
+                    ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: RaisedButton(
-                            color: Color(0xff009a00),
-                            onPressed: (){
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: RaisedButton(
+                              color: Color(0xff009a00),
+                              onPressed: (){
 //                              Utility.checkEnabledLocationService()==false ? Fluttertoast.showToast(msg: 'Location Service not Enabled') :
-                              setState(() {
-                                !showProgress ?
-                                Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
-                                  final coordinates = new Coordinates(position.latitude, position.longitude);
-                                  var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-                                  var first = addresses.first;
-                                  print("${first.featureName} : ${first.addressLine}");
-                                  if(first.postalCode != null && first.postalCode.isNotEmpty) {
-                                    callSetLocationApi(first.postalCode, first.addressLine);
-                                  } else {
-                                    Fluttertoast.showToast(msg: 'Pincode detail not found.');
-                                  }
-                                }) : null;
-                                showProgress = true;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 12, bottom: 12),
-                              child: Text(
-                                'Use my location', style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500
+                                setState(() {
+                                  !showProgress ?
+                                  Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
+                                    final coordinates = new Coordinates(position.latitude, position.longitude);
+                                    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+                                    var first = addresses.first;
+                                    print("${first.featureName} : ${first.addressLine}");
+                                    if(first.postalCode != null && first.postalCode.isNotEmpty) {
+                                      callSetLocationApi(first.postalCode, first.addressLine);
+                                    } else {
+                                      Fluttertoast.showToast(msg: 'Pincode detail not found.');
+                                    }
+                                  }) : null;
+                                  showProgress = true;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 12, bottom: 12),
+                                child: Text(
+                                  'Use my location', style: TextStyle(
+                                    fontSize: 19,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500
+                                ),
+                                ),
                               ),
-                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        FlatButton(
+                          onPressed: (){
+                            Navigator.push(context, EnterExitRoute(enterPage: SetLocationManually()));
+                          },
+                          child: Text(
+                            'Set Manually',
+                            style: TextStyle(
+                                color: Color(0xff393939),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500
                             ),
                           ),
                         )
                       ],
                     ),
-                  ),
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: falseResult,
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: (){
-                          Navigator.push(context, EnterExitRoute(enterPage: SetLocationManually()));
-                        },
+                    Image.asset('assets/OkAssets/Unservicebleareaerror.png', height: 200,),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    Text('Uh Oh! We don\'t deliver here.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 23,
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    Text('Currently we are not providing services in this',
+                      style: TextStyle(
+                          color: Color(0xff2d2d2d),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15
+                      ),
+                    ),
+
+                    Text('city/ area/ society. Please try again with',
+                      style: TextStyle(
+                          color: Color(0xff2d2d2d),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15
+                      ),
+                    ),
+
+                    Text('some other locations.',
+                      style: TextStyle(
+                          color: Color(0xff2d2d2d),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 15,
+                    ),
+
+                    RaisedButton(
+                      color: Const.widgetGreen,
+                      onPressed: () {
+                        Navigator.of(context).push(EnterExitRoute(enterPage: SetLocationManually(), exitPage: SetDeliveryLocation()));
+                        setState(() {
+                          falseResult = false;
+                          showProgress = false;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
                         child: Text(
-                          'Set Manually',
-                          style: TextStyle(
-                              color: Color(0xff393939),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500
-                          ),
+                          'Set Delivery Location', style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
               ),
             ),
-          ),
-          Visibility(
-            visible: falseResult,
-            child: Center(
+            Visibility(
+              visible: showProgress,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-
-                  Image.asset('assets/OkAssets/Unservicebleareaerror.png', height: 200,),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  Text('Uh Oh! We don\'t deliver here.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 23,
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  Text('Currently we are not providing services in this',
-                    style: TextStyle(
-                        color: Color(0xff2d2d2d),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15
-                    ),
-                  ),
-
-                  Text('city/ area/ society. Please try again with',
-                    style: TextStyle(
-                        color: Color(0xff2d2d2d),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15
-                    ),
-                  ),
-
-                  Text('some other locations.',
-                    style: TextStyle(
-                        color: Color(0xff2d2d2d),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 15,
-                  ),
-
-                  RaisedButton(
-                    color: Const.widgetGreen,
-                    onPressed: () {
-                      Navigator.of(context).push(EnterExitRoute(enterPage: SetLocationManually(), exitPage: SetDeliveryLocation()));
-                      setState(() {
-                        falseResult = false;
-                        showProgress = false;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                      child: Text(
-                        'Set Delivery Location', style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500
-                      ),
-                      ),
-                    ),
-                  ),
-
-                ],
+                  children:<Widget>[Expanded(child: Container()), Container(
+                    child: CircularProgressIndicator(backgroundColor: Const.iconOrange,),
+                  )]
               ),
-            ),
-          ),
-          Visibility(
-            visible: showProgress,
-            child: Column(
-                children:<Widget>[Expanded(child: Container()), Container(
-                  child: CircularProgressIndicator(backgroundColor: Const.iconOrange,),
-                )]
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       )
     );
   }
