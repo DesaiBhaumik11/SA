@@ -322,7 +322,6 @@ class MyCartState extends State<MyCartScreen> {
                                 height: 100.0,
                                 width: 100.0,
                               ),
-
                       ),
                     ],
                   ),

@@ -24,8 +24,7 @@ import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_detail.dart';
 
-class ProductDetailScreen extends StatefulWidget
-{
+class ProductDetailScreen extends StatefulWidget {
 
   String productId;
 
@@ -162,14 +161,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   Widget productImageSlides()
   {
     List<Image> imageList = [
-//      Image.asset('assets/02-product.png', height: 50, width: 50.0,)
       productModal.PrimaryMediaId==null||productModal.PrimaryMediaId.isEmpty?Image.asset("assets/VegetosAssets/02-product.png",height: 100,width: 100,):
       Image.network("${ImageURL}${productModal.PrimaryMediaId}", height: 100.0, width: 100.0,),
-    //  Image.asset('${appFirstModal}', height: 100.0, width: 100.0,),
-//      Image.asset('assets/01-product.png', height: 100.0, width: 100.0,),
-//      Image.asset('assets/02-product.png', height: 100.0, width: 100.0,),
-//      Image.asset('assets/03-product.png', height: 100.0, width: 100.0,),
-//      Image.asset('assets/04-product.png', height: 100.0, width: 100.0,),
     ];
 
     return Stack(
@@ -404,9 +397,15 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
           ),
           Container(
               padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-              child: Text("${ProductDetail.Description}", maxLines: descFlag ? 20 : 2,
-                  style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans', color: Const.dashboardGray,
-                      fontWeight: FontWeight.w500))
+              child: Text("${ProductDetail.Description}",
+                  maxLines: descFlag ? 20 : 2,
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      fontFamily: 'GoogleSans',
+                      color: Const.dashboardGray,
+                      fontWeight: FontWeight.w500,
+                  )
+              )
           ),
 
           Container(

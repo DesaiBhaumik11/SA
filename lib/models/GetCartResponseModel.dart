@@ -110,6 +110,7 @@ class CartItemViewModel {
   });
 
   factory CartItemViewModel.fromJson(Map<String, dynamic> json) => CartItemViewModel(
+
     itemId: json["ItemId"],
     ProductId: json["ItemId"],
     name: json["Name"],

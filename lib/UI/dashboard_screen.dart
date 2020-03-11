@@ -25,6 +25,7 @@ import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
+import 'package:vegetos_flutter/models/CartManager.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/all_product_screen.dart';
 import 'package:vegetos_flutter/UI/categories_screen.dart';
@@ -94,6 +95,10 @@ class DashboardScreenState extends State<DashboardScreen>
 
   String version = "";
 
+  String cartTotalItems = "0";
+  GetCartResponseModel model = GetCartResponseModel();
+  List<ManagerItemViewModel> managerItemViewModel;
+
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -134,7 +139,22 @@ class DashboardScreenState extends State<DashboardScreen>
     recommendedFuture = ApiCall().recommendedForYou("1", "10");
 
     WidgetsBinding.instance.addObserver(this);
+
+   managerForCart();
     super.initState();
+  }
+
+  void managerForCart() {
+    CartManagerResponseModel().callGetMyCartAPI();
+    CartManagerResponseModel.streamController.stream.listen((cartItems){
+      setState((){
+        this.managerItemViewModel = cartItems;
+        print(managerItemViewModel[0].productId);
+        print(managerItemViewModel[0].id);
+        print(managerItemViewModel[0].incrementalStep);
+        print(managerItemViewModel[0].quantity);
+      });
+    });
   }
 
   @override
@@ -144,44 +164,10 @@ class DashboardScreenState extends State<DashboardScreen>
     });
 
     appFirstModal = Provider.of<AppFirstModal>(context);
-    //defaultAddressModal = Provider.of<DefaultAddressModel>(context);
     final cat = Provider.of<CategoriesModel>(context);
 
-    /*if(!defaultAddressModal.loaded){
-      defaultAddressModal.loadAddress(context) ;
-    }else{
-
-    }*/
-
-    //bestSelling=Provider.of<BestSellingProductModel>(context);
-    //vegitosExclusive=Provider.of<VegetosExclusiveModel>(context);
-    //recommendedProducts=Provider.of<RecommendedProductsModel>(context);
-
     addressModal = Provider.of<AddressModal>(context);
-    //myCartModal=Provider.of<MyCartModal>(context);
-    /*shippingSlotModal=Provider.of<ShippingSlotModal>(context);
 
-
-    if(!shippingSlotModal.loaded){
-      shippingSlotModal.getShippingSlot() ;
-    }*/
-
-    /*if(!myCartModal.loaded){
-      myCartModal.getMyCart() ;
-    }else{
-
-      if(allCals){
-        allCals = false ;
-        myCartModal.getMyCart() ;
-      }else{
-        cartSize=myCartModal.result==null?0:myCartModal.result.cartItemViewModels.length ;
-      }
-
-    }*/
-
-//    if(!addressModal.loaded){
-//      addressModal.getMyAddresses() ;
-//    }
     if (!cat.isLoaded) {
       cat.loadCategories();
     }
@@ -417,7 +403,7 @@ class DashboardScreenState extends State<DashboardScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                 // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                  // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                   child: Stack(
                     //alignment: Alignment.center,
                     children: <Widget>[
@@ -445,16 +431,26 @@ class DashboardScreenState extends State<DashboardScreen>
                               ),
                         margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       ),
-                        ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-                          margin: EdgeInsets.fromLTRB(5.0, 15.0, 0.0, 0.0),
-                          padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2.0),
-                              color: Colors.orange
-                          ),
-                          child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-                              color: Colors.white),),
-                        ) : Container(),
+                      ProductPrice.DiscountPercent != null &&
+                              ProductPrice.DiscountPercent != 0
+                          ? Container(
+                              margin: EdgeInsets.fromLTRB(5.0, 15.0, 0.0, 0.0),
+                              padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2.0),
+                                  color: Colors.orange),
+                              child: Text(
+                                ProductPrice.DiscountPercent != null
+                                    ? ProductPrice.DiscountPercent.toString() +
+                                        ' %'
+                                    : '0 %',
+                                style: TextStyle(
+                                    fontSize: 10.0,
+                                    fontFamily: 'GoogleSans',
+                                    color: Colors.white),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -531,25 +527,6 @@ class DashboardScreenState extends State<DashboardScreen>
                             ),
                           )
                         : Container(),
-//                    ProductPrice.DiscountPercent != null &&
-//                            ProductPrice.DiscountPercent != 0
-//                        ? Container(
-//                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-//                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(5.0),
-//                                color: Colors.orange),
-//                            child: Text(
-//                              ProductPrice.DiscountPercent != null
-//                                  ? ProductPrice.DiscountString + ' %'
-//                                  : '0 %',
-//                              style: TextStyle(
-//                                  fontSize: 10.0,
-//                                  fontFamily: 'GoogleSans',
-//                                  color: Colors.white),
-//                            ),
-//                          )
-//                        : Container(),
                   ],
                 ),
                 InkWell(
@@ -570,8 +547,6 @@ class DashboardScreenState extends State<DashboardScreen>
                         )),
                   ),
                   onTap: () {
-                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                    //myCartModal.addTocart(result);
                     addToCart(
                         productVariant.ProductId,
                         productVariant.IncrementalStep.toString(),
@@ -596,8 +571,7 @@ class DashboardScreenState extends State<DashboardScreen>
                                 ProductPrice.OfferPrice.toString());
                           },
                           child: Container(
-                            margin:
-                            EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                             child: Image.asset(
                               'assets/OkAssets/minus.png',
                               height: 20.0,
@@ -606,10 +580,8 @@ class DashboardScreenState extends State<DashboardScreen>
                           ),
                         ),
                         Container(
-                          margin:
-                          EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                          child: Text(
-                              "",
+                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                          child: Text("",
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontFamily: 'GoogleSans',
@@ -627,8 +599,7 @@ class DashboardScreenState extends State<DashboardScreen>
                                 ProductPrice.OfferPrice.toString());
                           },
                           child: Container(
-                            margin:
-                            EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                             child: Image.asset(
                               'assets/OkAssets/plus.png',
                               height: 20.0,
@@ -676,8 +647,6 @@ class DashboardScreenState extends State<DashboardScreen>
       actions: <Widget>[
         GestureDetector(
           onTap: () {
-            //myCartModal.loaded =false ;
-//            Navigator.push(context, SlideRightRoute(page: MyCartScreen()));
             Navigator.of(context)
                 .push(SlideRightRoute(page: MyCartScreen()))
                 .then((prefs) {
@@ -723,7 +692,6 @@ class DashboardScreenState extends State<DashboardScreen>
                                           fontSize: 10.0,
                                           fontFamily: 'GoogleSans',
                                           color: Colors.white)),
-                                  //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                                 ),
                               ),
                             )
@@ -750,9 +718,7 @@ class DashboardScreenState extends State<DashboardScreen>
                             fontFamily: 'GoogleSans',
                             color: Const.widgetGreen),
                         textAlign: TextAlign.left,
-                      )
-//                    Text(deliveryAddress.isNotEmpty ? 'Change Delivery Location' : 'Set Delivery Location',style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans'),textAlign: TextAlign.left,)
-                          ),
+                      )),
                     ],
                   ),
                   Row(
@@ -766,12 +732,9 @@ class DashboardScreenState extends State<DashboardScreen>
                               fontSize: 14.0,
                               fontFamily: 'GoogleSans',
                               color: Const.textBlack),
-//                        minFontSize: 16.0,
-//                        maxFontSize: 17.0,
                           maxLines: 1,
 //                        overflow: TextOverflow.ellipsis,
                         ),
-//                      width: MediaQuery.of(context).size.width * 0.6,
                       ),
                     ],
                   ),
@@ -835,7 +798,6 @@ class DashboardScreenState extends State<DashboardScreen>
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    //Navigator.pushNamed(context, Const.categories);
                     Navigator.push(
                             context, SlideRightRoute(page: CategoriesScreen()))
                         .then((returnn) {
@@ -979,15 +941,6 @@ class DashboardScreenState extends State<DashboardScreen>
       children: <Widget>[
         GestureDetector(
           onTap: () {
-//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-//                height: 25,
-//                width: 25,
-//                child: CircularProgressIndicator())));
-//              productModal.getProductDetail(productVariant.ProductId,(){
-//              Navigator.pop(context);
-//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
-//            }) ;
             Navigator.push(
                     context,
                     EnterExitRoute(
@@ -999,18 +952,15 @@ class DashboardScreenState extends State<DashboardScreen>
           },
           child: Container(
             width: 180.0,
-//            height: 280.0,
             child: Card(
               child: Column(
                 children: <Widget>[
                   Stack(
-                    //alignment: Alignment.center,
                     children: <Widget>[
                       Center(
                         child: Container(
                           width: 110.0,
                           height: 110.0,
-                          //alignment: Alignment.center,
                           child: Card(
                             elevation: 0.0,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -1030,21 +980,10 @@ class DashboardScreenState extends State<DashboardScreen>
                                     height: 110.0,
                                     width: 110.0,
                                   ),
-//                            child: Image.asset("02-product.png",height: 100,width: 100,),
                           ),
                           margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
                       ),
-//                      ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ? Container(
-//                        margin: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
-//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-//                        decoration: BoxDecoration(
-//                            borderRadius: BorderRadius.circular(5.0),
-//                            color: Colors.orange
-//                        ),
-//                        child: Text(ProductPrice.DiscountPercent != null ? ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-//                            color: Colors.white),),
-//                      ) : Container(),
                     ],
                   ),
                   Expanded(
@@ -1147,7 +1086,6 @@ class DashboardScreenState extends State<DashboardScreen>
                       padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
-                          //color: Const.gray10
                           color: Const.primaryColor),
                       child: Align(
                         alignment: Alignment.center,
@@ -1161,8 +1099,6 @@ class DashboardScreenState extends State<DashboardScreen>
                       ),
                     ),
                     onTap: () {
-                      //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                      //myCartModal.addTocart(result);
                       addToCart(
                           productVariant.ProductId,
                           productVariant.IncrementalStep.toString(),
@@ -1180,7 +1116,7 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget drawer(BuildContext context)      {
+  Widget drawer(BuildContext context) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: SafeArea(
@@ -1302,7 +1238,6 @@ class DashboardScreenState extends State<DashboardScreen>
             ),
             InkWell(
               onTap: () {
-                //Navigator.pushNamed(context, Const.myOrders);
                 Navigator.push(context, EnterExitRoute(enterPage: MyOrders()));
               },
               child: Container(
