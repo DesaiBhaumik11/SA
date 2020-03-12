@@ -14,6 +14,7 @@ import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/CartManager.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
@@ -443,6 +444,7 @@ class MyCartState extends State<MyCartScreen> {
                               children: <Widget>[
                                 InkWell(
                                   onTap: () {
+                                    CartManagerResponseModel().callGetMyCartAPI();
                                     if (cartItem.quantity >
                                         cartItem.MinimumOrderQuantity) {
                                       updateCartQuantity(
@@ -481,6 +483,7 @@ class MyCartState extends State<MyCartScreen> {
                                 ),
                                 InkWell(
                                   onTap: () {
+                                    CartManagerResponseModel().callGetMyCartAPI();
                                     updateCartQuantity(
                                         cartItem.itemId,
                                         (cartItem.quantity +

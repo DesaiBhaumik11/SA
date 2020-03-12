@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'const.dart';
 
-class CommonWidget{
-
-  Widget buildNickAddress(BuildContext context,String nickAddress) {
+class CommonWidget {
+  Widget buildNickAddress(BuildContext context, String nickAddress) {
     return Column(
       children: <Widget>[
         Padding(
@@ -16,8 +15,8 @@ class CommonWidget{
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 5, horizontal: 10),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: Text(
                     nickAddress,
                     style: TextStyle(
@@ -26,7 +25,6 @@ class CommonWidget{
                       color: Color(0xffffffff),
                     ),
                   ),
-
                 ),
               ),
             ),

@@ -155,7 +155,7 @@ class _AboutVegetosState extends State<AboutVegetos> {
 
                   Padding(
                     padding:EdgeInsets.fromLTRB(10, 0, 10, 15) ,
-                    child: Text(Const.contactus, style: text,),
+                    child: Text(Const.contactUs, style: text,),
                   )
 
                 ],

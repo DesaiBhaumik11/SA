@@ -1,35 +1,20 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:in_app_update/in_app_update.dart';
-import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
-import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/UI/dashboard_screen.dart';
-import 'package:vegetos_flutter/UI/force_update.dart';
-import 'package:vegetos_flutter/UI/welcome_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
-import 'package:vegetos_flutter/Utils/Enumaration.dart';
-import 'package:vegetos_flutter/Utils/const.dart';
-import 'package:vegetos_flutter/Utils/const_endpoint.dart';
-import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
-import 'package:vegetos_flutter/models/app_first_modal.dart';
-
 import 'set_delivery_location.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -44,8 +29,6 @@ class SplashScreenState extends State<SplashScreen> {
   bool runOnce = true;
   String version = "";
   bool runOnlyOnce = false;
-
-  //AppFirstModal appFirstModal ;
 
   @override
   void setState(fn) {
@@ -66,29 +49,6 @@ class SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
 
-    //appFirstModal = Provider.of<AppFirstModal>(context);
-
-    /*if(runOnce) {
-     runOnce=false;
-     SharedPreferences.getInstance().then((prefs) {
-       String uuid = prefs.getString("uuid") ?? Uuid().v4();
-
-       prefs.setString("uuid", uuid);
-
-
-
-       */ /*TokenController().getJwtToken(uuid).then((r) {
-         print("AUTH_TOKEN Prefns ${prefs.getString("AUTH_TOKEN")}");
-          if(prefs.getString("AUTH_TOKEN")==null){
-            appFirstModal.appFirstRun(r,(){navigate(context);}) ;
-          }else{
-            NetworkUtils.updateToken(prefs );
-            appFirstModal.getDefaults();
-            navigate(context);
-          }
-       });*/ /*
-     });
-   }*/
     if (!runOnlyOnce) {
       runOnlyOnce = true;
       checkUUID(context);
@@ -137,7 +97,7 @@ class SplashScreenState extends State<SplashScreen> {
       });
     } else {
       DeviceTokenController().ValidateDeviceToken().then((token) async {
-        String authToken = await AuthTokenController().ValidateAuthToken();
+        String authToken = await AuthTokenController().validateAuthToken();
         if (authToken != null && authToken.isNotEmpty) {
           callGetDefaultsAPI(context);
         } else {

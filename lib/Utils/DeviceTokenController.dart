@@ -5,11 +5,10 @@ import 'package:device_info/device_info.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
-import 'package:vegetos_flutter/Utils/AuthTokenController.dart';
 
-class DeviceTokenController
-{
+
+class DeviceTokenController {
+
   Future<String> ValidateDeviceToken() async
   {
     SharedPreferences prefs = await SharedPreferences.getInstance();

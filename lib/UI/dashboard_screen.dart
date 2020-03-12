@@ -8,20 +8,14 @@ import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:package_info/package_info.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
-import 'package:vegetos_flutter/UI/about_app_release.dart';
 import 'package:vegetos_flutter/UI/about_vegetos.dart';
 import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
-import 'package:vegetos_flutter/Utils/Enumaration.dart';
-import 'package:vegetos_flutter/Utils/LifecycleEventHandler.dart';
-import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
-import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
@@ -36,13 +30,9 @@ import 'package:vegetos_flutter/UI/my_orders.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/UI/search_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
-import 'package:vegetos_flutter/Utils/AutoSizeText.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
-import 'package:vegetos_flutter/Utils/const_endpoint.dart';
-import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
-import 'package:vegetos_flutter/models/GetDefaultsResponseModel.dart';
 import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
 import 'package:vegetos_flutter/models/ProductPriceModel.dart';
 import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
@@ -50,16 +40,8 @@ import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
-import 'package:vegetos_flutter/models/best_selling_product.dart';
-import 'package:vegetos_flutter/models/default_address.dart';
-import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
-import 'package:vegetos_flutter/models/product_detail.dart';
-import 'package:vegetos_flutter/models/recommended_products.dart';
-import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
-import 'package:vegetos_flutter/models/vegetos_exclusive.dart';
-//import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -98,6 +80,8 @@ class DashboardScreenState extends State<DashboardScreen>
   String cartTotalItems = "0";
   GetCartResponseModel model = GetCartResponseModel();
   List<ManagerItemViewModel> managerItemViewModel;
+
+  bool isAvailableInCart = false;
 
   @override
   void setState(fn) {
@@ -149,10 +133,7 @@ class DashboardScreenState extends State<DashboardScreen>
     CartManagerResponseModel.streamController.stream.listen((cartItems){
       setState((){
         this.managerItemViewModel = cartItems;
-        print(managerItemViewModel[0].productId);
-        print(managerItemViewModel[0].id);
-        print(managerItemViewModel[0].incrementalStep);
-        print(managerItemViewModel[0].quantity);
+        print(managerItemViewModel.length);
       });
     });
   }
@@ -253,6 +234,7 @@ class DashboardScreenState extends State<DashboardScreen>
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         AllProductScreen('Browse By Product')));
+
                           },
                         ),
                       ),
@@ -340,14 +322,14 @@ class DashboardScreenState extends State<DashboardScreen>
         ),
         //padding: EdgeInsets.all(5.0),
         itemBuilder: (context, index) {
-          return gridChildView(context, products[index]);
+          return gridChildView(context, products[index] , managerItemViewModel);
         },
       ),
     );
   }
 
   Widget gridChildView(
-      BuildContext context, ProductWithDefaultVarientModel productVariant) {
+      BuildContext context, ProductWithDefaultVarientModel productVariant, List<ManagerItemViewModel> managerItemViewModel) {
     String name = "";
     String unit = "";
     for (int i = 0; i < productVariant.ProductDetails.length; i++) {
@@ -394,10 +376,6 @@ class DashboardScreenState extends State<DashboardScreen>
           child: Container(
             padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
             decoration: BoxDecoration(
-//                border: new Border.all(
-//                    color: Colors.grey[500],
-//                    width: 0.5,
-//                    style: BorderStyle.solid),
                 color: Colors.white),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,13 +525,14 @@ class DashboardScreenState extends State<DashboardScreen>
                         )),
                   ),
                   onTap: () {
+                    CartManagerResponseModel().callGetMyCartAPI();
                     addToCart(
                         productVariant.ProductId,
                         productVariant.IncrementalStep.toString(),
                         "",
                         ProductPrice.Price.toString(),
                         ProductPrice.OfferPrice.toString());
-                  },
+                    },
                 ),
                 Visibility(
                   visible: false,
@@ -563,12 +542,16 @@ class DashboardScreenState extends State<DashboardScreen>
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-                            addToCart(
-                                productVariant.ProductId,
-                                (productVariant.IncrementalStep - 2).toString(),
-                                "",
-                                ProductPrice.Price.toString(),
-                                ProductPrice.OfferPrice.toString());
+//                            if (.quantity >
+//                                cartItem.MinimumOrderQuantity) {
+//                              updateCartQuantity(
+//                                  cartItem.itemId,
+//                                  (cartItem.quantity -
+//                                      cartItem.IncrementalStep)
+//                                      .toString());
+//                            } else {
+//                              deleteCartItem(cartItem.itemId);
+//                            }
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
@@ -1921,9 +1904,9 @@ class DashboardScreenState extends State<DashboardScreen>
   Widget somethingWentWrong(int index) {
     return InkWell(
       onTap: () {
-        //1 == Best Selling
-        //2 == Vegetos Exclusive
-        //3 == Recommended
+//        1 == Best Selling
+//        2 == Vegetos Exclusive
+//        3 == Recommended
         if (index == 1) {
           callBestSellingItemsAPI();
         } else if (index == 2) {
@@ -2034,8 +2017,6 @@ class DashboardScreenState extends State<DashboardScreen>
         if (cartCountModel != null && cartCountModel.count != null) {
           cartTotalStr = cartCountModel.count.toString();
         }
-      } else {
-//        Navigator.pushAndRemoveUntil(context, EnterExitRoute(enterPage: LoginScreen()),(c)=>false);
       }
       setState(() {
         cartTotal = cartTotalStr;

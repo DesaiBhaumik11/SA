@@ -89,9 +89,6 @@ class AddressModal extends ChangeNotifier{
 
     }
 
-//    statusCode= decode["StatusCode"] ;
-//    message= decode["Message"];
-//    isError= decode["IsError"] ;
     loaded = true ;
     notifyListeners() ;
   }
@@ -122,14 +119,6 @@ class AddressModal extends ChangeNotifier{
 
       getMyAddresses() ;
 
-//      var root=json.decode(r);
-//     {
-//        this.result.add(Result.fromJson((root['Result'])));
-//        if(callback!=null){
-//          callback();
-//        }
-//        notifyListeners();
-//      }
     }).catchError((e){
       print("Error Catch in addAddress  ${e}") ;
     });
@@ -162,7 +151,6 @@ class AddressModal extends ChangeNotifier{
       }else{
         setFullAddress("");
       }
-//
 
       if(callback!=null){
         callback();

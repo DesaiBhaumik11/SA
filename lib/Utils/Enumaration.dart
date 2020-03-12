@@ -140,8 +140,6 @@ class EnumPaymentMode extends Enumaration{
         }else if(mode==5){
             return EnumPaymentMode.COD;
         }
-
-
     }
 }
 

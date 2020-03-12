@@ -189,7 +189,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 top: 40,
                 child: InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      if(Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else
+                        Navigator.push(context, EnterExitRoute(enterPage: DashboardScreen(), exitPage: LoginScreen()));
                     },
                     child: Image.asset(
                       "assets/OkAssets/Cencelicone.png",

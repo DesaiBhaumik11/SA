@@ -29,18 +29,18 @@ class Const {
 
   static String disclaimer = "Disclaimer: Please check the product at the time of delivery.";
 
-  static String deleteAddressConfir = 'Are you sure you want to delete\nthis saved address?';
+  static String deleteAddressConfirm = 'Are you sure you want to delete\nthis saved address?';
 
   static String localitydialog1 = 'Locality can\'t be changed';
   static String localitydialog2 = 'Your delivery address has to be inside\nPaldi,Ahmedabad as you have shopped\nfrom the same locality';
 
-  static String offerzone1 = 'June Sale | Get 50% off';
-  static String offerzone2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+  static String offerZone1 = 'June Sale | Get 50% off';
+  static String offerZone2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 
   static String aboutVegetos1 = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.';
   static String privacyPolicy = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.';
   static String termsConditions = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.';
-  static String contactus ='\nEmail : info@ok.in\n\nContact Number : 079-42393668\n';
+  static String contactUs ='\nEmail : info@ok.in\n\nContact Number : 079-42393668\n';
 
   static String aboutAppRelease1 = 'Ok Greens is brand name owned & managed by Ok Fruits & vegetables Packing Industries.\nWe are providing service of door step delivery of Fruits & Vegetables, grocery & staples, etc..';
   static String aboutAppRelease2 = 'Introducing payment options like UPI, Payment, PhonePe etc. starting from 1 june 2019 12:00 AM';
@@ -60,7 +60,7 @@ class Const {
   static const dashboardGray = Color(0xFF464646);
   static const locationGrey = Color(0xFF393939);
   static const grey800 = Color(0xFF808080);
-  static const navMenuDevider = Color(0xFFDAF1F7);
+  static const navMenuDivider = Color(0xFFDAF1F7);
   static const orange = Color(0xffE36130);
   static const appBar = Color(0xff47870d);
   static const greyLight = Color(0xffCED1D8);

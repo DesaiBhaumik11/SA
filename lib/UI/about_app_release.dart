@@ -14,7 +14,7 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
   @override
   void initState() {
     // TODO: implement initState
-    getVeriosnCode();
+    getVersionCode();
     super.initState();
   }
 
@@ -129,7 +129,8 @@ class _AboutAppReleaseState extends State<AboutAppRelease> {
       ),
     );
   }
-  Future<String> getVeriosnCode() async {
+  // ignore: missing_return
+  Future<String> getVersionCode() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       version = packageInfo.version;

@@ -340,7 +340,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                           height: 10,
                         ),
                         Text(
-                          Const.deleteAddressConfir,
+                          Const.deleteAddressConfirm,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,

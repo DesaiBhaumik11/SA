@@ -82,7 +82,7 @@ class _OfferzoneState extends State<Offerzone> {
                       children: <Widget>[
 
                         Text(
-                          Const.offerzone1, style: TextStyle(
+                          Const.offerZone1, style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
                         ),
@@ -91,7 +91,7 @@ class _OfferzoneState extends State<Offerzone> {
                         SizedBox(height: 5,),
 
                         Text(
-                          Const.offerzone2, style: TextStyle(
+                          Const.offerZone2, style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 13,
                         ),

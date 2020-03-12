@@ -81,7 +81,6 @@ class AppFirstModal extends ChangeNotifier {
     Map<String,String> headers = Map() ;
     Map<String,String> body = Map() ;
     headers["device_token"]=jwtToken ;
-    //headers["Content-Type"]="application/json" ;
 
     if(!_loading) {
       _loading=true;
@@ -94,9 +93,7 @@ class AppFirstModal extends ChangeNotifier {
 
 
         setData( json.decode(r) , call);
-//        if(call!=null){
-//          call();
-//        }
+
 
       }).catchError((e) {
         _loading=false;
@@ -106,12 +103,6 @@ class AppFirstModal extends ChangeNotifier {
       }
         loaded=true;
         notifyListeners();
-
-
-
-        //setData(json.decode(e));
-
-
 
       });
     }

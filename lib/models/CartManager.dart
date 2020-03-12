@@ -1,11 +1,7 @@
 
 import 'dart:async';
-
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
-import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
-
-import 'ApiResponseModel.dart';
+import 'UnitsModel.dart';
 
 class CartManagerResponseModel {
 
@@ -47,17 +43,18 @@ class CartManagerResponseModel {
 }
 
 class ManagerItemViewModel {
+
   String productId;
-  String unit;
   String id;
-  int quantity;
+  int  quantity;
 
   int minimumOrderQuantity;
   int incrementalStep;
+  List<UnitsModel> units;
 
   ManagerItemViewModel({
     this.productId,
-    this.unit,
+    this.units,
     this.id,
     this.quantity,
 
@@ -69,7 +66,7 @@ class ManagerItemViewModel {
   factory ManagerItemViewModel.fromJson(Map<String, dynamic> json) => ManagerItemViewModel(
 
     productId: json["ItemId"],
-    unit: json["Unit"],
+    units: json['Units'] != null ? UnitsModel.parseList(json['Units']) : null,
     id: json["Id"],
     quantity: json["Quantity"],
 
@@ -79,7 +76,7 @@ class ManagerItemViewModel {
 
   Map<String, dynamic> toJson() => {
     "ProductId": productId,
-    "Unit": unit,
+    "Unit": units,
     "Id": id,
     "Quantity": quantity,
   };

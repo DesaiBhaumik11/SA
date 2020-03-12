@@ -21,13 +21,10 @@ class MyCartModal extends ChangeNotifier{
   bool isError;
   Result result;
 
-
   bool _loading = false ;
   bool loaded = false ;
   int cartItemSize = 0 ;
   double totalCost = 0.0;
-
-
 
   MyCartModal({
     this.version,
@@ -55,8 +52,7 @@ class MyCartModal extends ChangeNotifier{
 
 
 
-  addTocart(bst.Result resultModal, [bodyJson]){
-
+  addToCart(bst.Result resultModal, [bodyJson]){
 
     print("addTocart") ;
 
@@ -67,7 +63,6 @@ class MyCartModal extends ChangeNotifier{
       "Quantity": "${resultModal.quantity==0?1:resultModal.quantity}" ,
       "OfferId": "",
       "Amount": "${resultModal.price}"}) ;
-
 
     print("addToCart Body" + body) ;
 
@@ -161,6 +156,7 @@ class MyCartModal extends ChangeNotifier{
 
       cartItemSize=0 ;
       totalCost =0 ;
+
     }
     notifyListeners() ;
   }

@@ -6,10 +6,8 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
-import 'package:vegetos_flutter/UI/custom_stepper.dart';
 import 'package:vegetos_flutter/UI/force_update.dart';
 import 'package:vegetos_flutter/Utils/Enumaration.dart';
-import 'package:vegetos_flutter/models/StatusMangement.dart';
 
 class Utility {
 
