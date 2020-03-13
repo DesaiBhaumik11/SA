@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,6 +70,7 @@ class DashboardScreenState extends State<DashboardScreen>
   bool isCountLoading = false;
   String cartTotal = '0';
   String ImageURL = '';
+  double cartNumber = 0 ;
 
   Future bestSellingFuture;
   Future exclusiveFuture;
@@ -79,7 +81,8 @@ class DashboardScreenState extends State<DashboardScreen>
 
   String cartTotalItems = "0";
   GetCartResponseModel model = GetCartResponseModel();
-  List<ManagerItemViewModel> managerItemViewModel;
+  Map<String, dynamic> cartHashMap;
+  ManagerItemViewModel managerItemViewModel;
 
   bool isAvailableInCart = false;
 
@@ -124,20 +127,19 @@ class DashboardScreenState extends State<DashboardScreen>
 
     WidgetsBinding.instance.addObserver(this);
 
-   managerForCart();
+    managerForCart();
     super.initState();
   }
 
   void managerForCart() {
     CartManagerResponseModel().callGetMyCartAPI();
-    CartManagerResponseModel.streamController.stream.listen((cartItems){
+    CartManagerResponseModel.streamController.stream.listen((hashMap){
       setState((){
-        this.managerItemViewModel = cartItems;
-        print(managerItemViewModel.length);
+        this.cartHashMap = hashMap;
+        print(cartHashMap.length);
       });
     });
   }
-
   @override
   Widget build(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
@@ -322,14 +324,22 @@ class DashboardScreenState extends State<DashboardScreen>
         ),
         //padding: EdgeInsets.all(5.0),
         itemBuilder: (context, index) {
-          return gridChildView(context, products[index] , managerItemViewModel);
+          return gridChildView(context, products[index]);
         },
       ),
     );
   }
 
   Widget gridChildView(
-      BuildContext context, ProductWithDefaultVarientModel productVariant, List<ManagerItemViewModel> managerItemViewModel) {
+      BuildContext context, ProductWithDefaultVarientModel productVariant) {
+
+    ProductPriceModel ProductPrice = new ProductPriceModel();
+    ProductDetailsModel ProductDetail = new ProductDetailsModel();
+    UnitsModel Units = new UnitsModel();
+    ProductVariantMedia productVariantMedia = new ProductVariantMedia();
+
+    bool isAvailableInCart = false;
+
     String name = "";
     String unit = "";
     for (int i = 0; i < productVariant.ProductDetails.length; i++) {
@@ -346,28 +356,34 @@ class DashboardScreenState extends State<DashboardScreen>
       }
     }
 
-    ProductPriceModel ProductPrice = new ProductPriceModel();
-    ProductDetailsModel ProductDetail = new ProductDetailsModel();
-    UnitsModel Units = new UnitsModel();
-    ProductVariantMedia productVariantMedia = new ProductVariantMedia();
+   if(productVariant != null && cartHashMap!=null && cartHashMap.containsKey(productVariant.ProductId)) {
+      this.managerItemViewModel = cartHashMap[productVariant.ProductId];
+     productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
+       this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
+     if (productVariant.ProductPrice != null) {
+       ProductPrice = productVariant.ProductPrice;
+     }
+       isAvailableInCart = true;
+   } else {
+       if (productVariant.ProductDetails != null &&
+           productVariant.ProductDetails.length > 0) {
+         ProductDetail = productVariant.ProductDetails[0];
+       }
+       if (productVariant.Units != null && productVariant.Units.length > 0) {
+         Units = productVariant.Units[0];
+       }
+       if (productVariant.ProductPrice != null) {
+         ProductPrice = productVariant.ProductPrice;
+       }
+         isAvailableInCart = false;
+   }
 
-    if (productVariant != null) {
-      if (productVariant.ProductDetails != null &&
-          productVariant.ProductDetails.length > 0) {
-        ProductDetail = productVariant.ProductDetails[0];
-      }
-      if (productVariant.Units != null && productVariant.Units.length > 0) {
-        Units = productVariant.Units[0];
-      }
-      if (productVariant.ProductPrice != null) {
-        ProductPrice = productVariant.ProductPrice;
-      }
-    }
 
     return Stack(
       children: <Widget>[
         GestureDetector(
           onTap: () {
+            managerForCart();
             Navigator.push(
                 context,
                 EnterExitRoute(
@@ -507,6 +523,7 @@ class DashboardScreenState extends State<DashboardScreen>
                         : Container(),
                   ],
                 ),
+                !isAvailableInCart ?
                 InkWell(
                   child: Container(
                     margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -525,36 +542,42 @@ class DashboardScreenState extends State<DashboardScreen>
                         )),
                   ),
                   onTap: () {
-                    CartManagerResponseModel().callGetMyCartAPI();
-                    addToCart(
-                        productVariant.ProductId,
-                        productVariant.IncrementalStep.toString(),
-                        "",
-                        ProductPrice.Price.toString(),
-                        ProductPrice.OfferPrice.toString());
+                    setState(() {
+                      managerForCart();
+                      addToCart(
+                          productVariant.ProductId,
+                          productVariant.IncrementalStep.toString(),
+                          "",
+                          ProductPrice.Price.toString(),
+                          ProductPrice.OfferPrice.toString());
+                      managerForCart();
+                    });
                     },
-                ),
+                ) :
                 Visibility(
-                  visible: false,
+                  visible: true,
                   child: Expanded(
                     flex: 0,
                     child: Row(
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-//                            if (.quantity >
-//                                cartItem.MinimumOrderQuantity) {
-//                              updateCartQuantity(
-//                                  cartItem.itemId,
-//                                  (cartItem.quantity -
-//                                      cartItem.IncrementalStep)
-//                                      .toString());
-//                            } else {
-//                              deleteCartItem(cartItem.itemId);
-//                            }
+                            setState(() {
+                              managerForCart();
+                              if (managerItemViewModel.quantity >
+                                  managerItemViewModel.minimumOrderQuantity) {
+                                CartManagerResponseModel().updateCartQuantity(
+                                    managerItemViewModel.id,
+                                    (managerItemViewModel.quantity -
+                                        managerItemViewModel.incrementalStep)
+                                        .toString());
+                              } else {
+                                CartManagerResponseModel().deleteCartItem(managerItemViewModel.id);
+                              }
+                            });
                           },
                           child: Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
                             child: Image.asset(
                               'assets/OkAssets/minus.png',
                               height: 20.0,
@@ -563,8 +586,8 @@ class DashboardScreenState extends State<DashboardScreen>
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                          child: Text("",
+                          margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                          child: Text(cartNumber.round().toString(),
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontFamily: 'GoogleSans',
@@ -574,15 +597,18 @@ class DashboardScreenState extends State<DashboardScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            addToCart(
-                                productVariant.ProductId,
-                                productVariant.IncrementalStep.toString(),
-                                "",
-                                ProductPrice.Price.toString(),
-                                ProductPrice.OfferPrice.toString());
+                            setState(() {
+                              CartManagerResponseModel().callGetMyCartAPI();
+                              CartManagerResponseModel().updateCartQuantity(
+                                  managerItemViewModel.id,
+                                  (managerItemViewModel.quantity +
+                                      managerItemViewModel.incrementalStep)
+                                      .toString());
+                              CartManagerResponseModel().callGetMyCartAPI();
+                            });
                           },
                           child: Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
                             child: Image.asset(
                               'assets/OkAssets/plus.png',
                               height: 20.0,

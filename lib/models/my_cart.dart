@@ -127,9 +127,9 @@ class MyCartModal extends ChangeNotifier{
   void updateQuantity(String itemId , int quantity){
 
     //    print("${itemId}   >>> ${quantity}") ;
-    Map<String , String>  headersmap = Map() ;
+    Map<String , String>  headersMap = Map() ;
     print("updateQuantity itemId>>> $itemId quantity>>> $quantity") ;
-    NetworkUtils.postRequest(endpoint: Constant.UpdateQuantity+ itemId + "&quantity=${quantity}" ,headers: headersmap).then((res){
+    NetworkUtils.postRequest(endpoint: Constant.UpdateQuantity+ itemId + "&quantity=$quantity" ,headers: headersMap).then((res){
       print("updateQuantity REsponse>>> $res") ;
 
     }) ;
@@ -150,7 +150,7 @@ class MyCartModal extends ChangeNotifier{
         totalCost = totalCost+  result.cartItemViewModels[i].price*result.cartItemViewModels[i].quantity ;
       }
       cartItemSize = result.cartItemViewModels.length ;
-      print("Cart Size ${cartItemSize} , Total Cost ${totalCost}") ;
+      print("Cart Size $cartItemSize , Total Cost $totalCost") ;
 
     }catch(Exception){
 

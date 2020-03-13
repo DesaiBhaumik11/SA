@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'UnitsModel.dart';
 
@@ -30,13 +31,59 @@ class CartManagerResponseModel {
     return jobList;
   }
 
+  void deleteCartItem(String itemId) {
+    ApiCall().deleteItem(itemId).then((apiResponseModel) {
+      if (apiResponseModel.statusCode == 200) {
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      }
+    });
+  }
+
+  Future<dynamic> updateCartQuantity(String itemId, String quantity) {
+    ApiCall()
+        .updateQuantity(itemId, quantity)
+        .then((apiResponseModel) {
+
+      if (apiResponseModel.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Item Updated');
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      }
+    });
+  }
+
   Future<dynamic> callGetMyCartAPI() {
     ApiCall().getCart().then((apiResponseModel) {
       if (apiResponseModel.statusCode == 200) {
         CartManagerResponseModel getCartManagerResponseModel =
         CartManagerResponseModel.fromJson(apiResponseModel.Result);
         managerItemViewModel = getCartManagerResponseModel.managerItemViewModel;
-        streamController.add(managerItemViewModel);
+        Map<String,ManagerItemViewModel> cartHashMap = new Map();
+        for(int i = 0; i < managerItemViewModel.length; i++) {
+          ManagerItemViewModel cartItemViewModel=managerItemViewModel[i];
+          cartHashMap[cartItemViewModel.productId] = cartItemViewModel;
+        }
+        streamController.add(cartHashMap);
+        print(cartHashMap);
+        print(cartHashMap.containsKey(managerItemViewModel[0].productId));
+        print(cartHashMap.keys);
       }
     });
   }
@@ -65,9 +112,9 @@ class ManagerItemViewModel {
 
   factory ManagerItemViewModel.fromJson(Map<String, dynamic> json) => ManagerItemViewModel(
 
-    productId: json["ItemId"],
+    productId: json["Id"],
     units: json['Units'] != null ? UnitsModel.parseList(json['Units']) : null,
-    id: json["Id"],
+    id: json["ItemId"],
     quantity: json["Quantity"],
 
     minimumOrderQuantity: json['MinimumOrderQuantity'],
