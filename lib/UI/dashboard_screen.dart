@@ -617,11 +617,14 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  void updateQuantity (id , quantity) {
+  Future<dynamic> updateQuantity (id , quantity) {
+    var success;
     setState(() {
       isCountLoading = false;
     });
-    CartManagerResponseModel().updateCartQuantity(id, quantity);
+    CartManagerResponseModel().updateCartQuantity(id, quantity).then((_){
+       success = _;
+    });
   }
 
   @override

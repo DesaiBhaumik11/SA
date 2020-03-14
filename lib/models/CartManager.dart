@@ -50,7 +50,8 @@ class CartManagerResponseModel {
     });
   }
 
-  Future<ApiResponseModel> updateCartQuantity(String itemId, String quantity) {
+  Future<dynamic> updateCartQuantity(String itemId, String quantity) {
+    var x ;
     ApiCall()
         .updateQuantity(itemId, quantity)
         .then((apiResponseModel) {
@@ -68,8 +69,10 @@ class CartManagerResponseModel {
                 ? apiResponseModel.message
                 : 'Something went wrong.!');
       }
-      return apiResponseModel;
+      x = apiResponseModel.Result;
+      return apiResponseModel.Result;
     });
+    return x;
   }
 
   void listenCart(List<ManagerItemViewModel> managerItemViewModel) {
