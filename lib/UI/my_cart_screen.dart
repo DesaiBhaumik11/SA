@@ -780,25 +780,6 @@ class MyCartState extends State<MyCartScreen> {
                             ),
                           )
                         : Container(),
-//                    result.ProductPrice.DiscountPercent != null &&
-//                            result.ProductPrice.DiscountPercent != 0
-//                        ? Container(
-//                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-//                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(5.0),
-//                                color: Colors.orange),
-//                            child: Text(
-//                              result.ProductPrice.DiscountPercent != null
-//                                  ? result.ProductPrice.DiscountString + ' %'
-//                                  : '0 %',
-//                              style: TextStyle(
-//                                  fontSize: 10.0,
-//                                  fontFamily: 'GoogleSans',
-//                                  color: Colors.white),
-//                            ),
-//                          )
-//                        : Container(),
                   ],
                 ),
                 InkWell(
@@ -819,8 +800,6 @@ class MyCartState extends State<MyCartScreen> {
                         )),
                   ),
                   onTap: () {
-                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                    //myCartModal.addTocart(result);
                     callAddToCartAPI(
                         result.ProductId,
                         result.IncrementalStep.toString(),
@@ -1042,18 +1021,6 @@ class MyCartState extends State<MyCartScreen> {
                   ),
                 ),
               ),
-//        Visibility(
-//          visible: model != null && model.cartItemViewModels != null ? true : false,
-//          child: InkWell(
-//            onTap: (){
-//              Navigator.push(context, SlideLeftRoute(page: SelectContact()));
-//            },
-//            child: Container(
-//              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-//              child: Icon(Icons.share, color: Colors.white,),
-//            ),
-//          ),
-//        )
       ],
     );
   }

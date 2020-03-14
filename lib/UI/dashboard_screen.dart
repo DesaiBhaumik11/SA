@@ -132,7 +132,6 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   void managerForCart() {
-    CartManagerResponseModel().callGetMyCartAPI();
     CartManagerResponseModel.streamController.stream.listen((hashMap){
       setState((){
         this.cartHashMap = hashMap;
@@ -363,6 +362,7 @@ class DashboardScreenState extends State<DashboardScreen>
      if (productVariant.ProductPrice != null) {
        ProductPrice = productVariant.ProductPrice;
      }
+
        isAvailableInCart = true;
    } else {
        if (productVariant.ProductDetails != null &&
@@ -563,14 +563,10 @@ class DashboardScreenState extends State<DashboardScreen>
                         InkWell(
                           onTap: () {
                             setState(() {
-                              managerForCart();
                               if (managerItemViewModel.quantity >
                                   managerItemViewModel.minimumOrderQuantity) {
-                                CartManagerResponseModel().updateCartQuantity(
-                                    managerItemViewModel.id,
-                                    (managerItemViewModel.quantity -
-                                        managerItemViewModel.incrementalStep)
-                                        .toString());
+                                updateQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
+                                    managerItemViewModel.incrementalStep).toString());
                               } else {
                                 CartManagerResponseModel().deleteCartItem(managerItemViewModel.id);
                               }
@@ -597,15 +593,8 @@ class DashboardScreenState extends State<DashboardScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              CartManagerResponseModel().callGetMyCartAPI();
-                              CartManagerResponseModel().updateCartQuantity(
-                                  managerItemViewModel.id,
-                                  (managerItemViewModel.quantity +
-                                      managerItemViewModel.incrementalStep)
-                                      .toString());
-                              CartManagerResponseModel().callGetMyCartAPI();
-                            });
+                            updateQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
+                                managerItemViewModel.incrementalStep).toString());
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -626,6 +615,13 @@ class DashboardScreenState extends State<DashboardScreen>
         )
       ],
     );
+  }
+
+  void updateQuantity (id , quantity) {
+    setState(() {
+      isCountLoading = false;
+    });
+    CartManagerResponseModel().updateCartQuantity(id, quantity);
   }
 
   @override

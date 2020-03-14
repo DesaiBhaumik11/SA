@@ -6,42 +6,25 @@ import 'ProductPriceModel.dart';
 import 'ProductTaxModel.dart';
 
 //created by Prashant on 08-01-2020
-class ProductWithDefaultVarientModel
-{
+class ProductWithDefaultVarientModel {
+
   String ProductVariantId;
-
   String ProductId;
-
   String PrimaryMediaId;
-
   bool IsDefault;
-
   String CategoryId;
-
   String BrandId;
-
   String SeoTags;
-
   bool IsActive;
-
   String CategoryName;
-
   String CategoryParentId;
-
   String BrandName;
-
   int MinimumOrderQuantity;
-
   int IncrementalStep;
-
   List<UnitsModel> Units;
-
   List<ProductDetailsModel> ProductDetails;
-
   ProductTaxModel ProductTax;
-
   ProductPriceModel ProductPrice;
-
   Object ProductVariantMedia;
 
   ProductWithDefaultVarientModel({
@@ -94,5 +77,4 @@ class ProductWithDefaultVarientModel
     list.map((data) => ProductWithDefaultVarientModel.fromJson(data)).toList();
     return jobList;
   }
-
 }
