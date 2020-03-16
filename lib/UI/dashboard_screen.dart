@@ -137,7 +137,6 @@ class DashboardScreenState extends State<DashboardScreen>
       setState((){
         this.cartHashMap = hashMap;
         print(cartHashMap.length);
-        isCountLoading = true;
       });
     });
   }
@@ -544,7 +543,6 @@ class DashboardScreenState extends State<DashboardScreen>
                   ),
                   onTap: () {
                     setState(() {
-                      managerForCart();
                       addToCart(
                           productVariant.ProductId,
                           productVariant.IncrementalStep.toString(),
@@ -552,6 +550,7 @@ class DashboardScreenState extends State<DashboardScreen>
                           ProductPrice.Price.toString(),
                           ProductPrice.OfferPrice.toString());
                       managerForCart();
+                      isCountLoading = false;
                     });
                     },
                 ) :
@@ -567,13 +566,13 @@ class DashboardScreenState extends State<DashboardScreen>
                             setState(() {
                               if (managerItemViewModel.quantity >
                                   managerItemViewModel.minimumOrderQuantity) {
-                                updateCartQuantity(managerItemViewModel.id, (managerItemViewModel.quantity -
-                                    managerItemViewModel.incrementalStep).toString());
+                                updateCartQuantity(managerItemViewModel.id,
+                                    (managerItemViewModel.quantity - managerItemViewModel.incrementalStep).toString());
+                                //isCountLoading = false;
                               } else {
-                                isAvailableInCart = false;
+                                deleteCartItem(managerItemViewModel.id);
                               }
                             });
-                            managerForCart();
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -597,10 +596,10 @@ class DashboardScreenState extends State<DashboardScreen>
                         InkWell(
                           onTap: () {
                             setState(() {
+                              managerForCart();
                               updateCartQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
                                   managerItemViewModel.incrementalStep).toString());
                             });
-                            managerForCart();
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -638,9 +637,6 @@ class DashboardScreenState extends State<DashboardScreen>
         CartManagerResponseModel.fromJson(apiResponseModel.Result);
         List managerItem = getCartManagerResponseModel.managerItemViewModel;
         CartManagerResponseModel.listenCart(managerItem);
-        setState(() {
-          isCountLoading = false;
-        });
         Fluttertoast.showToast(msg: 'Item Updated');
       } else if (apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(
@@ -663,8 +659,13 @@ class DashboardScreenState extends State<DashboardScreen>
     ApiCall().setContext(context).deleteItem(itemId).then((apiResponseModel) {
       setState(() {
         isCountLoading = false;
+        isAvailableInCart = false;
       });
       if (apiResponseModel.statusCode == 200) {
+        CartManagerResponseModel getCartManagerResponseModel =
+        CartManagerResponseModel.fromJson(apiResponseModel.Result);
+        List managerItem = getCartManagerResponseModel.managerItemViewModel;
+        CartManagerResponseModel.listenCart(managerItem);
       } else if (apiResponseModel.statusCode == 401) {
         Fluttertoast.showToast(
             msg: apiResponseModel.message != null
@@ -2113,6 +2114,10 @@ class DashboardScreenState extends State<DashboardScreen>
         .addToCart(productId, qty, offerId, amount, offerAmount)
         .then((apiResponseModel) {
       if (apiResponseModel.statusCode == 200) {
+        managerForCart();
+        setState(() {
+          isAvailableInCart = true;
+        });
         Fluttertoast.showToast(msg: 'Item added in cart');
       } else {
         Fluttertoast.showToast(
@@ -2120,6 +2125,9 @@ class DashboardScreenState extends State<DashboardScreen>
                 ? apiResponseModel.message
                 : '');
       }
+      setState(() {
+        isAvailableInCart = true;
+      });
       count();
     });
   }
