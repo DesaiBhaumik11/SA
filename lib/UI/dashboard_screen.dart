@@ -622,7 +622,8 @@ class DashboardScreenState extends State<DashboardScreen>
     setState(() {
       isCountLoading = false;
     });
-    CartManagerResponseModel().updateCartQuantity(id, quantity).then((_){
+    CartManagerResponseModel().updateCartQuantity(id, quantity).then
+      ((_){
        success = _;
     });
   }
