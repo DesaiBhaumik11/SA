@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
 import 'UnitsModel.dart';
 
 class CartManagerResponseModel {
@@ -31,51 +32,48 @@ class CartManagerResponseModel {
     list.map((data) => CartManagerResponseModel.fromJson(data)).toList();
     return jobList;
   }
+//
+//  Future<ApiResponseModel> deleteCartItem(String itemId) {
+//    ApiCall().deleteItem(itemId).then((apiResponseModel) {
+//      if (apiResponseModel.statusCode == 200) {
+//      } else if (apiResponseModel.statusCode == 401) {
+//        Fluttertoast.showToast(
+//            msg: apiResponseModel.message != null
+//                ? apiResponseModel.message
+//                : 'Something went wrong.!');
+//      } else {
+//        Fluttertoast.showToast(
+//            msg: apiResponseModel.message != null
+//                ? apiResponseModel.message
+//                : 'Something went wrong.!');
+//      }
+//      return apiResponseModel;
+//    });
+//  }
+//
+//  Future<dynamic> updateCartQuantity(String itemId, String quantity) {
+//    ApiCall()
+//        .updateQuantity(itemId, quantity)
+//        .then((apiResponseModel) {
+//
+//      if (apiResponseModel.statusCode == 200) {
+//        Fluttertoast.showToast(msg: 'Item Updated');
+//      } else if (apiResponseModel.statusCode == 401) {
+//        Fluttertoast.showToast(
+//            msg: apiResponseModel.message != null
+//                ? apiResponseModel.message
+//                : 'Something went wrong.!');
+//      } else {
+//        Fluttertoast.showToast(
+//            msg: apiResponseModel.message != null
+//                ? apiResponseModel.message
+//                : 'Something went wrong.!');
+//      }
+//      return apiResponseModel.Result;
+//    });
+//  }
 
-  Future<ApiResponseModel> deleteCartItem(String itemId) {
-    ApiCall().deleteItem(itemId).then((apiResponseModel) {
-      if (apiResponseModel.statusCode == 200) {
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
-      return apiResponseModel;
-    });
-  }
-
-  Future<dynamic> updateCartQuantity(String itemId, String quantity) {
-    var x ;
-    ApiCall()
-        .updateQuantity(itemId, quantity)
-        .then((apiResponseModel) {
-
-      if (apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: 'Item Updated');
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
-      x = apiResponseModel.Result;
-      return apiResponseModel.Result;
-    });
-    return x;
-  }
-
-  void listenCart(List<ManagerItemViewModel> managerItemViewModel) {
+  static listenCart(List<ManagerItemViewModel> managerItemViewModel) {
     Map<String,ManagerItemViewModel> cartHashMap = new Map();
     for(int i = 0; i < managerItemViewModel.length; i++) {
       ManagerItemViewModel cartItemViewModel=managerItemViewModel[i];
@@ -98,6 +96,8 @@ class CartManagerResponseModel {
 }
 
 class ManagerItemViewModel {
+
+  ProductWithDefaultVarientModel productModel= ProductWithDefaultVarientModel();
 
   String productId;
   String id;

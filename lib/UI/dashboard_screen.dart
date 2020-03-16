@@ -132,10 +132,12 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   void managerForCart() {
+    CartManagerResponseModel().callGetMyCartAPI();
     CartManagerResponseModel.streamController.stream.listen((hashMap){
       setState((){
         this.cartHashMap = hashMap;
         print(cartHashMap.length);
+        isCountLoading = true;
       });
     });
   }
@@ -321,7 +323,6 @@ class DashboardScreenState extends State<DashboardScreen>
           mainAxisSpacing: 15.0,
           childAspectRatio: aspectRatio >= 0.73 ? 1.2 : 1.6,
         ),
-        //padding: EdgeInsets.all(5.0),
         itemBuilder: (context, index) {
           return gridChildView(context, products[index]);
         },
@@ -562,15 +563,17 @@ class DashboardScreenState extends State<DashboardScreen>
                       children: <Widget>[
                         InkWell(
                           onTap: () {
+                            managerForCart();
                             setState(() {
                               if (managerItemViewModel.quantity >
                                   managerItemViewModel.minimumOrderQuantity) {
-                                updateQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
+                                updateCartQuantity(managerItemViewModel.id, (managerItemViewModel.quantity -
                                     managerItemViewModel.incrementalStep).toString());
                               } else {
-                                CartManagerResponseModel().deleteCartItem(managerItemViewModel.id);
+                                isAvailableInCart = false;
                               }
                             });
+                            managerForCart();
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -593,8 +596,11 @@ class DashboardScreenState extends State<DashboardScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            updateQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
-                                managerItemViewModel.incrementalStep).toString());
+                            setState(() {
+                              updateCartQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
+                                  managerItemViewModel.incrementalStep).toString());
+                            });
+                            managerForCart();
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -616,17 +622,63 @@ class DashboardScreenState extends State<DashboardScreen>
       ],
     );
   }
-
-  Future<dynamic> updateQuantity (id , quantity) {
-    var success;
+  void updateCartQuantity(String itemId, String quantity) {
     setState(() {
-      isCountLoading = false;
+      isCountLoading = true;
     });
-    CartManagerResponseModel().updateCartQuantity(id, quantity).then
-      ((_){
-       success = _;
+    ApiCall()
+        .setContext(context)
+        .updateQuantity(itemId, quantity)
+        .then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      if (apiResponseModel.statusCode == 200) {
+        CartManagerResponseModel getCartManagerResponseModel =
+        CartManagerResponseModel.fromJson(apiResponseModel.Result);
+        List managerItem = getCartManagerResponseModel.managerItemViewModel;
+        CartManagerResponseModel.listenCart(managerItem);
+        setState(() {
+          isCountLoading = false;
+        });
+        Fluttertoast.showToast(msg: 'Item Updated');
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      }
     });
   }
+
+  void deleteCartItem(String itemId) {
+    setState(() {
+      isCountLoading = true;
+    });
+    ApiCall().setContext(context).deleteItem(itemId).then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      if (apiResponseModel.statusCode == 200) {
+      } else if (apiResponseModel.statusCode == 401) {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      } else {
+        Fluttertoast.showToast(
+            msg: apiResponseModel.message != null
+                ? apiResponseModel.message
+                : 'Something went wrong.!');
+      }
+    });
+  }
+
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {

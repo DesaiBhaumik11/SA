@@ -49,8 +49,6 @@ class AppFirstModal extends ChangeNotifier {
     "Result": result.toJson(),
   };
 
-
-
   getDefaults([call]){
       NetworkUtils.getRequest(endPoint: Constant.GetDefaults ).then((r) {
         print("getDefaults response = $r");
@@ -75,8 +73,6 @@ class AppFirstModal extends ChangeNotifier {
 
   }
 
-
-
   appFirstRun(String jwtToken,[call]){
     Map<String,String> headers = Map() ;
     Map<String,String> body = Map() ;
@@ -87,13 +83,10 @@ class AppFirstModal extends ChangeNotifier {
       NetworkUtils.appFirstRunPost(endpoint: Constant.AppFirstStart ,body:  body , headers: headers).then((r) {
         print("ravdepp: "+Constant.AppFirstStart);
         print(headers);
-        _loading=false;
+        _loading = false;
         print("appFirstRun response = $r");
 
-
-
         setData( json.decode(r) , call);
-
 
       }).catchError((e) {
         _loading=false;
@@ -107,8 +100,6 @@ class AppFirstModal extends ChangeNotifier {
       });
     }
   }
-
-
 
   void setDataLoginRToken(json, SharedPreferences prefs){
     result = Result.fromJson(json["Result"]);
@@ -136,7 +127,6 @@ class AppFirstModal extends ChangeNotifier {
     notifyListeners();
   }else{
       if(message=="Another user is active on this device."){
-
 
         SharedPreferences.getInstance().then((r) {
           NetworkUtils.updateToken(r);
