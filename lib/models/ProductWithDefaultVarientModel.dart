@@ -27,6 +27,7 @@ class ProductWithDefaultVarientModel {
   ProductPriceModel ProductPrice;
   Object ProductVariantMedia;
 
+  String itemId;
   ProductWithDefaultVarientModel({
     this.ProductVariantId,
     this.ProductId,

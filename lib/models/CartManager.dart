@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
@@ -8,9 +7,12 @@ import 'UnitsModel.dart';
 
 class CartManagerResponseModel {
 
+  /// ------------------------------Initialize Stream Controller --------------------------------------------///
+
   static StreamController streamController = StreamController.broadcast();
+
+  /// -------------------------------------------------------------------------------------------------------///
   List<ManagerItemViewModel> managerItemViewModel;
-//  static List<ManagerItemViewModel> managerItemViewModel1;
 
   CartManagerResponseModel({
     this.managerItemViewModel,
@@ -18,90 +20,100 @@ class CartManagerResponseModel {
 
   factory CartManagerResponseModel.fromJson(Map<String, dynamic> json) {
     return CartManagerResponseModel(
-      managerItemViewModel: json["CartItemViewModels"] != null ? ManagerItemViewModel.parseList(json["CartItemViewModels"]) : new List(),
+      managerItemViewModel: json["CartItemViewModels"] != null
+          ? ManagerItemViewModel.parseList(json["CartItemViewModels"])
+          : new List(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "CartItemViewModels": List<dynamic>.from(managerItemViewModel.map((x) => x.toJson())),
-  };
+        "CartItemViewModels":
+            List<dynamic>.from(managerItemViewModel.map((x) => x.toJson())),
+      };
 
   static List<CartManagerResponseModel> parseList(listData) {
     var list = listData as List;
     List<CartManagerResponseModel> jobList =
-    list.map((data) => CartManagerResponseModel.fromJson(data)).toList();
+        list.map((data) => CartManagerResponseModel.fromJson(data)).toList();
     return jobList;
   }
-//
-//  Future<ApiResponseModel> deleteCartItem(String itemId) {
-//    ApiCall().deleteItem(itemId).then((apiResponseModel) {
-//      if (apiResponseModel.statusCode == 200) {
-//      } else if (apiResponseModel.statusCode == 401) {
-//        Fluttertoast.showToast(
-//            msg: apiResponseModel.message != null
-//                ? apiResponseModel.message
-//                : 'Something went wrong.!');
-//      } else {
-//        Fluttertoast.showToast(
-//            msg: apiResponseModel.message != null
-//                ? apiResponseModel.message
-//                : 'Something went wrong.!');
-//      }
-//      return apiResponseModel;
-//    });
-//  }
-//
-//  Future<dynamic> updateCartQuantity(String itemId, String quantity) {
-//    ApiCall()
-//        .updateQuantity(itemId, quantity)
-//        .then((apiResponseModel) {
-//
-//      if (apiResponseModel.statusCode == 200) {
-//        Fluttertoast.showToast(msg: 'Item Updated');
-//      } else if (apiResponseModel.statusCode == 401) {
-//        Fluttertoast.showToast(
-//            msg: apiResponseModel.message != null
-//                ? apiResponseModel.message
-//                : 'Something went wrong.!');
-//      } else {
-//        Fluttertoast.showToast(
-//            msg: apiResponseModel.message != null
-//                ? apiResponseModel.message
-//                : 'Something went wrong.!');
-//      }
-//      return apiResponseModel.Result;
-//    });
-//  }
 
-  static listenCart(List<ManagerItemViewModel> managerItemViewModel) {
-    Map<String,ManagerItemViewModel> cartHashMap = new Map();
-    for(int i = 0; i < managerItemViewModel.length; i++) {
-      ManagerItemViewModel cartItemViewModel=managerItemViewModel[i];
-      cartHashMap[cartItemViewModel.productId] = cartItemViewModel;
-    }
-    streamController.add(cartHashMap);
+  /// -----------------------Delete CartItem API call--------------------------------------------------------///
+
+  Future<ApiResponseModel> deleteCartItem(String itemId) async {
+    ApiResponseModel apiResponseModel = await ApiCall().deleteItem(itemId);
+    listenCart(apiResponseModel, "Item Deleted");
+    return apiResponseModel;
   }
 
-  Future<ApiResponseModel> callGetMyCartAPI() {
-    ApiCall().getCart().then((apiResponseModel) {
-      if (apiResponseModel.statusCode == 200) {
-        CartManagerResponseModel getCartManagerResponseModel =
-        CartManagerResponseModel.fromJson(apiResponseModel.Result);
-        managerItemViewModel = getCartManagerResponseModel.managerItemViewModel;
-        listenCart(managerItemViewModel);
+  /// ------------------------Add to Cart API call-----------------------------------------------------------///
+
+  Future<ApiResponseModel> addToCart(
+      productId, qty, offerId, amount, offerAmount) async {
+    ApiResponseModel apiResponseModel =
+        await ApiCall().addToCart(productId, qty, offerId, amount, offerAmount);
+    listenCart(apiResponseModel, 'Item added in cart');
+    return apiResponseModel;
+  }
+
+  /// -----------------------Update CartItem API call--------------------------------------------------------///
+
+  Future<ApiResponseModel> updateCartQuantity(
+      String itemId, String quantity) async {
+    ApiResponseModel apiResponseModel =
+        await ApiCall().updateQuantity(itemId, quantity);
+    listenCart(apiResponseModel, "Item Updated");
+    return apiResponseModel;
+  }
+
+  ///------------------------Listen Stream from All API Response---------------------------------------------///
+
+  void listenCart(ApiResponseModel apiResponseModel, String message) {
+    if (apiResponseModel.statusCode == 200 ||
+        apiResponseModel.statusCode == 204) {
+      CartManagerResponseModel getCartManagerResponseModel =
+          CartManagerResponseModel.fromJson(apiResponseModel.Result);
+      managerItemViewModel = getCartManagerResponseModel.managerItemViewModel;
+      if (message.isNotEmpty) {
+        Fluttertoast.showToast(msg: message);
       }
-      return apiResponseModel;
-    });
+      Map<String, ManagerItemViewModel> cartHashMap = new Map();
+      for (int i = 0; i < managerItemViewModel.length; i++) {
+        ManagerItemViewModel cartItemViewModel = managerItemViewModel[i];
+        cartHashMap[cartItemViewModel.productId] = cartItemViewModel;
+      }
+      streamController.add(cartHashMap);
+    } else if (apiResponseModel.statusCode == 401) {
+      Fluttertoast.showToast(
+          msg: apiResponseModel.message != null
+              ? apiResponseModel.message
+              : 'Something went wrong.!');
+    } else {
+      Fluttertoast.showToast(
+          msg: apiResponseModel.message != null
+              ? apiResponseModel.message
+              : 'Something went wrong.!');
+    }
   }
+
+  /// ------------------------Get CartItem API call----------------------------------------------------------///
+
+  Future<ApiResponseModel> callGetMyCartAPI() async {
+    ApiResponseModel apiResponseModel = await ApiCall().getCart();
+    listenCart(apiResponseModel, "");
+    return apiResponseModel;
+  }
+
+  /// -------------------------------------------------------------------------------------------------------///
 }
 
 class ManagerItemViewModel {
-
-  ProductWithDefaultVarientModel productModel= ProductWithDefaultVarientModel();
+  ProductWithDefaultVarientModel productModel =
+      ProductWithDefaultVarientModel();
 
   String productId;
-  String id;
-  int  quantity;
+  String itemId;
+  int quantity;
 
   int minimumOrderQuantity;
   int incrementalStep;
@@ -110,44 +122,40 @@ class ManagerItemViewModel {
   ManagerItemViewModel({
     this.productId,
     this.units,
-    this.id,
+    this.itemId,
     this.quantity,
-
     this.minimumOrderQuantity,
     this.incrementalStep,
-
   });
 
-  factory ManagerItemViewModel.fromJson(Map<String, dynamic> json) => ManagerItemViewModel(
-
-    productId: json["Id"],
-    units: json['Units'] != null ? UnitsModel.parseList(json['Units']) : null,
-    id: json["ItemId"],
-    quantity: json["Quantity"],
-
-    minimumOrderQuantity: json['MinimumOrderQuantity'],
-    incrementalStep: json['IncrementalStep'],
-  );
+  factory ManagerItemViewModel.fromJson(Map<String, dynamic> json) =>
+      ManagerItemViewModel(
+        productId: json["Id"],
+        units:
+            json['Units'] != null ? UnitsModel.parseList(json['Units']) : null,
+        itemId: json["ItemId"],
+        quantity: json["Quantity"],
+        minimumOrderQuantity: json['MinimumOrderQuantity'],
+        incrementalStep: json['IncrementalStep'],
+      );
 
   Map<String, dynamic> toJson() => {
-    "ProductId": productId,
-    "Unit": units,
-    "Id": id,
-    "Quantity": quantity,
-  };
+        "ProductId": productId,
+        "Unit": units,
+        "Id": itemId,
+        "Quantity": quantity,
+      };
 
   static List<ManagerItemViewModel> parseList(listData) {
     var list = listData as List;
     List<ManagerItemViewModel> jobList =
-    list.map((data) => ManagerItemViewModel.fromJson(data)).toList();
+        list.map((data) => ManagerItemViewModel.fromJson(data)).toList();
     return jobList;
   }
 
-  static List encodedToJson(List<ManagerItemViewModel>list){
+  static List encodedToJson(List<ManagerItemViewModel> list) {
     List jsonList = List();
-    list.map((item)=>
-        jsonList.add(item.toJson())
-    ).toList();
+    list.map((item) => jsonList.add(item.toJson())).toList();
     return jsonList;
   }
 }

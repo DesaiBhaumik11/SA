@@ -341,6 +341,7 @@ class DashboardScreenState extends State<DashboardScreen>
 
     String name = "";
     String unit = "";
+    double quantity = 0;
     for (int i = 0; i < productVariant.ProductDetails.length; i++) {
       if (productVariant.ProductDetails[i].Language == "En-US") {
         name = productVariant.ProductDetails[i].Name;
@@ -357,16 +358,16 @@ class DashboardScreenState extends State<DashboardScreen>
 
    if(productVariant != null && cartHashMap!=null && cartHashMap.containsKey(productVariant.ProductId)) {
       this.managerItemViewModel = cartHashMap[productVariant.ProductId];
-     productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
-       this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
+      productVariant.itemId = managerItemViewModel.itemId;
+      productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
+      this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
      if (productVariant.ProductPrice != null) {
-       ProductPrice = productVariant.ProductPrice;
+       ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
+       ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
      }
-
        isAvailableInCart = true;
    } else {
-       if (productVariant.ProductDetails != null &&
-           productVariant.ProductDetails.length > 0) {
+       if (productVariant.ProductDetails != null && productVariant.ProductDetails.length > 0) {
          ProductDetail = productVariant.ProductDetails[0];
        }
        if (productVariant.Units != null && productVariant.Units.length > 0) {
@@ -383,7 +384,6 @@ class DashboardScreenState extends State<DashboardScreen>
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            managerForCart();
             Navigator.push(
                 context,
                 EnterExitRoute(
@@ -397,9 +397,7 @@ class DashboardScreenState extends State<DashboardScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                   child: Stack(
-                    //alignment: Alignment.center,
                     children: <Widget>[
                       Container(
                         width: double.maxFinite,
@@ -549,7 +547,7 @@ class DashboardScreenState extends State<DashboardScreen>
                           "",
                           ProductPrice.Price.toString(),
                           ProductPrice.OfferPrice.toString());
-                      managerForCart();
+
                       isCountLoading = false;
                     });
                     },
@@ -562,17 +560,11 @@ class DashboardScreenState extends State<DashboardScreen>
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-                            managerForCart();
-                            setState(() {
-                              if (managerItemViewModel.quantity >
-                                  managerItemViewModel.minimumOrderQuantity) {
-                                updateCartQuantity(managerItemViewModel.id,
-                                    (managerItemViewModel.quantity - managerItemViewModel.incrementalStep).toString());
-                                //isCountLoading = false;
+                              if (productVariant.MinimumOrderQuantity == productVariant.IncrementalStep) {
+                                deleteCartItem(productVariant.itemId);
                               } else {
-                                deleteCartItem(managerItemViewModel.id);
+                                updateCartQuantity(productVariant.itemId, (productVariant.MinimumOrderQuantity - productVariant.IncrementalStep).toString());
                               }
-                            });
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -595,11 +587,7 @@ class DashboardScreenState extends State<DashboardScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              managerForCart();
-                              updateCartQuantity(managerItemViewModel.id, (managerItemViewModel.quantity +
-                                  managerItemViewModel.incrementalStep).toString());
-                            });
+                            updateCartQuantity(productVariant.itemId, (productVariant.MinimumOrderQuantity + productVariant.IncrementalStep).toString());
                           },
                           child: Container(
                             margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
@@ -621,34 +609,17 @@ class DashboardScreenState extends State<DashboardScreen>
       ],
     );
   }
+
   void updateCartQuantity(String itemId, String quantity) {
     setState(() {
       isCountLoading = true;
     });
-    ApiCall()
-        .setContext(context)
-        .updateQuantity(itemId, quantity)
-        .then((apiResponseModel) {
+
+    CartManagerResponseModel().updateCartQuantity(itemId, quantity).then((apiResponseModel){
       setState(() {
         isCountLoading = false;
       });
-      if (apiResponseModel.statusCode == 200) {
-        CartManagerResponseModel getCartManagerResponseModel =
-        CartManagerResponseModel.fromJson(apiResponseModel.Result);
-        List managerItem = getCartManagerResponseModel.managerItemViewModel;
-        CartManagerResponseModel.listenCart(managerItem);
-        Fluttertoast.showToast(msg: 'Item Updated');
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
+      count();
     });
   }
 
@@ -656,27 +627,11 @@ class DashboardScreenState extends State<DashboardScreen>
     setState(() {
       isCountLoading = true;
     });
-    ApiCall().setContext(context).deleteItem(itemId).then((apiResponseModel) {
+    CartManagerResponseModel().deleteCartItem(itemId).then((apiResponseModel){
       setState(() {
         isCountLoading = false;
-        isAvailableInCart = false;
       });
-      if (apiResponseModel.statusCode == 200) {
-        CartManagerResponseModel getCartManagerResponseModel =
-        CartManagerResponseModel.fromJson(apiResponseModel.Result);
-        List managerItem = getCartManagerResponseModel.managerItemViewModel;
-        CartManagerResponseModel.listenCart(managerItem);
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
+      count();
     });
   }
 
@@ -2104,29 +2059,12 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   void addToCart(productId, qty, offerId, amount, offerAmount) {
-//    progressDialog  = Utility.progressDialog(context, "") ;
-//    progressDialog.show() ;
     setState(() {
       isCountLoading = true;
     });
-    ApiCall()
-        .setContext(context)
-        .addToCart(productId, qty, offerId, amount, offerAmount)
-        .then((apiResponseModel) {
-      if (apiResponseModel.statusCode == 200) {
-        managerForCart();
-        setState(() {
-          isAvailableInCart = true;
-        });
-        Fluttertoast.showToast(msg: 'Item added in cart');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : '');
-      }
+    CartManagerResponseModel().addToCart(productId, qty, offerId, amount, offerAmount).then((apiResponseModel){
       setState(() {
-        isAvailableInCart = true;
+        isCountLoading = false;
       });
       count();
     });
