@@ -70,7 +70,7 @@ class DashboardScreenState extends State<DashboardScreen>
   bool isCountLoading = false;
   String cartTotal = '0';
   String ImageURL = '';
-  double cartNumber = 0 ;
+  double cartNumber = 0;
 
   Future bestSellingFuture;
   Future exclusiveFuture;
@@ -133,13 +133,14 @@ class DashboardScreenState extends State<DashboardScreen>
 
   void managerForCart() {
     CartManagerResponseModel().callGetMyCartAPI();
-    CartManagerResponseModel.streamController.stream.listen((hashMap){
-      setState((){
+    CartManagerResponseModel.streamController.stream.listen((hashMap) {
+      setState(() {
         this.cartHashMap = hashMap;
         print(cartHashMap.length);
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
@@ -236,7 +237,6 @@ class DashboardScreenState extends State<DashboardScreen>
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         AllProductScreen('Browse By Product')));
-
                           },
                         ),
                       ),
@@ -329,9 +329,9 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------Grid Child For Browse By Product----------------------///
   Widget gridChildView(
       BuildContext context, ProductWithDefaultVarientModel productVariant) {
-
     ProductPriceModel ProductPrice = new ProductPriceModel();
     ProductDetailsModel ProductDetail = new ProductDetailsModel();
     UnitsModel Units = new UnitsModel();
@@ -356,29 +356,43 @@ class DashboardScreenState extends State<DashboardScreen>
       }
     }
 
-   if(productVariant != null && cartHashMap!=null && cartHashMap.containsKey(productVariant.ProductId)) {
-      this.managerItemViewModel = cartHashMap[productVariant.ProductId];
-      productVariant.itemId = managerItemViewModel.itemId;
-      productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
-      this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
-     if (productVariant.ProductPrice != null) {
-       ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
-       ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
-     }
-       isAvailableInCart = true;
-   } else {
-       if (productVariant.ProductDetails != null && productVariant.ProductDetails.length > 0) {
-         ProductDetail = productVariant.ProductDetails[0];
-       }
-       if (productVariant.Units != null && productVariant.Units.length > 0) {
-         Units = productVariant.Units[0];
-       }
-       if (productVariant.ProductPrice != null) {
-         ProductPrice = productVariant.ProductPrice;
-       }
-         isAvailableInCart = false;
-   }
+    if (productVariant != null &&
+        cartHashMap != null &&
+        cartHashMap.containsKey(productVariant.ProductId)) {
 
+      this.managerItemViewModel = cartHashMap[productVariant.ProductId];
+
+      productVariant.itemId = managerItemViewModel.itemId;
+
+      productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
+
+      this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
+
+      if (productVariant.ProductPrice != null) {
+        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
+        ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
+      }
+
+      isAvailableInCart = true;
+
+    } else {
+
+      if (productVariant.ProductDetails != null &&
+          productVariant.ProductDetails.length > 0) {
+        ProductDetail = productVariant.ProductDetails[0];
+      }
+
+      if (productVariant.Units != null && productVariant.Units.length > 0) {
+        Units = productVariant.Units[0];
+      }
+
+      if (productVariant.ProductPrice != null) {
+        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
+        ProductPrice.Price = productVariant.ProductPrice.Price;
+      }
+
+      isAvailableInCart = false;
+    }
 
     return Stack(
       children: <Widget>[
@@ -391,8 +405,7 @@ class DashboardScreenState extends State<DashboardScreen>
           },
           child: Container(
             padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-            decoration: BoxDecoration(
-                color: Colors.white),
+            decoration: BoxDecoration(color: Colors.white),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -521,87 +534,100 @@ class DashboardScreenState extends State<DashboardScreen>
                         : Container(),
                   ],
                 ),
-                !isAvailableInCart ?
-                InkWell(
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2.0),
-                        //color: Const.gray10
-                        color: Const.primaryColor),
-                    child: Text('+ ADD',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontFamily: 'GoogleSans',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        )),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      addToCart(
-                          productVariant.ProductId,
-                          productVariant.IncrementalStep.toString(),
-                          "",
-                          ProductPrice.Price.toString(),
-                          ProductPrice.OfferPrice.toString());
-
-                      isCountLoading = false;
-                    });
-                    },
-                ) :
-                Visibility(
-                  visible: true,
-                  child: Expanded(
-                    flex: 0,
-                    child: Row(
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                              if (productVariant.MinimumOrderQuantity == productVariant.IncrementalStep) {
-                                deleteCartItem(productVariant.itemId);
-                              } else {
-                                updateCartQuantity(productVariant.itemId, (productVariant.MinimumOrderQuantity - productVariant.IncrementalStep).toString());
-                              }
-                          },
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
-                            child: Image.asset(
-                              'assets/OkAssets/minus.png',
-                              height: 20.0,
-                              width: 20.0,
-                            ),
-                          ),
-                        ),
-                        Container(
+                !isAvailableInCart
+                    ? InkWell(
+                        child: Container(
                           margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
-                          child: Text(cartNumber.round().toString(),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2.0),
+                              //color: Const.gray10
+                              color: Const.primaryColor),
+                          child: Text('+ ADD',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: 15.0,
                                 fontFamily: 'GoogleSans',
+                                color: Colors.white,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.black,
                               )),
                         ),
-                        InkWell(
-                          onTap: () {
-                            updateCartQuantity(productVariant.itemId, (productVariant.MinimumOrderQuantity + productVariant.IncrementalStep).toString());
-                          },
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
-                            child: Image.asset(
-                              'assets/OkAssets/plus.png',
-                              height: 20.0,
-                              width: 20.0,
-                            ),
+                        onTap: () {
+                          setState(() {
+                            addToCart(
+                                productVariant.ProductId,
+                                productVariant.IncrementalStep.toString(),
+                                "",
+                                ProductPrice.Price.toString(),
+                                ProductPrice.OfferPrice.toString());
+
+                            isCountLoading = false;
+                          });
+                        },
+                      )
+                    : Visibility(
+                        visible: true,
+                        child: Expanded(
+                          flex: 0,
+                          child: Row(
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () {
+                                  if (productVariant.MinimumOrderQuantity ==
+                                      productVariant.IncrementalStep) {
+                                    deleteCartItem(productVariant.itemId);
+                                  } else {
+                                    updateCartQuantity(
+                                        productVariant.itemId,
+                                        (productVariant.MinimumOrderQuantity -
+                                                productVariant.IncrementalStep)
+                                            .toString());
+                                  }
+                                },
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                  child: Image.asset(
+                                    'assets/OkAssets/minus.png',
+                                    height: 20.0,
+                                    width: 20.0,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                child: Text(cartNumber.round().toString(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontFamily: 'GoogleSans',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    )),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  updateCartQuantity(
+                                      productVariant.itemId,
+                                      (productVariant.MinimumOrderQuantity +
+                                              productVariant.IncrementalStep)
+                                          .toString());
+                                },
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                  child: Image.asset(
+                                    'assets/OkAssets/plus.png',
+                                    height: 20.0,
+                                    width: 20.0,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                )
+                      )
               ],
             ),
           ),
@@ -610,24 +636,32 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------------------------------------------------------------///
+
+  ///--------------------Update Cart Quantity----------------------------------///
+
   void updateCartQuantity(String itemId, String quantity) {
     setState(() {
       isCountLoading = true;
     });
 
-    CartManagerResponseModel().updateCartQuantity(itemId, quantity).then((apiResponseModel){
+    CartManagerResponseModel()
+        .updateCartQuantity(itemId, quantity)
+        .then((apiResponseModel) {
       setState(() {
         isCountLoading = false;
       });
       count();
     });
   }
+
+  ///--------------------Delete Cart Quantity----------------------------------///
 
   void deleteCartItem(String itemId) {
     setState(() {
       isCountLoading = true;
     });
-    CartManagerResponseModel().deleteCartItem(itemId).then((apiResponseModel){
+    CartManagerResponseModel().deleteCartItem(itemId).then((apiResponseModel) {
       setState(() {
         isCountLoading = false;
       });
@@ -635,7 +669,9 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }
 
+  ///--------------------------------------------------------------------------///
 
+  ///---------------------Did Change App LifeCycle-----------------------------///
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     // TODO: implement didChangeAppLifecycleState
@@ -644,6 +680,10 @@ class DashboardScreenState extends State<DashboardScreen>
       count();
     }
   }
+
+  ///--------------------------------------------------------------------------///
+
+  ///---------------------------AppBar-----------------------------------------///
 
   Widget appBar(BuildContext context) {
     return SliverAppBar(
@@ -803,6 +843,10 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------------------------------------------------------------///
+
+  ///---------------------------Search Bar-------------------------------------///
+
   Widget searchBar(BuildContext context) {
     return Container(
       height: 50.0,
@@ -884,6 +928,9 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------------------------------------------------------------///
+
+  ///---------------------------Ad View---------------------------------------///
   Widget adViewWidget() {
     List<Image> imageList = <Image>[
       Image.asset(
@@ -918,6 +965,9 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------------------------------------------------------------///
+
+  ///------------------------Child View---------------------------------------///
   Widget childView(
       BuildContext context, ProductWithDefaultVarientModel productVariant) {
     String name = "";
@@ -2062,7 +2112,9 @@ class DashboardScreenState extends State<DashboardScreen>
     setState(() {
       isCountLoading = true;
     });
-    CartManagerResponseModel().addToCart(productId, qty, offerId, amount, offerAmount).then((apiResponseModel){
+    CartManagerResponseModel()
+        .addToCart(productId, qty, offerId, amount, offerAmount)
+        .then((apiResponseModel) {
       setState(() {
         isCountLoading = false;
       });
