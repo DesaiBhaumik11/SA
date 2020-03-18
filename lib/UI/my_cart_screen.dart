@@ -17,7 +17,11 @@ import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/CartManager.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
+import 'package:vegetos_flutter/models/ProductPriceModel.dart';
+import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
 import 'package:vegetos_flutter/models/ProductWithDefaultVarientModel.dart';
+import 'package:vegetos_flutter/models/UnitsModel.dart';
 import 'package:vegetos_flutter/models/my_cart.dart' as myCart;
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 
@@ -34,16 +38,25 @@ class MyCartScreen extends StatefulWidget {
 class MyCartState extends State<MyCartScreen> {
   //RecommendedProductsModel  recommendedProductsModel ;
 
+  /// ------------------------------------Initialize Variable-----------------------------------------------///
   String cartTotalItems = "0";
   String totalSaving = "0";
   String checkoutTotal = "0";
   bool isCountLoading = false;
   String ImageURL = '';
 
+  double cartNumber = 0;
+
   bool isDataAvailable = true;
+
+  bool isAvailableInCart = false;
 
   Future recommendedFuture;
   GetCartResponseModel model = GetCartResponseModel();
+  Map<String, dynamic> cartHashMap;
+  ManagerItemViewModel managerItemViewModel;
+
+  /// --------------------InitState Call When Widget Build------------------------///
 
   @override
   void initState() {
@@ -52,9 +65,24 @@ class MyCartState extends State<MyCartScreen> {
     SharedPreferences.getInstance().then((prefs) {
       ImageURL = prefs.getString("ImageURL");
     });
-    callGetMyCartAPI();
+    managerForCart();
     super.initState();
   }
+
+  /// -------------------Function that Listen CartManager---------------------------///
+
+  void managerForCart() {
+    CartManagerResponseModel().callGetMyCartAPI().then((apiResponseModel) {
+      BindData(apiResponseModel);
+    });
+    CartManagerResponseModel.streamController.stream.listen((hashMap) {
+      setState(() {
+        this.cartHashMap = hashMap;
+      });
+    });
+  }
+
+  /// -------------------Function call When StateChange-------------------------------///
 
   @override
   void setState(fn) {
@@ -63,20 +91,10 @@ class MyCartState extends State<MyCartScreen> {
     }
   }
 
+  /// ----------------------------Build Method -----------------------------------------///
+
   @override
   Widget build(BuildContext context) {
-//    myCartModal = Provider.of<myCart.MyCartModal>(context);
-    /*recommendedProductsModel = Provider.of<RecommendedProductsModel>(context) ;
-
-    if(!recommendedProductsModel.loaded){
-      recommendedProductsModel.loadProducts();
-    }*/
-
-//    if(!myCartModal.loaded){
-//      myCartModal.getMyCart();
-//      return Material(child: Center(child: CircularProgressIndicator(),),);
-//    }
-
     return Scaffold(
       backgroundColor: Color(0xffeeeeee),
       appBar: cartAppBar(),
@@ -105,6 +123,8 @@ class MyCartState extends State<MyCartScreen> {
       bottomNavigationBar: checkoutBottomBar(),
     );
   }
+
+  /// -----------------------------Price Total Box Widget----------------------------------///
 
   Widget priceTotalBox(GetCartResponseModel model) {
     return Visibility(
@@ -248,6 +268,8 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ------------------------------Cart Item list--------------------------------------///
+
   Widget cartItemList(GetCartResponseModel model) {
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -279,9 +301,11 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ---------------------------Cart Item List Child----------------------------------///
   Widget cartItemChild(CartItemViewModel cartItem) {
     String name = "";
     String unit = "";
+    double quantity = 0;
     for (int i = 0; i < cartItem.ProductDetails.length; i++) {
       if (cartItem.ProductDetails[i].Language == "En-US") {
         name = cartItem.ProductDetails[i].Name;
@@ -295,226 +319,232 @@ class MyCartState extends State<MyCartScreen> {
         break;
       }
     }
+    if(cartItem.quantity >= 1000 && unit == "Grams") {
+      quantity = (cartItem.quantity / 1000);
+      unit = "Kg";
+    } else {
+      quantity = cartItem.quantity.floorToDouble();
+    }
 
-    return Container(
-      color: Colors.white,
+    return InkWell(
+      onTap: () {
+//        Navigator.push(
+//            context,
+//            EnterExitRoute(
+//                enterPage: ProductDetailScreen(cartItem.ProductId)));
+      },
       child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(width: 0.5, color: Const.allBOxStroke)),
-        padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-        child: Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                  child: Stack(
+        color: Colors.white,
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(width: 0.5, color: Const.allBOxStroke)),
+          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+          child: Row(
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          child: cartItem.productMediaId != null &&
+                                  cartItem.productMediaId.isNotEmpty
+                              ? Image.network(
+                                  ImageURL + cartItem.productMediaId,
+                                  height: 100.0,
+                                  width: 100.0,
+                                )
+                              : Image.asset(
+                                  'assets/VegetosAssets/02-product.png',
+                                  height: 100.0,
+                                  width: 100.0,
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  cartItem.ProductPrice.DiscountPercent != null &&
+                          cartItem.ProductPrice.DiscountPercent != 0
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                          padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              color: Colors.orange),
+                          child: Text(
+                            cartItem.ProductPrice.DiscountPercent != null
+                                ? cartItem.ProductPrice.DiscountString + ' %'
+                                : '0 %',
+                            style: TextStyle(
+                                fontSize: 11.0,
+                                fontFamily: 'GoogleSans',
+                                color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
                     children: <Widget>[
                       Container(
-                        child: cartItem.productMediaId != null &&
-                                cartItem.productMediaId.isNotEmpty
-                            ? Image.network(
-                                ImageURL + cartItem.productMediaId,
-                                height: 100.0,
-                                width: 100.0,
-                              )
-                            : Image.asset(
-                                'assets/VegetosAssets/02-product.png',
-                                height: 100.0,
-                                width: 100.0,
-                              ),
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                              fontSize: 17.0,
+                              fontFamily: 'GoogleSans',
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                        child: Text(
+                          quantity.toString() + " " + unit,
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              fontFamily: 'GoogleSans',
+                              color: Const.dashboardGray,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        "₹ ${cartItem.ProductPrice.OfferPrice * (cartItem.quantity/cartItem.MinimumOrderQuantity)}",
+                                        style: TextStyle(
+                                            fontSize: 15.0,
+                                            fontFamily: 'GoogleSans',
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Wrap(
+                                      direction: Axis.vertical,
+                                      runAlignment: WrapAlignment.start,
+                                      children: <Widget>[
+                                        cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0
+                                            ? Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    0.0, 5.0, 5.0, 5.0),
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Text(
+                                                    '₹ ${cartItem.ProductPrice.Price * (cartItem.quantity/cartItem.MinimumOrderQuantity)}',
+                                                    style: TextStyle(
+                                                        fontSize: 14.0,
+                                                        fontFamily: 'GoogleSans',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.grey,
+                                                        decoration: TextDecoration
+                                                            .lineThrough),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 0,
+                              child: Row(
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: () {
+                                      if (cartItem.quantity >
+                                          cartItem.MinimumOrderQuantity) {
+                                        updateCartQuantity(
+                                            cartItem.itemId,
+                                            (cartItem.quantity -
+                                                    cartItem.IncrementalStep)
+                                                .toString());
+                                      } else {
+                                        deleteCartItem(cartItem.itemId);
+                                      }
+                                    },
+                                    child: Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                      child: Image.asset(
+                                        'assets/OkAssets/minus.png',
+                                        height: 20.0,
+                                        width: 20.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                    child: Text(
+                                        (cartItem.quantity /
+                                                cartItem.MinimumOrderQuantity)
+                                            .round()
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontFamily: 'GoogleSans',
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        )),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      updateCartQuantity(
+                                          cartItem.itemId,
+                                          (cartItem.quantity +
+                                                  cartItem.IncrementalStep)
+                                              .toString());
+                                    },
+                                    child: Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                      child: Image.asset(
+                                        'assets/OkAssets/plus.png',
+                                        height: 20.0,
+                                        width: 20.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
-                cartItem.ProductPrice.DiscountPercent != null &&
-                        cartItem.ProductPrice.DiscountPercent != 0
-                    ? Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.orange),
-                        child: Text(
-                          cartItem.ProductPrice.DiscountPercent != null
-                              ? cartItem.ProductPrice.DiscountString + ' %'
-                              : '0 %',
-                          style: TextStyle(
-                              fontSize: 11.0,
-                              fontFamily: 'GoogleSans',
-                              color: Colors.white),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text(
-                        name,
-                        style: TextStyle(
-                            fontSize: 17.0,
-                            fontFamily: 'GoogleSans',
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Text(
-                        cartItem.MinimumOrderQuantity.toString() + " " + unit,
-                        style: TextStyle(
-                            fontSize: 12.0,
-                            fontFamily: 'GoogleSans',
-                            color: Const.dashboardGray,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      "₹ ${cartItem.ProductPrice.OfferPrice}",
-                                      style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontFamily: 'GoogleSans',
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Wrap(
-                                    direction: Axis.vertical,
-                                    runAlignment: WrapAlignment.start,
-                                    children: <Widget>[
-                                      cartItem.ProductPrice.DiscountPercent !=
-                                                  null &&
-                                              cartItem.ProductPrice
-                                                      .DiscountPercent !=
-                                                  0
-                                          ? Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0.0, 5.0, 5.0, 5.0),
-                                              child: Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  '₹' +
-                                                      cartItem
-                                                          .ProductPrice.Price
-                                                          .toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontFamily: 'GoogleSans',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey,
-                                                      decoration: TextDecoration
-                                                          .lineThrough),
-                                                ),
-                                              ),
-                                            )
-                                          : Container(),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 0,
-                            child: Row(
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: () {
-                                    CartManagerResponseModel().callGetMyCartAPI();
-                                    if (cartItem.quantity >
-                                        cartItem.MinimumOrderQuantity) {
-                                      updateCartQuantity(
-                                          cartItem.itemId,
-                                          (cartItem.quantity -
-                                                  cartItem.IncrementalStep)
-                                              .toString());
-                                    } else {
-                                      deleteCartItem(cartItem.itemId);
-                                    }
-                                  },
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Image.asset(
-                                      'assets/OkAssets/minus.png',
-                                      height: 20.0,
-                                      width: 20.0,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                  child: Text(
-                                      (cartItem.quantity /
-                                              cartItem.MinimumOrderQuantity)
-                                          .round()
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontFamily: 'GoogleSans',
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      )),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    CartManagerResponseModel().callGetMyCartAPI();
-                                    updateCartQuantity(
-                                        cartItem.itemId,
-                                        (cartItem.quantity +
-                                                cartItem.IncrementalStep)
-                                            .toString());
-                                  },
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                    child: Image.asset(
-                                      'assets/OkAssets/plus.png',
-                                      height: 20.0,
-                                      width: 20.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
+
+  /// ---------------------------Cart Widgets-----------------------------------------///
 
   Widget cartWidgets() {
     return Column(
@@ -524,6 +554,8 @@ class MyCartState extends State<MyCartScreen> {
       ],
     );
   }
+
+  /// ---------------------------Cart Recommended Container-------------------------------///
 
   Widget recommendedContainer() {
     return Container(
@@ -563,13 +595,11 @@ class MyCartState extends State<MyCartScreen> {
                                   color: Colors.white)),
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AllProductScreen(
-                                        "Recommended for you"))).then(
-                                (value) {
-                              callGetMyCartAPI();
-                            });
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AllProductScreen(
+                                            "Recommended for you")))
+                                .then((value) {});
                           },
                         ),
                       ),
@@ -585,6 +615,8 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ---------------------------Cart Recommended List ----------------------------------///
+
   Widget productList(List<ProductWithDefaultVarientModel> products) {
     return Container(
       height: 275.0,
@@ -599,10 +631,21 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ---------------------------Cart Recommended List Child ----------------------------------///
+
   Widget childView(
       BuildContext context, ProductWithDefaultVarientModel result) {
+    ProductPriceModel ProductPrice = new ProductPriceModel();
+    ProductDetailsModel ProductDetail = new ProductDetailsModel();
+    UnitsModel Units = new UnitsModel();
+    ProductVariantMedia productVariantMedia = new ProductVariantMedia();
+
+    bool isAvailableInCart = false;
+
     String name = "";
     String unit = "";
+    double quantity = 0;
+
     for (int i = 0; i < result.ProductDetails.length; i++) {
       if (result.ProductDetails[i].Language == "En-US") {
         name = result.ProductDetails[i].Name;
@@ -617,28 +660,73 @@ class MyCartState extends State<MyCartScreen> {
       }
     }
 
+    if (result != null &&
+        cartHashMap != null &&
+        cartHashMap.containsKey(result.ProductId)) {
+      this.managerItemViewModel = cartHashMap[result.ProductId];
+
+      result.itemId = managerItemViewModel.itemId;
+
+      result.MinimumOrderQuantity = managerItemViewModel.quantity;
+
+      if (result.ProductDetails != null && result.ProductDetails.length > 0) {
+        ProductDetail = result.ProductDetails[0];
+      }
+
+      if (result.Units != null && result.Units.length > 0) {
+        Units = result.Units[0];
+      }
+
+      if (result.MinimumOrderQuantity >= 1000) {
+        quantity = result.MinimumOrderQuantity / 1000;
+        unit = "Kg";
+      } else {
+        quantity = result.MinimumOrderQuantity.floorToDouble();
+      }
+      this.cartNumber = managerItemViewModel.quantity /
+          managerItemViewModel.minimumOrderQuantity;
+
+      if (result.ProductPrice != null) {
+        result.ProductPrice.OfferPrice =
+            result.ProductPrice.OfferPrice * cartNumber;
+        result.ProductPrice.Price = result.ProductPrice.Price * cartNumber;
+        result.ProductPrice.DiscountPercent =
+            result.ProductPrice.DiscountPercent;
+      }
+
+      isAvailableInCart = true;
+    } else {
+      if (result.ProductDetails != null && result.ProductDetails.length > 0) {
+        ProductDetail = result.ProductDetails[0];
+      }
+
+      if (result.Units != null && result.Units.length > 0) {
+        Units = result.Units[0];
+      }
+
+      quantity = result.MinimumOrderQuantity.floorToDouble();
+
+      if (result.ProductPrice != null) {
+        result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
+        result.ProductPrice.Price = result.ProductPrice.Price;
+        result.ProductPrice.DiscountPercent =
+            result.ProductPrice.DiscountPercent;
+      }
+      isAvailableInCart = false;
+    }
+
     return Stack(
       children: <Widget>[
         GestureDetector(
           onTap: () {
             final ProductDetailModal productModal =
                 Provider.of<ProductDetailModal>(context);
-            showDialog(
-                context: context,
-                builder: (c) => Center(
-                    child: SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: CircularProgressIndicator())));
             productModal.getProductDetail(result.ProductId, () {
-//               Navigator.pop(context);
               Navigator.push(
                       context,
                       EnterExitRoute(
                           enterPage: ProductDetailScreen(result.ProductId)))
-                  .then((value) {
-                callGetMyCartAPI();
-              });
+                  .then((value) {});
             });
           },
           child: Container(
@@ -646,12 +734,7 @@ class MyCartState extends State<MyCartScreen> {
             padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 10.0),
             width: 180.0,
             height: 280.0,
-            decoration: BoxDecoration(
-//                border: new Border.all(
-//                    color: Const.allBOxStroke,
-//                    width: 0.5,
-//                    style: BorderStyle.solid),
-                color: Colors.white),
+            decoration: BoxDecoration(color: Colors.white),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -663,13 +746,11 @@ class MyCartState extends State<MyCartScreen> {
                           style: BorderStyle.solid),
                       color: Colors.white),
                   child: Stack(
-                    //alignment: Alignment.center,
                     children: <Widget>[
                       Center(
                         child: Container(
                           width: 110.0,
                           height: 110.0,
-                          //alignment: Alignment.center,
                           child: result.PrimaryMediaId == null ||
                                   result.PrimaryMediaId.toString().isEmpty
                               ? Image.asset(
@@ -688,23 +769,23 @@ class MyCartState extends State<MyCartScreen> {
                         ),
                       ),
                       result.ProductPrice.DiscountPercent != null &&
-                          result.ProductPrice.DiscountPercent != 0
+                              result.ProductPrice.DiscountPercent != 0
                           ? Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-                        padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: Colors.orange),
-                        child: Text(
-                          result.ProductPrice.DiscountPercent != null
-                              ? result.ProductPrice.DiscountString + ' %'
-                              : '0 %',
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              fontFamily: 'GoogleSans',
-                              color: Colors.white),
-                        ),
-                      )
+                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
+                              padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: Colors.orange),
+                              child: Text(
+                                result.ProductPrice.DiscountPercent != null
+                                    ? result.ProductPrice.DiscountString + ' %'
+                                    : '0 %',
+                                style: TextStyle(
+                                    fontSize: 10.0,
+                                    fontFamily: 'GoogleSans',
+                                    color: Colors.white),
+                              ),
+                            )
                           : Container(),
                     ],
                   ),
@@ -735,7 +816,7 @@ class MyCartState extends State<MyCartScreen> {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      result.MinimumOrderQuantity.toString() + " " + unit,
+                      quantity.toString() + " " + unit,
                       style: TextStyle(
                           fontSize: 11.0,
                           fontFamily: 'GoogleSans',
@@ -782,32 +863,95 @@ class MyCartState extends State<MyCartScreen> {
                         : Container(),
                   ],
                 ),
-                InkWell(
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 0.0),
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2.0),
-                        //color: Const.gray10
-                        color: Const.primaryColor),
-                    child: Text('+ ADD',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontFamily: 'GoogleSans',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        )),
-                  ),
-                  onTap: () {
-                    callAddToCartAPI(
-                        result.ProductId,
-                        result.IncrementalStep.toString(),
-                        "",
-                        result.ProductPrice.Price.toString(),
-                        result.ProductPrice.OfferPrice.toString());
-                  },
-                )
+                !isAvailableInCart
+                    ? InkWell(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 0.0),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2.0),
+                              color: Const.primaryColor),
+                          child: Text('+ ADD',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontFamily: 'GoogleSans',
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              )),
+                        ),
+                        onTap: () {
+                          callAddToCartAPI(
+                              result.ProductId,
+                              result.IncrementalStep.toString(),
+                              "",
+                              result.ProductPrice.Price.toString(),
+                              result.ProductPrice.OfferPrice.toString());
+                        },
+                      )
+                    : Visibility(
+                        visible: true,
+                        child: Expanded(
+                          flex: 0,
+                          child: Row(
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () {
+                                  if (result.MinimumOrderQuantity ==
+                                      result.IncrementalStep) {
+                                    deleteCartItem(result.itemId);
+                                  } else {
+                                    updateCartQuantity(
+                                        result.itemId,
+                                        (result.MinimumOrderQuantity -
+                                                result.IncrementalStep)
+                                            .toString());
+                                  }
+                                },
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                  child: Image.asset(
+                                    'assets/OkAssets/minus.png',
+                                    height: 20.0,
+                                    width: 20.0,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                child: Text(cartNumber.floor().toString(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontFamily: 'GoogleSans',
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    )),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  updateCartQuantity(
+                                      result.itemId,
+                                      (result.MinimumOrderQuantity +
+                                              result.IncrementalStep)
+                                          .toString());
+                                },
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                  child: Image.asset(
+                                    'assets/OkAssets/plus.png',
+                                    height: 20.0,
+                                    width: 20.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
               ],
             ),
           ),
@@ -815,6 +959,8 @@ class MyCartState extends State<MyCartScreen> {
       ],
     );
   }
+
+  /// ---------------------------Cart Confirm Delete ----------------------------------///
 
   void confirmDelete() {
     // flutter defined function
@@ -848,11 +994,7 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
-  Widget callGetMyCartAPI() {
-    ApiCall().setContext(context).getCart().then((apiResponseModel) {
-      BindData(apiResponseModel);
-    });
-  }
+  /// ---------------------------Cart Bind Data ----------------------------------///
 
   void BindData(ApiResponseModel apiResponseModel) {
     if (apiResponseModel.statusCode == 200) {
@@ -894,6 +1036,8 @@ class MyCartState extends State<MyCartScreen> {
     }
   }
 
+  /// ---------------------Show when no Item Available in cart-------------------------///
+
   Widget noItemsInYourCart() {
     return Container(
         padding: EdgeInsets.all(10),
@@ -922,9 +1066,7 @@ class MyCartState extends State<MyCartScreen> {
                     onPressed: () {
                       Navigator.of(context)
                           .push(EnterExitRoute(enterPage: CategoriesScreen()))
-                          .then((value) {
-                        callGetMyCartAPI();
-                      });
+                          .then((value) {});
                     },
                     color: Colors.green,
                     padding: const EdgeInsets.only(
@@ -944,6 +1086,8 @@ class MyCartState extends State<MyCartScreen> {
           ),
         ));
   }
+
+  /// ------------------------------Cart AppBar -------------------------------------///
 
   Widget cartAppBar() {
     return AppBar(
@@ -1004,7 +1148,9 @@ class MyCartState extends State<MyCartScreen> {
                   ),
                 ))
             : Visibility(
-                visible: model != null && model.cartItemViewModels != null
+                visible: model != null &&
+                        model.cartItemViewModels != null &&
+                        isDataAvailable == true
                     ? true
                     : false,
                 child: InkWell(
@@ -1025,11 +1171,16 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ---------------------------Cart Checkout Bottom Bar --------------------------------///
+
   Widget checkoutBottomBar() {
     return BottomAppBar(
       child: Visibility(
-        visible:
-            model != null && model.cartItemViewModels != null ? true : false,
+        visible: model != null &&
+                model.cartItemViewModels != null &&
+                isDataAvailable == true
+            ? true
+            : false,
         child: InkWell(
           onTap: () {
             SharedPreferences.getInstance().then((prefs) {
@@ -1078,7 +1229,7 @@ class MyCartState extends State<MyCartScreen> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'You have savd ₹ ' + totalSaving,
+                          'You have saved ₹ ' + totalSaving,
                           style: TextStyle(
                               fontSize: 12.0,
                               fontFamily: 'GoogleSans',
@@ -1116,57 +1267,37 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ---------------------------Update Cart Quantity Api----------------------------------///
+
   void updateCartQuantity(String itemId, String quantity) {
     setState(() {
       isCountLoading = true;
     });
-    ApiCall()
-        .setContext(context)
-        .updateQuantity(itemId, quantity)
+    CartManagerResponseModel()
+        .updateCartQuantity(itemId, quantity)
         .then((apiResponseModel) {
+      BindData(apiResponseModel);
       setState(() {
         isCountLoading = false;
       });
-      if (apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: 'Item Updated');
-        BindData(apiResponseModel);
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
     });
   }
+
+  /// ---------------------------Delete Cart Quantity Api----------------------------------///
 
   void deleteCartItem(String itemId) {
     setState(() {
       isCountLoading = true;
     });
-    ApiCall().setContext(context).deleteItem(itemId).then((apiResponseModel) {
+    CartManagerResponseModel().deleteCartItem(itemId).then((apiResponseModel) {
+      BindData(apiResponseModel);
       setState(() {
         isCountLoading = false;
       });
-      if (apiResponseModel.statusCode == 200) {
-        BindData(apiResponseModel);
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
     });
   }
+
+  /// -------------------------------Clear Cart Api-------------------------------------///
 
   void callClearCartAPI() {
     setState(() {
@@ -1192,6 +1323,8 @@ class MyCartState extends State<MyCartScreen> {
       }
     });
   }
+
+  /// ---------------------------Recommended Item Api----------------------------------///
 
   Widget callRecommendedForYouAPI() {
     return FutureBuilder(
@@ -1221,6 +1354,8 @@ class MyCartState extends State<MyCartScreen> {
       },
     );
   }
+
+  /// ---------------------------Something  Went Wrong Widget-------------------------------///
 
   Widget somethingWentWrong() {
     return InkWell(
@@ -1252,33 +1387,20 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// ---------------------------Add to Cart Item Api----------------------------------///
+
   void callAddToCartAPI(String productId, String qty, String offerId,
       String amount, String offerAmount) {
     setState(() {
       isCountLoading = true;
     });
-    ApiCall()
-        .setContext(context)
+    CartManagerResponseModel()
         .addToCart(productId, qty, offerId, amount, offerAmount)
         .then((apiResponseModel) {
+      BindData(apiResponseModel);
       setState(() {
         isCountLoading = false;
       });
-      if (apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null ? "Item added in cart" : '');
-        BindData(apiResponseModel);
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : '');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : '');
-      }
     });
   }
 }

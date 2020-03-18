@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
@@ -84,8 +83,6 @@ class DashboardScreenState extends State<DashboardScreen>
   Map<String, dynamic> cartHashMap;
   ManagerItemViewModel managerItemViewModel;
 
-  bool isAvailableInCart = false;
-
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -136,7 +133,6 @@ class DashboardScreenState extends State<DashboardScreen>
     CartManagerResponseModel.streamController.stream.listen((hashMap) {
       setState(() {
         this.cartHashMap = hashMap;
-        print(cartHashMap.length);
       });
     });
   }
@@ -330,9 +326,11 @@ class DashboardScreenState extends State<DashboardScreen>
   }
 
   ///--------------------Grid Child For Browse By Product----------------------///
+
   Widget gridChildView(
       BuildContext context, ProductWithDefaultVarientModel productVariant) {
-    ProductPriceModel ProductPrice = new ProductPriceModel();
+
+    ProductPriceModel ProductPrice = ProductPriceModel();
     ProductDetailsModel ProductDetail = new ProductDetailsModel();
     UnitsModel Units = new UnitsModel();
     ProductVariantMedia productVariantMedia = new ProductVariantMedia();
@@ -342,6 +340,7 @@ class DashboardScreenState extends State<DashboardScreen>
     String name = "";
     String unit = "";
     double quantity = 0;
+
     for (int i = 0; i < productVariant.ProductDetails.length; i++) {
       if (productVariant.ProductDetails[i].Language == "En-US") {
         name = productVariant.ProductDetails[i].Name;
@@ -366,11 +365,18 @@ class DashboardScreenState extends State<DashboardScreen>
 
       productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
 
+      if(productVariant.MinimumOrderQuantity >= 1000) {
+        quantity = productVariant.MinimumOrderQuantity / 1000;
+        unit = "Kg";
+      } else {
+        quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+      }
       this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
 
       if (productVariant.ProductPrice != null) {
         ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
         ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
+        ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
@@ -386,9 +392,12 @@ class DashboardScreenState extends State<DashboardScreen>
         Units = productVariant.Units[0];
       }
 
+      quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+
       if (productVariant.ProductPrice != null) {
         ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
         ProductPrice.Price = productVariant.ProductPrice.Price;
+        ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = false;
@@ -485,7 +494,7 @@ class DashboardScreenState extends State<DashboardScreen>
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      productVariant.MinimumOrderQuantity.toString() +
+                      quantity.toString() +
                           " " +
                           unit,
                       style: TextStyle(
@@ -503,7 +512,7 @@ class DashboardScreenState extends State<DashboardScreen>
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          '₹ ${ProductPrice.OfferPrice != null ? ProductPrice.OfferPrice.toString() : 0}',
+                          '₹ ${ProductPrice.OfferPrice.toString()}',
                           style: TextStyle(
                               fontSize: 13.0,
                               fontFamily: 'GoogleSans',
@@ -512,16 +521,14 @@ class DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                     ),
-                    ProductPrice.DiscountPercent != null &&
-                            ProductPrice.DiscountPercent != 0
+                    ProductPrice.Price != null &&
+                            ProductPrice.Price != 0
                         ? Container(
                             margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                ProductPrice.Price != null
-                                    ? '₹' + ProductPrice.Price.toString()
-                                    : 0,
+                                    '₹' + ProductPrice.Price.toString(),
                                 style: TextStyle(
                                     fontSize: 10.0,
                                     fontFamily: 'GoogleSans',
@@ -561,8 +568,6 @@ class DashboardScreenState extends State<DashboardScreen>
                                 "",
                                 ProductPrice.Price.toString(),
                                 ProductPrice.OfferPrice.toString());
-
-                            isCountLoading = false;
                           });
                         },
                       )
@@ -1183,6 +1188,8 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///-----------------------------Drawer--------------------------------------///
+
   Widget drawer(BuildContext context) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
@@ -1709,6 +1716,8 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///-----------------------Call Best Selling Items API----------------------------///
+
   Widget callBestSellingItemsAPI() {
     return FutureBuilder(
       future: bestSellingFuture,
@@ -1737,6 +1746,8 @@ class DashboardScreenState extends State<DashboardScreen>
       },
     );
   }
+
+  ///-----------------------Call Best Selling Items Container-----------------------///
 
   Widget bestSellingContainer() {
     return Container(
@@ -1796,6 +1807,8 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------------------------------------------------------------///
+
   Widget productList(List<ProductWithDefaultVarientModel> products) {
     return Container(
       height: 275.0,
@@ -1809,6 +1822,8 @@ class DashboardScreenState extends State<DashboardScreen>
           }),
     );
   }
+
+  ///--------------------Call Vegetos Exclusive Product API-------------------///
 
   Widget callVegetosExclusiveProductAPI() {
     return FutureBuilder(
@@ -1838,6 +1853,8 @@ class DashboardScreenState extends State<DashboardScreen>
       },
     );
   }
+
+  ///-----------------------Vegetos Exclusive Container------------------------///
 
   Widget vegetosExclusiveContainer() {
     return Container(
@@ -1897,6 +1914,8 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///----------------------Call Recommended For You API------------------------///
+
   Widget callRecommendedForYouAPI() {
     return FutureBuilder(
       future: recommendedFuture,
@@ -1925,6 +1944,8 @@ class DashboardScreenState extends State<DashboardScreen>
       },
     );
   }
+
+  ///--------------------------Recommended Container--------------------------///
 
   Widget recommendedContainer() {
     return Container(
@@ -1985,6 +2006,8 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///----------------------------Something Went Wrong-------------------------///
+
   Widget somethingWentWrong(int index) {
     return InkWell(
       onTap: () {
@@ -2024,6 +2047,8 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///--------------------------------------------------------------------------///
+
   /*void callGetCartAPI() {
     ApiCall().getCart().then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
@@ -2041,6 +2066,8 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }*/
 
+  ///--------------------------------------------------------------------------///
+
   /*void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
     ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
       if(apiResponseModel.statusCode == 200) {
@@ -2054,12 +2081,16 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }*/
 
+  ///---------------------------Dispose Method Call Here------------------///
+
   @override
   void dispose() {
     // TODO: implement dispose
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
+  ///-----------------------Get My Default Address By Prefs---------------------///
 
   void getMyDefaultAddressByPrefs() {
     SharedPreferences.getInstance().then((prefs) {
@@ -2068,6 +2099,8 @@ class DashboardScreenState extends State<DashboardScreen>
       });
     });
   }
+
+  ///--------------------------Get My Default Address--------------------------///
 
   void getMyDefaultAddress() {
     ApiCall()
@@ -2089,6 +2122,8 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }
 
+  ///--------------------------Count In Cart-----------------------------------///
+
   void count() {
     ApiCall().setContext(context).count().then((apiResponseModel) {
       setState(() {
@@ -2108,6 +2143,8 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }
 
+  ///--------------------------Add to Cart API--------------------------------///
+
   void addToCart(productId, qty, offerId, amount, offerAmount) {
     setState(() {
       isCountLoading = true;
@@ -2122,12 +2159,17 @@ class DashboardScreenState extends State<DashboardScreen>
     });
   }
 
+  ///--------------------------Get Version Code Here--------------------------///
+
   Future<String> getVeriosnCode() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       version = packageInfo.version;
     });
   }
+
+///---------------------------------CLASS END----------------------------------///
+
 }
 
 class FunkyOverlay extends StatefulWidget {

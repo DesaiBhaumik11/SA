@@ -38,13 +38,12 @@ class ProductDetailScreen extends StatefulWidget {
 
 }
 
-class ProductDetailScreenState extends State<ProductDetailScreen>
-{
+class ProductDetailScreenState extends State<ProductDetailScreen> {
   ProductWithDefaultVarientModel productModal;
    ProductPriceModel ProductPrice=new ProductPriceModel();
    ProductDetailsModel ProductDetail=new ProductDetailsModel();
    UnitsModel Units=new UnitsModel();
-//   MyCartModal cartModal ;
+   MyCartModal cartModal ;
 //   AppFirstModal appFirstModal ;
 
   var pressed = false;
@@ -162,7 +161,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen>
   {
     List<Image> imageList = [
       productModal.PrimaryMediaId==null||productModal.PrimaryMediaId.isEmpty?Image.asset("assets/VegetosAssets/02-product.png",height: 100,width: 100,):
-      Image.network("${ImageURL}${productModal.PrimaryMediaId}", height: 100.0, width: 100.0,),
+      Image.network("$ImageURL${productModal.PrimaryMediaId}", height: 100.0, width: 100.0,),
     ];
 
     return Stack(

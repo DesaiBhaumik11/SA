@@ -1,7 +1,7 @@
 
 //created by Prashant on 08-01-2020
-class ProductPriceModel
-{
+class ProductPriceModel {
+
   String ProductId;
 
   String ProductVariantId;
@@ -29,6 +29,7 @@ class ProductPriceModel
   String UpdatedOn;
 
   ProductPriceModel({
+
     this.ProductId="",
     this.ProductVariantId="",
     this.ApplicableFrom="",
@@ -42,14 +43,18 @@ class ProductPriceModel
     this.CreatedOn="",
     this.UpdatedOn="",
     this.DiscountString="",
+
   });
 
   factory ProductPriceModel.fromJson(Map<String, dynamic> parsedData) {
-    double discount=parsedData['DiscountPercent'] !=null ? parsedData['DiscountPercent'] : 0;
-    bool isZeroDecimal=false;
+    double discount = parsedData['DiscountPercent'] !=null ? parsedData['DiscountPercent'] : 0;
+
+    bool isZeroDecimal = false;
+
     if(discount!=null && discount!= 0 && discount.toString().split(".")[1]=="0"){
-      isZeroDecimal=true;
+      isZeroDecimal = true;
     }
+
     return ProductPriceModel(
       ProductId: parsedData['ProductId'],
       ProductVariantId: parsedData['ProductVariantId'],
@@ -57,7 +62,7 @@ class ProductPriceModel
       IsTaxInclusive: parsedData['IsTaxInclusive'],
       BusinessLocationId: parsedData['BusinessLocationId'],
       Price: parsedData['Price']!=null ? parsedData['Price'] : 0,
-      DiscountPercent: discount,
+      DiscountPercent: parsedData['DiscountPercent'],
       DiscountString: isZeroDecimal ? discount.round().toString() : discount.toString(),
       OfferPrice: parsedData['OfferPrice'] != null ? parsedData['OfferPrice'] : 0,
       UpdatedBy: parsedData['UpdatedBy'],

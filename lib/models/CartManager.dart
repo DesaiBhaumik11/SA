@@ -38,6 +38,7 @@ class CartManagerResponseModel {
     return jobList;
   }
 
+
   /// -----------------------Delete CartItem API call--------------------------------------------------------///
 
   Future<ApiResponseModel> deleteCartItem(String itemId) async {
