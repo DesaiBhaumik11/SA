@@ -67,6 +67,14 @@ class CartManagerResponseModel {
     return apiResponseModel;
   }
 
+  /// -----------------------Clear CartItem API call--------------------------------------------------------///
+
+  Future<ApiResponseModel> clearCartItems() async {
+    ApiResponseModel apiResponseModel = await ApiCall().clearCart();
+    listenCart(apiResponseModel, "Cart Clear");
+    return apiResponseModel;
+  }
+
   ///------------------------Listen Stream from All API Response---------------------------------------------///
 
   void listenCart(ApiResponseModel apiResponseModel, String message) {

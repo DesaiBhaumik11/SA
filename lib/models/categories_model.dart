@@ -41,12 +41,11 @@ class CategoriesModel extends ChangeNotifier {
     "IsError": isError,
   };
 
-
-
   setSubVisibility(index){
     result[index].showSubs=!(result[index].showSubs);
     notifyListeners();
   }
+
   loadCategories() {
     if(!_loading) {
       _loading=true;
@@ -70,7 +69,6 @@ class CategoriesModel extends ChangeNotifier {
     isLoaded = true;
     notifyListeners();
   }
-
 
 }
 

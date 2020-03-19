@@ -10,6 +10,7 @@ import 'package:vegetos_flutter/UI/ProductChildRow.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
+import 'package:vegetos_flutter/models/CartManager.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/UI/product_detail_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
@@ -59,6 +60,10 @@ class _AllProductScreenState extends State<AllProductScreen> {
   ProgressDialog progressDialog;
 
   bool isCountLoading = false;
+  double cartNumber = 0;
+  GetCartResponseModel model = GetCartResponseModel();
+  Map<String, dynamic> cartHashMap;
+  ManagerItemViewModel managerItemViewModel;
 
   _AllProductScreenState(String name) {
     this.name = name;
@@ -91,9 +96,18 @@ class _AllProductScreenState extends State<AllProductScreen> {
         ImageURL = prefs.getString("ImageURL");
       });
     });
-    count();
-
+    managerForCart();
     super.initState();
+  }
+
+  void managerForCart() {
+    CartManagerResponseModel().callGetMyCartAPI();
+    CartManagerResponseModel.streamController.stream.listen((hashMap) {
+      setState(() {
+        this.cartHashMap = hashMap;
+        count();
+      });
+    });
   }
 
   @override
@@ -175,7 +189,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
                                             fontSize: 10.0,
                                             fontFamily: 'GoogleSans',
                                             color: Colors.white)),
-                                    //child: Text("${cartSize}" ,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans', color: Colors.white)),
                                   ),
                                 ),
                               )
@@ -205,8 +218,12 @@ class _AllProductScreenState extends State<AllProductScreen> {
 
   Widget childView(
       BuildContext context, ProductWithDefaultVarientModel productVariant) {
+
     String name = "";
     String unit = "";
+    bool isAvailableInCart = false;
+    int quantity = 0;
+
     for (int i = 0; i < productVariant.ProductDetails.length; i++) {
       if (productVariant.ProductDetails[i].Language == "En-US") {
         name = productVariant.ProductDetails[i].Name;
@@ -220,169 +237,63 @@ class _AllProductScreenState extends State<AllProductScreen> {
         break;
       }
     }
+
     ProductPriceModel ProductPrice = new ProductPriceModel();
     ProductDetailsModel ProductDetail = new ProductDetailsModel();
     UnitsModel Units = new UnitsModel();
     ProductVariantMedia productVariantMedia = new ProductVariantMedia();
 
-    if (productVariant != null) {
+    if (productVariant != null &&
+        cartHashMap != null &&
+        cartHashMap.containsKey(productVariant.ProductId)) {
+      this.managerItemViewModel = cartHashMap[productVariant.ProductId];
+
+      productVariant.itemId = managerItemViewModel.itemId;
+
+      quantity = productVariant.MinimumOrderQuantity;
+
+//      if (productVariant.MinimumOrderQuantity >= 1000) {
+//        quantity = productVariant.MinimumOrderQuantity / 1000;
+//        unit = "Kg";
+//      } else {
+//        quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+//      }
+      this.cartNumber = managerItemViewModel.quantity /
+          managerItemViewModel.minimumOrderQuantity;
+
+      if (productVariant.ProductPrice != null) {
+        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
+        ProductPrice.Price = productVariant.ProductPrice.Price;
+        ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
+      }
+
+      isAvailableInCart = true;
+    } else {
       if (productVariant.ProductDetails != null &&
           productVariant.ProductDetails.length > 0) {
         ProductDetail = productVariant.ProductDetails[0];
       }
+
       if (productVariant.Units != null && productVariant.Units.length > 0) {
         Units = productVariant.Units[0];
       }
+
+      quantity = productVariant.MinimumOrderQuantity;
+
       if (productVariant.ProductPrice != null) {
-        ProductPrice = productVariant.ProductPrice;
+        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
+        ProductPrice.Price = productVariant.ProductPrice.Price;
+        ProductPrice.DiscountPercent =
+            productVariant.ProductPrice.DiscountPercent;
       }
+
+      isAvailableInCart = false;
     }
 
-//    return Column(
-//      children: <Widget>[
-//        InkWell(
-//          onTap: () {
-//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-//                height: 25,
-//                width: 25,
-//                child: CircularProgressIndicator())));
-//            productModal.getProductDetail(productModal.ProductId,(){
-//              Navigator.pop(context);
-//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productModal.ProductId)));
-//            }) ;
-//
-//          },
-//          child: Container(
-//            //width: 180.0,
-//            //height: 300.0,
-//            child: Card(
-//              child: Column(
-//                children: <Widget>[
-//                  Stack(
-//                    alignment: Alignment.center,
-//                    children: <Widget>[
-//                      Container(
-//                        width: 100.0,
-//                        height: 100.0,
-//                        alignment: Alignment.center,
-//                        child: Card(
-//                          elevation: 0.0,
-//                          clipBehavior: Clip.antiAliasWithSaveLayer,
-//                          shape: RoundedRectangleBorder(
-//                              borderRadius: BorderRadius.circular(5.0)
-//                          ),
-//                          child: productModal.PrimaryMediaId==null||productModal.PrimaryMediaId.isEmpty?Image.asset("02-product.png",height: 100,width: 100,)
-//                              :Image.network(ImageURL + productModal.PrimaryMediaId + '&h=150&w=150' , height: 110.0, width: 110.0,),
-////                          child: Image.asset("02-product.png",height: 100,width: 100,),
-//                        ),
-//                        margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-//                      ),
-//                      productModal.ProductPrice.DiscountPercent != null && productModal.ProductPrice.DiscountPercent != 0 ? Container(
-//                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-//                        padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-//                        decoration: BoxDecoration(
-//                            borderRadius: BorderRadius.circular(5.0),
-//                            color: Colors.orange
-//                        ),
-//                        child: Text(productModal.ProductPrice.DiscountPercent != null ? productModal.ProductPrice.DiscountPercent.toString() + ' %': '0 %',style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-//                            color: Colors.white),),
-//                      ) : Container(),
-//                    ],
-//                  ),
-//                  Container(
-////                    height: 35,
-//                    margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-//                    child: Row(
-//                      crossAxisAlignment: CrossAxisAlignment.center,
-//                      children: <Widget>[
-//                        Flexible(
-//                          child: Text(name,
-//                              overflow: TextOverflow.ellipsis, maxLines: 2 ,
-//                              style: TextStyle(fontSize: 14.0, fontFamily: 'GoogleSans',
-//                              fontWeight: FontWeight.w700,
-//                              color: Colors.black)),
-//                        ),
-//                      ],
-//                    ),
-//                  ),//Expanded(child: Container(),flex: 1,),
-//                  Container(
-//                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-//                    child: Align(
-//                      alignment: Alignment.topLeft,
-//                      child: Text(productModal.MinimumOrderQuantity.toString() + " " + unit,
-//                        style: TextStyle(fontSize: 11.0, fontFamily: 'GoogleSans',
-//                          fontWeight: FontWeight.w500,
-//                          color: Colors.grey),
-//                      ),
-//                    ),
-//                  ),
-//                  Row(
-//                    children: <Widget>[
-//                      Container(
-//                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-//                        child: Align(
-//                          alignment: Alignment.topLeft,
-//                          child: Text('₹ ${productModal.ProductPrice.OfferPrice != null ? productModal.ProductPrice.OfferPrice.toString() : 0}',style: TextStyle(fontSize: 13.0, fontFamily: 'GoogleSans',
-//                              fontWeight: FontWeight.w700,
-//                              color: Colors.black),
-//                          ),
-//                        ),
-//                      ),
-//                      Container(
-//                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-//                        child: Align(
-//                          alignment: Alignment.topLeft,
-//                          child: Text(productModal.ProductPrice.Price != null ? '₹' + productModal.ProductPrice.Price.toString() : 0,style: TextStyle(fontSize: 10.0, fontFamily: 'GoogleSans',
-//                              fontWeight: FontWeight.w500,
-//                              color: Colors.grey, decoration: TextDecoration.lineThrough),
-//                          ),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                  InkWell(child:  Container(
-//                    margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 7.0),
-//                    padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-//                    decoration: BoxDecoration(
-//                        borderRadius: BorderRadius.circular(5.0),
-//                        color: Const.primaryColor
-//                        //color: Const.gray10
-//                    ),
-//                    child: Align(
-//                      alignment: Alignment.center,
-//                      child: Text('+ ADD',style: TextStyle(fontSize: 15.0, fontFamily: 'GoogleSans',
-//                        color: Colors.white, fontWeight: FontWeight.w500,)),
-//                    ),
-//
-//                  ),
-//                    onTap: (){
-//                      //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-//                      //myCartModal.addTocart(productModal);
-//                      MyCartUtils().callAddToCartAPI(productModal.ProductId, productModal.ProductVariantId, productModal.IncrementalStep.toString(),
-//                          "", productModal.ProductPrice.OfferPrice.toString());
-//                    },)
-//                ],
-//              ),
-//            ),
-//          ),
-//        )
-//      ],
-//    );
     return Stack(
       children: <Widget>[
         GestureDetector(
           onTap: () {
-//            final ProductDetailModal productModal=Provider.of<ProductDetailModal>(context);
-//            showDialog(context: context,builder: (c)=>Center(child: SizedBox(
-//                height: 25,
-//                width: 25,
-//                child: CircularProgressIndicator())));
-//            productModal.getProductDetail(productVariant.ProductId,(){
-//              Navigator.pop(context);
-//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
-//            }) ;
-//            Navigator.pop(context);
             Navigator.push(
                     context,
                     EnterExitRoute(
@@ -397,8 +308,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
           child: Container(
             padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
             decoration: BoxDecoration(
-//                border: new Border.all(
-//                    color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
                 color: Colors.white),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,7 +315,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
                 Container(
                   margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                   child: Stack(
-                    //alignment: Alignment.center,
                     children: <Widget>[
                       Center(
                         child: Container(
@@ -431,20 +339,19 @@ class _AllProductScreenState extends State<AllProductScreen> {
                                   height: 110.0,
                                   width: 110.0,
                                 ),
-                         // margin: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                         ),
                       ),
                       ProductPrice.DiscountPercent != null &&
                               ProductPrice.DiscountPercent != 0.0
                           ? Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 15.0, 0.0, 0.0),
+                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                               padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(2.0),
                                   color: Colors.orange),
                               child: Text(
                                 ProductPrice.DiscountPercent != null
-                                    ? ProductPrice.DiscountString + ' %'
+                                    ? ProductPrice.DiscountPercent.toString() + ' %'
                                     : '0 %',
                                 style: TextStyle(
                                     fontSize: 10.0,
@@ -482,9 +389,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      productVariant.MinimumOrderQuantity.toString() +
-                          " " +
-                          unit,
+                      quantity.toString() + " " + unit,
                       style: TextStyle(
                           fontSize: 11.0,
                           fontFamily: 'GoogleSans',
@@ -529,34 +434,15 @@ class _AllProductScreenState extends State<AllProductScreen> {
                             ),
                           )
                         : Container(),
-//                    ProductPrice.DiscountPercent != null &&
-//                            ProductPrice.DiscountPercent != 0
-//                        ? Container(
-//                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
-//                            padding: EdgeInsets.fromLTRB(3.0, 2.0, 3.0, 2.0),
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(5.0),
-//                                color: Colors.orange),
-//                            child: Text(
-//                              ProductPrice.DiscountPercent != null
-//                                  ? ProductPrice.DiscountString + ' %'
-//                                  : '0 %',
-//                              style: TextStyle(
-//                                  fontSize: 10.0,
-//                                  fontFamily: 'GoogleSans',
-//                                  color: Colors.white),
-//                            ),
-//                          )
-//                        : Container(),
                   ],
                 ),
+                !isAvailableInCart ?
                 InkWell(
                   child: Container(
                     margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2.0),
-                        //color: Const.gray10
                         color: Const.primaryColor),
                     child: Text('+ ADD',
                         textAlign: TextAlign.center,
@@ -568,8 +454,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
                         )),
                   ),
                   onTap: () {
-                    //Fluttertoast.showToast(msg: 'Delivery location not found, coming soon.');
-                    //myCartModal.addTocart(productModal);
                     addToCart(
                         productVariant.ProductId,
                         productVariant.IncrementalStep.toString(),
@@ -577,6 +461,68 @@ class _AllProductScreenState extends State<AllProductScreen> {
                         ProductPrice.Price.toString(),
                         ProductPrice.OfferPrice.toString());
                   },
+                ) :
+                Visibility(
+                  visible: true,
+                  child: Expanded(
+                    flex: 0,
+                    child: Row(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            if (managerItemViewModel.quantity ==
+                                managerItemViewModel.incrementalStep) {
+                              deleteCartItem(productVariant.itemId);
+                            } else {
+                              updateCartQuantity(
+                                  productVariant.itemId,
+                                  (managerItemViewModel.quantity -
+                                      managerItemViewModel.incrementalStep)
+                                      .toString());
+                            }
+                          },
+                          child: Container(
+                            margin:
+                            EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                            child: Image.asset(
+                              'assets/OkAssets/minus.png',
+                              height: 20.0,
+                              width: 20.0,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin:
+                          EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                          child: Text(cartNumber.round().toString(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              )),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            updateCartQuantity(
+                                productVariant.itemId,
+                                (managerItemViewModel.quantity +
+                                    managerItemViewModel.incrementalStep)
+                                    .toString());
+                          },
+                          child: Container(
+                            margin:
+                            EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                            child: Image.asset(
+                              'assets/OkAssets/plus.png',
+                              height: 20.0,
+                              width: 20.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
@@ -586,25 +532,52 @@ class _AllProductScreenState extends State<AllProductScreen> {
     );
   }
 
+  ///------------------------Add Cart Quantity----------------------------------///
+
   void addToCart(productId, qty, offerId, amount, offerAmount) {
     setState(() {
       isCountLoading = true;
     });
-    ApiCall()
-        .setContext(context)
-        .addToCart(productId, qty, offerId, amount, offerAmount)
-        .then((apiResponseModel) {
-      if (apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: 'Item added in cart');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : '');
-      }
+    CartManagerResponseModel().addToCart(productId, qty, offerId, amount, offerAmount).then((apiResponse) {
+      setState(() {
+        isCountLoading = false;
+      });
       count();
     });
   }
+
+  ///--------------------Update Cart Quantity----------------------------------///
+
+  void updateCartQuantity(String itemId, String quantity) {
+    setState(() {
+      isCountLoading = true;
+    });
+
+    CartManagerResponseModel()
+        .updateCartQuantity(itemId, quantity)
+        .then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      count();
+    });
+  }
+
+  ///--------------------Delete Cart Quantity----------------------------------///
+
+  void deleteCartItem(String itemId) {
+    setState(() {
+      isCountLoading = true;
+    });
+    CartManagerResponseModel().deleteCartItem(itemId).then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      count();
+    });
+  }
+
+  ///-----------------------------------Cart Count-----------------------------///
 
   void count() {
     setState(() {
@@ -651,36 +624,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
       ),
     );
   }
-
-  /*void callGetCartAPI() {
-    ApiCall().getCart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          if(getCartResponseModel.cartItemViewModels != null) {
-            cartTotal = getCartResponseModel.cartItemViewModels.length.toString();
-          }
-        });
-      } else if(apiResponseModel.statusCode == 401) {
-
-      } else {
-
-      }
-    });
-  }
-
-  void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-        callGetCartAPI();
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      }
-    });
-  }*/
 
   Widget productList() {
     double cardWidth = MediaQuery.of(context).size.width;
@@ -758,29 +701,6 @@ class _AllProductScreenState extends State<AllProductScreen> {
         },
       ),
     );
-  }
-
-  Widget getList() {
-    /*FutureBuilder(
-      future: ApiCall().recommendedForYou(pageNUmber.toString(), pageSize.toString()),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done) {
-          ApiResponseModel apiResponseModel = snapshot.data;
-          if(apiResponseModel.statusCode == 200) {
-            DashboardProductResponseModel responseModel = DashboardProductResponseModel.fromJson(apiResponseModel.Result);
-            return responseModel.Results;
-          } else if(apiResponseModel.statusCode == 401) {
-            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-          } else {
-            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-          }
-        } else if(snapshot.connectionState == ConnectionState.waiting) {
-          return ListView();
-        } else {
-          return ListView();
-        }
-      },
-    );*/
   }
 
   Future<List> getFutureList(int index) async {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'const.dart';
@@ -24,6 +25,7 @@ class CommonWidget {
                       fontWeight: FontWeight.w500,
                       color: Color(0xffffffff),
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),

@@ -1,17 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/CategoryWiseProductListScreen.dart';
-import 'package:vegetos_flutter/UI/dashboard_screen.dart';
 import 'package:vegetos_flutter/UI/search_screen.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
-import 'package:vegetos_flutter/models/app_first_modal.dart' as appfc;
 import 'package:vegetos_flutter/models/categories_model.dart';
 
 import 'my_cart_screen.dart';
@@ -85,7 +82,6 @@ class CategoriesScreenState extends State<CategoriesScreen> {
                     child: Image.asset("assets/OkAssets/Search.png", height: 22, width: 22,),
                     alignment: Alignment.center,
                   ),
-
                 ],
               ),
             ),

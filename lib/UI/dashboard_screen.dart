@@ -133,6 +133,7 @@ class DashboardScreenState extends State<DashboardScreen>
     CartManagerResponseModel.streamController.stream.listen((hashMap) {
       setState(() {
         this.cartHashMap = hashMap;
+        count();
       });
     });
   }
@@ -231,8 +232,10 @@ class DashboardScreenState extends State<DashboardScreen>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        AllProductScreen('Browse By Product')));
+                                    builder: (context) => AllProductScreen(
+                                        'Browse By Product'))).then((onValue) {
+                              managerForCart();
+                            });
                           },
                         ),
                       ),
@@ -248,6 +251,7 @@ class DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  ///----------------------------Browse by Product Api-------------------------///
   Widget browseByProductAPI() {
     return FutureBuilder(
       future: bestSellingFuture,
@@ -276,6 +280,8 @@ class DashboardScreenState extends State<DashboardScreen>
       },
     );
   }
+
+  ///-------------------------Browse by Product GridListing-----------------------///
 
   Widget productGridList(List<ProductWithDefaultVarientModel> products) {
     double cardWidth = MediaQuery.of(context).size.width;
@@ -329,7 +335,6 @@ class DashboardScreenState extends State<DashboardScreen>
 
   Widget gridChildView(
       BuildContext context, ProductWithDefaultVarientModel productVariant) {
-
     ProductPriceModel ProductPrice = ProductPriceModel();
     ProductDetailsModel ProductDetail = new ProductDetailsModel();
     UnitsModel Units = new UnitsModel();
@@ -339,7 +344,7 @@ class DashboardScreenState extends State<DashboardScreen>
 
     String name = "";
     String unit = "";
-    double quantity = 0;
+    int quantity = 0;
 
     for (int i = 0; i < productVariant.ProductDetails.length; i++) {
       if (productVariant.ProductDetails[i].Language == "En-US") {
@@ -358,31 +363,30 @@ class DashboardScreenState extends State<DashboardScreen>
     if (productVariant != null &&
         cartHashMap != null &&
         cartHashMap.containsKey(productVariant.ProductId)) {
-
       this.managerItemViewModel = cartHashMap[productVariant.ProductId];
 
       productVariant.itemId = managerItemViewModel.itemId;
 
-      productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
+      quantity = productVariant.MinimumOrderQuantity;
 
-      if(productVariant.MinimumOrderQuantity >= 1000) {
-        quantity = productVariant.MinimumOrderQuantity / 1000;
-        unit = "Kg";
-      } else {
-        quantity = productVariant.MinimumOrderQuantity.floorToDouble();
-      }
-      this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
+//      if (productVariant.MinimumOrderQuantity >= 1000) {
+//        quantity = productVariant.MinimumOrderQuantity / 1000;
+//        unit = "Kg";
+//      } else {
+//        quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+//      }
+      this.cartNumber = managerItemViewModel.quantity /
+          managerItemViewModel.minimumOrderQuantity;
 
       if (productVariant.ProductPrice != null) {
-        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
-        ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
-        ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
+        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
+        ProductPrice.Price = productVariant.ProductPrice.Price;
+        ProductPrice.DiscountPercent =
+            productVariant.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
-
     } else {
-
       if (productVariant.ProductDetails != null &&
           productVariant.ProductDetails.length > 0) {
         ProductDetail = productVariant.ProductDetails[0];
@@ -392,12 +396,13 @@ class DashboardScreenState extends State<DashboardScreen>
         Units = productVariant.Units[0];
       }
 
-      quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+      quantity = productVariant.MinimumOrderQuantity;
 
       if (productVariant.ProductPrice != null) {
         ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
         ProductPrice.Price = productVariant.ProductPrice.Price;
-        ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
+        ProductPrice.DiscountPercent =
+            productVariant.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = false;
@@ -494,9 +499,7 @@ class DashboardScreenState extends State<DashboardScreen>
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      quantity.toString() +
-                          " " +
-                          unit,
+                      quantity.toString() + " " + unit,
                       style: TextStyle(
                           fontSize: 11.0,
                           fontFamily: 'GoogleSans',
@@ -521,14 +524,13 @@ class DashboardScreenState extends State<DashboardScreen>
                         ),
                       ),
                     ),
-                    ProductPrice.Price != null &&
-                            ProductPrice.Price != 0
+                    ProductPrice.Price != null && ProductPrice.Price != 0
                         ? Container(
                             margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 0.0),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                    '₹' + ProductPrice.Price.toString(),
+                                '₹' + ProductPrice.Price.toString(),
                                 style: TextStyle(
                                     fontSize: 10.0,
                                     fontFamily: 'GoogleSans',
@@ -579,14 +581,15 @@ class DashboardScreenState extends State<DashboardScreen>
                             children: <Widget>[
                               InkWell(
                                 onTap: () {
-                                  if (productVariant.MinimumOrderQuantity ==
-                                      productVariant.IncrementalStep) {
+                                  if (managerItemViewModel.quantity ==
+                                      managerItemViewModel.incrementalStep) {
                                     deleteCartItem(productVariant.itemId);
                                   } else {
                                     updateCartQuantity(
                                         productVariant.itemId,
-                                        (productVariant.MinimumOrderQuantity -
-                                                productVariant.IncrementalStep)
+                                        (managerItemViewModel.quantity -
+                                                managerItemViewModel
+                                                    .incrementalStep)
                                             .toString());
                                   }
                                 },
@@ -615,8 +618,8 @@ class DashboardScreenState extends State<DashboardScreen>
                                 onTap: () {
                                   updateCartQuantity(
                                       productVariant.itemId,
-                                      (productVariant.MinimumOrderQuantity +
-                                              productVariant.IncrementalStep)
+                                      (managerItemViewModel.quantity +
+                                              managerItemViewModel.incrementalStep)
                                           .toString());
                                 },
                                 child: Container(
@@ -2049,38 +2052,6 @@ class DashboardScreenState extends State<DashboardScreen>
 
   ///--------------------------------------------------------------------------///
 
-  /*void callGetCartAPI() {
-    ApiCall().getCart().then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        GetCartResponseModel getCartResponseModel = GetCartResponseModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          if(getCartResponseModel.cartItemViewModels != null) {
-            cartTotal = getCartResponseModel.cartItemViewModels.length.toString();
-          }
-        });
-      } else if(apiResponseModel.statusCode == 401) {
-
-      } else {
-
-      }
-    });
-  }*/
-
-  ///--------------------------------------------------------------------------///
-
-  /*void callAddToCartAPI(String productId, String varientId, String qty, String offerId, String amount) {
-    ApiCall().addToCart(productId, varientId, qty, offerId, amount).then((apiResponseModel) {
-      if(apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-        MyCartUtils().callCartCountAPI();
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
-      }
-    });
-  }*/
-
   ///---------------------------Dispose Method Call Here------------------///
 
   @override
@@ -2167,10 +2138,9 @@ class DashboardScreenState extends State<DashboardScreen>
       version = packageInfo.version;
     });
   }
-
-///---------------------------------CLASS END----------------------------------///
-
 }
+
+///--------------------------------------CLASS END-----------------------------------------///
 
 class FunkyOverlay extends StatefulWidget {
   @override

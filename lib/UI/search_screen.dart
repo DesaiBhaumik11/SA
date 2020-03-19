@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +14,8 @@ import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/MyCartUtils.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
+import 'package:vegetos_flutter/models/CartManager.dart';
+import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
 import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
 import 'package:vegetos_flutter/models/ProductPriceModel.dart';
 import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
@@ -51,6 +52,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
   List<ProductWithDefaultVarientModel> searchList;
 
+  GetCartResponseModel model = GetCartResponseModel();
+  Map<String, dynamic> cartHashMap;
+  ManagerItemViewModel managerItemViewModel;
+  double cartNumber = 0;
+
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -73,7 +79,17 @@ class _SearchScreenState extends State<SearchScreen> {
         ImageURL = prefs.getString("ImageURL");
       });
     });
+    managerForCart();
     super.initState();
+  }
+
+  void managerForCart() {
+    CartManagerResponseModel().callGetMyCartAPI();
+    CartManagerResponseModel.streamController.stream.listen((hashMap) {
+      setState(() {
+        this.cartHashMap = hashMap;
+      });
+    });
   }
 
   @override
@@ -183,8 +199,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         padding: EdgeInsets.all(15),
                         child: Image.asset(
                           'assets/OkAssets/Cencelicone.png',
-                          height: 20,
-                          width: 20,
+                          height: 18,
+                          width: 18,
                         ),
                       ),
                     ),
@@ -209,8 +225,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   Align(
                                     child: Image.asset(
                                       'assets/OkAssets/Mycart.png',
-                                      height: 25,
-                                      width: 25,
+                                      height: 28,
+                                      width: 28,
                                     ),
                                     alignment: Alignment.center,
                                   ),
@@ -365,6 +381,9 @@ class _SearchScreenState extends State<SearchScreen> {
         String name = "";
         String unit = "";
         String desc = "";
+        double quantity = 0;
+        bool isAvailableInCart = false;
+
         for (int i = 0; i < productVariant.ProductDetails.length; i++) {
           if (productVariant.ProductDetails[i].Language == "En-US") {
             name = productVariant.ProductDetails[i].Name;
@@ -385,23 +404,57 @@ class _SearchScreenState extends State<SearchScreen> {
         UnitsModel Units = new UnitsModel();
         ProductVariantMedia productVariantMedia = new ProductVariantMedia();
 
-        if (productVariant != null) {
+        if (productVariant != null &&
+            cartHashMap != null &&
+            cartHashMap.containsKey(productVariant.ProductId)) {
+
+          this.managerItemViewModel = cartHashMap[productVariant.ProductId];
+
+          productVariant.itemId = managerItemViewModel.itemId;
+
+          productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
+
+          if(productVariant.MinimumOrderQuantity >= 1000) {
+            quantity = productVariant.MinimumOrderQuantity / 1000;
+            unit = "Kg";
+          } else {
+            quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+          }
+          this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
+
+          if (productVariant.ProductPrice != null) {
+            ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
+            ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
+            ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
+          }
+
+          isAvailableInCart = true;
+
+        } else {
+
           if (productVariant.ProductDetails != null &&
               productVariant.ProductDetails.length > 0) {
             ProductDetail = productVariant.ProductDetails[0];
           }
+
           if (productVariant.Units != null && productVariant.Units.length > 0) {
             Units = productVariant.Units[0];
           }
+
+          quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+
           if (productVariant.ProductPrice != null) {
-            ProductPrice = productVariant.ProductPrice;
+            ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
+            ProductPrice.Price = productVariant.ProductPrice.Price;
+            ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
           }
+
+          isAvailableInCart = false;
         }
 
         if (ProductDetail != null) {
           return GestureDetector(
             onTap: () {
-//              Navigator.push(context, EnterExitRoute(enterPage: ProductDetailScreen(productVariant.ProductId)));
               Navigator.of(context)
                   .push(SlideRightRoute(
                       page: ProductDetailScreen(productVariant.ProductId)))
@@ -412,8 +465,6 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Container(
               padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
               decoration: BoxDecoration(
-//                  border: new Border.all(
-//                      color: Colors.grey[500], width: 0.5, style: BorderStyle.solid),
                   color: Colors.white),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -465,21 +516,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               )
                             : Container(),
-//                          ProductPrice.DiscountPercent != null && ProductPrice.DiscountPercent != 0 ?
-//                          Container(
-//                            padding: EdgeInsets.fromLTRB(2.0, 2.0, 2.0, 2.0),
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(5.0),
-//                                color: Colors.orange),
-//                            child: Text(
-//                                ProductPrice.DiscountPercent != null ?
-//                                ProductPrice.DiscountPercent.toString() : null,
-//                              style: TextStyle(
-//                                  fontSize: 10.0,
-//                                  fontFamily: 'GoogleSans',
-//                                  color: Colors.white),
-//                            ),
-//                          ) : Container(),
                       ],
                     ),
                   ),
@@ -505,16 +541,16 @@ class _SearchScreenState extends State<SearchScreen> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
-                        //  width: MediaQuery.of(context).size.width * 0.55,
                         ),
                         SizedBox(
                           width: 5,
                         ),
                         Container(
                           margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                          // width: MediaQuery.of(context).size.width * 0.55,
                           child: Text(
-                            desc,
+                              quantity.toString() +
+                                  " " +
+                                  unit,
                             style: TextStyle(
                                 fontSize: 11.0,
                                 fontFamily: 'GoogleSans',
@@ -565,33 +601,93 @@ class _SearchScreenState extends State<SearchScreen> {
                                 : Container(),
                           ],
                         ),
-                        Expanded(
-                          flex: 0,
-                          child: InkWell(
-                            onTap: () {
-                              addToCart(
-                                  productVariant.ProductId,
-                                  productVariant.IncrementalStep.toString(),
-                                  "",
-                                  productVariant.ProductPrice.Price.toString(),
-                                  productVariant.ProductPrice.OfferPrice
-                                      .toString());
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 0.0),
-                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2.0),
-                                  //color: Const.gray10
-                                  color: Const.primaryColor),
-                              child: Text('+ ADD',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontFamily: 'GoogleSans',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  )),
+                        !isAvailableInCart ?
+                        InkWell(
+                          onTap: () {
+                            addToCart(
+                                productVariant.ProductId,
+                                productVariant.IncrementalStep.toString(),
+                                "",
+                                productVariant.ProductPrice.Price.toString(),
+                                productVariant.ProductPrice.OfferPrice
+                                    .toString());
+                          },
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 0.0),
+                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2.0),
+                                //color: Const.gray10
+                                color: Const.primaryColor),
+                            child: Text('+ ADD',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontFamily: 'GoogleSans',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                )),
+                          ),
+                        ) :
+                        Visibility(
+                          visible: true,
+                          child: Expanded(
+                            flex: 0,
+                            child: Row(
+                              children: <Widget>[
+                                InkWell(
+                                  onTap: () {
+                                    if (productVariant.MinimumOrderQuantity ==
+                                        productVariant.IncrementalStep) {
+                                      deleteCartItem(productVariant.itemId);
+                                    } else {
+                                      updateCartQuantity(
+                                          productVariant.itemId,
+                                          (productVariant.MinimumOrderQuantity -
+                                              productVariant.IncrementalStep)
+                                              .toString());
+                                    }
+                                  },
+                                  child: Container(
+                                    margin:
+                                    EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                    child: Image.asset(
+                                      'assets/OkAssets/minus.png',
+                                      height: 20.0,
+                                      width: 20.0,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin:
+                                  EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                  child: Text(cartNumber.round().toString(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontFamily: 'GoogleSans',
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      )),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    updateCartQuantity(
+                                        productVariant.itemId,
+                                        (productVariant.MinimumOrderQuantity +
+                                            productVariant.IncrementalStep)
+                                            .toString());
+                                  },
+                                  child: Container(
+                                    margin:
+                                    EdgeInsets.fromLTRB(5.0, 8.0, 10.0, 8.0),
+                                    child: Image.asset(
+                                      'assets/OkAssets/plus.png',
+                                      height: 20.0,
+                                      width: 20.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         )
@@ -612,6 +708,60 @@ class _SearchScreenState extends State<SearchScreen> {
       physics: BouncingScrollPhysics(),
     );
   }
+
+
+  ///--------------------Delete Cart Quantity----------------------------------///
+
+  void deleteCartItem(String itemId) {
+    setState(() {
+      isCountLoading = true;
+    });
+    CartManagerResponseModel().deleteCartItem(itemId).then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      count();
+    });
+  }
+
+  ///--------------------------------------------------------------------------///
+
+
+  ///--------------------Update Cart Quantity----------------------------------///
+
+  void updateCartQuantity(String itemId, String quantity) {
+    setState(() {
+      isCountLoading = true;
+    });
+
+    CartManagerResponseModel()
+        .updateCartQuantity(itemId, quantity)
+        .then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      count();
+    });
+  }
+
+  ///--------------------------------------------------------------------------///
+
+
+  ///------------------------Add Cart Quantity----------------------------------///
+
+  void addToCart(productId, qty, offerId, amount, offerAmount) {
+    setState(() {
+      isCountLoading = true;
+    });
+    CartManagerResponseModel().addToCart((productId), qty, offerId, amount, offerAmount).then((apiResponseModel){
+      setState(() {
+        isCountLoading = false;
+      });
+      count();
+    });
+  }
+
+  ///--------------------------------------------------------------------------///
 
   ListView buildList() {
     return ListView.builder(
@@ -939,26 +1089,6 @@ class _SearchScreenState extends State<SearchScreen> {
         builder: (BuildContext bc) {
           return SheetWid();
         });
-  }
-
-  void addToCart(productId, qty, offerId, amount, offerAmount) {
-    setState(() {
-      isCountLoading = true;
-    });
-    ApiCall()
-        .setContext(context)
-        .addToCart(productId, qty, offerId, amount, offerAmount)
-        .then((apiResponseModel) {
-      if (apiResponseModel.statusCode == 200) {
-        Fluttertoast.showToast(msg: 'Item added in cart');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : '');
-      }
-      count();
-    });
   }
 
   void count() {

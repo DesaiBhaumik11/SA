@@ -14,6 +14,7 @@ import 'package:vegetos_flutter/UI/set_delivery_details.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
+import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/CartManager.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
@@ -46,6 +47,7 @@ class MyCartState extends State<MyCartScreen> {
   String ImageURL = '';
 
   double cartNumber = 0;
+  String cartTotal = "";
 
   bool isDataAvailable = true;
 
@@ -303,9 +305,11 @@ class MyCartState extends State<MyCartScreen> {
 
   /// ---------------------------Cart Item List Child----------------------------------///
   Widget cartItemChild(CartItemViewModel cartItem) {
+
     String name = "";
     String unit = "";
-    double quantity = 0;
+    int quantity = 0;
+
     for (int i = 0; i < cartItem.ProductDetails.length; i++) {
       if (cartItem.ProductDetails[i].Language == "En-US") {
         name = cartItem.ProductDetails[i].Name;
@@ -319,12 +323,15 @@ class MyCartState extends State<MyCartScreen> {
         break;
       }
     }
-    if(cartItem.quantity >= 1000 && unit == "Grams") {
-      quantity = (cartItem.quantity / 1000);
-      unit = "Kg";
-    } else {
-      quantity = cartItem.quantity.floorToDouble();
-    }
+
+    quantity = cartItem.MinimumOrderQuantity;
+
+//    if(cartItem.quantity >= 1000 && unit == "Grams") {
+//      quantity = (cartItem.quantity / 1000);
+//      unit = "Kg";
+//    } else {
+//      quantity = cartItem.quantity.floorToDouble();
+//    }
 
     return InkWell(
       onTap: () {
@@ -426,7 +433,7 @@ class MyCartState extends State<MyCartScreen> {
                                     child: Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
-                                        "₹ ${cartItem.ProductPrice.OfferPrice * (cartItem.quantity/cartItem.MinimumOrderQuantity)}",
+                                        "₹ ${cartItem.ProductPrice.OfferPrice}",
                                         style: TextStyle(
                                             fontSize: 15.0,
                                             fontFamily: 'GoogleSans',
@@ -448,9 +455,9 @@ class MyCartState extends State<MyCartScreen> {
                                                 child: Align(
                                                   alignment: Alignment.topLeft,
                                                   child: Text(
-                                                    '₹ ${cartItem.ProductPrice.Price * (cartItem.quantity/cartItem.MinimumOrderQuantity)}',
+                                                    '₹ ${cartItem.ProductPrice.Price}',
                                                     style: TextStyle(
-                                                        fontSize: 14.0,
+                                                        fontSize: 12.0,
                                                         fontFamily: 'GoogleSans',
                                                         fontWeight:
                                                             FontWeight.w500,
@@ -598,8 +605,9 @@ class MyCartState extends State<MyCartScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AllProductScreen(
-                                            "Recommended for you")))
-                                .then((value) {});
+                                            "Recommended for you"))).then((value) {
+                                  managerForCart();
+                            });
                           },
                         ),
                       ),
@@ -614,6 +622,26 @@ class MyCartState extends State<MyCartScreen> {
       ),
     );
   }
+
+  void count() {
+    ApiCall().setContext(context).count().then((apiResponseModel) {
+      setState(() {
+        isCountLoading = false;
+      });
+      String cartTotalStr = "0";
+      if (apiResponseModel.statusCode == 200) {
+        CartCountModel cartCountModel =
+        CartCountModel.fromJson(apiResponseModel.Result);
+        if (cartCountModel != null && cartCountModel.count != null) {
+          cartTotalStr = cartCountModel.count.toString();
+        }
+      }
+      setState(() {
+         cartTotal = cartTotalStr;
+      });
+    });
+  }
+
 
   /// ---------------------------Cart Recommended List ----------------------------------///
 
@@ -633,8 +661,8 @@ class MyCartState extends State<MyCartScreen> {
 
   /// ---------------------------Cart Recommended List Child ----------------------------------///
 
-  Widget childView(
-      BuildContext context, ProductWithDefaultVarientModel result) {
+  Widget childView(BuildContext context, ProductWithDefaultVarientModel result) {
+
     ProductPriceModel ProductPrice = new ProductPriceModel();
     ProductDetailsModel ProductDetail = new ProductDetailsModel();
     UnitsModel Units = new UnitsModel();
@@ -644,7 +672,7 @@ class MyCartState extends State<MyCartScreen> {
 
     String name = "";
     String unit = "";
-    double quantity = 0;
+    int quantity = 0;
 
     for (int i = 0; i < result.ProductDetails.length; i++) {
       if (result.ProductDetails[i].Language == "En-US") {
@@ -667,8 +695,6 @@ class MyCartState extends State<MyCartScreen> {
 
       result.itemId = managerItemViewModel.itemId;
 
-      result.MinimumOrderQuantity = managerItemViewModel.quantity;
-
       if (result.ProductDetails != null && result.ProductDetails.length > 0) {
         ProductDetail = result.ProductDetails[0];
       }
@@ -677,21 +703,22 @@ class MyCartState extends State<MyCartScreen> {
         Units = result.Units[0];
       }
 
-      if (result.MinimumOrderQuantity >= 1000) {
-        quantity = result.MinimumOrderQuantity / 1000;
-        unit = "Kg";
-      } else {
-        quantity = result.MinimumOrderQuantity.floorToDouble();
-      }
+      quantity = result.MinimumOrderQuantity;
+
+//      if (result.MinimumOrderQuantity >= 1000) {
+//        quantity = result.MinimumOrderQuantity / 1000;
+//        unit = "Kg";
+//      } else {
+//        quantity = result.MinimumOrderQuantity.floorToDouble();
+//      }
+
       this.cartNumber = managerItemViewModel.quantity /
           managerItemViewModel.minimumOrderQuantity;
 
       if (result.ProductPrice != null) {
-        result.ProductPrice.OfferPrice =
-            result.ProductPrice.OfferPrice * cartNumber;
-        result.ProductPrice.Price = result.ProductPrice.Price * cartNumber;
-        result.ProductPrice.DiscountPercent =
-            result.ProductPrice.DiscountPercent;
+        result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
+        result.ProductPrice.Price = result.ProductPrice.Price;
+        result.ProductPrice.DiscountPercent = result.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
@@ -704,13 +731,12 @@ class MyCartState extends State<MyCartScreen> {
         Units = result.Units[0];
       }
 
-      quantity = result.MinimumOrderQuantity.floorToDouble();
+      quantity = result.MinimumOrderQuantity;
 
       if (result.ProductPrice != null) {
         result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
         result.ProductPrice.Price = result.ProductPrice.Price;
-        result.ProductPrice.DiscountPercent =
-            result.ProductPrice.DiscountPercent;
+        result.ProductPrice.DiscountPercent = result.ProductPrice.DiscountPercent;
       }
       isAvailableInCart = false;
     }
@@ -898,14 +924,14 @@ class MyCartState extends State<MyCartScreen> {
                             children: <Widget>[
                               InkWell(
                                 onTap: () {
-                                  if (result.MinimumOrderQuantity ==
-                                      result.IncrementalStep) {
+                                  if (managerItemViewModel.quantity ==
+                                      managerItemViewModel.incrementalStep) {
                                     deleteCartItem(result.itemId);
                                   } else {
                                     updateCartQuantity(
                                         result.itemId,
-                                        (result.MinimumOrderQuantity -
-                                                result.IncrementalStep)
+                                        (managerItemViewModel.quantity -
+                                                managerItemViewModel.incrementalStep)
                                             .toString());
                                   }
                                 },
@@ -934,8 +960,8 @@ class MyCartState extends State<MyCartScreen> {
                                 onTap: () {
                                   updateCartQuantity(
                                       result.itemId,
-                                      (result.MinimumOrderQuantity +
-                                              result.IncrementalStep)
+                                      (managerItemViewModel.quantity +
+                                              managerItemViewModel.incrementalStep)
                                           .toString());
                                 },
                                 child: Container(
@@ -1303,24 +1329,11 @@ class MyCartState extends State<MyCartScreen> {
     setState(() {
       isCountLoading = true;
     });
-    ApiCall().setContext(context).clearCart().then((apiResponseModel) {
+    CartManagerResponseModel().clearCartItems().then((apiResponseModel) {
+      BindData(apiResponseModel);
       setState(() {
         isCountLoading = false;
       });
-      if (apiResponseModel.statusCode == 200 ||
-          apiResponseModel.statusCode == 204) {
-        BindData(apiResponseModel);
-      } else if (apiResponseModel.statusCode == 401) {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : 'Something went wrong.!');
-      }
     });
   }
 
