@@ -246,29 +246,35 @@ class _AllProductScreenState extends State<AllProductScreen> {
     if (productVariant != null &&
         cartHashMap != null &&
         cartHashMap.containsKey(productVariant.ProductId)) {
+
       this.managerItemViewModel = cartHashMap[productVariant.ProductId];
 
       productVariant.itemId = managerItemViewModel.itemId;
 
-      quantity = productVariant.MinimumOrderQuantity;
+      productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
 
-//      if (productVariant.MinimumOrderQuantity >= 1000) {
-//        quantity = productVariant.MinimumOrderQuantity / 1000;
-//        unit = "Kg";
-//      } else {
-//        quantity = productVariant.MinimumOrderQuantity.floorToDouble();
-//      }
-      this.cartNumber = managerItemViewModel.quantity /
-          managerItemViewModel.minimumOrderQuantity;
+      if(productVariant.MinimumOrderQuantity >= 1000) {
+        //quantity = productVariant.MinimumOrderQuantity / 1000;
+        quantity = managerItemViewModel.minimumOrderQuantity;
+        // unit = "Kg";
+      } else {
+        // quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+        quantity = managerItemViewModel.minimumOrderQuantity;
+      }
+      this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
 
       if (productVariant.ProductPrice != null) {
+//        ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
+//        ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
         ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
         ProductPrice.Price = productVariant.ProductPrice.Price;
         ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
+
     } else {
+
       if (productVariant.ProductDetails != null &&
           productVariant.ProductDetails.length > 0) {
         ProductDetail = productVariant.ProductDetails[0];
@@ -278,13 +284,13 @@ class _AllProductScreenState extends State<AllProductScreen> {
         Units = productVariant.Units[0];
       }
 
+      // quantity = productVariant.MinimumOrderQuantity.floorToDouble();
       quantity = productVariant.MinimumOrderQuantity;
 
       if (productVariant.ProductPrice != null) {
         ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
         ProductPrice.Price = productVariant.ProductPrice.Price;
-        ProductPrice.DiscountPercent =
-            productVariant.ProductPrice.DiscountPercent;
+        ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = false;
@@ -470,14 +476,14 @@ class _AllProductScreenState extends State<AllProductScreen> {
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-                            if (managerItemViewModel.quantity ==
-                                managerItemViewModel.incrementalStep) {
+                            if (productVariant.MinimumOrderQuantity ==
+                                productVariant.IncrementalStep) {
                               deleteCartItem(productVariant.itemId);
                             } else {
                               updateCartQuantity(
                                   productVariant.itemId,
-                                  (managerItemViewModel.quantity -
-                                      managerItemViewModel.incrementalStep)
+                                  (productVariant.MinimumOrderQuantity -
+                                      productVariant.IncrementalStep)
                                       .toString());
                             }
                           },
@@ -506,8 +512,8 @@ class _AllProductScreenState extends State<AllProductScreen> {
                           onTap: () {
                             updateCartQuantity(
                                 productVariant.itemId,
-                                (managerItemViewModel.quantity +
-                                    managerItemViewModel.incrementalStep)
+                                (productVariant.MinimumOrderQuantity +
+                                    productVariant.IncrementalStep)
                                     .toString());
                           },
                           child: Container(

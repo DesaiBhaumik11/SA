@@ -47,9 +47,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
   @override
   Widget build(BuildContext context) {
     appFirstModal = Provider.of<AppFirstModal>(context);
-
+    double appBarHeight  = AppBar().preferredSize.height;
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -60,117 +59,120 @@ class _VerifyOTPState extends State<VerifyOTP> {
               Navigator.pop(context);
             },
             child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.only(right: 20),
                 child: Image.asset(
                   "assets/OkAssets/Cencelicone.png", height: 22, width: 22,)
             ),
           ),
         ],
       ),
-      body: Container(
-        height: double.maxFinite,
-        width: double.maxFinite,
-        decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage("assets/OkAssets/VerifyOtp.png"))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 60),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Verify OTP',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
-                ),
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Enter the six digit OTP sent on',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'your mobile number to continue',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            otpPin(),
-            SizedBox(height: 1),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - appBarHeight,
+          width:  MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("assets/OkAssets/VerifyOtp.png"))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.33,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Expanded(
-                      child: RaisedButton(
-                        color: Theme
-                            .of(context)
-                            .primaryColor,
-                        onPressed: () {
-                          code = otpController.text;
-                          validate();
-
-                          // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            'Verify',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18),
-                          ),
-                        ),
-                      ))
+                  Text(
+                    'Verify OTP',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+                  ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Text(
-                'Haven\'t received the OTP yet?',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(SlideRightRoute(page: LoginScreen()));
-                },
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: Text(
-                    'Resend OTP.',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Theme
-                            .of(context)
-                            .primaryColor,
-                        fontWeight: FontWeight.w500),
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Enter the six digit OTP sent on',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                   ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'your mobile number to continue',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              otpPin(),
+              SizedBox(height: 1),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: RaisedButton(
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
+                          onPressed: () {
+                            code = otpController.text;
+                            validate();
+
+                            // Navigator.of(context).push(SlideLeftRoute(page: UpdateProfile()));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Verify',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18),
+                            ),
+                          ),
+                        ))
+                  ],
                 ),
               ),
-            ])
-          ],
+              SizedBox(
+                height: 5,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                Text(
+                  'Haven\'t received the OTP yet?',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(SlideRightRoute(page: LoginScreen()));
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    child: Text(
+                      'Resend OTP.',
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ])
+            ],
+          ),
         ),
       ),
     );

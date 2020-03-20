@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
+import 'package:vegetos_flutter/UI/login.dart';
 import 'package:vegetos_flutter/UI/verify_otp.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/const_endpoint.dart';
@@ -32,10 +34,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double appBarHeight  = AppBar().preferredSize.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
-
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -46,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
 
             child: Padding(
-              padding: const EdgeInsets.only(top:0.0,right: 30),
+              padding: const EdgeInsets.only(top:0.0,right: 20),
               child: InkWell(
                 onTap: (){
                   Navigator.pop(context);
@@ -57,98 +58,100 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ],
       ),
-      body: Container(
-        width: double.maxFinite,
-        height: double.maxFinite,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage("assets/OkAssets/backgraound.PNG")
-            )
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            okProfile(),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                formForSignUp(),
-                GestureDetector(
-                  onTap: () {
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - appBarHeight,
+          width:  MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("assets/OkAssets/backgraound.PNG")
+              )
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.07,
+              ),
+              okProfile(),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  formForSignUp(),
+                  GestureDetector(
+                    onTap: () {
 
-                    name= regName.text;
-                    email = regEmail.text;
-                    mobile = regPhoneNumber.text;
+                      name= regName.text;
+                      email = regEmail.text;
+                      mobile = regPhoneNumber.text;
 
-                    if(mobile==""||mobile.length < 10){
-                      Utility.toastMessage("Enter phone number");
-                    } else {
-                      register();
-                    }
-                    // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
-                  },
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    height: 40,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(5, 5),
-                            blurRadius: 10,
-                          )
-                        ],
-                        color: Colors.green[700]
-                    ),
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Have An Account?",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black
+                      if(mobile==""||mobile.length < 10){
+                        Utility.toastMessage("Enter phone number");
+                      } else {
+                        register();
+                      }
+                      // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      height: 40,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(5, 5),
+                              blurRadius: 10,
+                            )
+                          ],
+                          color: Colors.green[700]
+                      ),
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-
-                      },
-                      child: Text(
-                        " Sign In",
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Have An Account?",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: Colors.green
+                            color: Colors.black
                         ),
                       ),
-                    )
-                  ],
-                )
-              ],
-            ),
-//            Expanded(
-//              flex: 0,
-//              child: Container(height: 70,),
-//            )
-          ],
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              EnterExitRoute(enterPage: LoginScreen(), exitPage: RegisterScreen()));
+                        },
+                        child: Text(
+                          " Sign In",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.green
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

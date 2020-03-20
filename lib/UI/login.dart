@@ -30,177 +30,184 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double appBarHeight  = AppBar().preferredSize.height;
     return WillPopScope(
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-        body: Container(
-          height: double.maxFinite,
-          width: double.maxFinite,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage("assets/OkAssets/FarmBackground.png"))),
-          child: Stack(
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    "assets/OkAssets/LoginLock.PNG",
-                    scale: 0.95,
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Login with OTP",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 22,
-                            color: Const.textBlack),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "We will send you a One Time Password",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            color: Const.textBlack),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "on your registerd mobile number",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            color: Const.textBlack),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text('Enter your mobile number',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black54,
-                                    fontSize: 15)),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: TextFormField(
-                          maxLength: 10,
-                          onChanged: (e) {
-                            mobile = e;
-                          },
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                              counterText: '',
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 10)),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(children: <Widget>[
-                        Expanded(
-                            child: RaisedButton(
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            if (mobile == "" || mobile.length < 10) {
-                              Utility.toastMessage("Enter Correct Number");
-                            } else {
-                              loginApi();
-                            }
-                            // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18),
-                            ),
-                          ),
-                        ))
-                      ])),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      InkWell(
-                        child: Text(
-                          'Register ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Const.widgetGreen
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.push(context,
-                              EnterExitRoute(enterPage: RegisterScreen()));
-                        },
-                      ),
-                      SizedBox(width: 20),
-                    ],
-                  ),
-                ],
-              ),
-              Positioned(
-                right: 25,
-                top: 40,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+
+              child: Padding(
+                padding: const EdgeInsets.only(top:0.0,right: 20),
                 child: InkWell(
-                    onTap: () {
-                      if(Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      } else
-                        Navigator.push(context, EnterExitRoute(enterPage: DashboardScreen(), exitPage: LoginScreen()));
-                    },
-                    child: Image.asset(
-                      "assets/OkAssets/Cencelicone.png",
-                      height: 22,
-                      width: 22,
-                    )),
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22),
+                ),
               ),
-            ],
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - appBarHeight,
+            width:  MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage("assets/OkAssets/FarmBackground.png"))),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.045,
+                ),
+                Image.asset(
+                  "assets/OkAssets/LoginLock.PNG",
+                  scale: 0.50,
+                  height: 200,
+                  width: 200,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Login with OTP",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 22,
+                          color: Const.textBlack),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "We will send you a One Time Password",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: Const.textBlack),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "on your registerd mobile number",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: Const.textBlack),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height:15,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text('Enter your mobile number',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black54,
+                                  fontSize: 15)),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        maxLength: 10,
+                        onChanged: (e) {
+                          mobile = e;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            counterText: '',
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 10)),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(children: <Widget>[
+                      Expanded(
+                          child: RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          if (mobile == "" || mobile.length < 10) {
+                            Utility.toastMessage("Enter Correct Number");
+                          } else {
+                            loginApi();
+                          }
+                          // Navigator.of(context).push(SlideLeftRoute(page: VerifyOTP()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18),
+                          ),
+                        ),
+                      ))
+                    ])),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    InkWell(
+                      child: Text(
+                        'Register ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: Const.widgetGreen
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(context,
+                            EnterExitRoute(enterPage: RegisterScreen()));
+                      },
+                    ),
+                    SizedBox(width: 20),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1,)
+              ],
+            ),
           ),
         ),
       ),

@@ -381,7 +381,8 @@ class _SearchScreenState extends State<SearchScreen> {
         String name = "";
         String unit = "";
         String desc = "";
-        double quantity = 0;
+        //double quantity = 0;
+        int quantity = 0;
         bool isAvailableInCart = false;
 
         for (int i = 0; i < productVariant.ProductDetails.length; i++) {
@@ -415,16 +416,20 @@ class _SearchScreenState extends State<SearchScreen> {
           productVariant.MinimumOrderQuantity = managerItemViewModel.quantity;
 
           if(productVariant.MinimumOrderQuantity >= 1000) {
-            quantity = productVariant.MinimumOrderQuantity / 1000;
-            unit = "Kg";
+           // quantity = productVariant.MinimumOrderQuantity / 1000;
+            quantity = managerItemViewModel.minimumOrderQuantity;
+          //  unit = "Kg";
           } else {
-            quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+           // quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+            quantity = managerItemViewModel.minimumOrderQuantity;
           }
           this.cartNumber = managerItemViewModel.quantity / managerItemViewModel.minimumOrderQuantity;
 
           if (productVariant.ProductPrice != null) {
-            ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
-            ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
+//            ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice * cartNumber;
+//            ProductPrice.Price = productVariant.ProductPrice.Price * cartNumber;
+            ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;
+            ProductPrice.Price = productVariant.ProductPrice.Price;
             ProductPrice.DiscountPercent = productVariant.ProductPrice.DiscountPercent;
           }
 
@@ -441,7 +446,8 @@ class _SearchScreenState extends State<SearchScreen> {
             Units = productVariant.Units[0];
           }
 
-          quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+          //quantity = productVariant.MinimumOrderQuantity.floorToDouble();
+          quantity = productVariant.MinimumOrderQuantity;
 
           if (productVariant.ProductPrice != null) {
             ProductPrice.OfferPrice = productVariant.ProductPrice.OfferPrice;

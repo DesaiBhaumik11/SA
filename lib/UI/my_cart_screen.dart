@@ -695,6 +695,8 @@ class MyCartState extends State<MyCartScreen> {
 
       result.itemId = managerItemViewModel.itemId;
 
+      result.MinimumOrderQuantity = managerItemViewModel.quantity;
+
       if (result.ProductDetails != null && result.ProductDetails.length > 0) {
         ProductDetail = result.ProductDetails[0];
       }
@@ -703,22 +705,23 @@ class MyCartState extends State<MyCartScreen> {
         Units = result.Units[0];
       }
 
-      quantity = result.MinimumOrderQuantity;
-
-//      if (result.MinimumOrderQuantity >= 1000) {
-//        quantity = result.MinimumOrderQuantity / 1000;
-//        unit = "Kg";
-//      } else {
-//        quantity = result.MinimumOrderQuantity.floorToDouble();
-//      }
-
+      if (result.MinimumOrderQuantity >= 1000) {
+       // quantity = result.MinimumOrderQuantity / 1000;
+        quantity = managerItemViewModel.minimumOrderQuantity;
+       // unit = "Kg";
+      } else {
+       // quantity = result.MinimumOrderQuantity.floorToDouble();
+        quantity = managerItemViewModel.minimumOrderQuantity;
+      }
       this.cartNumber = managerItemViewModel.quantity /
           managerItemViewModel.minimumOrderQuantity;
 
       if (result.ProductPrice != null) {
-        result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
-        result.ProductPrice.Price = result.ProductPrice.Price;
-        result.ProductPrice.DiscountPercent = result.ProductPrice.DiscountPercent;
+        result.ProductPrice.OfferPrice =
+            result.ProductPrice.OfferPrice * cartNumber;
+        result.ProductPrice.Price = result.ProductPrice.Price * cartNumber;
+        result.ProductPrice.DiscountPercent =
+            result.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
@@ -731,12 +734,14 @@ class MyCartState extends State<MyCartScreen> {
         Units = result.Units[0];
       }
 
+     // quantity = result.MinimumOrderQuantity.floorToDouble();
       quantity = result.MinimumOrderQuantity;
 
       if (result.ProductPrice != null) {
         result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
         result.ProductPrice.Price = result.ProductPrice.Price;
-        result.ProductPrice.DiscountPercent = result.ProductPrice.DiscountPercent;
+        result.ProductPrice.DiscountPercent =
+            result.ProductPrice.DiscountPercent;
       }
       isAvailableInCart = false;
     }
@@ -924,14 +929,14 @@ class MyCartState extends State<MyCartScreen> {
                             children: <Widget>[
                               InkWell(
                                 onTap: () {
-                                  if (managerItemViewModel.quantity ==
-                                      managerItemViewModel.incrementalStep) {
+                                  if (result.MinimumOrderQuantity ==
+                                      result.IncrementalStep) {
                                     deleteCartItem(result.itemId);
                                   } else {
                                     updateCartQuantity(
                                         result.itemId,
-                                        (managerItemViewModel.quantity -
-                                                managerItemViewModel.incrementalStep)
+                                        (result.MinimumOrderQuantity -
+                                                result.IncrementalStep)
                                             .toString());
                                   }
                                 },
@@ -960,8 +965,8 @@ class MyCartState extends State<MyCartScreen> {
                                 onTap: () {
                                   updateCartQuantity(
                                       result.itemId,
-                                      (managerItemViewModel.quantity +
-                                              managerItemViewModel.incrementalStep)
+                                      (result.MinimumOrderQuantity +
+                                              result.IncrementalStep)
                                           .toString());
                                 },
                                 child: Container(

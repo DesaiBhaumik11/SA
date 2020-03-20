@@ -196,6 +196,9 @@ class _MyOrdersState extends State<MyOrders> {
           if(apiResponseModel.statusCode == 200) {
             List<GetOrderByIdResponseModel> getOrdersResponseModelList = GetOrderByIdResponseModel.parseList(apiResponseModel.Result);
 
+            if(getOrdersResponseModelList.length == 0) {
+              return Center(child: Text("No Order Placed", style: TextStyle(fontSize: 20),),);
+            }
             return buildList(getOrdersResponseModelList);
           } else if(apiResponseModel.statusCode == 401){
             return Container();
