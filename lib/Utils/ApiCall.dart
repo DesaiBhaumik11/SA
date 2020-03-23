@@ -22,9 +22,7 @@ import 'package:vegetos_flutter/models/address_modal.dart';
 
 import 'DeviceTokenController.dart';
 
-class ApiCall
-{
-
+class ApiCall {
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
   static final String SetLocation = "/SetLocation";
@@ -142,7 +140,6 @@ class ApiCall
       return _internalCrash(e.toString());
     }
   }
-
 
 
   ApiResponseModel getResponse(var response,bool isRedirect){

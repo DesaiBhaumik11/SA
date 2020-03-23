@@ -150,6 +150,8 @@ class SplashScreenState extends State<SplashScreen> {
 
   void callAppFirstStartAPI(BuildContext context) {
     ApiCall().appFirstStart().then((apiResponseModel) {
+
+
       if (apiResponseModel.statusCode == 200) {
         AppFirstStartResponseModel appFirstStartResponseModel =
             AppFirstStartResponseModel.fromJson(apiResponseModel.Result);
