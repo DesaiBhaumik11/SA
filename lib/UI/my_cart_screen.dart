@@ -335,10 +335,10 @@ class MyCartState extends State<MyCartScreen> {
 
     return InkWell(
       onTap: () {
-//        Navigator.push(
-//            context,
-//            EnterExitRoute(
-//                enterPage: ProductDetailScreen(cartItem.ProductId)));
+        Navigator.push(
+            context,
+            EnterExitRoute(
+                enterPage: ProductDetailScreen(cartItem.ProductId)));
       },
       child: Container(
         color: Colors.white,
@@ -623,6 +623,8 @@ class MyCartState extends State<MyCartScreen> {
     );
   }
 
+  /// -----------------------------Cart Count Number------------------------------------///
+
   void count() {
     ApiCall().setContext(context).count().then((apiResponseModel) {
       setState(() {
@@ -717,11 +719,9 @@ class MyCartState extends State<MyCartScreen> {
           managerItemViewModel.minimumOrderQuantity;
 
       if (result.ProductPrice != null) {
-        result.ProductPrice.OfferPrice =
-            result.ProductPrice.OfferPrice * cartNumber;
-        result.ProductPrice.Price = result.ProductPrice.Price * cartNumber;
-        result.ProductPrice.DiscountPercent =
-            result.ProductPrice.DiscountPercent;
+        result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
+        result.ProductPrice.Price = result.ProductPrice.Price;
+        result.ProductPrice.DiscountPercent = result.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
