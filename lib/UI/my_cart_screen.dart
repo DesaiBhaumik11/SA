@@ -338,7 +338,7 @@ class MyCartState extends State<MyCartScreen> {
         Navigator.push(
             context,
             EnterExitRoute(
-                enterPage: ProductDetailScreen(cartItem.ProductId)));
+                enterPage: ProductDetailScreen(cartItem.id)));
       },
       child: Container(
         color: Colors.white,

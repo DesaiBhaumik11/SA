@@ -70,7 +70,7 @@ class Const {
   static const textBlack = Color(0xff000000);
   static const widgetGreen = Color(0xff019024);
   static const colorGrey = Color(0xff797979);
-  static const menuIconGrey = Color(0xff898989);
+  static const menuIconGrey = Color(0xff999999);
   static const allBOxStroke = Color(0xff898989);
   static const cancelButton = Color(0xffc6c6c6);
 
