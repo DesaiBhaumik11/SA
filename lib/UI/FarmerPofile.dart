@@ -9,8 +9,6 @@ class FarmerProfile extends StatefulWidget {
 
 class _FarmerProfileState extends State<FarmerProfile> {
 
-  ManufacturerFarmer manufacturerFarmer =  ManufacturerFarmer();
-
   @override
   void initState() {
     // TODO: implement initState

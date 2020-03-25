@@ -1,38 +1,65 @@
+// To parse this JSON data, do
+//
+//     final getManufacturerById = getManufacturerByIdFromJson(jsonString);
 
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
+GetManufacturerById getManufacturerByIdFromJson(String str) => GetManufacturerById.fromJson(json.decode(str));
 
-class ManufacturerFarmer {
+String getManufacturerByIdToJson(GetManufacturerById data) => json.encode(data.toJson());
 
-  String imageUrl;
-  String name;
-  String address;
-  String phoneNumber;
-  String email;
+class GetManufacturerById {
+  Result result;
+  int statusCode;
+  String message;
+  bool isError;
 
-  ManufacturerFarmer({this.imageUrl, this.name, this.address, this.phoneNumber, this.email});
+  GetManufacturerById({
+    this.result,
+    this.statusCode,
+    this.message,
+    this.isError,
+  });
 
-  factory ManufacturerFarmer.fromJson(Map<String, dynamic> json) => ManufacturerFarmer(
-    imageUrl: json["ImageUrl"],
-    name: json["Name"],
-    address: json["Address"],
-    phoneNumber: json["PhoneNumber"],
-    email: json["Email"],
+  factory GetManufacturerById.fromJson(Map<String, dynamic> json) => GetManufacturerById(
+    result: Result.fromJson(json["Result"]),
+    statusCode: json["StatusCode"],
+    message: json["Message"],
+    isError: json["IsError"],
   );
 
-  Map<String, dynamic> toJson () => {
-    "ImageUrl" : imageUrl,
-    "Name" : name,
-    "Address" : address,
-    "PhoneNumber" : phoneNumber,
-    "Email" : email,
+  Map<String, dynamic> toJson() => {
+    "Result": result.toJson(),
+    "StatusCode": statusCode,
+    "Message": message,
+    "IsError": isError,
   };
+}
 
-  Future<String> loadManufacturerDa() async {
-    String jsonString = await rootBundle.loadString('assets/OkJsons/manufacturer.json');
-    final jsonResponse = json.decode(jsonString);
-    print(jsonResponse);
-    return jsonResponse;
-  }
+class Result {
+  String id;
+  String name;
+  String createdBy;
+  DateTime createdOn;
+
+  Result({
+    this.id,
+    this.name,
+    this.createdBy,
+    this.createdOn,
+  });
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    id: json["Id"],
+    name: json["Name"],
+    createdBy: json["CreatedBy"],
+    createdOn: DateTime.parse(json["CreatedOn"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "Id": id,
+    "Name": name,
+    "CreatedBy": createdBy,
+    "CreatedOn": createdOn.toIso8601String(),
+  };
 }
