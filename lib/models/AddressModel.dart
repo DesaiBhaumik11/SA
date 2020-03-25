@@ -1,6 +1,6 @@
 
-class AddressModel
-{
+class AddressModel {
+
   String id;
   String namePrefix;
   String name;

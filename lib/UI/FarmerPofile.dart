@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
+import 'package:vegetos_flutter/models/Manufacturer_model.dart';
 
 class FarmerProfile extends StatefulWidget {
   @override
@@ -7,6 +8,16 @@ class FarmerProfile extends StatefulWidget {
 }
 
 class _FarmerProfileState extends State<FarmerProfile> {
+
+  ManufacturerFarmer manufacturerFarmer =  ManufacturerFarmer();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

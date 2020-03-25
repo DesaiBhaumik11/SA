@@ -1,6 +1,9 @@
 
+import 'dart:convert';
 
-class Manufacturer {
+import 'package:flutter/services.dart';
+
+class ManufacturerFarmer {
 
   String imageUrl;
   String name;
@@ -8,9 +11,9 @@ class Manufacturer {
   String phoneNumber;
   String email;
 
-  Manufacturer({this.imageUrl, this.name, this.address, this.phoneNumber, this.email});
+  ManufacturerFarmer({this.imageUrl, this.name, this.address, this.phoneNumber, this.email});
 
-  factory Manufacturer.fromJson(Map<String, dynamic> json) => Manufacturer(
+  factory ManufacturerFarmer.fromJson(Map<String, dynamic> json) => ManufacturerFarmer(
     imageUrl: json["ImageUrl"],
     name: json["Name"],
     address: json["Address"],
@@ -25,4 +28,11 @@ class Manufacturer {
     "PhoneNumber" : phoneNumber,
     "Email" : email,
   };
+
+  Future<String> loadManufacturerDa() async {
+    String jsonString = await rootBundle.loadString('assets/OkJsons/manufacturer.json');
+    final jsonResponse = json.decode(jsonString);
+    print(jsonResponse);
+    return jsonResponse;
+  }
 }
