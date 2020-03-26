@@ -27,6 +27,8 @@ class ProductWithDefaultVarientModel {
   ProductPriceModel ProductPrice;
   Object ProductVariantMedia;
   String itemId;
+  String manufacturerId;
+  String manufacturerName;
 
   ProductWithDefaultVarientModel({
     this.ProductVariantId,
@@ -47,6 +49,8 @@ class ProductWithDefaultVarientModel {
     this.ProductTax,
     this.ProductPrice,
     this.ProductVariantMedia,
+    this.manufacturerId,
+    this.manufacturerName
   });
 
   factory ProductWithDefaultVarientModel.fromJson(Map<String, dynamic> parsedData) {
@@ -69,6 +73,8 @@ class ProductWithDefaultVarientModel {
       ProductTax: parsedData['ProductTax'] != null ? ProductTaxModel.fromJson(parsedData['ProductTax']) : new ProductTaxModel(),
       ProductPrice: parsedData['ProductPrice'] != null ? ProductPriceModel.fromJson(parsedData['ProductPrice']) : new ProductPriceModel(),
       ProductVariantMedia: parsedData['ProductVariantMedia'],
+      manufacturerId: parsedData['ManufacturerId'] != null ? parsedData['ManufacturerId'] : null,
+      manufacturerName: parsedData['ManufacturerName'] != null ? parsedData['ManufacturerName'] : null,
     );
   }
 

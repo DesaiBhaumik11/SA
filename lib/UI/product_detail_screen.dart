@@ -65,6 +65,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen> {
 
   bool isCountLoading = false;
 
+  bool isManufacturerAvailable = false;
+
   DashboardProductResponseModel model = DashboardProductResponseModel();
 
   @override
@@ -1071,8 +1073,8 @@ class ProductDetailScreenState extends State<ProductDetailScreen> {
             if (productModal.Units != null && productModal.Units.length > 0) {
               Units = productModal.Units[0];
             }
-
             return SingleChildScrollView(
+
               physics: BouncingScrollPhysics(),
               child: Container(
                 color: Const.gray10,
@@ -1108,84 +1110,103 @@ class ProductDetailScreenState extends State<ProductDetailScreen> {
 
 
   Widget farmer() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(height: 2, color: Const.allBOxStroke,),
-          SizedBox(height: 10,),
-          Container(
-            margin: EdgeInsets.only(left: 5),
-              child: Text("Know Farmer",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Const.textBlack,
-                ),
-              )
-          ),
-          Row(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
-                child: Image.network(
-                  "https://us.123rf.com/450wm/adsniks/adsniks1807/adsniks180700027/105287783-indian-farmer-holding-crop-plant-in-his-wheat-field.jpg?ver=6",
-                  height: 70,
-                  width: 70,
-                ),
-              ),
-              SizedBox(width: 10,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(" Ramjibhai Desai",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: Const.textBlack
-                    ),
+    if(productModal.manufacturerId != null && productModal.manufacturerName != null) {
+        isManufacturerAvailable = true;
+    } else {
+        isManufacturerAvailable = false;
+    }
+    return Visibility(
+      visible: isManufacturerAvailable,
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Divider(height: 2, color: Const.allBOxStroke,),
+            SizedBox(height: 10,),
+            Container(
+              margin: EdgeInsets.only(left: 5),
+                child: Text("Know Farmer",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Const.textBlack,
                   ),
-                  Row(
-                    children: <Widget>[
-                      Image.asset("assets/OkAssets/Locationo.png", width: 15,height: 15),
-                      Text("Moti Marad, Tq-Dhoraji, Dt-Rajkot",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Const.textBlack
+                )
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 0.0),
+                  child: Image.network(
+                    //"https://us.123rf.com/450wm/adsniks/adsniks1807/adsniks180700027/105287783-indian-farmer-holding-crop-plant-in-his-wheat-field.jpg?ver=6",
+                    "https://www.battlegroundindy.com/wp-content/uploads/2019/01/no-image-770x466.jpg",
+                    height: 70,
+                    width: 70,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text("${productModal.manufacturerName}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Const.textBlack
+                      ),
+                    ),
+                    Visibility(
+                      visible: true,
+                      child: Row(
+                        children: <Widget>[
+                          //Image.asset("assets/OkAssets/Locationo.png", width: 15,height: 15),
+                          Image.asset("", width: 15,height: 15),
+                         // Text("Moti Marad, Tq-Dhoraji, Dt-Rajkot",
+                          Text("",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Const.textBlack
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: true,
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                          margin: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2.0),
+                          //  color: Const.primaryColor,
+                            color: Colors.transparent,
+                            //color: Const.gray10,
+                          ),
+                          alignment: Alignment.center,
+                          height: 22.0,
+                          child: Text(
+                            //'View Profile',
+                            '',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
+                        onTap: () {
+                         // Navigator.push(context, EnterExitRoute(enterPage: FarmerProfile()));
+                        },
                       ),
-                    ],
-                  ),
-                  InkWell(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      margin: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2.0),
-                        color: Const.primaryColor,
-                        //color: Const.gray10,
-                      ),
-                      alignment: Alignment.center,
-                      height: 22.0,
-                      child: Text(
-                        'View Profile',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(context, EnterExitRoute(enterPage: FarmerProfile()));
-                    },
-                  )
-                ],
-              )
-            ],
-          ),
-          SizedBox(height: 10,),
-          Divider(height: 2, color: Const.allBOxStroke,),
-        ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            SizedBox(height: 10,),
+            Divider(height: 2, color: Const.allBOxStroke,),
+          ],
+        ),
       ),
     );
   }
