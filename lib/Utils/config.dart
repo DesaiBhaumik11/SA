@@ -9,4 +9,6 @@ class Config{
 
   static String kGoogleApiKeyAndroid = "AIzaSyCEIEP_t6lwIQy-DwbVHEgBaIaHy9ZUjBw";
   static String kGoogleApiKeyIos = "AIzaSyCEIEP_t6lwIQy-DwbVHEgBaIaHy9ZUjBw";
+
+  static final String ZendeskAccountKey = 'KAe5qExlxYvBcrQNps1lrmcESIqXNAct';
 }

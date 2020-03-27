@@ -25,6 +25,7 @@ import 'DeviceTokenController.dart';
 class ApiCall {
 
   static final String GetProductWithDefaultVariantByIds = "/ProductWithDefaultVariant";
+  static final String GetManufacturerByIds = "/GetManufacturerById";
   static final String SetLocation = "/SetLocation";
   static final String AppFirstStart = "/AppFirstStart";
   static final String RefreshToken = "/RefreshToken";
@@ -257,8 +258,12 @@ class ApiCall {
 
   }
 
-  Future<ApiResponseModel> GetProductWithDefaultVarientAPI(String categoryId) async {
+  Future<ApiResponseModel> GetManufacturerByIdAPI(String categoryId) async {
     return _get(ApiCall.GetProductWithDefaultVariantByIds + "?categoryId=" + categoryId);
+  }
+
+  Future<ApiResponseModel> GetProductWithDefaultVarientAPI(String manufacturerId) async {
+    return _get(ApiCall.GetManufacturerByIds + "?id=" + manufacturerId);
   }
 
   Future<ApiResponseModel> setLocation(String pincode) async {

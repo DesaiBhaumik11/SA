@@ -16,6 +16,7 @@ import 'package:vegetos_flutter/UI/about_vegetos.dart';
 import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
+import 'package:vegetos_flutter/Utils/config.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
 import 'package:vegetos_flutter/models/CartCountModel.dart';
@@ -42,6 +43,7 @@ import 'package:vegetos_flutter/models/address_modal.dart';
 import 'package:vegetos_flutter/models/app_first_modal.dart';
 import 'package:vegetos_flutter/models/product_common.dart' as bst;
 import 'package:vegetos_flutter/models/categories_model.dart';
+import 'package:zendesk/zendesk.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -83,6 +85,23 @@ class DashboardScreenState extends State<DashboardScreen>
   Map<String, dynamic> cartHashMap;
   ManagerItemViewModel managerItemViewModel;
 
+  final Zendesk zendesk = Zendesk();
+
+  // Zendesk is asynchronous, so we initialize in an async method.
+  Future<void> initZendesk() async {
+    zendesk.init(Config.ZendeskAccountKey, department: 'Department Name', appName: 'My Example App').then((r) {
+      print('init finished');
+    }).catchError((e) {
+      print('failed with error $e');
+    });
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    // But we aren't calling setState, so the above point is rather moot now.
+  }
+
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -123,7 +142,7 @@ class DashboardScreenState extends State<DashboardScreen>
     recommendedFuture = ApiCall().recommendedForYou("1", "10");
 
     WidgetsBinding.instance.addObserver(this);
-
+    initZendesk();
     managerForCart();
     super.initState();
   }
@@ -1432,6 +1451,50 @@ class DashboardScreenState extends State<DashboardScreen>
                       Container(
                         margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
                         child: Text('My Addresses',
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontFamily: 'GoogleSans',
+                                fontWeight: FontWeight.w500,
+                                color: Const.textBlack)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                zendesk.setVisitorInfo(
+                  name: 'Geust User',
+                  phoneNumber: '8320593380',
+                ).then((r) {
+                  print('setVisitorInfo finished');
+                }).catchError((e) {
+                  print('error $e');
+                });
+                zendesk.startChat().then((r) {
+                  print('startChat finished');
+                }).catchError((e) {
+                  print('error $e');
+                });
+              },
+              child: Container(
+                height: 50.0,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                        child: Image.asset(
+                          'assets/OkAssets/DrawerIcon/CuostmerSupport.png',
+                          height: 25.0,
+                          width: 25.0,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                        child: Text('Customer Support',
                             style: TextStyle(
                                 fontSize: 15.0,
                                 fontFamily: 'GoogleSans',
