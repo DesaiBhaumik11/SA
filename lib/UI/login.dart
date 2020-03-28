@@ -39,19 +39,17 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           actions: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-
-              child: Padding(
-                padding: const EdgeInsets.only(top:0.0,right: 20),
-                child: InkWell(
-                  onTap: (){
+            Padding(
+              padding: const EdgeInsets.only(top:0.0,right: 20),
+              child: InkWell(
+                onTap: (){
+                  if(Navigator.canPop(context)) {
                     Navigator.pop(context);
-                  },
-                  child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22),
-                ),
+                  } else {
+                    Navigator.push(context, EnterExitRoute(enterPage: DashboardScreen()));
+                  }
+                },
+                child: Image.asset("assets/OkAssets/Cencelicone.png",height: 22,width: 22),
               ),
             ),
           ],

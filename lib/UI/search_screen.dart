@@ -193,7 +193,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        searchController.text = '';
+                        setState(() {
+                          searchController.text = '';
+                          searchList.length = 0;
+                        });
                       },
                       child: Padding(
                         padding: EdgeInsets.all(15),

@@ -258,11 +258,11 @@ class ApiCall {
 
   }
 
-  Future<ApiResponseModel> GetManufacturerByIdAPI(String categoryId) async {
+  Future<ApiResponseModel> GetProductWithDefaultVarientAPI(String categoryId) async {
     return _get(ApiCall.GetProductWithDefaultVariantByIds + "?categoryId=" + categoryId);
   }
 
-  Future<ApiResponseModel> GetProductWithDefaultVarientAPI(String manufacturerId) async {
+  Future<ApiResponseModel> GetManufacturerByIdAPI(String manufacturerId) async {
     return _get(ApiCall.GetManufacturerByIds + "?id=" + manufacturerId);
   }
 

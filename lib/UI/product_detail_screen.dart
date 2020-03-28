@@ -96,6 +96,7 @@ class ProductDetailScreenState extends State<ProductDetailScreen> {
       setState(() {
         this.cartHashMap = hashMap;
       });
+      count();
     });
   }
 

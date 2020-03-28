@@ -64,6 +64,8 @@ class DashboardScreenState extends State<DashboardScreen>
   bool allCals = true;
 
   String phoneNumber;
+  String userName;
+  String userEmail;
 
   bool isAnnonymous = true;
 
@@ -116,6 +118,8 @@ class DashboardScreenState extends State<DashboardScreen>
     SharedPreferences.getInstance().then((prefs) {
       Map<String, dynamic> tokenMap =
           Const.parseJwt(prefs.getString('AUTH_TOKEN'));
+      userName = tokenMap['name'].toString();
+      userEmail = tokenMap['email'].toString();
       if (tokenMap['anonymous'].toString().toLowerCase() == "true") {
         setState(() {
           isAnnonymous = true;
@@ -852,7 +856,7 @@ class DashboardScreenState extends State<DashboardScreen>
                   child: Align(
                     child: deliveryAddress.isNotEmpty
                         ? Image.asset(
-                            "assets/OkAssets/Search.png",
+                            "assets/OkAssets/Edit.png",
                             height: 22,
                             width: 23,
                           )
@@ -1462,46 +1466,50 @@ class DashboardScreenState extends State<DashboardScreen>
                 ),
               ),
             ),
-            InkWell(
-              onTap: () {
-                zendesk.setVisitorInfo(
-                  name: 'Geust User',
-                  phoneNumber: '8320593380',
-                ).then((r) {
-                  print('setVisitorInfo finished');
-                }).catchError((e) {
-                  print('error $e');
-                });
-                zendesk.startChat().then((r) {
-                  print('startChat finished');
-                }).catchError((e) {
-                  print('error $e');
-                });
-              },
-              child: Container(
-                height: 50.0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Image.asset(
-                          'assets/OkAssets/DrawerIcon/CuostmerSupport.png',
-                          height: 25.0,
-                          width: 25.0,
+            Visibility(
+              visible: !isAnnonymous ? true : false,
+              child: InkWell(
+                onTap: () {
+                  zendesk.setVisitorInfo(
+                    name: '$userName',
+                    phoneNumber: '$phoneNumber',
+                    email: '$userEmail'
+                  ).then((r) {
+                    print('setVisitorInfo finished');
+                  }).catchError((e) {
+                    print('error $e');
+                  });
+                  zendesk.startChat().then((r) {
+                    print('startChat finished');
+                  }).catchError((e) {
+                    print('error $e');
+                  });
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Image.asset(
+                            'assets/OkAssets/DrawerIcon/CuostmerSupport.png',
+                            height: 25.0,
+                            width: 25.0,
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
-                        child: Text('Customer Support',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontFamily: 'GoogleSans',
-                                fontWeight: FontWeight.w500,
-                                color: Const.textBlack)),
-                      )
-                    ],
+                        Container(
+                          margin: EdgeInsets.fromLTRB(25.0, 0.0, 0.0, 0.0),
+                          child: Text('Customer Support',
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontFamily: 'GoogleSans',
+                                  fontWeight: FontWeight.w500,
+                                  color: Const.textBlack)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

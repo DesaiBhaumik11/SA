@@ -34,7 +34,7 @@ class _MyOrdersState extends State<MyOrders> {
    @override
   void initState() {
     // TODO: implement initState
-     future=ApiCall().setContext(context).getOrders();
+     future = ApiCall().setContext(context).getOrders();
     super.initState();
   }
   @override
@@ -75,7 +75,9 @@ class _MyOrdersState extends State<MyOrders> {
         GetOrderByIdResponseModel model = result[index];
         return InkWell(
           onTap: (){
-            Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(result[index].id,false)));
+            Navigator.push(context, EnterExitRoute(enterPage: OrderPlacedScreen(result[index].id,false))).then((onValue){
+              future = ApiCall().setContext(context).getOrders();
+            });
           },
           child: Card(
             child: Padding(
@@ -333,13 +335,6 @@ class WhoopsOrder extends StatelessWidget {
       ),
     );
   }
-
-
-
-
-
-
-
 
 }
 

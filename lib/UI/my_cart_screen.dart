@@ -81,6 +81,7 @@ class MyCartState extends State<MyCartScreen> {
       setState(() {
         this.cartHashMap = hashMap;
       });
+      count();
     });
   }
 
@@ -338,7 +339,9 @@ class MyCartState extends State<MyCartScreen> {
         Navigator.push(
             context,
             EnterExitRoute(
-                enterPage: ProductDetailScreen(cartItem.id)));
+                enterPage: ProductDetailScreen(cartItem.id))).then((x) {
+                  managerForCart();
+        });
       },
       child: Container(
         color: Colors.white,
@@ -1311,6 +1314,7 @@ class MyCartState extends State<MyCartScreen> {
       setState(() {
         isCountLoading = false;
       });
+      count();
     });
   }
 
@@ -1325,6 +1329,7 @@ class MyCartState extends State<MyCartScreen> {
       setState(() {
         isCountLoading = false;
       });
+      count();
     });
   }
 
@@ -1339,6 +1344,7 @@ class MyCartState extends State<MyCartScreen> {
       setState(() {
         isCountLoading = false;
       });
+      count();
     });
   }
 
@@ -1419,6 +1425,7 @@ class MyCartState extends State<MyCartScreen> {
       setState(() {
         isCountLoading = false;
       });
+      count();
     });
   }
 }
