@@ -16,7 +16,7 @@ AddressModal addressModalFromJson(String str) => AddressModal.fromJson(json.deco
 String addressModalToJson(AddressModal data) => json.encode(data.toJson());
 
 class AddressModal extends ChangeNotifier{
-  List<Result> result=List();
+  List<Result> result = List();
   int statusCode;
   String message;
   String defaultAddress ="No Location Found";
@@ -85,10 +85,7 @@ class AddressModal extends ChangeNotifier{
           setDeliveryLocation(result[i].addressLine1 + " , "+ result[i].addressLine2);
        }
       }
-
-
     }
-
     loaded = true ;
     notifyListeners() ;
   }
@@ -100,25 +97,22 @@ class AddressModal extends ChangeNotifier{
   addAddress(Result result,{callback}){
 
       Map<String,dynamic> map={
-        "NamePrefix" : result.namePrefix,
-      "Name":          result.name,
-      "AddressLine1":  result.addressLine1,
-      "AddressLine2":  result.addressLine2,
-      "City":          result.city,
-      "Country":       result.country,
-      "State":         result.state,
-      "Pin":           result.pin,
-        "Title":           result.title,
-      "Latitude":      result.latitude,
-      "Longitude":     result.longitude,
-      "IsDefault":     result.isDefault
+        "NamePrefix"    :  result.namePrefix,
+        "Name"          :  result.name,
+        "AddressLine1"  :  result.addressLine1,
+        "AddressLine2"  :  result.addressLine2,
+        "City"          :  result.city,
+        "Country"       :  result.country,
+        "State"         :  result.state,
+        "Pin"           :  result.pin,
+        "Title"         :  result.title,
+        "Latitude"      :  result.latitude,
+        "Longitude"     :  result.longitude,
+        "IsDefault"     :  result.isDefault
     };
     NetworkUtils.postRequest(endpoint:Constant.AddAddress,body: json.encode(map)).then((r){
       print("addAddress response = $r");
-
-
       getMyAddresses() ;
-
     }).catchError((e){
       print("Error Catch in addAddress  ${e}") ;
     });
@@ -142,13 +136,13 @@ class AddressModal extends ChangeNotifier{
 
   void deleteAddress(id, {callback}) {
     ApiCall().deleteAddress(id).then((apiResponseModel){
-      result.removeWhere((e)=>e.id==id);
+      result.removeWhere((e)=>e.id == id);
       if(result.length>0){
-        int idx= result.indexWhere((e)=>e.isDefault==true);
-        if(idx==-1){
+        int idx = result.indexWhere((e) => e.isDefault == true);
+        if(idx == -1){
           setDefaultAddress(result[0].id);
         }
-      }else{
+      } else {
         setFullAddress("");
       }
 
@@ -163,7 +157,6 @@ class AddressModal extends ChangeNotifier{
       prefs.setString("FullAddres", address);
     });
   }
-
 }
 
 class Result {

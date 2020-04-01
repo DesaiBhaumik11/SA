@@ -6,10 +6,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
+import 'package:vegetos_flutter/Utils/ManageLocation.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 
 class LocateMap extends StatefulWidget {
+
   var latLng;
   String addressLine2;
 
@@ -33,7 +35,8 @@ class _LocateMapState extends State<LocateMap> {
 
   LatLng latLng;
 
-  TextEditingController textEditingController;
+ // TextEditingController textEditingController;
+  String displayAddress="";
 
   var completeAddress;
   String pincode="";
@@ -41,15 +44,16 @@ class _LocateMapState extends State<LocateMap> {
   GoogleMapController controller;
   @override
   void initState() {
-    textEditingController = TextEditingController(text: widget.addressLine2);
+   // textEditingController = TextEditingController(text: widget.addressLine2);
+    displayAddress = widget.addressLine2;
     super.initState();
-    if(widget.latLng!=null){
-      latLng=widget.latLng;
+    if(widget.latLng != null){
+      latLng = widget.latLng;
       _kGooglePlex = CameraPosition(
         target: latLng,
         zoom: 14.4746,
       );
-      onMapTap(latLng);
+     // onMapTap(latLng);
     }else{
       _kGooglePlex = CameraPosition(
         target: LatLng(37.42796133580664, -122.085749655962),
@@ -86,51 +90,41 @@ class _LocateMapState extends State<LocateMap> {
             myLocationEnabled: true,
 
             onMapCreated: (c) async {
-              controller=c;
-              var add = await Geocoder.local.findAddressesFromQuery(widget.addressLine2);
-              controller.animateCamera(CameraUpdate.newLatLng(LatLng(add.first.coordinates.latitude, add.first.coordinates.longitude)));
-              onMapTap(LatLng(add.first.coordinates.latitude, add.first.coordinates.longitude));
-//              Location().getLocation().then((r){
-//                //controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
-//              });
+              controller = c;
+              if(widget.latLng != null){
+                controller.animateCamera(CameraUpdate.newLatLng(latLng));
+                onMapTap(latLng);
+              }else {
+                var add = await ManageLocation().findAddressesFromQuery(widget.addressLine2);
+                controller.animateCamera(CameraUpdate.newLatLng(LatLng(add.coordinates.latitude, add.coordinates.longitude)));
+                onMapTap(LatLng(add.coordinates.latitude, add.coordinates.longitude));
+              }
             },
             initialCameraPosition: _kGooglePlex,
           ),
           Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-                child: TextFormField(
-                  textInputAction: TextInputAction.search,onFieldSubmitted: (value){
-                    search();
-                },
-                  style: text,
-                  //initialValue: widget.addressLine2,
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 13),
-                      prefixIcon: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: (){
-                          search();
-                        },
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Image.asset("assets/OkAssets/Cencelicone.png", height: 20,width: 20,),
-                        onPressed: (){
-                          if(textEditingController!=null){
-                            setState(() {
-                              textEditingController.text="";
-                            });
+                padding: EdgeInsets.fromLTRB(15, 15, 15, 5),
+                child: InkWell(
+                  child: Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.search),
+                        SizedBox(width: 10,),
+                        new Flexible(child: Text(displayAddress,style: text,maxLines: 2,
+                        ))
+                      ],
+                    ),
+                    decoration: BoxDecoration(color: Colors.white),
+                    padding: EdgeInsets.fromLTRB(5, 5, 30, 5),
+                    margin: EdgeInsets.fromLTRB(0, 0, 40, 0),
 
-                          }
-                        },
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none),
-                ),
-              ),
+                  ),onTap: (){
+                  searchPlace();
+                },
+                )),
               Expanded(
                 flex: 1,
                 child: Container(),
@@ -202,17 +196,22 @@ class _LocateMapState extends State<LocateMap> {
     );
   }
 
+  void searchPlace(){
+    ManageLocation().placeAutoCompleteShow(context).then((_address){
+      if(_address!=null){
+        setState(() {
+          displayAddress = _address.description;
+          search();
+        });
+      }
+    });
+  }
+
   void search(){
-    if(textEditingController!=null && textEditingController.text.toString().isNotEmpty) {
-      Geocoder.local.findAddressesFromQuery(
-          textEditingController.text.toString()).then((add) {
-        controller.animateCamera(CameraUpdate.newLatLng(LatLng(
-            add.first.coordinates.latitude, add.first.coordinates.longitude)));
-        onMapTap(LatLng(
-            add.first.coordinates.latitude, add.first.coordinates.longitude));
-//                  Location().getLocation().then((r){
-////                    controller.animateCamera(CameraUpdate.newLatLng(LatLng(r.latitude, r.longitude)));
-//                  });
+    if(displayAddress != null && displayAddress.isNotEmpty) {
+      ManageLocation().findAddressesFromQuery(displayAddress).then((add) {
+        controller.animateCamera(CameraUpdate.newLatLng(LatLng(add.coordinates.latitude, add.coordinates.longitude)));
+        onMapTap(LatLng(add.coordinates.latitude, add.coordinates.longitude));
       });
     }
   }
@@ -222,11 +221,11 @@ class _LocateMapState extends State<LocateMap> {
         context, "Checking Delivery Location..");
     progressDialog.show();
     ApiCall().setLocation(pincode).then((apiResponseModel) {
-      if(progressDialog!=null && progressDialog.isShowing()){
+      if(progressDialog != null && progressDialog.isShowing()){
         progressDialog.dismiss();
       }
       if (apiResponseModel.statusCode == 200) {
-        Navigator.pop(context, completeAddress);
+        Navigator.of(context).pop(completeAddress);
       } else {
         Fluttertoast.showToast(
             msg: "Delivery Location not available");
@@ -245,12 +244,12 @@ class _LocateMapState extends State<LocateMap> {
           ),
         );
         latLng = argument;
-        Geocoder.local.findAddressesFromCoordinates(Coordinates(argument.latitude, argument.longitude)).then((add) {
+        ManageLocation().findAddressesFromCoordinates(Coordinates(argument.latitude, argument.longitude)).then((add) {
           setState(() {
-            widget.addressLine2 = add.first.toString();
-            textEditingController.text = add.first.addressLine;
-            completeAddress = add.first;
-            pincode= add.first.postalCode;
+            widget.addressLine2 = add.toString();
+            displayAddress = add.addressLine;
+            completeAddress = add;
+            pincode = add.postalCode;
           });
         });
       });

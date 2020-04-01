@@ -1,12 +1,13 @@
 
 class AddressModel {
 
-  String id;
+  String id = "";
   String namePrefix;
   String name;
   String contactId;
-  String addressLine1;
+  String addressLine1 = "";
   String addressLine2;
+  String subLocality = "";
   String city;
   String country;
   String state;
@@ -19,7 +20,7 @@ class AddressModel {
   String createdBy;
   String createdOn;
   String updatedOn;
-  bool isLoaded=false;
+  bool isLoaded = false;
 
   AddressModel({
     this.id,
@@ -28,6 +29,7 @@ class AddressModel {
     this.contactId,
     this.addressLine1,
     this.addressLine2,
+    this.subLocality,
     this.city,
     this.country,
     this.state,
@@ -43,27 +45,46 @@ class AddressModel {
     this.isLoaded,
   });
 
-  factory AddressModel.fromJson(Map<String, dynamic> json) => AddressModel(
-    id: json["Id"],
-    namePrefix: json["NamePrefix"],
-    name: json["Name"],
-    contactId: json["ContactId"],
-    addressLine1: json["AddressLine1"],
-    addressLine2: json["AddressLine2"],
-    city: json["City"],
-    country: json["Country"],
-    state: json["State"],
-    pin: json["Pin"],
-    title: json["Title"],
-    latitude: json["Latitude"] == null ? null : json["Latitude"],
-    longitude: json["Longitude"] == null ? null : json["Longitude"],
-    isDefault: json["IsDefault"],
-    updatedBy: json["UpdatedBy"] == null ? null : json["UpdatedBy"],
-    createdBy: json["CreatedBy"],
-    createdOn: json["CreatedOn"],
-    updatedOn: json["UpdatedOn"] == null ? null : json["UpdatedOn"],
-    isLoaded: true,
-  );
+  factory AddressModel.fromJson(Map<String, dynamic> json) {
+    List<String> cities=json["City"].split("||");
+    String _city="",_subLocality="";
+    if(cities.length==2) {
+      _subLocality=cities[0];
+      _city=cities[1];
+    }else {
+      _city=json["City"];
+    }
+    return AddressModel(
+      id: json["Id"]!=null ? json["Id"] : "",
+      namePrefix: json["NamePrefix"],
+      name: json["Name"],
+      contactId: json["ContactId"],
+      addressLine1: json["AddressLine1"],
+      addressLine2: json["AddressLine2"],
+      subLocality: _subLocality,
+      city: _city ,
+      country: json["Country"],
+      state: json["State"],
+      pin: json["Pin"],
+      title: json["Title"],
+      latitude: json["Latitude"] == null ? null : json["Latitude"],
+      longitude: json["Longitude"] == null ? null : json["Longitude"],
+      isDefault: json["IsDefault"],
+      updatedBy: json["UpdatedBy"] == null ? null : json["UpdatedBy"],
+      createdBy: json["CreatedBy"],
+      createdOn: json["CreatedOn"],
+      updatedOn: json["UpdatedOn"] == null ? null : json["UpdatedOn"],
+      isLoaded: true,
+    );
+  }
+
+  static List<AddressModel> parseList(listData) {
+    var list = listData as List;
+    List<AddressModel> jobList =
+    list.map((data) => AddressModel.fromJson(data)).toList();
+    jobList.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+    return jobList;
+  }
 
   Map<String, dynamic> toJson() => {
     "Id": id,

@@ -1,47 +1,44 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/add_new_address.dart';
+import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/CommonWidget.dart';
+import 'package:vegetos_flutter/Utils/Prefs.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
-import 'package:vegetos_flutter/Utils/const_endpoint.dart';
-import 'package:vegetos_flutter/Utils/newtwork_util.dart';
-import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
-import 'package:vegetos_flutter/models/default_address.dart';
 
-import 'locate_on_map.dart';
 
 class MyAddresses extends StatefulWidget {
+
   @override
   _MyAddressesState createState() => _MyAddressesState();
 }
 
 class _MyAddressesState extends State<MyAddresses> {
-  AddressModal  addressModal ;
-  DefaultAddressModel defaultAddressModel ;
 
-
+  List<AddressModel> addressModels;
+  String deliveryAddressId="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    Prefs.getDeliveryAddressId().then((addressId){
+      setState(() {
+        deliveryAddressId = addressId;
+      });
+    });
+    apiGetMyAddress();
+    super.initState();
+  }
   var address = TextStyle(
       fontWeight: FontWeight.w400, fontSize: 15, color: Color(0xff2d2d2d));
 
   @override
   Widget build(BuildContext context) {
-     addressModal=Provider.of<AddressModal>(context);
 
-     if(defaultAddressModel==null){
-       defaultAddressModel=Provider.of<DefaultAddressModel>(context);
-     }
-
-
-    if(!addressModal.loaded){
-      addressModal.getMyAddresses();
+    if(addressModels==null){
       return Material(child: Center(child: CircularProgressIndicator(),),);
     }
 
@@ -73,47 +70,17 @@ class _MyAddressesState extends State<MyAddresses> {
             Divider(height: 2, color: Const.allBOxStroke,),
             GestureDetector(
               onTap: () {
-
-//              Utility.checkEnabledLocationService().then((value){
-//                if(value==false){
-//                  return;
-//                }
-                ProgressDialog progresDialog=Utility.progressDialog(context, "");
-                progresDialog.show();
-                Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((position) async {
-                  final coordinates = new Coordinates(position.latitude, position.longitude);
-                  var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-                  var first = addresses.first;
-                  print("${first.featureName} : ${first.addressLine}");
-                  if(progresDialog!=null && progresDialog.isShowing()){
-                    progresDialog.dismiss();
+                Navigator.push(context, SlideLeftRoute(page: AddNewAddress(result: new AddressModel(),edit: false))).then((addressModels_){
+                  if(addressModels_ != null) {
+                    AddressModel addressModel = addressModels_[0];
+                    setState(() {
+                      addressModels = addressModels_;
+                      deliveryAddressId = addressModel.id;
+                    });
+                    Prefs.setDeliveryAddress(addressModel.addressLine1 + " , " + addressModel.addressLine2, addressModel.id);
                   }
-                  Navigator.push(context, SlideLeftRoute(
-                  page: LocateMap(latLng:widget!=null? LatLng(position.latitude,position.longitude):null,
-                    addressLine2: "",))).then((address){
-                  Address add = address;
-                  Result result=
-                  Result(
-                  //    id:          widget.edit?widget.result.id:  Uuid().v4(),
-                  name:          "",
-                  // contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
-                  addressLine1:  add.addressLine,
-                  addressLine2:  add.subLocality,
-                  city:          add.locality,
-                  country:       add.countryName,
-                  state:         add.adminArea,
-                  pin:           add.postalCode,
-                  latitude:      add.coordinates.latitude,
-                  longitude:     add.coordinates.longitude,
-                  isDefault:     true
-                  );
-                  Navigator.push(context, SlideLeftRoute(page: AddNewAddress(result: result,edit: false)));
-                  });
-//
-              });
-//              });
+                });
                 },
-
               child: Container(
                 width: double.infinity,
                 color: Colors.white,
@@ -151,9 +118,9 @@ class _MyAddressesState extends State<MyAddresses> {
                     fontWeight: FontWeight.w500),
               ),
             ),
-            Expanded(
-              child: buildList(context),
-            )
+            addressModels!=null && addressModels.length>0 ?
+            Expanded(child: buildList(context),):
+            CommonWidget.noAddressAvailable(),
           ],
         ),
       ),
@@ -164,8 +131,15 @@ class _MyAddressesState extends State<MyAddresses> {
 
     return ListView.builder(
       itemBuilder: (context, index) {
+        AddressModel addressModel = addressModels[index];
         return InkWell(
-          onTap: () {},
+          onTap: () {
+            Prefs.setDeliveryAddress(addressModel.addressLine1+" , "+addressModel.addressLine2, addressModel.id).then((value){
+              setState(() {
+                deliveryAddressId = addressModel.id;
+              });
+            });
+          },
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(10),
@@ -176,9 +150,9 @@ class _MyAddressesState extends State<MyAddresses> {
                   Row(
                     children: <Widget>[
                       Text(
-                        addressModal.result[index].namePrefix!=null && addressModal.result[index].namePrefix.isNotEmpty ?
-                            addressModal.result[index].namePrefix +" "+addressModal.result[index].name :
-                        addressModal.result[index].name,
+                        addressModel.namePrefix != null && addressModel.namePrefix.isNotEmpty ?
+                        addressModel.namePrefix +" "+addressModel.name :
+                        addressModel.name,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
@@ -187,17 +161,25 @@ class _MyAddressesState extends State<MyAddresses> {
                       SizedBox(
                         width: 4,
                       ),
-                      addressModal.result[index].isDefault?
+                      addressModel.isDefault?
                       Image.asset(
                         'assets/OkAssets/Tick.png',
                         height: 18,
                       ):Container(),
-
+                      SizedBox(
+                        width: 4,
+                      ),
+                      deliveryAddressId.isNotEmpty && deliveryAddressId==addressModel.id ?
+                      Image.asset(
+                        'assets/OkAssets/locate-on-map.png',
+                        height: 18,
+                      ):Container(),
 
                       Expanded(
                         flex: 1,
                         child: Container(),
                       ),
+
                       PopupMenuButton(
                         itemBuilder: (c) => ["Edit", "Delete","Set Default"]
                             .map((i) => PopupMenuItem(
@@ -205,24 +187,25 @@ class _MyAddressesState extends State<MyAddresses> {
                                   onTap: () {
                                     Navigator.pop(context);
                                     if (i == "Edit") {
-                                      Navigator.push(
-                                          context,
-                                          SlideLeftRoute(page: AddNewAddress(result:addressModal.result[index],edit: true)));
-                                    } else if(i=="Delete"){
+                                      Navigator.push(context, SlideLeftRoute(page: AddNewAddress(result: addressModel,edit: true))).then((addressModels_){
+                                        if(addressModels_!=null) {
+                                          setState(() {
+                                            addressModels = addressModels_;
+                                          });
+                                        }
+                                      });
+                                    } else if(i == "Delete"){
                                       showDialog(
                                           context: context,
                                           builder: (s) {
-                                            return FunkyOverlay(addressModal.result[index].id);
-                                          });
-                                    }else{
-
-                                      addressModal.defaultAddress = addressModal.result[index].name + " , " +
-                                          addressModal.result[index].city ;
-
-                                      addressModal.setDefaultAddress(addressModal.result[index].id) ;
-
-                                      defaultAddressModel.loadAddress(context) ;
-
+                                            return FunkyOverlay(addressModel.id);
+                                          }).then((value){
+                                        if(value == true){
+                                          apiDeleteAddress(addressModel.id);
+                                        }
+                                      });
+                                    } else {
+                                      apiSetMyDefaultAddress(addressModel.id);
                                     }
                                   },
                                   title: Text(i),
@@ -242,39 +225,105 @@ class _MyAddressesState extends State<MyAddresses> {
                     height: 10,
                   ),
                   Text(
-                    addressModal.result[index].addressLine1,
+                    addressModel.addressLine1,
                     style: address,
                   ),
                   Text(
-                    addressModal.result[index].addressLine2,
+                    addressModel.addressLine2,
                     style: address,
                   ),
                   Row(
                     children: <Widget>[
                       Text(
-                        addressModal.result[index].city + " , "+addressModal.result[index].state + " , " + addressModal.result[index].pin,
+                        addressModel.subLocality + " , " + addressModel.city + " , " + addressModel.pin,
                         style: address,
                       ),
                       Expanded(
                         flex: 1,
                         child: Container(),
                       ),
-                      addressModal.result[index].title!=null && addressModal.result[index].title.isNotEmpty ?
-                      CommonWidget().buildNickAddress(context, addressModal.result[index].title) : Container(),
+                      addressModel.title!=null && addressModel.title.isNotEmpty ?
+                      CommonWidget().buildNickAddress(context, addressModel.title) : Container(),
                     ],
                   ),
-
                 ],
               ),
             ),
           ),
         );
       },
-      itemCount: addressModal.result==null?0:addressModal.result.length,
+      itemCount: addressModels == null ? 0 : addressModels.length,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
     );
+  }
+
+  void apiGetMyAddress(){
+    ApiCall().setContext(context).getMyAddress().then((apiResponseModel){
+      if(apiResponseModel.statusCode == 200){
+        setState(() {
+          addressModels = AddressModel.parseList(apiResponseModel.Result);
+        });
+      }else{
+        setState(() {
+          addressModels = new List();
+        });
+      }
+    });
+  }
+
+  void apiGetMyDefaultAddress(){
+    ApiCall().setContext(context).getMyDefaultAddress().then((apiResponseModel){
+      if(apiResponseModel.statusCode==200){
+        setState(() {
+          addressModels = AddressModel.parseList(apiResponseModel.Result);
+        });
+      }
+    });
+  }
+
+  void apiSetMyDefaultAddress(String addressId){
+    ApiCall().setContext(context).setDefaultAddress(addressId).then((apiResponseModel){
+      if(apiResponseModel.statusCode == 200){
+        AddressModel addModel = AddressModel.fromJson(apiResponseModel.Result);
+        Prefs.setDeliveryAddress(addModel.addressLine1+" , "+addModel.addressLine2, addModel.id).then((value){
+          apiGetMyAddress();
+        });
+      }
+    });
+  }
+
+  void apiDeleteAddress(String addressId){
+    ApiCall().setContext(context).deleteAddress(addressId).then((apiResponseModel){
+      if(apiResponseModel.statusCode==200) {
+        List<AddressModel> addressModels_ = AddressModel.parseList(apiResponseModel.Result);
+        if (addressModels_ != null && addressModels_.length > 0) {
+          int idx = addressModels_.indexWhere((e) => e.isDefault == true);
+          if (idx == -1) {
+            apiSetMyDefaultAddress(addressModels_[0].id);
+          } else {
+            setState(() {
+              addressModels = addressModels_;
+            });
+          }
+        } else {
+          Prefs.setDeliveryAddress("", "");
+          setState(() {
+            addressModels = new List();
+          });
+        }
+      }else if(apiResponseModel.statusCode==204){
+        Prefs.setDeliveryAddress("", "");
+        setState(() {
+          addressModels = new List();
+        });
+      }else {
+        setState(() {
+          addressModels;
+        });
+      }
+    });
   }
 }
 
@@ -356,10 +405,7 @@ class FunkyOverlayState extends State<FunkyOverlay>
                             RaisedButton(
                                 color: Theme.of(context).primaryColor,
                                 onPressed: () {
-                                  Provider.of<AddressModal>(context).deleteAddress(id,callback:(){
-                                    Navigator.pop(context);
-                                  });
-                                //  Navigator.pop(context);
+                                  Navigator.pop(context,true);
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
@@ -408,7 +454,4 @@ class FunkyOverlayState extends State<FunkyOverlay>
       ),
     );
   }
-
-
-
 }

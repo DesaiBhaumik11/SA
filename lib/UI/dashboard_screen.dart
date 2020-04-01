@@ -16,6 +16,7 @@ import 'package:vegetos_flutter/UI/about_vegetos.dart';
 import 'package:vegetos_flutter/UI/profile.dart';
 import 'package:vegetos_flutter/UI/splash_screeen.dart';
 import 'package:vegetos_flutter/Utils/DeviceTokenController.dart';
+import 'package:vegetos_flutter/Utils/Prefs.dart';
 import 'package:vegetos_flutter/Utils/config.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/models/AppFirstStartResponseModel.dart';
@@ -69,7 +70,7 @@ class DashboardScreenState extends State<DashboardScreen>
 
   bool isAnnonymous = true;
 
-  String deliveryAddress = '';
+  String deliveryAddress;
   bool isCountLoading = false;
   String cartTotal = '0';
   String ImageURL = '';
@@ -116,30 +117,30 @@ class DashboardScreenState extends State<DashboardScreen>
   void initState() {
     // TODO: implement initState
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> tokenMap =
-          Const.parseJwt(prefs.getString('AUTH_TOKEN'));
+      Map<String, dynamic> tokenMap = Const.parseJwt(prefs.getString('AUTH_TOKEN'));
       userName = tokenMap['name'].toString();
       userEmail = tokenMap['email'].toString();
+      bool _isAnnonymous=false;
       if (tokenMap['anonymous'].toString().toLowerCase() == "true") {
-        setState(() {
-          isAnnonymous = true;
-        });
-      } else {
-        setState(() {
-          isAnnonymous = false;
-        });
+        _isAnnonymous=true;
       }
 
-      String businessLocationId = prefs.getString('BusinessLocationId');
-      String address = prefs.getString('FullAddress');
-      if (businessLocationId != null && businessLocationId.isNotEmpty) {
+//      String businessLocationId = prefs.getString('BusinessLocationId');
+//      String address = prefs.getString('FullAddress');
+//      if (businessLocationId != null && businessLocationId.isNotEmpty) {
+//        deliveryAddress = address;
+//      }
+//      ImageURL = prefs.getString("ImageURL");
+      String address = prefs.getString(Prefs.DeliveryAddress);
+      setState(() {
+        isAnnonymous = _isAnnonymous;
         deliveryAddress = address;
-      }
-      ImageURL = prefs.getString("ImageURL");
+        ImageURL = prefs.getString(Prefs.ImageURL);
+      });
     });
 
     getVeriosnCode();
-    getMyDefaultAddress();
+    //getMyDefaultAddress();
     count();
     bestSellingFuture = ApiCall().bestSellingItems("1", "10");
     exclusiveFuture = ApiCall().vegetosExclusive("1", "10");
@@ -2137,9 +2138,9 @@ class DashboardScreenState extends State<DashboardScreen>
   ///-----------------------Get My Default Address By Prefs---------------------///
 
   void getMyDefaultAddressByPrefs() {
-    SharedPreferences.getInstance().then((prefs) {
+    Prefs.getDeliveryAddress().then((address){
       setState(() {
-        deliveryAddress = prefs.getString('FullAddress');
+        deliveryAddress = address;
       });
     });
   }

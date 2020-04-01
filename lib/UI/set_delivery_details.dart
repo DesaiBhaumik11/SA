@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -12,26 +9,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/my_addresses.dart';
-import 'package:vegetos_flutter/UI/my_cart_screen.dart';
 import 'package:vegetos_flutter/Utils/CommonWidget.dart';
+import 'package:vegetos_flutter/Utils/Prefs.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
-import 'package:vegetos_flutter/Utils/const_endpoint.dart';
-import 'package:vegetos_flutter/Utils/newtwork_util.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/CheckoutRequestModel.dart';
 import 'package:vegetos_flutter/models/DisplayShippingModel.dart';
-import 'package:vegetos_flutter/models/GetAllShippingSlotModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart' as cart;
 import 'package:vegetos_flutter/models/TimeSlotListModel.dart';
-import 'package:vegetos_flutter/models/default_address.dart';
-import 'package:vegetos_flutter/models/my_cart.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
 
 import 'payment_option_screen.dart';
-import 'choose_address.dart';
 
 class SetDeliveryDetails extends StatefulWidget {
 
@@ -50,7 +41,6 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   _SetDeliveryDetailsState(this.myCartModal);
 
   ShippingSlotModal shippingSlotModal;
-  //static DefaultAddressModel addressModel;
   var tappedIndex = 0;
   int tappedIndexForRadio = 0;
   int selectedRadioTile;
@@ -58,11 +48,11 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
   List<DisplayShippingModel> displayShippingSlotList;
   Future shippingSchedule = ApiCall().getShippingScheduleFor();
-  //Future getMyDefaultAddress = ApiCall().getMyDefaultAddress();
+
 
   bool isDefaultAddressAvailable = false;
-  //bool isOnlyFirstTime = true;
-  AddressModel addressModel=new AddressModel();
+
+  AddressModel addressModel = new AddressModel();
 
   ProgressDialog progressDialog;
 
@@ -226,7 +216,6 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                 ),
               ),
             ),
-
             //shippingList(context, displayShippingModel),
           ],
         );
@@ -270,8 +259,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                       //setSelectedRadioTile(index);
                     },
                     activeColor: Const.orange,
-                    selected:
-                        shippingSlotModal.checkedValue == index ? true : false,
+                    selected: shippingSlotModal.checkedValue == index ? true : false,
                   ),
                 ],
               );
@@ -347,7 +335,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
                   Row(
                     children: <Widget>[
                       Text(
-                        addressModel.city + " , "+addressModel.state + " , " + addressModel.pin,
+                        addressModel.subLocality + " , "+addressModel.city + " , " + addressModel.pin,
                         style: TextStyle(
                             color: Color(0xff2d2d2d),
                             fontWeight: FontWeight.w400,
@@ -458,22 +446,26 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   }
 
   void updateAddress() {
-    ApiCall().setContext(context).getMyDefaultAddress().then((apiResponseModel) {
-      addressModel.isLoaded=true;
-      if(apiResponseModel.statusCode == 200) {
-        AddressModel addModel = AddressModel.fromJson(apiResponseModel.Result);
-        setState(() {
-          isDefaultAddressAvailable = true;
-          addressModel = addModel;
-        });
-      } else if(apiResponseModel.statusCode == 204) {
-        setState(() {
-          isDefaultAddressAvailable = false;
-        });
-      } else {
-        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
-        setState(() {
-          isDefaultAddressAvailable = false;
+    Prefs.getDeliveryAddressId().then((addressId){
+      if(addressId!=null && addressId.isNotEmpty) {
+        ApiCall().setContext(context).getAddressById(addressId).then((apiResponseModel) {
+          addressModel.isLoaded = true;
+          if (apiResponseModel.statusCode == 200) {
+            AddressModel addModel = AddressModel.fromJson(apiResponseModel.Result);
+            setState(() {
+              isDefaultAddressAvailable = true;
+              addressModel = addModel;
+            });
+          } else if (apiResponseModel.statusCode == 204) {
+            setState(() {
+              isDefaultAddressAvailable = false;
+            });
+          } else {
+            Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : 'Something went wrong.!');
+            setState(() {
+              isDefaultAddressAvailable = false;
+            });
+          }
         });
       }
     });
@@ -520,7 +512,6 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       model.TotalAmount = myCartModal.totalAmount.toString();
       model.OfferAmount = "0";
 //    model.CheckoutItems = cartList;
-
       callCheckoutAPI(model);
     });
   }

@@ -35,4 +35,22 @@ class CommonWidget {
       ],
     );
   }
+
+  static Widget noAddressAvailable() {
+    return Expanded(
+      child: Center(
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'assets/OkAssets/AddnewAddress.png',
+              height: 50,
+            ),
+            Text("No Address Saved Yet." ,style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16,color: Colors.grey),),
+          ],
+        ),
+      ),
+    );
+  }
 }

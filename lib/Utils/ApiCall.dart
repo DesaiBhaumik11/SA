@@ -35,7 +35,7 @@ class ApiCall {
   static final String Logout  = "/Logout";
   static final String Validate  = "/Validate";
 
-  static final String GetMyAddresses  = "GetMyAddresses";
+  static final String GetMyAddresses  = "/GetMyAddresses";
   static final String DeleteAddress  = "/DeleteAddress";
   static final String AddAddress  = "/AddAddress";
   static final String UpdateAddress  = "/UpdateAddress";
@@ -45,6 +45,8 @@ class ApiCall {
   static final String GetAllShippingSchedule = "/GetAllShippingSchedule";
   static final String GetShippingScheduleFor = "/GetShippingScheduleFor";
   static final String GetPaymentModes = "/GetPaymentModes";
+  static final String SetDefaultAddress  = "/SetDefaultAddress";
+  static final String GetAddressById = "/GetAddressById";
 
   static final String ProceedToPayment = "/ProceedTopayment";
   static final String ProceedTopaymentUsingGateway = "/ProceedTopaymentUsingGateway";
@@ -423,6 +425,7 @@ class ApiCall {
   Future<ApiResponseModel> getMyAddress() async {
     return _get(ApiCall.GetMyAddresses);
   }
+
   Future<ApiResponseModel> updateAddress(Result result,{callback}) async {
     var apiRequestBody = json.encode({
       "Id":            result.id,
@@ -442,19 +445,36 @@ class ApiCall {
     });
     return _put(ApiCall.UpdateAddress,apiRequestBody);
   }
+
+  Future<ApiResponseModel> getAddressById(String addressId) async {
+    return _get(ApiCall.GetAddressById+"?addressId="+addressId);
+  }
+
   Future<ApiResponseModel> getMyDefaultAddress() async {
     return _get(ApiCall.GetMyDefaultAddress);
   }
-//  Future<ApiResponseModel> addAddress(Result result) async {
-//    var apiRequestBody = json.encode({
-//      "ProductId": productId,
-//      "ProductVariantId": varientId,
-//      "Quantity": qty,
-//      "OfferId": offerId,
-//      "Amount": amount,
-//    });
-//    return _post(ApiCall.AddAddress,apiRequestBody);
-//  }
+
+  Future<ApiResponseModel> setDefaultAddress(String addressId) async {
+    return _get(ApiCall.SetDefaultAddress+ "?addressId="+addressId);
+  }
+
+  Future<ApiResponseModel> addAddress(Result result) async {
+    var apiRequestBody = json.encode({
+      "NamePrefix" : result.namePrefix,
+      "Name":          result.name,
+      "AddressLine1":  result.addressLine1,
+      "AddressLine2":  result.addressLine2,
+      "City":          result.city,
+      "Country":       result.country,
+      "State":         result.state,
+      "Pin":           result.pin,
+      "Title":           result.title,
+      "Latitude":      result.latitude,
+      "Longitude":     result.longitude,
+      "IsDefault":     result.isDefault
+    });
+    return _post(ApiCall.AddAddress,apiRequestBody);
+  }
 
   Future<ApiResponseModel> deleteAddress(String id) async {
     return _delete(ApiCall.DeleteAddress + "?addressId="+id);
@@ -471,7 +491,6 @@ class ApiCall {
   Future<ApiResponseModel> addToCart(String productId,  String qty, String offerId, String amount,String offerAmount) async {
     var apiRequestBody = json.encode({
       "ProductId": productId,
-//      "ProductVariantId": varientId,
       "Quantity": qty,
       "OfferId": offerId,
       "Amount": amount,

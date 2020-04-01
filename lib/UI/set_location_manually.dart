@@ -2,20 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vegetos_flutter/Animation/EnterExitRoute.dart';
-import 'package:vegetos_flutter/UI/location_service_unavailable.dart';
-import 'package:vegetos_flutter/UI/set_delivery_location.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
-import 'package:vegetos_flutter/Utils/config.dart';
-import 'package:vegetos_flutter/models/SetLocationResponseModel.dart';
+import 'package:vegetos_flutter/Utils/ManageLocation.dart';
+import 'package:vegetos_flutter/Utils/Prefs.dart';
 
-import '../Utils/const.dart';
 import 'dashboard_screen.dart';
 
 class SetLocationManually extends StatefulWidget {
@@ -40,17 +34,13 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
   @override
   void initState() {
     // TODO: implement initState
-    /*PluginGooglePlacePicker.initialize(
-      androidApiKey: "AIzaSyAbnNcaXfrNc69sdUZCCExMmixYnrM3EXE",
-      iosApiKey: "AIzaSyAbnNcaXfrNc69sdUZCCExMmixYnrM3EXE",
-    );*/
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
@@ -109,14 +99,6 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
                         ],
                       ),
                     ),
-
-                    /*InkWell(
-                    onTap: (){},
-                    child: Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Image.asset('close.png', height: 17,),
-                    ),
-                  ),*/
                   ],
                 ),
               ),
@@ -182,7 +164,6 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
                         ),
                         Container(
                           color: Color(0xff009a00),
-                          //onPressed: widget.s,
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 12, bottom: 12, left: 10, right: 10),
@@ -205,168 +186,47 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
         ));
   }
 
-  ListView buildList(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return index == 3
-            ? InkWell(
-                onTap: () {
-                  Geolocator()
-                      .getCurrentPosition(
-                          desiredAccuracy: LocationAccuracy.high)
-                      .then((position) async {
-                    final coordinates =
-                        new Coordinates(position.latitude, position.longitude);
-                    var addresses = await Geocoder.local
-                        .findAddressesFromCoordinates(coordinates);
-                    var first = addresses.first;
-                    print("${first.featureName} : ${first.addressLine}");
-                    if (first.postalCode != null &&
-                        first.postalCode.isNotEmpty) {
-                      callSetLocationApi(first.postalCode, first.addressLine);
-                    } else {
-                      Fluttertoast.showToast(msg: 'Pincode detail not found.');
-                    }
-                  });
-                },
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(10, 15, 0, 15),
-                  child: Row(
-                    children: <Widget>[
-                      Image.asset(
-                        'assets/OkAssets/UseCurrantLocation.png',
-                        height: 18,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Use my current location',
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : Column(
-                children: <Widget>[
-                  ListTile(
-                    onTap: () {
-                      setState(() {
-                        wid = 2;
-                      });
-                    },
-                    title: Text(
-                      'Vikasgruah Road',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'Fatehpura, Paldi, Ahmedabad, Gujarat',
-                      style: TextStyle(
-                          color: Color(0xff464646),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.black12,
-                  )
-                ],
-              );
-      },
-      itemCount: 4,
-      padding: EdgeInsets.fromLTRB(5, 0, 5, 20),
-      shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
-    );
+  void showProgress(bool value) {
+    setState(() {
+      if (value) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      }
+      isProgress = value;
+    });
   }
 
   void callSetLocationApi(String pincode, String address) {
-    ApiCall()
-        .setContext(context)
-        .setLocation(pincode)
-        .then((apiResponseModel) async {
-      if (apiResponseModel.statusCode == 200) {
-//        SetLocationResponseModel setLocationResponseModel = SetLocationResponseModel.fromJson(apiResponseModel.Result);
-        SharedPreferences sharedPreferences =
-            await SharedPreferences.getInstance();
-        sharedPreferences.setString(
-            'BusinessLocationId', apiResponseModel.Result);
-        sharedPreferences.setString('FullAddress', address);
-        Navigator.of(context).pushAndRemoveUntil(
-            EnterExitRoute(
-                enterPage: DashboardScreen(), exitPage: SetLocationManually()),
-            (Route<dynamic> route) => false);
-      } else if (apiResponseModel.statusCode == 401) {
-        setState(() {
-          falseResult = true;
-          isProgress = false;
-        });
+    ApiCall().setContext(context).setLocation(pincode).then((apiResponseModel) async {
+      showProgress(false);
+      if(apiResponseModel.statusCode == 200) {
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString('BusinessLocationId', apiResponseModel.Result);
+        sharedPreferences.setString(Prefs.DeliveryAddress, address);
+        sharedPreferences.setString(Prefs.DeliveryAddressId, "");
+        Navigator.of(context).pushAndRemoveUntil(EnterExitRoute(enterPage: DashboardScreen(), exitPage: SetLocationManually()), (Route<dynamic> route) => false);
       } else {
-        Fluttertoast.showToast(
-            msg: apiResponseModel.message != null
-                ? apiResponseModel.message
-                : '');
+        Fluttertoast.showToast(msg: apiResponseModel.message != null ? apiResponseModel.message : '');
         setState(() {
           falseResult = true;
-          isProgress = false;
         });
       }
     });
   }
 
   void addressSearch() async {
-    PlacesAutocomplete.show(
-      context: context,
-      apiKey: Platform.isIOS
-          ? Config.kGoogleApiKeyIos
-          : Config.kGoogleApiKeyAndroid,
-      hint: "Search for area, location or pincode",
-      //components: [Component(Component.country, "fr")],
-      onError: (e) {
-        Fluttertoast.showToast(msg: e != null ? e.errorMessage.toString() : '');
-      },
-      mode: Mode.overlay,
-      // Mode.fullscreen
-      //logo: Image.asset('02-product.png'),
-      language: "IN",
-    ).then((p) async {
-      if (p != null) {
-        setState(() {
-          FocusScope.of(context).requestFocus(FocusNode());
-          isProgress = true;
-        });
-        print(p.description.toString());
-        var addresses = await Geocoder.local
-            .findAddressesFromQuery(p.description.toString());
-        var first = addresses.first;
-        if (first.postalCode != null && first.postalCode.isNotEmpty) {
-          callSetLocationApi(first.postalCode, first.addressLine);
-        } else if (first.coordinates.latitude != null &&
-            first.coordinates.longitude != null &&
-            first.coordinates.latitude != 0 &&
-            first.coordinates.longitude != 0) {
-          var add = await Geocoder.local
-              .findAddressesFromCoordinates(first.coordinates);
-          var second = add.first;
-          if (second.postalCode != null && second.postalCode.isNotEmpty) {
-            callSetLocationApi(second.postalCode, second.addressLine);
-          } else {
-            Fluttertoast.showToast(msg: 'Pincode detail not found.');
-          }
+    ManageLocation().placeAutoCompleteShow(context).then((prediction) async {
+      if(prediction != null) {
+        showProgress(true);
+        Address address = await ManageLocation().findAddressesFromQuery(prediction.description.toString());
+        if(address!=null && address.postalCode != null && address.postalCode.isNotEmpty) {
+          callSetLocationApi(address.postalCode, address.addressLine);
         } else {
           Fluttertoast.showToast(msg: 'Pincode detail not found.');
+          showProgress(false);
         }
       } else {
-        //Fluttertoast.showToast(msg: 'Address not found.');
+        Fluttertoast.showToast(msg: 'Address not found.');
+        showProgress(false);
       }
     });
   }

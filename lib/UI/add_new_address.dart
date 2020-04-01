@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,14 +10,17 @@ import 'package:uuid/uuid.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
 import 'package:vegetos_flutter/Utils/Enumaration.dart';
+import 'package:vegetos_flutter/Utils/ManageLocation.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/Utils/utility.dart';
+import 'package:vegetos_flutter/models/AddressModel.dart';
 import 'package:vegetos_flutter/models/address_modal.dart';
 
 import 'locate_on_map.dart';
 
 class AddNewAddress extends StatefulWidget {
-  Result result;
+
+  AddressModel result;
 
   bool edit;
 
@@ -30,7 +31,7 @@ class AddNewAddress extends StatefulWidget {
 }
 
 class _AddNewAddressState extends State<AddNewAddress> {
-  int _radioValue1 = -1;
+  int _radioValue1 = 0;
 
   var text = TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
 
@@ -38,11 +39,13 @@ class _AddNewAddressState extends State<AddNewAddress> {
   List<String> NickArray = ["HOME","OFFICE","OTHER"];
 
   var title =TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w500);
-  String namePrefix,fName;
+  String namePrefix = '', fName = '';
 
   var tappedIndex = -1;
 
-  String addressLine1,addressLine2,city,mainAddress,state,pin,nickAddress='';
+  String addressLine1 = '',addressLine2 = '',subLocality = '',city = '',mainAddress = '',state = '',pin = '',nickAddress = '';
+
+  LatLng latLng;
 
   bool isDataFilled = false;
 
@@ -54,25 +57,40 @@ class _AddNewAddressState extends State<AddNewAddress> {
     }
   }
 
+  void validation() {
+    setState(() {
+      if(fName.isEmpty || addressLine1.isEmpty || addressLine2.isEmpty || _radioValue1 == -1 || subLocality.isEmpty || city.isEmpty || pin.isEmpty) {
+        isDataFilled = false;
+      } else {
+        isDataFilled = true;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-
     textEditingController = TextEditingController(text: '');
-    _radioValue1 = widget.result.namePrefix!=null && widget.result.namePrefix.isNotEmpty? EnumNamePrefix.getNamePrefixInt(widget.result.namePrefix) : -1;
-    fName = widget.result.name!=null ? widget.result.name : '';
-    mainAddress = widget.result.addressLine2!=null ? widget.result.addressLine2 : '';
-    addressLine1 = widget.result.addressLine1!=null ? widget.result.addressLine1 : '';
-    addressLine2 = widget.result.addressLine2!=null ? widget.result.addressLine2 : '';
-    city = widget.result.city!=null ? widget.result.city : '';
-    state = widget.result.state!=null ? widget.result.state : '';
-    pin = widget.result.pin!=null ? widget.result.pin : '';
     if(widget.edit){
+      _radioValue1 = widget.result.namePrefix!=null && widget.result.namePrefix.isNotEmpty? EnumNamePrefix.getNamePrefixInt(widget.result.namePrefix) : 0;
+      fName = widget.result.name!=null ? widget.result.name : '';
+      mainAddress = widget.result.addressLine2!=null ? widget.result.addressLine2 : '';
+      addressLine1 = widget.result.addressLine1!=null ? widget.result.addressLine1 : '';
+      addressLine2 = widget.result.addressLine2!=null ? widget.result.addressLine2 : '';
+      subLocality = widget.result.subLocality !=null ? widget.result.subLocality : '';
+      city = widget.result.city !=null ? widget.result.city : '';
+      state = widget.result.state!=null ? widget.result.state : '';
+      pin = widget.result.pin!=null ? widget.result.pin : '';
       nickAddress = widget.result.title !=null ? widget.result.title : '';
       if(nickAddress.isNotEmpty && !NickArray.contains(nickAddress.toUpperCase())){
         NickArray.add(nickAddress.toUpperCase());
       }
+      if(widget.result.latitude!=null && widget.result.latitude!=0){
+        latLng=new LatLng(widget.result.latitude, widget.result.longitude);
+      }
+
     }
+    validation();
 
   }
 
@@ -104,12 +122,56 @@ class _AddNewAddressState extends State<AddNewAddress> {
             Expanded(
               child: RaisedButton(
                 onPressed: () {
-
-                  if(fName.isEmpty || addressLine1.isEmpty || addressLine2.isEmpty || _radioValue1 == -1 || city.isEmpty) {
+                  if(fName.isEmpty || addressLine1.isEmpty || addressLine2.isEmpty || _radioValue1 == -1 || subLocality.isEmpty || city.isEmpty || pin.isEmpty) {
                     Fluttertoast.showToast(msg: 'Please fill the data to continue');
                     return;
                   }
-                  checkLocation();
+
+                  ManageLocation.locationPermission().then((vale){
+                    if(vale == false){
+                      return;
+                    }
+                    ProgressDialog progressDialog = Utility.progressDialog(context, "Checking \nDelivery Location..");
+                    progressDialog.show();
+                    ApiCall().setLocation(pin).then((apiResponseModel) {
+                      if (apiResponseModel.statusCode != 200) {
+                        if(progressDialog!=null && progressDialog.isShowing()){
+                          progressDialog.dismiss();
+                        }
+                        Fluttertoast.showToast(msg: "Delivery Location not available");
+                        return;
+                      }
+                      String addressToMap=addressLine2 + " , "+ subLocality + " , " + city + " , "+pin;
+                      ManageLocation().findAddressesFromQuery(addressToMap).then((address){
+                        if(progressDialog!=null && progressDialog.isShowing()){
+                          progressDialog.dismiss();
+                        }
+                        Navigator.push(context, SlideLeftRoute(
+                            page: LocateMap(latLng:widget!=null? (latLng!=null ? latLng : LatLng(address.coordinates.latitude,address.coordinates.longitude)):null,
+                              addressLine2: addressToMap,))).then((address){
+                          Address add = address;
+                          Result result_=
+                          Result(
+                              id:          widget.edit?widget.result.id:  Uuid().v4(),
+                              namePrefix: EnumNamePrefix.getNamePrefix(_radioValue1),
+                              name:          fName,
+                              contactId:    widget.edit?widget.result.contactId:  Uuid().v4(),
+                              addressLine1:  addressLine1,
+                              addressLine2:  addressLine2,
+                              city:          add.subLocality+"||"+add.locality,
+                              country:       add.countryName,
+                              state:         add.adminArea,
+                              pin:           add.postalCode,
+                              title:         nickAddress.isNotEmpty ? nickAddress : textEditingController!=null ? textEditingController.text.toString() : '',
+                              latitude:      add.coordinates.latitude,
+                              longitude:     add.coordinates.longitude,
+                              isDefault:     widget.edit?widget.result.isDefault : true
+                          );
+                          widget.edit? apiUpdateAddress(result_) : apiAddAddress(result_) ;
+                        });
+                      });
+                    });
+                  });
                 },
                 color: isDataFilled ? Theme.of(context).primaryColor : Colors.grey[500],
                 child: Padding(
@@ -206,13 +268,12 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   'Full Name',
                   style: title,
                 ),
-                // Text(cart_prod_qty!=null?cart_prod_qty:'Default Value'),
                 TextFormField(
                   initialValue: fName,
                   style: text,
                   onChanged: (e) {
                     setState(() {
-                      fName=e;
+                      fName = e;
                     });
                     validation();
                   },
@@ -235,7 +296,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   style: text,
                   onChanged: (e) {
                     setState(() {
-                      addressLine1=e;
+                      addressLine1 = e;
                     });
                     validation();
                   },
@@ -257,7 +318,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   style: text,
                   onChanged: (e) {
                     setState(() {
-                      addressLine2=e;
+                      addressLine2 = e;
                     });
                     validation();
                   },
@@ -275,11 +336,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 ),
 
               TextFormField(
-                initialValue: city+" , "+state,
+                initialValue: subLocality,
                 style: text,
                 onChanged: (e) {
                   setState(() {
-                    city=e;
+                    subLocality = e;
                   });
                   validation();
                 },
@@ -287,7 +348,27 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   contentPadding: EdgeInsets.symmetric(vertical: 7)),
               ),
 
+                SizedBox(
+                  height: 20,
+                ),
 
+                Text(
+                  'City *',
+                  style: title,
+                ),
+
+                TextFormField(
+                  initialValue: city,
+                  style: text,
+                  onChanged: (e) {
+                    setState(() {
+                      city = e;
+                    });
+                    validation();
+                  },
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 7)),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -296,42 +377,18 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   'PinCode *',
                   style: title,
                 ),
-
-                Container(
-                  color: Colors.black12,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10,left: 10 ,right: 10),
-                    child: Text(
-                      '$pin',
-                      style: text,
-                    ),
-                  ),
+                TextFormField(
+                  initialValue: pin,
+                  style: text,
+                  onChanged: (e) {
+                    setState(() {
+                      pin = e;
+                    });
+                    validation();
+                  },
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 7)),
                 ),
-
-                Divider(
-                  color: Colors.black,
-                ),
-
-//                InkWell(
-//                  onTap: () {
-//                    showDialog(
-//                        context: context,
-//                        builder: (s) {
-//                          return FunkyOverlay();
-//                        });
-//                  },
-//                  child: Padding(
-//                    padding: EdgeInsets.only(top: 10, right: 15),
-//                    child: Text(
-//                      '$city',
-//                      style: text,
-//                    ),
-//                  ),
-//                ),
-
-//                Divider(
-//                  color: Colors.black,
-//                ),
 
                 SizedBox(
                   height: 20,
@@ -383,75 +440,22 @@ class _AddNewAddressState extends State<AddNewAddress> {
 
   }
 
-  void checkLocation() {
-    ProgressDialog progressDialog = Utility.progressDialog(
-        context, "Checking Delivery Location..");
-    progressDialog.show();
-    ApiCall().setLocation(pin).then((apiResponseModel) {
-      if(progressDialog!=null && progressDialog.isShowing()){
-        progressDialog.dismiss();
-      }
-      if (apiResponseModel.statusCode == 200) {
-        Result result_=
-        Result(
-            id:            widget.edit?widget.result.id:  Uuid().v4(),
-            namePrefix:    EnumNamePrefix.getNamePrefix(_radioValue1),
-            name:          fName,
-            contactId:     widget.edit?widget.result.contactId:  Uuid().v4(),
-            addressLine1:  addressLine1,
-            addressLine2:  addressLine2,
-            city:          city,
-            country:       widget.result.country,
-            state:         state,
-            pin:           widget.result.pin,
-            title:         nickAddress.isNotEmpty ? nickAddress : textEditingController!=null ? textEditingController.text.toString() : '',
-            latitude:      widget.result.latitude,
-            longitude:     widget.result.longitude,
-            isDefault:     widget.edit?widget.result.isDefault : true
-        );
-        widget.edit? Provider.of<AddressModal>(context).updateAddress(result_,callback: addressChanged()):
-        Provider.of<AddressModal>(context).addAddress(result_,callback: addressChanged());
-      } else {
-        Fluttertoast.showToast(
-            msg: "Delivery Location not available");
+  void apiAddAddress(result){
+    ApiCall().setContext(context).addAddress(result).then((apiResponseModel){
+      if(apiResponseModel.statusCode == 200){
+        Navigator.pop(context, AddressModel.parseList(apiResponseModel.Result));
       }
     });
   }
 
-  void setCurrentLoaciton() {
-    Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((position) async {
-      final coordinates = new Coordinates(
-          position.latitude, position.longitude);
-//      var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-//      var first = addresses.first;
-//      print("${first.featureName} : ${first.addressLine}");
-      Geocoder.local.findAddressesFromCoordinates(coordinates).then((address) {
-        Navigator.push(context, SlideLeftRoute(
-            page: LocateMap(latLng: widget.edit ? LatLng(
-                widget.result.latitude, widget.result.longitude) : null,
-              addressLine2: mainAddress,))).then((address) {
-          Address add = address;
-          Result result =
-          Result(
-            //    id:        widget.edit?widget.result.id:  Uuid().v4(),
-              name:          fName,
-              // contactId:  widget.edit?widget.result.contactId:  Uuid().v4(),
-              addressLine1:  addressLine1,
-              addressLine2:  addressLine2,
-              city:          add.subAdminArea,
-              country:       add.countryName,
-              state:         add.adminArea,
-              pin:           add.postalCode,
-              latitude:      add.coordinates.latitude,
-              longitude:     add.coordinates.longitude,
-              isDefault:     true
-          );
-        });
-      });
+  void apiUpdateAddress(result){
+    ApiCall().setContext(context).updateAddress(result).then((apiResponseModel){
+      if(apiResponseModel.statusCode == 200){
+        Navigator.pop(context, AddressModel.parseList(apiResponseModel.Result));
+      }
     });
   }
+
   ListView buildList(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -466,7 +470,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       textEditingController.text = '';
                     }
                     tappedIndex = index;
-                    nickAddress=NickArray[index];
+                    nickAddress = NickArray[index];
                   });
                 },
                 child: Container(
@@ -506,20 +510,9 @@ class _AddNewAddressState extends State<AddNewAddress> {
     );
   }
 
-  void validation() {
-    setState(() {
-      if(_radioValue1 != -1 && fName.isNotEmpty && addressLine1.isNotEmpty && addressLine2.isNotEmpty && city.isNotEmpty) {
-        isDataFilled = true;
-      } else {
-        isDataFilled = false;
-      }
-    });
-  }
-
   addressChanged(){
     Navigator.pop(context) ;
   }
-
 }
 
 class FunkyOverlay extends StatefulWidget {
