@@ -230,4 +230,5 @@ class _SetLocationManuallyState extends State<SetLocationManually> {
       }
     });
   }
+
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vegetos_flutter/Animation/slide_route.dart';
 import 'package:vegetos_flutter/UI/add_new_address.dart';
 import 'package:vegetos_flutter/Utils/ApiCall.dart';
@@ -8,7 +7,6 @@ import 'package:vegetos_flutter/Utils/CommonWidget.dart';
 import 'package:vegetos_flutter/Utils/Prefs.dart';
 import 'package:vegetos_flutter/Utils/const.dart';
 import 'package:vegetos_flutter/models/AddressModel.dart';
-import 'package:vegetos_flutter/models/address_modal.dart';
 
 
 class MyAddresses extends StatefulWidget {

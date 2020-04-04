@@ -8,7 +8,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as _location;
 import 'package:location_permissions/location_permissions.dart';
 import 'package:vegetos_flutter/Utils/config.dart';
-import 'package:vegetos_flutter/Utils/google_places_picker.dart';
 
 class ManageLocation{
 

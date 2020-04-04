@@ -2,12 +2,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs{
 
-  static final String DeliveryAddress="DeliveryAddress";
-  static final String ImageURL="ImageURL";
-  static final String DeliveryAddressId="DeliveryAddressId";
-  static final String JWT_TOKEN="JWT_TOKEN";
-  static final String AUTH_TOKEN="AUTH_TOKEN";
-  static final String phone="phone";
+  static final String DeliveryAddress = "DeliveryAddress";
+  static final String ImageURL = "ImageURL";
+  static final String DeliveryAddressId = "DeliveryAddressId";
+  static final String JWT_TOKEN = "JWT_TOKEN";
+  static final String AUTH_TOKEN = "AUTH_TOKEN";
+  static final String phone = "phone";
 
 
   static Future<bool> setLoginPrefs(String phone,String AUTH_TOKEN) async {

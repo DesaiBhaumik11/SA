@@ -134,20 +134,6 @@ class SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  /*void loginCheck(BuildContext context) async {
-      SharedPreferences prefs=await SharedPreferences.getInstance();
-      prefs.setString("AUTH_TOKEN", appFirstModal.result==null?null:appFirstModal.result.token) ;
-
-      SharedPreferences.getInstance().then((prefs){
-
-        if(prefs.getBool("LOGIN")==null){
-          Navigator.pushNamed(context, Const.welcome) ;
-        }else{
-          Navigator.pushNamed(context, Const.dashboard);
-        }
-      });
-  }*/
-
   void callAppFirstStartAPI(BuildContext context) {
     ApiCall().appFirstStart().then((apiResponseModel) {
       if (apiResponseModel.statusCode == 200) {

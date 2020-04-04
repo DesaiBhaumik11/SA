@@ -509,7 +509,6 @@ class _AddNewAddressState extends State<AddNewAddress> {
       physics: BouncingScrollPhysics(),
     );
   }
-
   addressChanged(){
     Navigator.pop(context) ;
   }

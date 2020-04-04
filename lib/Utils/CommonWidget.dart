@@ -44,8 +44,9 @@ class CommonWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'assets/OkAssets/AddnewAddress.png',
-              height: 50,
+              'assets/OkAssets/imagesAd.png',
+              height: 100,
+              width: 100,
             ),
             Text("No Address Saved Yet." ,style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16,color: Colors.grey),),
           ],

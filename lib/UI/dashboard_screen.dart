@@ -70,7 +70,7 @@ class DashboardScreenState extends State<DashboardScreen>
 
   bool isAnnonymous = true;
 
-  String deliveryAddress;
+  String deliveryAddress = "";
   bool isCountLoading = false;
   String cartTotal = '0';
   String ImageURL = '';

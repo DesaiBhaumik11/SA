@@ -45,7 +45,6 @@ class ShippingSlotModal extends ChangeNotifier{
   updateCheckedValue(int val){
     checkedValue = val ;
     notifyListeners() ;
-
   }
 
   getShippingSlot(){

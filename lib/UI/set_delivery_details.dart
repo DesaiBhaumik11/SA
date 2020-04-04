@@ -447,7 +447,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
   void updateAddress() {
     Prefs.getDeliveryAddressId().then((addressId){
-      if(addressId!=null && addressId.isNotEmpty) {
+      if(addressId != null && addressId.isNotEmpty) {
         ApiCall().setContext(context).getAddressById(addressId).then((apiResponseModel) {
           addressModel.isLoaded = true;
           if (apiResponseModel.statusCode == 200) {
@@ -479,7 +479,7 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
     ApiCall().setLocation(addressModel.pin).then((apiResponseModel) async {
       if (apiResponseModel.statusCode != 200) {
-        if(progressDialog!=null && progressDialog.isShowing()){
+        if(progressDialog != null && progressDialog.isShowing()){
           progressDialog.dismiss();
         }
         Fluttertoast.showToast(

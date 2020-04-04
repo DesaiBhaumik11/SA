@@ -454,43 +454,6 @@ class PaymentOptionScreenState extends State<PaymentOptionScreen> {
             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
             child: Column(
               children: createRadioListUsers(),
-//      <Widget>[
-//        Container(
-//          alignment: Alignment.topLeft,
-//          child: Text(
-//            'Payment Mode:',
-//            style: TextStyle(
-//                fontSize: 15.0,
-//                fontFamily: 'GoogleSans',
-//                fontWeight: FontWeight.w500,
-//                color: Const.primaryColorGreen),
-//          ),
-//        ),
-//        Row(children : <Widget>[
-//          new Radio(
-//          value: 0,
-//          activeColor: Const.orange,
-//          groupValue: _radioValue1,
-//          onChanged: (int e) {
-//            setState(() {
-//              _radioValue1 = e;
-//            });
-//          },
-//        ), new Text('Gateway',style: text,),
-//          ]),
-//        Row(children : <Widget>[
-//          new Radio(
-//          value: 1,
-//          activeColor: Const.orange,
-//          groupValue: _radioValue1,
-//          onChanged: (int e) {
-//            setState(() {
-//              _radioValue1 = e;
-//            });
-//          },
-//        ), new Text('Cash', style: text,),
-//            ]),
-//      ],
             ),
           ),
         ));
