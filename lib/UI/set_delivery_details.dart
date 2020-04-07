@@ -28,7 +28,8 @@ class SetDeliveryDetails extends StatefulWidget {
 
   cart.GetCartResponseModel myCartModal;
 
-  SetDeliveryDetails(this.myCartModal);
+  int shippingMode;
+  SetDeliveryDetails(this.myCartModal, this.shippingMode);
 
   @override
   _SetDeliveryDetailsState createState() => _SetDeliveryDetailsState(myCartModal);

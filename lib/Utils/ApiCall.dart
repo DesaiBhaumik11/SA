@@ -47,6 +47,10 @@ class ApiCall {
   static final String GetPaymentModes = "/GetPaymentModes";
   static final String SetDefaultAddress  = "/SetDefaultAddress";
   static final String GetAddressById = "/GetAddressById";
+  static final String GetShippingMode = "/GetShippingMode";
+  static final String GetAllShippingScheduleWithMode = "/GetAllShippingScheduleWithMode";
+  static final String GetShippingSlotWithMode = "/GetShippingSlotWithMode";
+
 
   static final String ProceedToPayment = "/ProceedTopayment";
   static final String ProceedTopaymentUsingGateway = "/ProceedTopaymentUsingGateway";
@@ -292,6 +296,19 @@ class ApiCall {
   Future<ApiResponseModel> getShippingScheduleFor() async {
     return _get(ApiCall.GetShippingScheduleFor);
   }
+
+  Future<ApiResponseModel> getShippingModes() async {
+    return _get(ApiCall.GetShippingMode);
+  }
+
+  Future<ApiResponseModel> getAllShippingScheduleWithMode(String shippingMode) async {
+    return _get(ApiCall.GetAllShippingScheduleWithMode + "?shippingMode=" + shippingMode);
+  }
+
+//  Future<ApiResponseModel> getShippingSlotWithMode() async {
+//    return _get(ApiCall.GetShippingSlotWithMode);
+//  }
+
   Future<ApiResponseModel> getPaymentModes() async {
     return _get(ApiCall.GetPaymentModes);
   }

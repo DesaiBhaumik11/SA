@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/models/CartCountModel.dart';
 import 'package:vegetos_flutter/models/CartManager.dart';
 import 'package:vegetos_flutter/models/DashboardProductResponseModel.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart';
+import 'package:vegetos_flutter/models/GetShippingMode_ModelClass.dart';
 import 'package:vegetos_flutter/models/ProductDetailsModel.dart';
 import 'package:vegetos_flutter/models/ProductPriceModel.dart';
 import 'package:vegetos_flutter/models/ProductVariantMedia.dart';
@@ -57,6 +58,8 @@ class MyCartState extends State<MyCartScreen> {
   GetCartResponseModel model = GetCartResponseModel();
   Map<String, dynamic> cartHashMap;
   ManagerItemViewModel managerItemViewModel;
+  int shippingModeValue = -1;
+  GetShippingMode getShippingMode = GetShippingMode();
 
   /// --------------------InitState Call When Widget Build------------------------///
 
@@ -306,7 +309,6 @@ class MyCartState extends State<MyCartScreen> {
 
   /// ---------------------------Cart Item List Child----------------------------------///
   Widget cartItemChild(CartItemViewModel cartItem) {
-
     String name = "";
     String unit = "";
     int quantity = 0;
@@ -336,11 +338,10 @@ class MyCartState extends State<MyCartScreen> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            EnterExitRoute(
-                enterPage: ProductDetailScreen(cartItem.id))).then((x) {
-                  managerForCart();
+        Navigator.push(context,
+                EnterExitRoute(enterPage: ProductDetailScreen(cartItem.id)))
+            .then((x) {
+          managerForCart();
         });
       },
       child: Container(
@@ -431,8 +432,8 @@ class MyCartState extends State<MyCartScreen> {
                               child: Row(
                                 children: <Widget>[
                                   Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 10.0),
+                                    margin: EdgeInsets.fromLTRB(
+                                        10.0, 5.0, 5.0, 10.0),
                                     child: Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -451,7 +452,11 @@ class MyCartState extends State<MyCartScreen> {
                                       direction: Axis.vertical,
                                       runAlignment: WrapAlignment.start,
                                       children: <Widget>[
-                                        cartItem.ProductPrice.DiscountPercent != null && cartItem.ProductPrice.DiscountPercent != 0
+                                        cartItem.ProductPrice.DiscountPercent !=
+                                                    null &&
+                                                cartItem.ProductPrice
+                                                        .DiscountPercent !=
+                                                    0
                                             ? Container(
                                                 margin: EdgeInsets.fromLTRB(
                                                     0.0, 5.0, 5.0, 5.0),
@@ -461,12 +466,14 @@ class MyCartState extends State<MyCartScreen> {
                                                     '₹ ${cartItem.ProductPrice.Price}',
                                                     style: TextStyle(
                                                         fontSize: 12.0,
-                                                        fontFamily: 'GoogleSans',
+                                                        fontFamily:
+                                                            'GoogleSans',
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         color: Colors.grey,
-                                                        decoration: TextDecoration
-                                                            .lineThrough),
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough),
                                                   ),
                                                 ),
                                               )
@@ -495,8 +502,8 @@ class MyCartState extends State<MyCartScreen> {
                                       }
                                     },
                                     child: Container(
-                                      margin:
-                                          EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 0.0, 5.0, 0.0),
                                       child: Image.asset(
                                         'assets/OkAssets/minus.png',
                                         height: 20.0,
@@ -528,8 +535,8 @@ class MyCartState extends State<MyCartScreen> {
                                               .toString());
                                     },
                                     child: Container(
-                                      margin:
-                                          EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 0.0, 5.0, 0.0),
                                       child: Image.asset(
                                         'assets/OkAssets/plus.png',
                                         height: 20.0,
@@ -605,11 +612,11 @@ class MyCartState extends State<MyCartScreen> {
                                   color: Colors.white)),
                           onPressed: () {
                             Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AllProductScreen(
-                                            "Recommended for you"))).then((value) {
-                                  managerForCart();
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AllProductScreen(
+                                        "Recommended for you"))).then((value) {
+                              managerForCart();
                             });
                           },
                         ),
@@ -636,17 +643,16 @@ class MyCartState extends State<MyCartScreen> {
       String cartTotalStr = "0";
       if (apiResponseModel.statusCode == 200) {
         CartCountModel cartCountModel =
-        CartCountModel.fromJson(apiResponseModel.Result);
+            CartCountModel.fromJson(apiResponseModel.Result);
         if (cartCountModel != null && cartCountModel.count != null) {
           cartTotalStr = cartCountModel.count.toString();
         }
       }
       setState(() {
-         cartTotal = cartTotalStr;
+        cartTotal = cartTotalStr;
       });
     });
   }
-
 
   /// ---------------------------Cart Recommended List ----------------------------------///
 
@@ -666,8 +672,8 @@ class MyCartState extends State<MyCartScreen> {
 
   /// ---------------------------Cart Recommended List Child ----------------------------------///
 
-  Widget childView(BuildContext context, ProductWithDefaultVarientModel result) {
-
+  Widget childView(
+      BuildContext context, ProductWithDefaultVarientModel result) {
     ProductPriceModel ProductPrice = new ProductPriceModel();
     ProductDetailsModel ProductDetail = new ProductDetailsModel();
     UnitsModel Units = new UnitsModel();
@@ -711,11 +717,11 @@ class MyCartState extends State<MyCartScreen> {
       }
 
       if (result.MinimumOrderQuantity >= 1000) {
-       // quantity = result.MinimumOrderQuantity / 1000;
+        // quantity = result.MinimumOrderQuantity / 1000;
         quantity = managerItemViewModel.minimumOrderQuantity;
-       // unit = "Kg";
+        // unit = "Kg";
       } else {
-       // quantity = result.MinimumOrderQuantity.floorToDouble();
+        // quantity = result.MinimumOrderQuantity.floorToDouble();
         quantity = managerItemViewModel.minimumOrderQuantity;
       }
       this.cartNumber = managerItemViewModel.quantity /
@@ -724,7 +730,8 @@ class MyCartState extends State<MyCartScreen> {
       if (result.ProductPrice != null) {
         result.ProductPrice.OfferPrice = result.ProductPrice.OfferPrice;
         result.ProductPrice.Price = result.ProductPrice.Price;
-        result.ProductPrice.DiscountPercent = result.ProductPrice.DiscountPercent;
+        result.ProductPrice.DiscountPercent =
+            result.ProductPrice.DiscountPercent;
       }
 
       isAvailableInCart = true;
@@ -737,7 +744,7 @@ class MyCartState extends State<MyCartScreen> {
         Units = result.Units[0];
       }
 
-     // quantity = result.MinimumOrderQuantity.floorToDouble();
+      // quantity = result.MinimumOrderQuantity.floorToDouble();
       quantity = result.MinimumOrderQuantity;
 
       if (result.ProductPrice != null) {
@@ -1227,8 +1234,7 @@ class MyCartState extends State<MyCartScreen> {
                 if (model != null &&
                     model.cartItemViewModels != null &&
                     model.cartItemViewModels.isNotEmpty) {
-                  Navigator.push(
-                      context, SlideLeftRoute(page: SetDeliveryDetails(model)));
+                  getShippingModesAPI();
                 } else {
                   Fluttertoast.showToast(msg: 'No items in your cart');
                 }
@@ -1299,6 +1305,87 @@ class MyCartState extends State<MyCartScreen> {
         ),
       ),
     );
+  }
+
+  void getShippingModesAPI() {
+    ApiCall().getShippingModes().then((apiResponseModel) {
+      if(apiResponseModel.statusCode == 200) {
+        GetShippingMode getShippingMode = GetShippingMode.fromJson(apiResponseModel.Result);
+        if(getShippingMode.homeDeliveryEnabled == true &&
+            getShippingMode.pickupFromStoreEnabled == true) {
+          showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                shippingModeValue = -1;
+                return AlertDialog(
+                  content: StatefulBuilder(
+                    builder:
+                        (BuildContext context, StateSetter setState) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              RadioListTile(
+                                title: const Text('Home Delivery'),
+                                value: 0,
+                                groupValue: shippingModeValue,
+                                activeColor: Const.iconOrange,
+                                onChanged: (value) {
+                                  setState(() {
+                                    shippingModeValue = value;
+                                    Navigator.push(
+                                        context, SlideLeftRoute(page: SetDeliveryDetails(model, shippingModeValue)));
+                                    print(shippingModeValue);
+                                  });
+                                },
+                              ),
+                              RadioListTile(
+                                title: const Text('Pickup From Store'),
+                                value: 1,
+                                groupValue: shippingModeValue,
+                                activeColor: Const.iconOrange,
+                                onChanged: (value) {
+                                  setState(() {
+                                    shippingModeValue = value;
+                                    Navigator.push(
+                                        context, SlideLeftRoute(page: SetDeliveryDetails(model, shippingModeValue)));
+                                    print(shippingModeValue);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: Const.widgetGreen
+                              ),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                );
+              });
+        } else if(getShippingMode.homeDeliveryEnabled == true &&
+            getShippingMode.pickupFromStoreEnabled == false) {
+          Navigator.push(
+              context, SlideLeftRoute(page: SetDeliveryDetails(model, 0)));
+        } else {
+          Navigator.push(
+              context, SlideLeftRoute(page: SetDeliveryDetails(model, 1)));
+        }
+      }
+    });
   }
 
   /// ---------------------------Update Cart Quantity Api----------------------------------///

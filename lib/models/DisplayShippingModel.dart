@@ -2,8 +2,7 @@
 import 'package:vegetos_flutter/models/TimeSlotListModel.dart';
 import 'package:intl/intl.dart';
 
-class DisplayShippingModel
-{
+class DisplayShippingModel {
   String Key;
 
   DateTime keyDate;
