@@ -13,6 +13,9 @@ class TimeSlotListModel
 
   bool IsHoliday;
 
+  ShippingMode shippingMode;
+  String businessLocationId;
+
   bool isSelected;
 
   TimeSlotListModel({
@@ -21,6 +24,8 @@ class TimeSlotListModel
     this.TimeFrom,
     this.TimeTo,
     this.IsHoliday,
+    this.shippingMode,
+    this.businessLocationId,
     this.isSelected,
   });
 
@@ -45,6 +50,8 @@ class TimeSlotListModel
       TimeFrom: timefrom,
       TimeTo: timeto,
       IsHoliday: parsedData['IsHoliday'],
+      shippingMode: shippingModeValues.map[parsedData["ShippingMode"]],
+      businessLocationId: parsedData["BusinessLocationId"],
       isSelected: false,
     );
   }
@@ -54,5 +61,25 @@ class TimeSlotListModel
     list.map((data) => TimeSlotListModel.fromJson(data)).toList();
     return jobList;
   }
+}
 
+enum ShippingMode { HOME_DELIVERY, PICKUP_FROM_STORE }
+
+final shippingModeValues = EnumValues({
+  "HomeDelivery": ShippingMode.HOME_DELIVERY,
+  "PickupFromStore": ShippingMode.PICKUP_FROM_STORE
+});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap;
+  }
 }

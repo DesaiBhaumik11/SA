@@ -18,6 +18,7 @@ import 'package:vegetos_flutter/Utils/utility.dart';
 import 'package:vegetos_flutter/models/ApiResponseModel.dart';
 import 'package:vegetos_flutter/models/CheckoutRequestModel.dart';
 import 'package:vegetos_flutter/models/DisplayShippingModel.dart';
+import 'package:vegetos_flutter/models/GetAllRetailsFromPincode_Model.dart';
 import 'package:vegetos_flutter/models/GetCartResponseModel.dart' as cart;
 import 'package:vegetos_flutter/models/TimeSlotListModel.dart';
 import 'package:vegetos_flutter/models/shipping_slot_modal.dart';
@@ -32,14 +33,19 @@ class SetDeliveryDetails extends StatefulWidget {
   SetDeliveryDetails(this.myCartModal, this.shippingMode);
 
   @override
-  _SetDeliveryDetailsState createState() => _SetDeliveryDetailsState(myCartModal);
+  _SetDeliveryDetailsState createState() => _SetDeliveryDetailsState(myCartModal, shippingMode);
 }
 
 class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
 
-  cart.GetCartResponseModel myCartModal;
+  //GetAllRetailsForPinCode selectedUser;
+  User selectedUser;
+  List<User> users = <User>[const User('Foo'), const User('Bar')];
 
-  _SetDeliveryDetailsState(this.myCartModal);
+  cart.GetCartResponseModel myCartModal;
+  int shippingMode;
+
+  _SetDeliveryDetailsState(this.myCartModal , this.shippingMode);
 
   ShippingSlotModal shippingSlotModal;
   var tappedIndex = 0;
@@ -48,16 +54,19 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   bool defaultAddressFlag = false;
 
   List<DisplayShippingModel> displayShippingSlotList;
-  Future shippingSchedule = ApiCall().getShippingScheduleFor();
+  List<GetAllRetailsForPinCode> getAllRetailsForPinCode;
 
+  List<RetailsAddress> retailAddress;
+
+  Future shippingSchedule = ApiCall().getShippingScheduleFor();
+  bool homeDelivery = true;
 
   bool isDefaultAddressAvailable = false;
 
   AddressModel addressModel = new AddressModel();
 
   ProgressDialog progressDialog;
-
-
+  String dropdownValue;
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -71,6 +80,11 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
     updateAddress();
     super.initState();
     selectedRadioTile = 0;
+    if(shippingMode == 0) {
+      homeDelivery = true;
+    } else {
+      homeDelivery = false;
+    }
   }
 
   @override
@@ -103,11 +117,12 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              addressContainer(),
+           //   addressContainer(),
+              pickupFromStoreAddress(),
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 20),
-                child: Text(
-                  'Set Delivery schedule',
+                child: Text( homeDelivery ?
+                  'Set Delivery schedule' : 'Set Pickup schedule',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
@@ -398,7 +413,8 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
   Widget callGetDeliveryDatesAPI() {
     displayShippingSlotList != null ? displayShippingSlotList.clear() : null;
     return FutureBuilder(
-      future: shippingSchedule,
+    //  future: shippingSchedule,
+      future: ApiCall().getAllShippingScheduleWithMode(""),
       builder: (contest, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           ApiResponseModel apiResponseModel = snapshot.data;
@@ -537,4 +553,154 @@ class _SetDeliveryDetailsState extends State<SetDeliveryDetails> {
       }
     });
   }
+
+  Widget pickupFromStoreAddress() {
+    return FutureBuilder(
+      future: ApiCall().getAllRetailsForPinCode(addressModel.pin),
+      builder: (context, snapShot) {
+        if(snapShot.connectionState == ConnectionState.done) {
+          ApiResponseModel apiResponseModel = snapShot.data;
+          if(apiResponseModel.statusCode == 200) {
+            getAllRetailsForPinCode = GetAllRetailsForPinCode.parseList(apiResponseModel.Result);
+            return isDefaultAddressAvailable ? Container(
+              width: double.infinity,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          addressModel.namePrefix!=null && addressModel.namePrefix.isNotEmpty ?
+                          addressModel.namePrefix +" "+addressModel.name :
+                          addressModel.name,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(),
+                        ),
+                        dropDown(getAllRetailsForPinCode),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      addressModel.addressLine1,
+                      style: TextStyle(
+                          color: Color(0xff2d2d2d),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16),
+                    ),
+                    Text(
+                      addressModel.addressLine2,
+                      style: TextStyle(
+                          color: Color(0xff2d2d2d),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16),
+                    ),
+
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          addressModel.subLocality + " , "+addressModel.city + " , " + addressModel.pin,
+                          style: TextStyle(
+                              color: Color(0xff2d2d2d),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(),
+                        ),
+                        addressModel.title!=null && addressModel.title.isNotEmpty ?
+                        CommonWidget().buildNickAddress(context, addressModel.title) : Container(),
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+            ) :  noAddress();
+          } else if (apiResponseModel.statusCode == 401) {
+            return Container();
+          } else {
+            return Container();
+          }
+        } else if (snapShot.connectionState == ConnectionState.waiting) {
+          return InkWell(
+            child: Container(
+                padding: EdgeInsets.all(10),
+                height: 350,
+                child: Card(
+                  child: Center(
+                      child: Center(child: CircularProgressIndicator(),)
+                  ),
+                )),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  Widget dropDown(List<GetAllRetailsForPinCode> getAllRetailsForPinCode) {
+    if(getAllRetailsForPinCode != null) {
+      return new DropdownButton<User>(
+        hint: new Text("Select a user"),
+        value: selectedUser,
+        onChanged: (User newValue) {
+          setState(() {
+            selectedUser = newValue;
+          });
+        },
+        items: users.map((User user) {
+          return new DropdownMenuItem<User>(
+            value: user,
+            child: new Text(
+              user.name,
+              style: new TextStyle(color: Colors.black),
+            ),
+          );
+        }).toList(),
+      );
+//      return new DropdownButton<GetAllRetailsForPinCode>(
+//        hint: new Text("Select a user"),
+//        value: selectedUser != null ? selectedUser : getAllRetailsForPinCode[0],
+//        onChanged: (GetAllRetailsForPinCode newValue) {
+//          setState(() {
+//            selectedUser = newValue;
+//         });
+//        },
+//        items: getAllRetailsForPinCode.map((GetAllRetailsForPinCode selectedUser) {
+//          return new DropdownMenuItem<GetAllRetailsForPinCode>(
+//            value: selectedUser,
+//            child: new Text(
+//              selectedUser.name,
+//              style: new TextStyle(color: Colors.black),
+//            ),
+//          );
+//        }).toList(),
+//      );
+    }
+    else{
+      return new Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+  }
+
+}
+
+class User {
+  const User(this.name);
+
+  final String name;
 }

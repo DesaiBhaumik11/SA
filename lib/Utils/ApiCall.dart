@@ -50,6 +50,8 @@ class ApiCall {
   static final String GetShippingMode = "/GetShippingMode";
   static final String GetAllShippingScheduleWithMode = "/GetAllShippingScheduleWithMode";
   static final String GetShippingSlotWithMode = "/GetShippingSlotWithMode";
+  static final String GetAllRetailsForPincode = "/GetAllRetailsForPincode";
+
 
 
   static final String ProceedToPayment = "/ProceedTopayment";
@@ -303,6 +305,10 @@ class ApiCall {
 
   Future<ApiResponseModel> getAllShippingScheduleWithMode(String shippingMode) async {
     return _get(ApiCall.GetAllShippingScheduleWithMode + "?shippingMode=" + shippingMode);
+  }
+
+  Future<ApiResponseModel> getAllRetailsForPinCode(String pinCode) async {
+    return _get(ApiCall.GetAllRetailsForPincode + "?pinCode=" + pinCode);
   }
 
 //  Future<ApiResponseModel> getShippingSlotWithMode() async {
